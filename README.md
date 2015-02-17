@@ -1,3 +1,2 @@
-# guia-julialang
-Guía básica de Julia
+# Guía básica de Julia
 [En construcción]
