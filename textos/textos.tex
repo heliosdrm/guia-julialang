@@ -9,94 +9,27 @@
  breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
  {hyperref}
 
-\makeatletter
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
-\newenvironment{lyxcode}
-{\par\begin{list}{}{
-\setlength{\rightmargin}{\leftmargin}
-\setlength{\listparindent}{0pt}% needed for AMS classes
-\raggedright
-\setlength{\itemsep}{0pt}
-\setlength{\parsep}{0pt}
-\normalfont\ttfamily}%
- \item[]}
-{\end{list}}
-\makeatother
-
 \begin{document}
 
 \section{¿Por qué \emph{Julia}?}
 
-Los lenguajes de programación dinámicos son una herramienta esencial
-en muchas profesiones científicas, que a menudo requieren realizar
-cálculos complejos en un corto plazo de tiempo; cálculos que además
-suponen un problema nuevo en cada ocasión, en el que los algoritmos
-a utilizar suelen basarse en trabajos anteriores, pero siempre necesitan
-ciertos retoques o extensiones.
+Los lenguajes de programación dinámicos son una herramienta esencial en muchas profesiones científicas, que a menudo requieren realizar cálculos complejos en un corto plazo de tiempo; cálculos que además suponen un problema nuevo en cada ocasión, en el que los algoritmos a utilizar suelen basarse en trabajos anteriores, pero siempre necesitan ciertos retoques o extensiones.
 
-La utilidad y popularidad de los distintos lenguajes existentes, y
-de las herramientas de software que los implementan, dependen de varios
-factores, y en particular del campo de aplicación y el contexto institucional.
-Tres de los más imporantes son R, Matlab y Python.
+La utilidad y popularidad de los distintos lenguajes existentes, y de las herramientas de software que los implementan, dependen de varios factores, y en particular del campo de aplicación y el contexto institucional. Tres de los más imporantes son R, Matlab y Python.
 
-R es principalmente una herramienta para cálculos estadísticos, aunque
-también es posible utilizarlo para muchos otros propósitos. Se trata
-de una implementación a modo de software libre del lenguaje utilizado
-por el programa S-PLUS, con una comunidad de usuarios y desarrolladores
-espectacularmente activa, que ha extendido su potencia y funcionalidades
-a casi cualquier tipo de tratamiento de datos. En consecuencia, R
-es la opción más usada en la ciencia estadística, especialmente en
-el entorno académico (en ciertos sectores industriales tiene más presencia
-el programa y el lenguaje de SAS, propiedad de la compañía privada
-del mismo nombre).
+R es principalmente una herramienta para cálculos estadísticos, aunque también es posible utilizarlo para muchos otros propósitos. Se trata de una implementación a modo de software libre del lenguaje utilizado por el programa S-PLUS, con una comunidad de usuarios y desarrolladores espectacularmente activa, que ha extendido su potencia y funcionalidades a casi cualquier tipo de tratamiento de datos. En consecuencia, R es la opción más usada en la ciencia estadística, especialmente en el entorno académico (en ciertos sectores industriales tiene más presencia el programa y el lenguaje de SAS, propiedad de la compañía privada del mismo nombre).
 
-Matlab es una de las soluciones más empleadas para la computación
-numérica en ciencias físicas e ingeniería, tanto por la industria
-como por la academia, gracias a la potencia de sus utilidades gráficas,
-numerosas \emph{toolboxes}, y un excelente entorno de desarrollo.
-Al contrario que R, se trata de un software cerrado y privado; existe
-también una implementación libre de Matlab (GNU Octave), que podría
-compararse con el caso de R respecto a S-PLUS, pero en este caso la
-herramienta libre no goza de tanta popularidad.
+Matlab es una de las soluciones más empleadas para la computación numérica en ciencias físicas e ingeniería, tanto por la industria como por la academia, gracias a la potencia de sus utilidades gráficas, numerosas \emph{toolboxes}, y un excelente entorno de desarrollo. Al contrario que R, se trata de un software cerrado y privado; existe también una implementación libre de Matlab (GNU Octave), que podría compararse con el caso de R respecto a S-PLUS, pero en este caso la herramienta libre no goza de tanta popularidad.
 
-Python, por su lado, es un lenguaje de programación genérico, implementado
-en forma de software libre, que tiene la comunidad de usuarios más
-entusiasta y numerosa de todos los lenguajes citados. El campo de
-aplicación de Python va en realidad mucho más allá del científico,
-siendo un lenguaje que sirve para prácticamente cualquier tipo de
-operación informática. Pero existen varios módulos de Python recogidos
-en el paquete SciPy, específicamente dedicados a la computación numérica,
-que también se presentan como una alternativa libre a Matlab.
+Python, por su lado, es un lenguaje de programación genérico, implementado en forma de software libre, que tiene la comunidad de usuarios más entusiasta y numerosa de todos los lenguajes citados. El campo de aplicación de Python va en realidad mucho más allá del científico, siendo un lenguaje que sirve para prácticamente cualquier tipo de operación informática. Pero existen varios módulos de Python recogidos en el paquete SciPy, específicamente dedicados a la computación numérica, que también se presentan como una alternativa libre a Matlab.
 
-En este contexto, el Massachusets Institute of Technology (MIT) publicó
-en 2012 Julia, otro lenguaje dinámico para computación científica,
-bajo la licencia del MIT para software libre. A la vista del tipo
-de funciones y operaciones que ofrece, podría parecer que Julia intenta
-reinventar la rueda, aunque sus autores son plenamente conocedores
-del estado de la ciencia en lenguajes de programación. De hecho, la
-documentación oficial parece especialmente dirigida a programadores
-que ya conocen otros lenguajes, y en particular los tres mencionados.
-Según las propias declaraciones de los creadores de Julia,%
-\footnote{\href{http://julialang.org/blog/2012/02/why-we-created-julia/}{http://julialang.org/blog/2012/02/why-we-created-julia/}%
-} su finalidad es combinar lo mejor de cada uno de esos (y otros) lenguajes,
-y salvar el mayor obstáculo común de todos ellos: la velocidad para
-cálculos complejos y tratamiento de ficheros y bases de datos muy
-voluminosas.
+En este contexto, el Massachusets Institute of Technology (MIT) publicó en 2012 Julia, otro lenguaje dinámico para computación científica, bajo la licencia del MIT para software libre. A la vista del tipo de funciones y operaciones que ofrece, podría parecer que Julia intenta reinventar la rueda, aunque sus autores son plenamente conocedores del estado de la ciencia en lenguajes de programación. De hecho, la documentación oficial parece especialmente dirigida a programadores que ya conocen otros lenguajes, y en particular los tres mencionados. Según las propias declaraciones de los creadores de Julia,%
+\footnote{%
+\url{http://julialang.org/blog/2012/02/why-we-created-julia/}%
+}
+su finalidad es combinar lo mejor de cada uno de esos (y otros) lenguajes, y salvar el mayor obstáculo común de todos ellos: la velocidad para cálculos complejos y tratamiento de ficheros y bases de datos muy voluminosas.
 
-El \emph{leit motiv} de Julia es principalmente su velocidad, comparable
-a la de programas compilados en C, sin dejar de ser un lenguaje plenamente
-dinámico y que permita trabajar con el paradigma del \emph{read-eval-print
-loop}. Esto hace que, incluso en su fase inicial de desarrollo, y
-con las carencias propias de la misma (pocos editores de código e
-interfaces para el desarrollo de programas, utilidades para depuración
-limitadas, etc.), Julia tenga un nicho de aplicación muy atractivo:
-la ejecución de operaciones conceptualmente sencillas, como algoritmos
-iterativos o rutinas masivas de lectura y escritura de dispositivos
-y archivos, que en lenguajes de bajo nivel pueden ser muy eficientes,
-pero a la hora de ejecutarlas en alguno de los lenguajes antes mencionados
-puedan consumir hasta horas de trabajo de la máquina. Con poco esfuerzo
-de programación, una hora de procesamiento en Matlab puede traducirse
-en unos pocos segundos de Julia.
+El \emph{leit motiv} de Julia es principalmente su velocidad, comparable a la de programas compilados en C, sin dejar de ser un lenguaje plenamente dinámico y que permita trabajar con el paradigma del \emph{read-eval-print loop}. Esto hace que, incluso en su fase inicial de desarrollo, y con las carencias propias de la misma (pocos editores de código e interfaces para el desarrollo de programas, utilidades para depuración limitadas, etc.), Julia tenga un nicho de aplicación muy atractivo: la ejecución de operaciones conceptualmente sencillas, como algoritmos iterativos o rutinas masivas de lectura y escritura de dispositivos y archivos, que en lenguajes de bajo nivel pueden ser muy eficientes, pero a la hora de ejecutarlas en alguno de los lenguajes antes mencionados puedan consumir hasta horas de trabajo de la máquina. Con poco esfuerzo de programación, una hora de procesamiento en Matlab puede traducirse en unos pocos segundos de Julia.
 
 
 \section{Primeros pasos}
@@ -104,48 +37,16 @@ en unos pocos segundos de Julia.
 
 \subsection{Instalación y uso básico de Julia}
 
-Explicar los primeros pasos para usar un lenguaje de programación es algo
-delicado y difícil. Es habitual comenzar con ejercicios triviales como el
-del <<Hola mundo>>, pero esos ejemplos no resultan muy estimulantes, ni dan
-tampoco una idea clara de cómo es el lenguaje. El extremo opuesto es comenzar
-con un fragmento de código para una aplicación relativamente compleja, que
-contenga buena parte de las características principales que se quieren
-explicar, e ir desgranándolas poco a poco, asumiendo que la mayor parte del
-programa será incomprensible para el lector hasta que haya avanzado
-bastante. Lo cierto es que ésa es una aproximación más cercana al modo en el
-que la mayoría acaba haciendo frente a cualquier lenguaje en la <<vida real>>,
-aunque también puede ser frustrante. Así que buscando un punto de
-compromiso, en esta sección se partirá de ejemplos prácticos pero sencillos,
-que se puedan entender por entero aunque los conceptos incluidos no se
-expliquen en detalle hasta secciones posteriores.
+Explicar los primeros pasos para usar un lenguaje de programación es algo delicado y difícil. Es habitual comenzar con ejercicios triviales como el del ``Hola mundo'', pero esos ejemplos no resultan muy estimulantes, ni dan tampoco una idea clara de cómo es el lenguaje. El extremo opuesto es comenzar con un fragmento de código para una aplicación relativamente compleja, que contenga buena parte de las características principales que se quieren explicar, e ir desgranándolas poco a poco, asumiendo que la mayor parte del programa será incomprensible para el lector hasta que haya avanzado bastante. Lo cierto es que ésa es una aproximación más cercana al modo en el que la mayoría acaba haciendo frente a cualquier lenguaje en la ``vida real'', aunque también puede ser frustrante. Así que buscando un punto de compromiso, en esta sección se partirá de ejemplos prácticos pero sencillos, que se puedan entender por entero aunque los conceptos incluidos no se expliquen en detalle hasta secciones posteriores.
 
-Ahora bien, antes de poner en práctica cualquier ejemplo, es necesario
-tener instaladas las herramientas que permiten usar el lenguaje de programación.
-El software básico para usar Julia está disponible en su página oficial (\url{http://julialang.org/downloads}),
-en forma de código fuente así como en binarios preparados para instalar
-en Windows, Mac OS X, y algunas distribuciones de Linux (por lo menos
-Ubuntu). Desde esa página se pueden encontrar también enlaces con
-explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son
-específicas para cada sistema, y por lo tanto no desarrollaremos aquí.
+Ahora bien, antes de poner en práctica cualquier ejemplo, es necesario tener instaladas las herramientas que permiten usar el lenguaje de programación. El software básico para usar Julia está disponible en su página oficial (\url{http://julialang.org/downloads}), en forma de código fuente así como en binarios preparados para instalar en Windows, Mac OS X, y algunas distribuciones de Linux (por lo menos Ubuntu). Desde esa página se pueden encontrar también enlaces con explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son específicas para cada sistema, y por lo tanto no desarrollaremos aquí.
 
-Por defecto, al ejecutar Julia se abre el <<intérprete>> de comandos
-para trabajar de forma interactiva, que es el modo de uso de Julia
-más útil para aprender y hacer pruebas sencillas.
-Por otro lado, para ejecutar rutinas más complejas, y siempre que
-se quiera obtener resultados reproducibles, es recomendable escribir
-las instrucciones en un archivo de código, y luego ejecutarlo en Julia.
-Los entornos de desarrollo integrados, ``IDE'' en inglés, suelen tener
-editores de código que permiten combinar ambas tareas ---escribir instrucciones
-en un archivo de código y ejecutarlas--- desde la misma interfaz, lo cual
-facilita el trabajo del programador. (Véase más abajo sobre algunos IDE para Julia.)
+Por defecto, al ejecutar Julia se abre el ``intérprete'' de comandos para trabajar de forma interactiva, que es el modo de uso de Julia más útil para aprender y hacer pruebas sencillas. Por otro lado, para ejecutar rutinas más complejas, y siempre que se quiera obtener resultados reproducibles, es recomendable escribir las instrucciones en un archivo de código, y luego ejecutarlo en Julia. Los entornos de desarrollo integrados, ``IDE'' en inglés, suelen tener editores de código que permiten combinar ambas tareas ---escribir instrucciones en un archivo de código y ejecutarlas--- desde la misma interfaz, lo cual facilita el trabajo del programador. (Véase más abajo sobre algunos IDE para Julia.)
 
-Veamos ahora un ejemplo práctico de ambas formas de uso, con un programa
-sencillo para calcular el día de la semana en el que cae cualquier fecha
-del calendario Gregoriano, usando el algoritmo de Gauss
-tal como está publicado por Bernt Schwerdtfeger.\footnote{%
-\ulr{http://berndt-schwerdtfeger.de/cal/cal.pdf}}%
-Se trata de un algoritmo simple, que podría traducirse a Julia mediante el
-siguiente código:
+Veamos ahora un ejemplo práctico de ambas formas de uso, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.%
+\footnote{%
+\ulr{http://berndt-schwerdtfeger.de/cal/cal.pdf}%
+} Se trata de un algoritmo simple, que podría traducirse a Julia mediante el siguiente código: 
 
 function gauss_diasemana(d, m, y)
 # d, m, y son los números del día, mes y año, respectivamente
@@ -170,110 +71,49 @@ function gauss_diasemana(d, m, y)
   return(warray[w+1])
 end
 
-Supongamos que ese código está guardado en un archivo llamado
-\texttt{calc_diasemana.jl} (el nombre del archivo es arbitrario, y puede ser
-cualquier nombre aceptado por el sistema operativo).
-El programa consiste en una sola función con 3 argumentos (los números del
-día, el mes y el año), basada en unas pocas divisiones enteras
-(definidas en la función \code{div}) y el cálculo de ``restos'' de
-dichas divisiones (\code{mod}),\footnote{%
-Existen dos funciones para el resto de una división: \code{mod} y \code{rem},
-que funcionan de forma distinta cuando alguno de los dos operandos es negativo.
-Para el caso que nos ocupa esa diferencia no es relevante.}%
-más la selección de unos valores a partir de los resultados intermedios y
-unas listas predefinidas.
+Supongamos que ese código está guardado en un archivo llamado \texttt{calc_diasemana.jl} (el nombre del archivo es arbitrario, y puede ser cualquier nombre aceptado por el sistema operativo). El programa consiste en una sola función con 3 argumentos (los números del día, el mes y el año), basada en unas pocas divisiones enteras (definidas en la función \code{div}) y el cálculo de ``restos'' de dichas divisiones (\code{mod}),%
+\footnote{%
+Existen dos funciones para el resto de una división: \code{mod} y \code{rem}, que funcionan de forma distinta cuando alguno de los dos operandos es negativo. Para el caso que nos ocupa esa diferencia no es relevante.%
+}
+más la selección de unos valores a partir de los resultados intermedios y unas listas predefinidas.
 
-Este programa se puede ejecutar de forma interactiva, usando la función
-\code{include} en el intérprete de Julia. Esto es lo que se debería ver
-en pantalla (el texto \code{julia>} al comienzo de la primera línea
-sólo marca el punto de inserción del código; no es parte
-del código, y puede variar entre sistemas):
+Este programa se puede ejecutar de forma interactiva, usando la función \code{include} en el intérprete de Julia. Esto es lo que se debería ver en pantalla (el texto \code{julia>} al comienzo de la primera línea sólo marca el punto de inserción del código; no es parte del código, y puede variar entre sistemas):
 
 julia> include("calc_diasemana.jl")
 calc_diasemana (generic function with 1 method)
 
-El resultado es algo decepcionante, porque lo único que se ha hecho es
-definir una función, que por sí misma no da ningún resultado. Por otro
-lado, lo más probable es que al introducir esa línea sin más ni siquiera
-se obtenga ese resultado, sino un error debido a que no se encuentra
-el archivo de código.\footnote{%
+El resultado es algo decepcionante, porque lo único que se ha hecho es definir una función, que por sí misma no da ningún resultado. Por otro lado, lo más probable es que al introducir esa línea sin más ni siquiera se obtenga ese resultado, sino un error debido a que no se encuentra el archivo de código.%
+\footnote{%
 Ref. a sección con información sobre LOAD\_PATH y require()%
-}%
+}
 Para asegurarse de que Julia encuentra el archivo,
 hay varias alternativas:
 
 \begin{enumerate}
-  \item Copiar el archivo de código \code{calc_diasemana.jl}
-  al directorio de trabajo de Julia. La ruta de ese directorio se puede
-  obtener con la función \code{pwd()} --- sin ningún argumento---.
-  \item Cambiar el directorio de trabajo al lugar que contiene el archivo.
-  El cambio de directorio se hace con la función \code{cd}, que recibe
-  un solo argumento: el nombre del directorio destino. Éste se puede definir
-  literalmente como un texto entre comillas dobles, o ser una variable
-  que contiene dicho texto. En sistemas operativos con entornos gráficos,
-  puede ser práctico copiar el nombre del directorio desde el gestor de
-  archivos al <<portapapeles>>, y utilizarlo directamente en Julia
-  con la función \code{clipboard}; es decir, introduciendo la
-  expresión \code{cd(clipboard())}.\footnote{%
-  Esta solución es particularmente recomendable en Windows, donde los
-  directorios de una ruta suelen presentarse divididos por
-  <<barras invertidas>>. Por ejemplo, el directorio de trabajo podría ser
-  \texttt{C:\\julia}. Pero la expresión \code{cd("C:\\julia")}
-  no daría el resultado esperado, porque la barra invertida se interpreta
-  como inicio de una <<secuencia de escape>> para caracteres no imprimibles.
-  Para que funcionase, habría que escribir \code{cd("C:/julia")} o
-  \code{cd("C:\\\\julia")}. La función \code{clipboard} ahorra
-  este tipo de problemas.}%
-  \item Introducir la ruta completa del archivo de código
-  en la llamada a \code{include}. Ésta se puede escribir literalmente,
-  o si el directorio que contiene el archivo está definido en una variable
-  (supongamos que esta variable se llama \code{dir_include}, la ruta
-  se puede componer con la función \code{joinpath}. Es decir, la expresión
-  anterior sería \code{include(joinpath(dir_include, "calc_diasemana.jl"))}.
-  También en este caso se podría utilizar \code{clipboard} para
-  identificar el directorio destino a través del portapapeles.
+  \item Copiar el archivo de código \code{calc_diasemana.jl} al directorio de trabajo de Julia. La ruta de ese directorio se puede obtener con la función \code{pwd()} --- sin ningún argumento---.
+  \item Cambiar el directorio de trabajo al lugar que contiene el archivo. El cambio de directorio se hace con la función \code{cd}, que recibe un solo argumento: el nombre del directorio destino. Éste se puede definir literalmente como un texto entre comillas dobles, o ser una variable que contiene dicho texto. En sistemas operativos con entornos gráficos, puede ser práctico copiar el nombre del directorio desde el gestor de archivos al ``portapapeles'', y utilizarlo directamente en Julia con la función \code{clipboard}; es decir, introduciendo la expresión \code{cd(clipboard())}.%
+  \footnote{%
+  Esta solución es particularmente recomendable en Windows, donde los directorios de una ruta suelen presentarse divididos por ``barras invertidas''. Por ejemplo, el directorio de trabajo podría ser \texttt{C:\\julia}. Pero la expresión \code{cd("C:\\julia")} no daría el resultado esperado, porque la barra invertida se interpreta como inicio de una ``secuencia de escape'' para caracteres no imprimibles. Para que funcionase, habría que escribir \code{cd("C:/julia")} o \code{cd("C:\\\\julia")}. La función \code{clipboard} ahorra este tipo de problemas.%
+  }
+  \item Introducir la ruta completa del archivo de código en la llamada a \code{include}. Ésta se puede escribir literalmente, o si el directorio que contiene el archivo está definido en una variable (supongamos que esta variable se llama \code{dir_include}, la ruta se puede componer con la función \code{joinpath}. Es decir, la expresión anterior sería \code{include(joinpath(dir_include, "calc_diasemana.jl"))}. También en este caso se podría utilizar \code{clipboard} para identificar el directorio destino a través del portapapeles.
 \end{enumerate}
 
-Una vez se ha conseguido cargar el archivo que define la función,
-ésta ya se puede usar para obtener un resultado de verdad. Por ejemplo,
-para conocer en qué día de la semana cayó el San Valentín de 2012:
+Una vez se ha conseguido cargar el archivo que define la función, ésta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó el San Valentín de 2012:
 
 julia> gauss_diasemana(14, 2, 2012)
 "martes"
 
-Lo que se hace <<en un día cualquiera>> usando Julia es esencialmente
-este modelo de rutina, con funciones más complicadas y muchas más
-operaciones interactivas, explorando resultados, corrigiendo argumentos
-y repitiendo operaciones, claro está.
+Lo que se hace ``en un día cualquiera'' usando Julia es esencialmente este modelo de rutina, con funciones más complicadas y muchas más operaciones interactivas, explorando resultados, corrigiendo argumentos y repitiendo operaciones, claro está.
 
 Ayuda: help, documentación...
 
 \subsection{Reglas sintácticas}
 
-La sintaxis de los lenguajes de programación implica una multitud
-de reglas, la mayoría de las cuales en realidad no es necesario explicar,
-ya que son reglas de escritura lógicas e intuitivas, o se desprenden
-directamente de la lectura de ejemplos. Sin embargo, hay unos pocos
-detalles que pueden resultar menos claros y conviene mencionar.
+La sintaxis de los lenguajes de programación implica una multitud de reglas, la mayoría de las cuales en realidad no es necesario explicar, ya que son reglas de escritura lógicas e intuitivas, o se desprenden directamente de la lectura de ejemplos. Sin embargo, hay unos pocos detalles que pueden resultar menos claros y conviene mencionar.
 
-Uno de estos detalles es el tipo de nombres permitidos para las variables
-y funciones. Las reglas son básicamente las habituales: pueden
-estar formados por cualquier combinación de letras y números, más
-guiones bajos, exceptuando nombres que comiencen por números y las palabras
-clave del lenguaje (como \code{for}, \code{if}, \code{end},
-etc.). Además, también se admiten nombres con caracteres Unicode más
-allá del ASCII básico (letras acentuadas, griegas, etc.), así como
-el signo de exclamación (\code{!}) en posición no inicial, aunque
-conviene usarlos con mesura: emplear caracteres extendidos aumenta el riesgo
-de problemas de portabilidad de los programas, y la exclamación se
-suele resevar para el nombre de cierto tipo de funciones (las que
-modifican sus argumentos de entrada).
+Uno de estos detalles es el tipo de nombres permitidos para las variables y funciones. Las reglas son básicamente las habituales: pueden estar formados por cualquier combinación de letras y números, más guiones bajos, exceptuando nombres que comiencen por números y las palabras clave del lenguaje (como \code{for}, \code{if}, \code{end}, etc.). Además, también se admiten nombres con caracteres Unicode más allá del ASCII básico (letras acentuadas, griegas, etc.), así como el signo de exclamación (\code{!}) en posición no inicial, aunque conviene usarlos con mesura: emplear caracteres extendidos aumenta el riesgo de problemas de portabilidad de los programas, y la exclamación se suele resevar para el nombre de cierto tipo de funciones (las que modifican sus argumentos de entrada).
 
-Hay seis constantes predefinidas que se pueden
-sobreescribir, pero conviene evitarlo (si se han usado antes en la sesión
-de Julia, aparecerá una advertencia al asignarles cualquier valor). Cuatro
-de ellas tienen dos nombres (tres con letras griegas), lo
-cual da más margen para reutilizar sus nombres:
+Hay seis constantes predefinidas que se pueden sobreescribir, pero conviene evitarlo (si se han usado antes en la sesión de Julia, aparecerá una advertencia al asignarles cualquier valor). Cuatro de ellas tienen dos nombres (tres con letras griegas), lo cual da más margen para reutilizar sus nombres:
 
 \begin{itemize}
   \item \code{pi}, \code{$\pi$}: el número pi.
@@ -284,31 +124,14 @@ cual da más margen para reutilizar sus nombres:
   \item \code{im}: la unidad imaginaria.
 \end{itemize}
 
-Los espacios entre nombres de variables, funciones, etc.
-son normalmente irrelevantes: siempre que haya algun símbolo delimitador
-(operadores matemáticos, signos de puntuación, paréntesis\ldots) pueden
-usarse uno, varios o ningún espacio entre ellos, o al principio de la línea.
-El uso de los espacio responde más a una cuestión de estilo que a la
-sintaxis. Por ejemplo, los distintos bloques de código (funciones,
-bucles, etc.) suelen sangrarse con un número de espacios en función
-del nivel de anidamiento (véase la función \code{gauss_diasemana} y el
-\code{if} anidado en ella), pero esto se hace para mejorar la legibilidad, no
-por necesidad (al contrario que en Python). Hay, sin embargo,
-dos excepciones.
+Los espacios entre nombres de variables, funciones, etc. son normalmente irrelevantes: siempre que haya algun símbolo delimitador (operadores matemáticos, signos de puntuación, paréntesis\ldots) pueden usarse uno, varios o ningún espacio entre ellos, o al principio de la línea. El uso de los espacio responde más a una cuestión de estilo que a la sintaxis. Por ejemplo, los distintos bloques de código (funciones, bucles, etc.) suelen sangrarse con un número de espacios en función del nivel de anidamiento (véase la función \code{gauss_diasemana} y el \code{if} anidado en ella), pero esto se hace para mejorar la legibilidad, no por necesidad (al contrario que en Python). Hay, sin embargo, dos excepciones.
 
-Una de ellas es el paréntesis inicial de la llamada a <<macros>>.
-A nivel de usuario una macro no resulta muy
-distinta a una función cualquiera, salvo en que el nombre empieza por
-la arroba (\code{@}), y en este detalle: el paréntesis ha de
-seguir al nombre de las macros sin ningún espacio intermedio
-(esta restricción no aplica a las funciones). Por ejemplo, para
-la macro \code{@printf} (usada para presentar valores en cadenas de texto con
-un formato específico):
+Una de ellas es el paréntesis inicial de la llamada a ``macros''. A nivel de usuario una macro no resulta muy distinta a una función cualquiera, salvo en que el nombre empieza por la arroba (\code{@}), y en este detalle: el paréntesis ha de seguir al nombre de las macros sin ningún espacio intermedio (esta restricción no aplica a las funciones). Por ejemplo, para la macro \code{@printf} (usada para presentar valores en cadenas de texto con un formato específico):
 
 julia> # Correcto:
 julia> @printf("El numero pi es %.4f", pi)
 El numero pi es 3.1416
-julia> # Mal!
+julia> # ¡Mal!
 julia> @printf ("El numero pi es %.4f", pi)
 ERROR: first or second argument must be a format string
 
@@ -319,32 +142,12 @@ julia> # Esto también vale:
 julia> @printf "El numero pi es %.4f" pi
 El numero pi es 3.1416
 
-La otra excepción es la premultiplicación de variables por números literales.
-Como ya se ha dicho, el nombre de una variable no puede comenzar por
-un número, pero sí se puede \emph{añadir} un número ante el nombre
-de una variable, lo cual funciona como si esa variable se multiplicara
-por ese valor (como se hace muchas veces al escribir fórmulas textualmente).
-Por ejemplo:
+La otra excepción es la premultiplicación de variables por números literales. Como ya se ha dicho, el nombre de una variable no puede comenzar por un número, pero sí se puede \emph{añadir} un número ante el nombre de una variable, lo cual funciona como si esa variable se multiplicara por ese valor (como se hace muchas veces al escribir fórmulas textualmente). Por ejemplo:
 
 julia> 2pi # Equivale a 2*pi
 6.283185307179586
 
-Otro detalle importante es el uso del punto para distinguir
-números enteros y decimales. Para Julia el número \code{1}
-no es el mismo que \code{1.0}, aunque simbolicen el mismo valor.
-El primero es un número entero, cuya representación en la memoria
-del ordenador no es compatible con la de los números decimales,
-y para mayor eficiencia Julia usa procedimientos distintos para
-operar con cada tipo de número. En la mayoría de los casos
-el usuario puede pasar por alto esta distinción, ya que
-el procesador se encarga de hacer automáticamente las
-conversiones necesarias (normalmente transformando los números
-enteros a decimales). Sin embargo, en secciones posteriores,
-en particular al hablar de los \emph{arrays}, se verá que
-a veces hay que tener cuidado con estos detalles.
-Para definir un número explícitamente como decimal basta
-con incluir el punto; si su valor es entero no hace falta
-incluir los ceros a la derecha.
+Otro detalle importante es el uso del punto para distinguir números enteros y decimales. Para Julia el número \code{1} no es el mismo que \code{1.0}, aunque simbolicen el mismo valor. El primero es un número entero, cuya representación en la memoria del ordenador no es compatible con la de los números decimales, y para mayor eficiencia Julia usa procedimientos distintos para operar con cada tipo de número. En la mayoría de los casos el usuario puede pasar por alto esta distinción, ya que el procesador se encarga de hacer automáticamente las conversiones necesarias (normalmente transformando los números enteros a decimales). Sin embargo, en secciones posteriores, en particular al hablar de los \emph{arrays}, se verá que a veces hay que tener cuidado con estos detalles. Para definir un número explícitamente como decimal basta con incluir el punto; si su valor es entero no hace falta incluir los ceros a la derecha.
 
 julia> # Los enteros no son "iguales" a los decimales, aunque valen lo mismo
 julia> 1 == 1.0
@@ -357,27 +160,13 @@ true
 julia> isequal(0.1, .1)
 true
 
-Finalmente, cabe mencionar el uso opcional del punto y coma (\code{;})
-al final de las expresiones. Normalmente cada expresión de Julia se
-termina con un salto de línea, pero puede usarse un punto y coma en
-su lugar, lo cual tiene dos efectos. Por un lado, es posible añadir
-otra expresión tras el punto y coma en la misma línea. Por ejemplo:
+Finalmente, cabe mencionar el uso opcional del punto y coma (\code{;}) al final de las expresiones. Normalmente cada expresión de Julia se termina con un salto de línea, pero puede usarse un punto y coma en su lugar, lo cual tiene dos efectos. Por un lado, es posible añadir otra expresión tras el punto y coma en la misma línea. Por ejemplo:
 
 julia> a = 1; b = 2
 
-Por otro lado, si se está trabajando en modo interactivo y
-no se añade ninguna otra expresión tras el punto y coma
-antes del salto de línea, no se presenta ningún resultado en pantalla.
-Este efecto no siempre es apreciable, ya que el procesador de Julia
-es por sí mismo bastante parco a la hora de presentar resultados.
-De hecho, \emph{nunca} presenta los resultados de las expresiones
-contenidas dentro de un bloque de código, independientemente de si
-llevan o no punto y coma al final.
+Por otro lado, si se está trabajando en modo interactivo y no se añade ninguna otra expresión tras el punto y coma antes del salto de línea, no se presenta ningún resultado en pantalla. Este efecto no siempre es apreciable, ya que el procesador de Julia es por sí mismo bastante parco a la hora de presentar resultados. De hecho, \emph{nunca} presenta los resultados de las expresiones contenidas dentro de un bloque de código, independientemente de si llevan o no punto y coma al final.
 
-En ocasiones esta última regla puede parecer confusa. Por ejemplo,
-considérese el siguiente bloque de código (delimitado por \code{begin}
-y \code{end} para forzar el agrupamiento de todas las líneas en un
-bloque):
+En ocasiones esta última regla puede parecer confusa. Por ejemplo, considérese el siguiente bloque de código (delimitado por \code{begin} y \code{end} para forzar el agrupamiento de todas las líneas en un bloque):
 
 begin
   x = 1
@@ -385,115 +174,51 @@ begin
   z = 3
 end
 
-Si se prueba a escribir y ejecutar el bloque en modo interactivo,
-se verá en pantalla el resultado de la última línea (\code{3}),
-pero no el de las demás. Sin embargo esto no tiene nada que ver
-con el hecho de que ésa (o las otras líneas) lleven o no punto y coma.
-De hecho, ocurriría lo mismo si se añade el punto y coma a la tercera
-línea o cualquiera de las demás.
+Si se prueba a escribir y ejecutar el bloque en modo interactivo, se verá en pantalla el resultado de la última línea (\code{3}), pero no el de las demás. Sin embargo esto no tiene nada que ver con el hecho de que ésa (o las otras líneas) lleven o no punto y coma. De hecho, ocurriría lo mismo si se añade el punto y coma a la tercera línea o cualquiera de las demás.
 
-¿Por qué aparece entonces el \code{3} en pantalla? La respuesta es
-que el bloque delimitado por \code{begin}/\code{end} es también
-una expresión de Julia (una expresión compuesta), cuyo resultado
-es el de la última línea del código que contiene. Lo que se muestra
-en pantalla es por tanto el resultado del bloque completo.
-La prueba es que si se añade el punto y coma al final del mismo,
-tras la palabra \code{end}, ya no se verá nada en pantalla.
+¿Por qué aparece entonces el \code{3} en pantalla? La respuesta es que el bloque delimitado por \code{begin}/\code{end} es también una expresión de Julia (una expresión compuesta), cuyo resultado es el de la última línea del código que contiene. Lo que se muestra en pantalla es por tanto el resultado del bloque completo. La prueba es que si se añade el punto y coma al final del mismo, tras la palabra \code{end}, ya no se verá nada en pantalla.
 
-Algo semejante ocurre al cargar un fichero de código con la
-función \code{include}. Esta función también devuelve un resultado,
-que es el de la última línea del archivo, y se verá reproducido en
-pantalla salvo que se añada el punto y coma en la llamada a \code{include}.
+Algo semejante ocurre al cargar un fichero de código con la función \code{include}. Esta función también devuelve un resultado, que es el de la última línea del archivo, y se verá reproducido en pantalla salvo que se añada el punto y coma en la llamada a \code{include}.
 
 
 \subsection{Complementos principales}
 
-La distribución básica de Julia es realmente <<básica>>, y carece
-de bastantes utilidades que son consideradas como muy importantes,
-incluso fundamentales, por la mayoría de los potenciales usuarios
-de un lenguaje de ese tipo, como representaciones gráficas de datos,
-editor de código, ayudas para la depuración de rutinas (\emph{debugging}),
-etc.
+La distribución básica de Julia es realmente ``básica'', y carece de bastantes utilidades que son consideradas como muy importantes, incluso fundamentales, por la mayoría de los potenciales usuarios de un lenguaje de ese tipo, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (\emph{debugging}), etc.
 
-Esta limitación está cubierta por el desarrollo coordinado (aunque
-independiente) de cientos de <<paquetes>> que contienen dichas utilidades.
-Como el propio proyecto Julia, todos los paquetes oficiales están
-publicados con el sistema de \href{http://git-scm.com/}{Git}. Julia
-mantiene un catálogo online de los paquetes oficiales, cuya lista
-se puede consultar con la expresión \code{Pkg.available()}.
+Esta limitación está cubierta por el desarrollo coordinado (aunque independiente) de cientos de ``paquetes'' que contienen dichas utilidades. Como el propio proyecto Julia, todos los paquetes oficiales están publicados con el sistema de \href{http://git-scm.com/}{Git}. Julia mantiene un catálogo online de los paquetes oficiales, cuya lista se puede consultar con la expresión \code{Pkg.available()}.
 
-Su instalación y desinstalación se controla desde dentro de Julia,
-mediante las funciones \code{Pkg.add} y \code{Pkg.rm}, respectivamente,
-que toman como argumento el nombre del paquete a instalar o desinstalar.
-Estas operaciones consisten esencialmente en <<clonar>> el paquete
-publicado en un lugar determinado del sistema, o borrarlo de ese sitio
-(definido en la variable \code{JULIA_PKGDIR} si existe, o por defecto
-en el directorio designado por la función \code{Pkg.dir}). Por ejemplo,
-el proceso para instalar el paquete \code{Winston} (el más básico
-para representaciones gráficas) podría ser como sigue:
+Su instalación y desinstalación se controla desde dentro de Julia, mediante las funciones \code{Pkg.add} y \code{Pkg.rm}, respectivamente, que toman como argumento el nombre del paquete a instalar o desinstalar. Estas operaciones consisten esencialmente en ``clonar'' el paquete publicado en un lugar determinado del sistema, o borrarlo de ese sitio (definido en la variable \code{JULIA_PKGDIR} si existe, o por defecto en el directorio designado por la función \code{Pkg.dir}). Por ejemplo, el proceso para instalar el paquete \code{Winston} (el más básico para representaciones gráficas) podría ser como sigue:
 
-julia> # Consultar~si~está~instalado~(en~cuyo~caso~no~hace~falta~instalarlo)
-
+julia> # Consultar si está instalado (en cuyo caso no hace falta instalarlo)
 julia> Pkg.installed("Winston")
 
-julia> # Si~devuelve "nothing"~(no~está~instalado):
-
+julia> # Si devuelve "nothing" (no está instalado):
 julia> Pkg.add("Winston")
 
-Esta operación sólo hay que hacerla una vez (actualizaciones aparte).
-Sin embargo, tener el paquete instalado no basta para poder usarlo.
-Para esto último hay que cargarlo explícitamente en cada sesión de
-trabajo, con la instrucción \code{using}:
+Esta operación sólo hay que hacerla una vez (actualizaciones aparte). Sin embargo, tener el paquete instalado no basta para poder usarlo. Para esto último hay que cargarlo explícitamente en cada sesión de trabajo, con la instrucción \code{using}:
 
 julia> using Winston
 
-A continuación se presenta una lista de algunos de los paquetes que
-pueden ser fundamentales para la mayoría de usuarios:
-\begin{itemize}
-\item Gráficos: \texttt{Winston} (el paquete más básico), \texttt{Gadfly}
-(semejante al ggplot2 de R), \texttt{PyPlot} basado en Matplotlib,
-depende de tener instalada esa librería de Python.
-\item Salvar y leer variables generadas entre sesiones de Julia: \texttt{HDF5}.
-\item Depuración de funciones (básico): \texttt{Debug}.
-\end{itemize}
-Por otro lado, la interfaz de línea de comandos es para muchos usuarios
-una herramienta de trabajo poco amigable, y las ``ayudas'' que proporciona
-(invocación de instrucciones anteriores usando las flechas de ``arriba''/``abajo'',
-combinaciones de teclas disponibles para acelerar las operaciones
-de corta-y-pega, etc.) son insuficientes. En respuesta a esa necesidad,
-hay entornos de programación más completos. Uno recomendado por los propios
-desarrolladores de Julia es \href{http://junolab.org/}{Juno}, basado en
-la plataforma \href{http://lighttable.com/}{Light Table}. Otra opción
-interesante es \href{http://forio.com/products/julia-studio/}{Julia Studio},
-con una interfaz clásica con consola interactiva y editor de código por separado.
+A continuación se presenta una lista de algunos de los paquetes que pueden ser fundamentales para la mayoría de usuarios:
 
-Otra interfaz avanzada, especialmente útil para documentar las sesiones
-de trabajo (combinando código, texto con formato y gráficas), es ``IJulia'',
-basada en IPython (una interfaz análoga para Python). Se puede iniciar desde
-dentro de Julia como un paquete más (requiere tener IPython y otros componentes
-asociados instalados en el sistema), o desde ``la nube'' en un navegador de
-Internet a través de \href{https://www.juliabox.org/}{JuliaBox}, sin
-instalar nada en el ordenador (ni siquiera Julia).
+\begin{itemize}
+  \item Gráficos: \texttt{Winston} (el paquete más básico), \texttt{Gadfly} (semejante al ggplot2 de R), \texttt{PyPlot} basado en Matplotlib, depende de tener instalada esa librería de Python.
+  \item Salvar y leer variables generadas entre sesiones de Julia: \texttt{HDF5}.
+  \item Depuración de funciones (básico): \texttt{Debug}.
+\end{itemize}
+
+Por otro lado, la interfaz de línea de comandos es para muchos usuarios una herramienta de trabajo poco amigable, y las ``ayudas'' que proporciona (invocación de instrucciones anteriores usando las flechas de ``arriba''/``abajo'', combinaciones de teclas disponibles para acelerar las operaciones de corta-y-pega, etc.) son insuficientes. En respuesta a esa necesidad, hay entornos de programación más completos. Uno recomendado por los propios desarrolladores de Julia es \href{http://junolab.org/}{Juno}, basado en la plataforma \href{http://lighttable.com/}{Light Table}. Otra opción interesante es \href{http://forio.com/products/julia-studio/}{Julia Studio}, con una interfaz clásica con consola interactiva y editor de código por separado.
+
+Otra interfaz avanzada, especialmente útil para documentar las sesiones de trabajo (combinando código, texto con formato y gráficas), es ``IJulia'', basada en IPython (una interfaz análoga para Python). Se puede iniciar desde dentro de Julia como un paquete más (requiere tener IPython y otros componentes asociados instalados en el sistema), o desde ``la nube'' en un navegador de Internet a través de \href{https://www.juliabox.org/}{JuliaBox}, sin instalar nada en el ordenador (ni siquiera Julia).
 
 
 \section{Variables de tipo \emph{array}}
 
-Las variables pueden ser valores escalares, como en el ejemplo de
-la sección anterior, o también series organizadas de valores (\emph{arrays}),
-que pueden tener varias dimensiones (matrices o hipermatrices, que
-formalmente reciben el nombre de \emph{multi-dimensional arrays}).
-Su definición y uso no es uno de los aspectos más sencillos del lenguaje,
-y de hecho acarrea bastantes complicaciones, pero conviene introducirlos
-en este punto ya que hay muchos otros conceptos que se entienden mejor
-habiendo conocido lo que son y cómo son los \emph{arrays}, o incluso
-no se pueden entender de otra manera. Además, los \emph{arrays} son
-un elemento fundamental para la mayoría de cálculos numéricos, por
-lo que tiene doble sentido hablar de ellos desde un principio.
+Las variables pueden ser valores escalares, como en el ejemplo de la sección anterior, o también series organizadas de valores (\emph{arrays}), que pueden tener varias dimensiones (matrices o hipermatrices, que formalmente reciben el nombre de \emph{multi-dimensional arrays}). Su definición y uso no es uno de los aspectos más sencillos del lenguaje, y de hecho acarrea bastantes complicaciones, pero conviene introducirlos en este punto ya que hay muchos otros conceptos que se entienden mejor habiendo conocido lo que son y cómo son los \emph{arrays}, o incluso no se pueden entender de otra manera. Además, los \emph{arrays} son un elemento fundamental para la mayoría de cálculos numéricos, por lo que tiene doble sentido hablar de ellos desde un principio.
 
 Creación de \emph{arrays}
 
-Un \emph{array} se define entre corchetes, con cada valor individual
-separado por comas:
+Un \emph{array} se define entre corchetes, con cada valor individual separado por comas:
 
 julia> primos = [1,2,3,5,7,11]
 6-element Array{Int32,1}:
@@ -504,12 +229,7 @@ julia> primos = [1,2,3,5,7,11]
  7
  11
 
-Como se comprueba en este ejemplo, los \emph{arrays} unidimensionales
-son equivalentes a <<vectores columna>>. Por lo tanto, en la práctica
-la coma puede sustituirse por el punto y coma (\codet{;}), que
-se utiliza como forma abreviada de la función \code{vcat} (<<concatenación
-vertical>>). Pero no es legal combinar la coma y el punto y coma
-de forma indiscriminada:
+Como se comprueba en este ejemplo, los \emph{arrays} unidimensionales son equivalentes a ``vectores columna''. Por lo tanto, en la práctica la coma puede sustituirse por el punto y coma (\codet{;}), que se utiliza como forma abreviada de la función \code{vcat} (``concatenación vertical''). Pero no es legal combinar la coma y el punto y coma de forma indiscriminada:
 
 julia> # Comparar definición con puntos y comas
 julia> primos == [1;2;3;5;7;11]
@@ -519,8 +239,7 @@ julia> # Sintaxis errónea
 julia> [1,2;3]
 ERROR: syntax: unexpected semicolon in array expression
 
-En matrices de más de una dimensión, las columnas se concatenan horizontalmente
-mediante la función \code{hcat}, o más compactamente mediante espacios:
+En matrices de más de una dimensión, las columnas se concatenan horizontalmente mediante la función \code{hcat}, o más compactamente mediante espacios:
 
 julia> # Equivale a mat = hcat([1,2,3], [10,20,30], [0.1,0.2,0.3])
 julia> mat = [[1,2,3] [10,20,30] [0.1,0.2,0.3]]
@@ -529,11 +248,7 @@ julia> mat = [[1,2,3] [10,20,30] [0.1,0.2,0.3]]
  2.0 20.0 0.2
  3.0 30.0 0.3
 
-Por otro lado, para construir matrices siguiendo la habitual definición
-<<línea a línea>>, los valores de cada línea se separan con espacios,
-y las líneas se separan entre sí mediante el punto y coma (también
-se puede usar la función \code{hvcat}, especificando cuántas columnas
-tiene cada línea):
+Por otro lado, para construir matrices siguiendo la habitual definición ``línea a línea'', los valores de cada línea se separan con espacios, y las líneas se separan entre sí mediante el punto y coma (también se puede usar la función \code{hvcat}, especificando cuántas columnas tiene cada línea):
 
 julia> # Equivale a mat = hvcat(3, 1, 10, 0.1, 2, 20, 0.2, 3, 30, 0.3)
 julia> mat = [1 10 0.1; 2 20 0.2; 3 30 0.3]
@@ -542,20 +257,11 @@ julia> mat = [1 10 0.1; 2 20 0.2; 3 30 0.3]
  2.0 20.0 0.2
  3.0 30.0 0.3
 
-Otras operaciones útiles para la construcción de matrices son la transposición
-(con la función \code{transpose} o el operador apóstrofe \code{'}),
-la función \code{cat}, que se utiliza de forma general para concatenar
-series o matrices en cualquier dimensión, más allá de las dos primeras
-(filas o columnas), y la función \code{reshape}, para reorganizar
-las dimensiones de un \emph{array}.
+Otras operaciones útiles para la construcción de matrices son la transposición (con la función \code{transpose} o el operador apóstrofe \code{'}), la función \code{cat}, que se utiliza de forma general para concatenar series o matrices en cualquier dimensión, más allá de las dos primeras (filas o columnas), y la función \code{reshape}, para reorganizar las dimensiones de un \emph{array}.
 
-Indexación y manipulación. Variables de tipo <<rango>>
+Indexación y manipulación. Variables de tipo ``rango''
 
-Para leer o modificar un valor de un \emph{array}, se indexa la posición
-seleccionar entre corchetes(\code{[]}), siguiendo el orden fila-columna-etc.
-(la primera posición se indica con el número 1). Si sólo se utiliza
-un índice de posición, hay que tener en cuenta que los valores están
-internamente ordenados por columnas:
+Para leer o modificar un valor de un \emph{array}, se indexa la posición seleccionar entre corchetes(\code{[]}), siguiendo el orden fila-columna-etc. (la primera posición se indica con el número 1). Si sólo se utiliza un índice de posición, hay que tener en cuenta que los valores están internamente ordenados por columnas:
 
 julia> # Cuarto número primo:
 julia> primos[4]
@@ -569,10 +275,7 @@ julia> # O lo que es lo mismo, primer valor tras la primera columna:
 julia> mat[3 + 1]
 10
 
-Se pueden utilizar vectores de índices, para seleccionar varios valores
-o combinaciones de filas y columnas en la misma operación. Por ejemplo,
-para intercambiar la segunda y tercera filas de \code{mat} (completas,
-es decir los valores de las tres columnas para esas dos filas):
+Se pueden utilizar vectores de índices, para seleccionar varios valores o combinaciones de filas y columnas en la misma operación. Por ejemplo, para intercambiar la segunda y tercera filas de \code{mat} (completas, es decir los valores de las tres columnas para esas dos filas):
 
 julia> # Véase que los índices de las filas se invierten al reasignarlos:
 julia> mat[[2,3],[1,2,3]] = mat[[3,2],[1,2,3]];
@@ -582,23 +285,12 @@ julia> mat
  3 30 0.3
  2 20 0.2
 
-Estos conjuntos de índices se pueden escribir de forma más cómoda
-a través de <<rangos>> (\emph{ranges}), un tipo especial de variable
-que representa una serie aritmética acotada. Los rangos se definen
-a través de tres valores: el primero y último de la serie (\code{a}
-y \code{b}, respectivamente), más el <<paso>> o diferencia entre
-dos números consecutivos (\code{s}), con la sintaxis \code{a:s:b}.
-Por ejemplo, la serie de números impares entre 1 y 10:
+Estos conjuntos de índices se pueden escribir de forma más cómoda a través de ``rangos'' (\emph{ranges}), un tipo especial de variable que representa una serie aritmética acotada. Los rangos se definen a través de tres valores: el primero y último de la serie (\code{a} y \code{b}, respectivamente), más el ``paso'' o diferencia entre dos números consecutivos (\code{s}), con la sintaxis \code{a:s:b}. Por ejemplo, la serie de números impares entre 1 y 10:
 
 julia> impares = 1:2:10
 1:2:9
 
-En este ejemplo el valor final asignado (10) no es compatible con
-la definición del valor inicial y el paso, por lo tanto se sustituye
-automáticamente por 9, el valor compatible más cercano (\emph{dentro}
-del rango entre los valores inicial y final asignados). El conjunto
-de valores representados se entiende más fácilmente si el resultado
-se convierte a un vector, usando el operador de los corchetes:
+En este ejemplo el valor final asignado (10) no es compatible con la definición del valor inicial y el paso, por lo tanto se sustituye automáticamente por 9, el valor compatible más cercano (\emph{dentro} del rango entre los valores inicial y final asignados). El conjunto de valores representados se entiende más fácilmente si el resultado se convierte a un vector, usando el operador de los corchetes:
 
 julia> [impares]
 5-element Array{Int32,1}:
@@ -608,14 +300,7 @@ julia> [impares]
  7
  9
 
-Los números de un rango no han de ser necesariamente enteros ni positivos,
-aunque es lo lógico cuando se quiere definir un conjunto de índices.
-Por otro lado, el paso \code{s} es un valor opcional, que por defecto
-se asume igual a 1. Para construir una serie ordenada de mayor a menor,
-además de definir los valores inicial y final en el orden adecuado,
-se ha de definir un paso negativo. Olvidar este detalle hace que la
-serie creada sea vacía. Por ejemplo, para una <<cuenta atrás>>
-de 5 a 1 (convertida a vector para más claridad):
+Los números de un rango no han de ser necesariamente enteros ni positivos, aunque es lo lógico cuando se quiere definir un conjunto de índices. Por otro lado, el paso \code{s} es un valor opcional, que por defecto se asume igual a 1. Para construir una serie ordenada de mayor a menor, además de definir los valores inicial y final en el orden adecuado, se ha de definir un paso negativo. Olvidar este detalle hace que la serie creada sea vacía. Por ejemplo, para una ``cuenta atrás'' de 5 a 1 (convertida a vector para más claridad):
 
 julia> [5:-1:1] # Correcto
 5-element Array{Int32,1}:
@@ -628,11 +313,7 @@ julia> [5:-1:1] # Correcto
 julia> [5:1] # Serie vacía
 0-element Array{Int32,1}:
 
-Algunos trucos útiles con rangos cuando se usan como índices son:
-la palabra clave \code{end} hace referencia a la última posición/fila/columna
-indexable en el \emph{array} manipulado; y los dos puntos aislados
-(\code{:}) hacen referencia a <<todas>> las posiciones, filas
-o columnas.
+Algunos trucos útiles con rangos cuando se usan como índices son: la palabra clave \code{end} hace referencia a la última posición/fila/columna indexable en el \emph{array} manipulado; y los dos puntos aislados (\code{:}) hacen referencia a ``todas'' las posiciones, filas o columnas.
 
 julia> # Serie de números primos al revés:
 julia> primos[end:-1:1]
@@ -652,28 +333,13 @@ julia> mat
  1 10 0.1
  2 20 0.2
 
-Dificultades de los \emph{arrays}. 1: <<mutabilidad>>
+Dificultades de los \emph{arrays}. 1: ``mutabilidad''
 
-Es importante tener en cuenta que los \emph{arrays} en Julia no son
-sólo agrupaciones de valores para manejarlos de forma conjunta. Son
-un tipo de variable diferente a los valores escalares, que muestra
-unos comportamientos muy distintos. Para empezar, si \code{a} es
-un \emph{array} (de cualesquiera dimensiones), el propio símbolo \code{a}
-no hace referencia a los valores contenidos (que se identifican individualmente
-como \code{a[i]}), sino a la estructura de memoria que los contiene.
-Esto resultará familiar a los programadores que conozcan C, y como
-en ese lenguaje tiene que ver con la eficiencia a la hora de manipular
-los datos.
+Es importante tener en cuenta que los \emph{arrays} en Julia no son sólo agrupaciones de valores para manejarlos de forma conjunta. Son un tipo de variable diferente a los valores escalares, que muestra unos comportamientos muy distintos. Para empezar, si \code{a} es un \emph{array} (de cualesquiera dimensiones), el propio símbolo \code{a} no hace referencia a los valores contenidos (que se identifican individualmente como \code{a[i]}), sino a la estructura de memoria que los contiene. Esto resultará familiar a los programadores que conozcan C, y como en ese lenguaje tiene que ver con la eficiencia a la hora de manipular los datos.
 
-En la práctica este aspecto afecta sobre todo al resultado de las
-asignaciones, y hay que tenerlo muy encuenta para evitar cambios inesperados
-en las variables.
+En la práctica este aspecto afecta sobre todo al resultado de las asignaciones, y hay que tenerlo muy encuenta para evitar cambios inesperados en las variables.
 
-En particular, \code{b = a} significa que \text{b} será el mismo
-\emph{array} que \code{a}, no una copia de sus contenidos, es decir
-que cualquier cambio en los valores de \code{a} se reflejarán también
-en \code{b}, y viceversa, salvo que uno de los dos \emph{arrays}
-se haya reasignado antes.
+En particular, \code{b = a} significa que \text{b} será el mismo \emph{array} que \code{a}, no una copia de sus contenidos, es decir que cualquier cambio en los valores de \code{a} se reflejarán también en \code{b}, y viceversa, salvo que uno de los dos \emph{arrays} se haya reasignado antes.
 
 julia> # sa y sb son una secuencia de 1 a 3 (la misma secuencia)
 julia> sa = sb = [1:3]
@@ -690,9 +356,7 @@ julia> sb 3-element
 Array{Int32,1}:
  0 2 3
 
-Este comportamiento se puede evitar definiendo los \emph{arrays} explícitamente
-como ``copias'' de otros. La forma más concisa es haciendo referencia
-a todos los valores individuales (con \code{[:]}).
+Este comportamiento se puede evitar definiendo los \emph{arrays} explícitamente como ``copias'' de otros. La forma más concisa es haciendo referencia a todos los valores individuales (con \code{[:]}).
 
 julia> # sa se redefine como un array que contiene "todos los valores de sb"
 julia> sa = sb[:]
@@ -713,67 +377,58 @@ julia> sb
 
 Dificultades de los \emph{arrays}. 2: Restricciones de tipo y tamaño.
 
-Además, el tipo de datos y las dimensiones de un \emph{array} no se
-pueden modificar (aunque sí se le puede reasignar un conjunto de datos
-nuevo, con otro tipo de datos u otro tamaño). La restricción sobre
-los tipos de datos puede causar ciertos problemas, ya que los números
-pueden codificarse de varias maneras, y puede crearse de forma accidental
-un \emph{array} con un tipo distinto del que se realmente se pretende
-utilizar. Por eso, al presentar un \emph{array} en pantalla siempre
-se muestra el tipo de datos y las dimensiones asociadas; en los ejemplos
-anteriores se han usado los tipos \code{Int32} (enteros de 32 bits)
-y \code{Float64} (números decimales de doble precisión --- 64 bits
----). Éstos son los tipos por defecto creados en un sistema operativo
-de 32 bits (en uno de 64 bits los enteros serían \code{Int64}, aunque
-los decimales serían iguales), según los valores asignados en la creación.
-También se puede consultar el tipo de una variable (\emph{array} u
-otro tipo) con la función \code{typeof}.
+Además, el tipo de datos y las dimensiones de un \emph{array} no se pueden modificar (aunque sí se le puede reasignar un conjunto de datos nuevo, con otro tipo de datos u otro tamaño). La restricción sobre los tipos de datos puede causar ciertos problemas, ya que los números pueden codificarse de varias maneras, y puede crearse de forma accidental un \emph{array} con un tipo distinto del que se realmente se pretende utilizar. Por eso, al presentar un \emph{array} en pantalla siempre se muestra el tipo de datos y las dimensiones asociadas; en los ejemplos anteriores se han usado los tipos \code{Int32} (enteros de 32 bits) y \code{Float64} (números decimales de doble precisión --- 64 bits ---). Éstos son los tipos por defecto creados en un sistema operativo de 32 bits (en uno de 64 bits los enteros serían \code{Int64}, aunque los decimales serían iguales), según los valores asignados en la creación. También se puede consultar el tipo de una variable (\emph{array} u otro tipo) con la función \code{typeof}.
 
-El problema mencionado se puede ejemplificar con los \emph{arrays}
-\code{sa} y \code{sb}, que se habían definido a partir de secuencias
-de números enteros, y por lo tanto son \emph{arrays} del tipo \code{Int32}.
-Esto significa que asignar un valor decimal a un elemento sería ilegal:
+El problema mencionado se puede ejemplificar con los \emph{arrays} \code{sa} y \code{sb}, que se habían definido a partir de secuencias de números enteros, y por lo tanto son \emph{arrays} del tipo \code{Int32}. Esto significa que asignar un valor decimal a un elemento sería ilegal:
 
 julia> sa[1] = 0.5
 ERROR: InexactError()
 
-Si se hubiera querido crear una secuencia de 1 a 3 con números decimales,
-habría varias alternativas:
+Si se hubiera querido crear una secuencia de 1 a 3 con números decimales, habría varias alternativas:
 
-julia> # 1. Crear primero el vector declarando el tipo de datos y el tamaño
+julia> # 1. Declarar el tipo de datos del vector en su creación
+julia> sf = (Float64)[1:3]
+julia> typeof(sf)
+Array{Float64,1}
+
+julia> # 2. Crear primero el vector declarando el tipo de datos y el tamaño
 julia> sf = Array(Float64, 3);
 julia> sf[:] = [1:3];
 julia> typeof(sf)
 Array{Float64,1}
 
-julia> # 2. Convertir la secuencia de enteros explícitamente a tipo float
+julia> # 3. Convertir la secuencia de enteros explícitamente a tipo float
 julia> sf = float([1:3]);
 julia> typeof(sf)
 Array{Float64,1}
 
-julia> # 3. Introducir números explícitamente decimales al definir la secuencia
+julia> # 4. Introducir números explícitamente decimales al definir la secuencia
 julia> # (vale con que un sólo valor sea decimal)
 julia> sf = [1.0:3]
 julia> typeof(sf)
 Array{Float64,1}
 
-El truco de la última opción consiste en aprovechar la ``promoción''
-automática que realiza Julia al operar con una combinación de números
-enteros y decimales, por virtud de la cual los enteros se tratan como
-si fueran decimales.
+El truco de la última opción consiste en aprovechar la ``promoción'' automática que realiza Julia al operar con una combinación de números enteros y decimales, por virtud de la cual los enteros se tratan como si fueran decimales.
 
-Julia admite muchos otros tipos de datos; los básicos son enteros
-con o sin signo y números decimales de distintas precisiones, pero
-hay muchas más abstracciones, incluyendo números racionales y complejos.
-Las variables escalares también se clasifican según dichos tipos,
-aunque en su caso la asignación no muestra estos problemas. Puede
-consultarse el manual de Julia para un catálogo completo de los tipos
-numéricos básicos y las reglas de promoción entre ellos.
+Julia admite muchos otros tipos de datos; los básicos son enteros con o sin signo y números decimales de distintas precisiones, pero hay muchas más abstracciones, incluyendo números racionales y complejos. Las variables escalares también se clasifican según dichos tipos, aunque en su caso la asignación no muestra estos problemas. Puede consultarse el manual de Julia para un catálogo completo de los tipos numéricos básicos y las reglas de promoción entre ellos.
 
-El otro error típico a la hora de manipular \emph{arrays} consiste
-en intentar la lectura o modificación de un valor más allá de su tamaño
-predefinido, aunque el \emph{array} siempre se puede cambiar por otro
-nuevo de mayor tamaño:
+Por otro lado, una forma alternativa de evitar problemas con los tipos de datos es emplear \emph{arrays} que admitan valores de \emph{cualquier} tipo ---en realidad valores del ``supertipo'' \code{Any}, que incluye todos los tipos que puedan existir en Julia---. La forma más concisa de hacer esto es cambiar los corchetes por llaves en la definición del \emph{array}:
+
+julia> {1,2,3}
+3-element Array{Any,1}:
+ 1
+ 2
+ 3
+
+Para crear una secuencia de números de tipo \code{Any}, el truco de expandir un rango no es tan inmediato, ya que Julia interpretaría que el rango es en sí mismo un posible elemento dentro de la categoría \code{Any}:
+
+julia> {1:3}
+1-element Array{Any,1}:
+ 1:3
+
+Este caso ilustra cómo no conviene abusar de los vectores de tipo \code{Any}, ya que además de que los programas son más eficientes cuanto más concretos son los tipos de las variables empleadas, ser demasiado tolerante con los tipos también aumenta la probabilidad de cometer errores que pasen inadvertidos.
+
+Vista ya la cuestión de las restricciones de tipo, el otro error típico a la hora de manipular \emph{arrays} consiste en intentar la lectura o modificación de un valor más allá de su tamaño predefinido, aunque el \emph{array} siempre se puede cambiar por otro nuevo de mayor tamaño:
 
 julia> # Así no se puede añadir un cuarto valor a sa:
 julia> sa[4] = 4
@@ -784,51 +439,17 @@ julia> sa = [sa, 4]
 4-element Array{Int32,1}:
  1 2 3 4
 
-Otra forma de ampliar \emph{arrays} es usar funciones como \code{append!},
-\code{prepend!}, \code{insert!}, \code{resize!}, etc. (el signo
-\code{!} en el nombre es una convención para indicar que la función
-modifica el argumento. Es típico crear \emph{arrays} que se van ampliando
-progresivamente en procesos iterativos, pero en la medida de lo posible
-es recomendable definirlos en un primer momento con el tamaño necesario
-para contener todos los elementos que requiera, sobredimensionándolo
-si hace falta y ``recortándolos'' después si se quiere. Esto evita
-la creación de una nueva variable en cada iteración, que puede consumir
-más tiempo de procesado que las demás operaciones, y reduce potencialmente
-el coste computacional en varios órdenes de magnitud.
+Otra forma de ampliar \emph{arrays} es usar funciones como \code{append!}, \code{prepend!}, \code{insert!}, \code{resize!}, etc. (el signo \code{!} en el nombre es una convención para indicar que la función modifica el argumento. Es típico crear \emph{arrays} que se van ampliando progresivamente en procesos iterativos, pero en la medida de lo posible es recomendable definirlos en un primer momento con el tamaño necesario para contener todos los elementos que requiera, sobredimensionándolo si hace falta y ``recortándolos'' después si se quiere. Esto evita la creación de una nueva variable en cada iteración, que puede consumir más tiempo de procesado que las demás operaciones, y reduce potencialmente el coste computacional en varios órdenes de magnitud.
 
 Operaciones matriciales
 
-Un caso especial de los \emph{arrays} es de las matrices bidimensionales,
-que son un elemento fundamental del álgebra lineal. (En el resto de
-esta sección se hablará simplemente de ``matrices'' sobreentendiéndose
-el calificativo de ``bidimensional''). La relevancia de las matrices
-implica que hay una cantidad muy importante de operaciones matemáticas
-dirigidas a este tipo de variables, y que no son válidas para \emph{arrays}
-de más dimensiones.
+Un caso especial de los \emph{arrays} es de las matrices bidimensionales, que son un elemento fundamental del álgebra lineal. (En el resto de esta sección se hablará simplemente de ``matrices'' sobreentendiéndose el calificativo de ``bidimensional''). La relevancia de las matrices implica que hay una cantidad muy importante de operaciones matemáticas dirigidas a este tipo de variables, y que no son válidas para \emph{arrays} de más dimensiones.
 
-Por ejemplo, las operaciones de multiplicación y división en ambos
-sentidos (\code{*}, \code{/}, \code{\\}
-), así como la potenciación por un escalar (\code{^}) se interpretan como
-operaciones específicas para matrices. También pueden aplicarse a
-escalares o vectores unidimensionales, aunque esto se debe a que pueden
-considerarse matrices de tamaño $1\times{}1$ o de una sola columna,
-respectivamente.
+Por ejemplo, las operaciones de multiplicación y división en ambos sentidos (\code{*}, \code{/}, \code{\\} ), así como la potenciación por un escalar (\code{^}) se interpretan como operaciones específicas para matrices. También pueden aplicarse a escalares o vectores unidimensionales, aunque esto se debe a que pueden considerarse matrices de tamaño $1\times{}1$ o de una sola columna, respectivamente.
 
-Sin embargo, éstas operaciones también podrían querer aplicarse a
-cada elemento individual del \emph{array} (o \emph{arrays}) de entrada.
-Por ese motivo, existe una versión ``elemento-a-elemento'' de
-esos operadores, que se distinguen por un punto precedente (\code{.*},
-\code{./}, \code{.\\}).
+Sin embargo, éstas operaciones también podrían querer aplicarse a cada elemento individual del \emph{array} (o \emph{arrays}) de entrada. Por ese motivo, existe una versión ``elemento-a-elemento'' de esos operadores, que se distinguen por un punto precedente (\code{.*}, \code{./}, \code{.\\}).
 
-También existe esta versión para operadores de comparación (\code{.==},
-\code{.!=}, etc.), así como para  la suma y la resta (\code{.+},
-\code{.-}, respectivamente), aunque la definición matricial y elemento
-a elemento de estas dos últimas no tiene distinción. De hecho, las sumas y restas ``con
-punto'' y ``sin punto'' sirven igualmente para todo tipo de \emph{arrays}
-(si las dimensiones de los operandos son iguales). La principal diferencia
-consiste en que las versiones con punto hacen una expansión automática
-de los operandos (\emph{broadcasting}) si algunas dimensiones son
-unitarias. Por ejemplo:
+También existe esta versión para operadores de comparación (\code{.==}, \code{.!=}, etc.), así como para  la suma y la resta (\code{.+}, \code{.-}, respectivamente), aunque la definición matricial y elemento a elemento de estas dos últimas no tiene distinción. De hecho, las sumas y restas ``con punto'' y ``sin punto'' sirven igualmente para todo tipo de \emph{arrays} (si las dimensiones de los operandos son iguales). La principal diferencia consiste en que las versiones con punto hacen una expansión automática de los operandos (\emph{broadcasting}) si algunas dimensiones son unitarias. Por ejemplo:
 
 julia> # Filas con unidades distintas, columnas con decimales distintos
 julia> # Sólo se suma un vector columna más un vector fila
@@ -838,23 +459,11 @@ julia> [1,2,3] .+ [0.1 0.2 0.3]
  2.1 2.2 2.3
  3.1 3.2 3.3
 
-Este truco no tiene lugar en la suma ``sin punto'', que por otro
-lado es más rápida. Por lo tanto, si se busca seguridad ante errores
-de programación (evitar expansiones si por accidente se suman \emph{arrays}
-de dimensiones incoherentes) y eficiencia en el procesado, es preferible
-usar la versión sin punto. La expansión automática siempre puede forzarse
-de forma eficiente con la función \code{broadcast}.
+Este truco no tiene lugar en la suma ``sin punto'', que por otro lado es más rápida. Por lo tanto, si se busca seguridad ante errores de programación (evitar expansiones si por accidente se suman \emph{arrays} de dimensiones incoherentes) y eficiencia en el procesado, es preferible usar la versión sin punto. La expansión automática siempre puede forzarse de forma eficiente con la función \code{broadcast}.
 
-Para las funciones ``con nombre'' que tienen una definición matricial
-específica, como la exponencial, el criterio es el contrario: la función
-con el nombre ``normal'' (\code{exp}) hace la operación elemento
-a elemento cuando se aplica a cualquier tipo de \emph{array}; y se
-utiliza un nombre especial para la operación matricial (\code{expm}).
+Para las funciones ``con nombre'' que tienen una definición matricial específica, como la exponencial, el criterio es el contrario: la función con el nombre ``normal'' (\code{exp}) hace la operación elemento a elemento cuando se aplica a cualquier tipo de \emph{array}; y se utiliza un nombre especial para la operación matricial (\code{expm}).
 
-Muchas otras funciones (p.ej. las funciones trigonométricas) sólo
-tienen sentido en \emph{arrays} si se hacen elemento a elemento, y
-por lo tanto son válidas tal cual con el mismo nombre para \emph{arrays}
-y para escalares.
+Muchas otras funciones (p.ej. las funciones trigonométricas) sólo tienen sentido en \emph{arrays} si se hacen elemento a elemento, y por lo tanto son válidas tal cual con el mismo nombre para \emph{arrays} y para escalares.
 
 
 
@@ -863,54 +472,23 @@ Gráficos con Winston
 
 Instrucciones básicas
 
-Vistos algunos de los aspectos básicos del manejo de números y \emph{arrays},
-podemos abordar el tema de la representación gráfica de los datos. A menudo,
-cuando se hace un análisis de datos, lo primero que se desea es visualizarlos
-en un gráfico. Además, aprender a dibujar gráficos sencillos suele ser
-más satisfactorio, y da la sensación de poder hacer ``cosas útiles'' desde
-el principio, más que hacer operaciones numéricas de complejidad equivalente.
+Vistos algunos de los aspectos básicos del manejo de números y \emph{arrays}, podemos abordar el tema de la representación gráfica de los datos. A menudo, cuando se hace un análisis de datos, lo primero que se desea es visualizarlos en un gráfico. Además, aprender a dibujar gráficos sencillos suele ser más satisfactorio, y da la sensación de poder hacer ``cosas útiles'' desde el principio, más que hacer operaciones numéricas de complejidad equivalente.
 
-La distribución básica de Julia no ofrece utilidades gráficas, pero
-existen varios paquetes que permiten hacerlas. El más elemental, que
-utilizaremos aquí, es Winston (https://github.com/nolta/Winston.jl).%
-\footnote{Los usuarios de R, y en particular del paquete ggplot2, encontrarán
-también útil el paquete Gadfly (https://github.com/dcjones/Gadfly.jl),
-que permite hacer gráficos mucho más complejos utilizando una sintaxis
-semejante. Los que tengan Python y su módulo gráfico Matplotlib instalado
-en el ordenador, también pueden usarlo a través de Julia con el paquete
-PyPlot(https://github.com/stevengj/PyPlot.jl).}%
-Recordamos aquí que para instalar este paquete, la forma más sencilla
-es ejecutar la línea:
+La distribución básica de Julia no ofrece utilidades gráficas, pero existen varios paquetes que permiten hacerlas. El más elemental, que utilizaremos aquí, es Winston (https://github.com/nolta/Winston.jl).% \footnote{Los usuarios de R, y en particular del paquete ggplot2, encontrarán también útil el paquete Gadfly (https://github.com/dcjones/Gadfly.jl), que permite hacer gráficos mucho más complejos utilizando una sintaxis semejante. Los que tengan Python y su módulo gráfico Matplotlib instalado en el ordenador, también pueden usarlo a través de Julia con el paquete PyPlot(https://github.com/stevengj/PyPlot.jl).}% Recordamos aquí que para instalar este paquete, la forma más sencilla es ejecutar la línea:
 
 julia> Pkg.add("Winston")
 
-Esta operación se hace una sola vez, y al mismo tiempo que Winston, instalará
-(si no se tienen ya) los distintos paquetes de los que depende.
-Además, en cada sesión en la que se desee emplear esta herramienta
-habrá que ``cargar'' el paquete mediante la orden:
+Esta operación se hace una sola vez, y al mismo tiempo que Winston, instalará (si no se tienen ya) los distintos paquetes de los que depende. Además, en cada sesión en la que se desee emplear esta herramienta habrá que ``cargar'' el paquete mediante la orden:
 
 julia> using Winston
 
-La función principal es \code{plot}, que se utiliza de manera casi
-idéntica a la función del mismo nombre en otros lenguajes como Matlab o la
-biblioteca PyPlot de Python. Partamos de un ejemplo trivial [Ref. a figura]:
+La función principal es \code{plot}, que se utiliza de manera casi idéntica a la función del mismo nombre en otros lenguajes como Matlab o la biblioteca PyPlot de Python. Partamos de un ejemplo trivial [Ref. a figura]:
 
 julia> # Dibujar el coseno de x entre 0 y 3pi con 100 puntos
 julia> x = linspace(0, 3pi, 100)
 julia> plot(x, cos(y), "-or")
 
-El primer argumento (vector de puntos en el eje $X$) es opcional: si sólo
-se pasa un vector de datos, éstos se dispondrán como si el eje $X$ fuese
-\code{[1:length(y)]}. El tercer argumento (también opcional)
-es una cadena de texto que indica los atributos gráficos de la serie dibujada
-(por defecto una linea continua negra). En este caso, una línea continua
-(\code{'-'}), con puntos marcados como círculos (\code{'o'}),
-todo ello de color rojo (\code{'r'}). Estos atributos pueden consistir
-en tipos de linea (FigXX), marcas de puntos (FigXX), o colores (FigXX),
-y se pueden combinar en cualquier orden, con una excepción:
-\code{"-."} representa ``linea discontinua alternada con puntos'', mientras
-que \code{".-"} equivale a ``marcadores en forma de puntos'' + 
-``linea continua''.
+El primer argumento (vector de puntos en el eje $X$) es opcional: si sólo se pasa un vector de datos, éstos se dispondrán como si el eje $X$ fuese \code{[1:length(y)]}. El tercer argumento (también opcional) es una cadena de texto que indica los atributos gráficos de la serie dibujada (por defecto una linea continua negra). En este caso, una línea continua (\code{'-'}), con puntos marcados como círculos (\code{'o'}), todo ello de color rojo (\code{'r'}). Estos atributos pueden consistir en tipos de linea (FigXX), marcas de puntos (FigXX), o colores (FigXX), y se pueden combinar en cualquier orden, con una excepción: \code{"-."} representa ``linea discontinua alternada con puntos'', mientras que \code{".-"} equivale a ``marcadores en forma de puntos'' + ``linea continua''.
 
 
 p = FramedPlot()
@@ -959,61 +537,38 @@ add(p, c1, leg1, leg2, leg3)
 ``w``     white
 ``k``     black
 
-La función \code{plot}, además de representar el gráfico especificado
-en pantalla, crea en memoria un objeto de la clase \code{FramedPlot} con
-los contenidos del gráfico, que es el valor devuelto por la función.
-Es decir, que si hubiéramos escrito, por ejemplo:
+La función \code{plot}, además de representar el gráfico especificado en pantalla, crea en memoria un objeto de la clase \code{FramedPlot} con los contenidos del gráfico, que es el valor devuelto por la función. Es decir, que si hubiéramos escrito, por ejemplo:
 
 julia> p = plot(x, y, "-or")
 
-la variable \code{p} contendría los contenidos del gráfico en cuestión. 
-De este modo, si se cierra la ventana del gráfico o se cambia su contenido,
-éste se puede volver a mostrar invocando a esta variable.
+la variable \code{p} contendría los contenidos del gráfico en cuestión. De este modo, si se cierra la ventana del gráfico o se cambia su contenido, éste se puede volver a mostrar invocando a esta variable.
 
 
 Series de datos superpuestas
 
-Asignar un gráfico a una variable también sirve para añadirle nuevas
-series de datos u otros componentes. Si a la función \code{plot} le añadimos un
-primer argumento con el contenido de un gráfico anterior:
+Asignar un gráfico a una variable también sirve para añadirle nuevas series de datos u otros componentes. Si a la función \code{plot} le añadimos un primer argumento con el contenido de un gráfico anterior:
 
 julia> # Dibujar sobre el gráfico "p"
 julia> plot(p, x, cos(x))
 
-veremos una nueva linea dibujada sobre la anterior (figura XXX). Si no se
-hubiera especificado ese primer argumento, simplemente se habría creado
-un nuevo gráfico que sustituiría al anterior, en lugar de superponerse.
+veremos una nueva linea dibujada sobre la anterior (figura XXX). Si no se hubiera especificado ese primer argumento, simplemente se habría creado un nuevo gráfico que sustituiría al anterior, en lugar de superponerse.
 
-Esta forma de añadir componentes es especialmente útil si se trabaja
-con varios gráficos a al vez. Si sólo se trabaja con uno, basta con utilizar la
-función \code{oplot} (forma abreviada de \emph{overplot}), que funciona igual
-que \code{plot} pero siempre añade la serie de datos especificada al
-último gráfico que se haya creado.
+Esta forma de añadir componentes es especialmente útil si se trabaja con varios gráficos a al vez. Si sólo se trabaja con uno, basta con utilizar la función \code{oplot} (forma abreviada de \emph{overplot}), que funciona igual que \code{plot} pero siempre añade la serie de datos especificada al último gráfico que se haya creado.
 
-Otra opción es emplear la función \code{hold},
-que altera el comportamiento de \code{plot} en este aspecto:
+Otra opción es emplear la función \code{hold}, que altera el comportamiento de \code{plot} en este aspecto:
 
 julia> hold(false) # comportamiento por defecto de "plot"
 julia> hold(true)  # cambia "plot" para hacer lo mismo que "oplot"
 julia> hold()      # alterna ambos comportamientos de "plot"
 
-Alternativamente, se puede llamar a \code{plot} especificando múltiples
-series de datos, para que las represente superpuestas en un solo paso.
+Alternativamente, se puede llamar a \code{plot} especificando múltiples series de datos, para que las represente superpuestas en un solo paso.
 
 julia> # Esta instrucción también genera el gráfico de la figura XXX
 julia> plot(x, sin(x), "-or", x, cos(x) "k")
 
-Como se ve en el ejemplo, los grupos de argumentos (datos en el eje $X$,
-datos en el eje $Y$, y atributos visuales) se añaden secuencialmente. Los
-argumentos opcionales (eje $X$ y atributos) se pueden omitir si la
-secuencia resultante no es ambigua.
+Como se ve en el ejemplo, los grupos de argumentos (datos en el eje $X$, datos en el eje $Y$, y atributos visuales) se añaden secuencialmente. Los argumentos opcionales (eje $X$ y atributos) se pueden omitir si la secuencia resultante no es ambigua.
 
-Y también hay otra alternativa más sencilla en el caso de que las series
-de datos tengan la misma longitud: juntar los valores del eje $Y$ en una
-sola matriz, con cada serie en una columna. La función \code{plot}
-asigna a cada columna un color distinto por defecto, repitiéndose esta
-secuencia cada 8 columnas: (1) negro, (2) rojo, (3) verde, (4) azul,
-(5) naranja, (6) morado/índigo, (7) marrón, (8) violeta/púrpura.
+Y también hay otra alternativa más sencilla en el caso de que las series de datos tengan la misma longitud: juntar los valores del eje $Y$ en una sola matriz, con cada serie en una columna. La función \code{plot} asigna a cada columna un color distinto por defecto, repitiéndose esta secuencia cada 8 columnas: (1) negro, (2) rojo, (3) verde, (4) azul, (5) naranja, (6) morado/índigo, (7) marrón, (8) violeta/púrpura.
 
 julia> # seno en una línea negra, coseno en una línea roja
 julia> plot(x, [sin(x) cos(x)])
@@ -1021,50 +576,30 @@ julia> plot(x, [sin(x) cos(x)])
 
 Trabajar con múltiples figuras
 
-Para trabajar con más de un gráfico en pantalla, se deben abrir distintas
-figuras o ventanas gráficas.\footnote{%
-Esto es así al menos cuando se trabaja con la interfaz básica de Julia.
-Los distintos IDEs pueden cambiar la forma de visualizar los gráficos.}%
-Conviene tener clara la diferencia entre los conceptos de ``figura'' y
-``gráfico'' (en términos técnicos, \emph{Figure} y \emph{FramedPlot},
-respectivamente). El segundo es siempre un contenido de la primera,
-como se muestra en la figura XXX.
+Para trabajar con más de un gráfico en pantalla, se deben abrir distintas figuras o ventanas gráficas.%
+\footnote{%
+Esto es así al menos cuando se trabaja con la interfaz básica de Julia. Los distintos IDEs pueden cambiar la forma de visualizar los gráficos.%
+}
+Conviene tener clara la diferencia entre los conceptos de ``figura'' y ``gráfico'' (en términos técnicos, \emph{Figure} y \emph{FramedPlot}, respectivamente). El segundo es siempre un contenido de la primera, como se muestra en la figura XXX.
 
-Para crear una nueva figura se utiliza la función \code{figure} sin ningún
-argumento. Esta función devuelve un número entero que identifica a la figura
-mientras ésta se encuentre abierta. Además hará que esa figura sea la
-``activa'', es decir que que desde ese momento todas las operaciones gráficas
-se hagan sobre ella y sus contenidos.
+Para crear una nueva figura se utiliza la función \code{figure} sin ningún argumento. Esta función devuelve un número entero que identifica a la figura mientras ésta se encuentre abierta. Además hará que esa figura sea la ``activa'', es decir que que desde ese momento todas las operaciones gráficas se hagan sobre ella y sus contenidos.
 
 julia> # Crear una nueva figura y asignar su identificador a f
 julia> f = figure()
 
-Si posteriormente se crean otras figuras, se puede volver a activar una
-anterior, empleando este identificador como argumento de \code{figure}:
+Si posteriormente se crean otras figuras, se puede volver a activar una anterior, empleando este identificador como argumento de \code{figure}:
 
 julia> # f vuelve a ser la figura activa
 julia> figure(f)
 
-La operación complementaria de eliminar una figura creada se lleva a cabo
-con la función \code{closefig} (aparte de la posibilidad hacer ``click''
-sobre el botón para cerrar la figura, cuando se trabaja en modo interactivo):
+La operación complementaria de eliminar una figura creada se lleva a cabo con la función \code{closefig} (aparte de la posibilidad hacer ``click'' sobre el botón para cerrar la figura, cuando se trabaja en modo interactivo):
 
 julia> # Cerrar la figura f
 julia> closefig(f)
 
-Es importante mencionar que las figuras recién creadas están
-``vacías''; no contienen ningún gráfico, ni siquiera en blanco, hasta
-que se llama a la función \code{plot} o una equivalente. Esto significa que
-la función \code{oplot} no actuará sobre ellas. Y tampoco se puede utilizar
-el identificador de la figura como primer argumento de \code{plot}, ya que
-se trata de un objeto de distinto tipo. Si se quiere, para crear un gráfico
-en blanco se puede emplear a la función ``constructora'' \code{FramedPlot}.
+Es importante mencionar que las figuras recién creadas están ``vacías''; no contienen ningún gráfico, ni siquiera en blanco, hasta que se llama a la función \code{plot} o una equivalente. Esto significa que la función \code{oplot} no actuará sobre ellas. Y tampoco se puede utilizar el identificador de la figura como primer argumento de \code{plot}, ya que se trata de un objeto de distinto tipo. Si se quiere, para crear un gráfico en blanco se puede emplear a la función ``constructora'' \code{FramedPlot}.
 
-Por otro lado, si no hay ninguna figura abierta, las funciones como
-\code{plot}, \code{FramedPlot}, etc. la crean automáticamente, aunque
-no dan información sobre ella. Si hace falta, el identificador
-de la figura activa se puede recuperar con la función \code{gcf} ---sin
-argumentos---, cuyo nombre representa el acrónimo de \emph{get current figure}.
+Por otro lado, si no hay ninguna figura abierta, las funciones como \code{plot}, \code{FramedPlot}, etc. la crean automáticamente, aunque no dan información sobre ella. Si hace falta, el identificador de la figura activa se puede recuperar con la función \code{gcf} ---sin argumentos---, cuyo nombre representa el acrónimo de \emph{get current figure}.
 
 julia> # f identifica a la figura que contiene el gráfico p
 julia> p = plot(x, y)
@@ -1073,21 +608,9 @@ julia> f = gcf()
 
 Tablas de gráficos, decoraciones y otras complejidades
 
-Para mostrar de forma práctica otros aspectos de la composición de gráficos,
-a continuación se plantea un ejemplo algo más complejo, que incluye un par de
-rutinas habituales: la definición de ``decoraciones''
-como títulos, leyendas o etiquetas de los ejes, ajustar el rango de los ejes, y
-organizar una tabla de gráficos en la misma figura. Este ejemplo también
-sirve para ver el uso de algunas operaciones rutinarias en cálculos numéricos.
+Para mostrar de forma práctica otros aspectos de la composición de gráficos, a continuación se plantea un ejemplo algo más complejo, que incluye un par de rutinas habituales: la definición de ``decoraciones'' como títulos, leyendas o etiquetas de los ejes, ajustar el rango de los ejes, y organizar una tabla de gráficos en la misma figura. Este ejemplo también sirve para ver el uso de algunas operaciones rutinarias en cálculos numéricos.
 
-El ejemplo consiste en una composición de dos gráficos (figura XXXX):
-el gráfico superior muestra una señal de
-frecuencia modulada y amplitud amortiguada (línea negra), a la que se le ha
-añadido un error aleatorio (puntos grises), y se ha ajustado con una media
-ponderada móvil (línea roja). El aspecto más ``ruidoso'' de la señal ajustada en el
-tramo final se representa en forma de razón entre señal y ruido
-(\emph{signal-to-noise ratio}, SNR) en el panel inferior. El código para
-generar este gráfico es el siguiente:
+El ejemplo consiste en una composición de dos gráficos (figura XXXX): el gráfico superior muestra una señal de frecuencia modulada y amplitud amortiguada (línea negra), a la que se le ha añadido un error aleatorio (puntos grises), y se ha ajustado con una media ponderada móvil (línea roja). El aspecto más ``ruidoso'' de la señal ajustada en el tramo final se representa en forma de razón entre señal y ruido (\emph{signal-to-noise ratio}, SNR) en el panel inferior. El código para generar este gráfico es el siguiente:
 
 # x es la variable independiente
 x = linspace(0, 50pi^2, 1000)
@@ -1097,7 +620,7 @@ y = f+0.25randn(1000)
 # yfit = señal ajustada con una media ponderada móvil
 yfit = fill(NaN, 1000)
 b = [1, 2, 3, 2, 1]/9
-for t in 3:998
+for t = 3:998
   yfit[t] = sum(y[t-2:t+2] .* b)
 end
 # Signal-to-noise ratio
@@ -1105,7 +628,7 @@ end
 signal_pow = fill(NaN, 1000)
 noise_pow = fill(NaN, 1000)
 noise = yfit - f
-for t in 3:998
+for t = 3:998
   signal_pow[t] = sum((f[t-2:t+2] - mean(f[t-2:t+2])).^2)
   noise_pow[t] = sum((noise[t-2:t+2] - mean(noise[t-2:t+2])).^2)
 end
@@ -1125,107 +648,43 @@ grid(true)
 plottable
 savefig(plottable, "figura.png")
 
-Las primeras líneas de este ejemplo son las operaciones realizadas
-para obtener los datos del panel superior. Se usa la función \code{linspace}
-para crear un vector de 1000 puntos equiespaciados entre $0$ y $50\pi$,
-unas sencillas funciones matemáticas para la señal ideal, y la función
-\code{randn} para añadirle el ruido aleatorio (procedente de una distribución
-gaussiana).
+Las primeras líneas de este ejemplo son las operaciones realizadas para obtener los datos del panel superior. Se usa la función \code{linspace} para crear un vector de 1000 puntos equiespaciados entre $0$ y $50\pi$, unas sencillas funciones matemáticas para la señal ideal, y la función \code{randn} para añadirle el ruido aleatorio (procedente de una distribución gaussiana).
 
-Este ruido se intenta cancelar con una media ponderada móvil, de
-ventana triangular de 5 puntos representada por el vector de coeficientes
-\code{b}. Este último cálculo se realiza con el bucle \code{for}, que
-es autoexplicativo --- los detalles de esta técnica se presentan en  el
-siguiente capítulo.\footnote{%
+Este ruido se intenta cancelar con una media ponderada móvil, de ventana triangular de 5 puntos representada por el vector de coeficientes \code{b}. Este último cálculo se realiza con el bucle \code{for}, que es autoexplicativo --- los detalles de esta técnica se presentan en  el siguiente capítulo.%
+\footnote{%
 Sería mucho más eficiente hacer esta operación con la
 función \code{filt}, pero se opta por esta solución más trivial para no
-complicar el ejemplo con cuestiones relativas al tratamiento de señales digitales.}% 
-Los dos primeros y últimos puntos de la señal ajustada no se calculan, y se
-dejan como \emph{not-a-numbers} (\code{NaN}), para evitar ``efectos de borde''.
-Luego se calcula la medida en que varían la señal original y la filtrada para obtener la
-SNR. Estas variaciones se calculan como una
-``suma de cuadrados móvil'' con un ancho de 5 puntos. Esto se hace con un bucle
-semejante al usado para la media ponderada móvil.
+complicar el ejemplo con cuestiones relativas al tratamiento de señales digitales.%
+}
+Los dos primeros y últimos puntos de la señal ajustada no se calculan, y se dejan como \emph{not-a-numbers} (\code{NaN}), para evitar ``efectos de borde''. Luego se calcula la medida en que varían la señal original y la filtrada para obtener la SNR. Estas variaciones se calculan como una ``suma de cuadrados móvil'' con un ancho de 5 puntos. Esto se hace con un bucle semejante al usado para la media ponderada móvil.
 
-A esto le siguen las operaciones gráficas. Para construir una tabla de gráficos se
-emplea la función \code{Table} con dos argumentos: el número de filas y
-columnas de la tabla, respectivamente. El valor devuelto es un objeto del tipo
-\code{PlotContainer} (véase al figura XXX).
-La gráfica creada con la función \code{plot}
-se asigna al panel que corresponde de esta tabla, del mismo modo que si
-trabajásemos con \emph{arrays} de datos numéricos.
+A esto le siguen las operaciones gráficas. Para construir una tabla de gráficos se emplea la función \code{Table} con dos argumentos: el número de filas y columnas de la tabla, respectivamente. El valor devuelto es un objeto del tipo \code{PlotContainer} (véase al figura XXX). La gráfica creada con la función \code{plot} se asigna al panel que corresponde de esta tabla, del mismo modo que si trabajásemos con \emph{arrays} de datos numéricos.
 
-En este ejemplo, la primera llamada a \code{plot} se utiliza para representar
-tres series de datos al mismo tiempo. La primera secuencia es la de los puntos observados
-(\code{".c"} son puntos en color cian), representados de dos en dos para que el
-gráfico sea menos denso. La segunda secuencia son las dos líneas con la señal original y
-la ajustada, puestas como un solo conjunto de datos en forma de matriz.
+En este ejemplo, la primera llamada a \code{plot} se utiliza para representar tres series de datos al mismo tiempo. La primera secuencia es la de los puntos observados (\code{".c"} son puntos en color cian), representados de dos en dos para que el gráfico sea menos denso. La segunda secuencia son las dos líneas con la señal original y la ajustada, puestas como un solo conjunto de datos en forma de matriz.
 
-El panel inferior representa la razón entre señal y ruido (\code{snr}), pero
-en lugar de \code{plot} se utiliza la función \code{semilogy}, porque
-queremos que el eje Y se represente en escala logarítmica para visualizar mejor
-cómo varía esta medida. Para poner en escala logarítmica el eje X o ambos,
-se emplean las funcioines \code{semilogx} y \code{loglog}, respectivamente.
+El panel inferior representa la razón entre señal y ruido (\code{snr}), pero en lugar de \code{plot} se utiliza la función \code{semilogy}, porque queremos que el eje Y se represente en escala logarítmica para visualizar mejor cómo varía esta medida. Para poner en escala logarítmica el eje X o ambos, se emplean las funcioines \code{semilogx} y \code{loglog}, respectivamente.
 
-También se muestra el uso de algunas funciones habituales para ajustar
-los límites del gráfico y ``decorar'' el contexto.
-(véase que estas funciones se han llamado tras crear los objetos gráficos del
-panel que se quiere modificar):
+También se muestra el uso de algunas funciones habituales para ajustar los límites del gráfico y ``decorar'' el contexto. (véase que estas funciones se han llamado tras crear los objetos gráficos del panel que se quiere modificar):
 
 
 \begin{itemize}
-\item \code{xlim} define los límites
-inferior y superior del eje $X$ (el eje $Y$ se ajusta con \code{ylim})
-\item Las funciones \code{title}, \code{xlabel}, \code{ylabel}
-sirven para añadir texto al título y los dos ejes, respectivamente
-\item \code{grid} se emplea para añadir o eliminar la cuadrícula en el area gráfica
-\item \code{legend} añade una leyenda con los textos especificados para las
-distintas series de datos representadas; el primer argumento es un vector
-de cadenas de texto, ordenadas según se han creado los
-elementos gráficos que se etiquetan en la leyenda; los dos siguientes argumentos
-son las coordenadas de la ``caja'' que contiene la leyenda, relativas al
-área de la figura ($(0,0)$ representa la esquina inferior izquierda, y
-$(1,1)$ la superior derecha).
+  \item \code{xlim} define los límites inferior y superior del eje $X$ (el eje $Y$ se ajusta con \code{ylim})
+  \item Las funciones \code{title}, \code{xlabel}, \code{ylabel} sirven para añadir texto al título y los dos ejes, respectivamente
+  \item \code{grid} se emplea para añadir o eliminar la cuadrícula en el area gráfica
+  \item \code{legend} añade una leyenda con los textos especificados para las distintas series de datos representadas; el primer argumento es un vector de cadenas de texto, ordenadas según se han creado los elementos gráficos que se etiquetan en la leyenda; los dos siguientes argumentos son las coordenadas de la ``caja'' que contiene la leyenda, relativas al área de la figura ($(0,0)$ representa la esquina inferior izquierda, y $(1,1)$ la superior derecha).
 \end{itemize}
 
-Hacia el final se llama a la tabla de gráficos por su nombre, para mostrar el resultado
-una vez terminado el proceso. El motivo es que si las líneas del código se ejecutan
-una a una en modo interactivo, se verá que al llamar a la función \code{Table}
-aparece una figura en blanco; luego, cuando se crea
-cada uno de los gráficos, éstos
-sustituyen a la figura vacía ocupando toda la ventana gráfica.
-La tabla con los dos gráficos combinados sólo aparece
-al volver a llamar a la tabla de gráficos al final.
-Este comportamiento recalca la importancia de
-asignar el objeto devuelto por \code{Table} a una variable, ya que
-para visualizar la tabla de gráficos hay que llamarla explícitamente
-después de crearla. Ni siquiera ocultando los dos gráficos individuales
-(por ejemplo añadiendo un punto y coma tras las líneas segunda y tercera)
-se hubiera actualizado la vista de la tabla, hasta llamar la última línea.
+Hacia el final se llama a la tabla de gráficos por su nombre, para mostrar el resultado una vez terminado el proceso. El motivo es que si las líneas del código se ejecutan una a una en modo interactivo, se verá que al llamar a la función \code{Table} aparece una figura en blanco; luego, cuando se crea cada uno de los gráficos, éstos sustituyen a la figura vacía ocupando toda la ventana gráfica. La tabla con los dos gráficos combinados sólo aparece al volver a llamar a la tabla de gráficos al final. Este comportamiento recalca la importancia de asignar el objeto devuelto por \code{Table} a una variable, ya que para visualizar la tabla de gráficos hay que llamarla explícitamente después de crearla. Ni siquiera ocultando los dos gráficos individuales (por ejemplo añadiendo un punto y coma tras las líneas segunda y tercera) se hubiera actualizado la vista de la tabla, hasta llamar la última línea.
 
-Finalmente, para salvar el resultado a un archivo gráfico,
-basta con darle el nombre del archivo a la función \code{savefig}.
-Los tipos de archivo soportados por la función son
-EPS, PDF, SVG y PNG. El identificador del gráfico es opcional ---por defecto
-se imprime el gráfico de la figura activa---, y en el caso de guardarse un
-archivo de tipo PDF, se puede asignar un vector de gráficos (objetos de tipo
-\code{PlotContainer}), cada uno de los cuales se imprimirá en una página
-distinta.
+Finalmente, para salvar el resultado a un archivo gráfico, basta con darle el nombre del archivo a la función \code{savefig}. Los tipos de archivo soportados por la función son EPS, PDF, SVG y PNG. El identificador del gráfico es opcional ---por defecto se imprime el gráfico de la figura activa---, y en el caso de guardarse un archivo de tipo PDF, se puede asignar un vector de gráficos (objetos de tipo \code{PlotContainer}), cada uno de los cuales se imprimirá en una página distinta.
+
 
 Edición de gráficos
 
-De vez en cuando se desea cambiar algún atributo de las gráficas creadas,
-lo cual puede conseguirse habitualmente con las funciones \code{setattr}
-y \code{style}.
+De vez en cuando se desea cambiar algún atributo de las gráficas creadas, lo cual puede conseguirse habitualmente con las funciones \code{setattr} y \code{style}.
 
-Su uso se muestra algunos ejemplos que pueden ser más o menos habituales,
-siguiendo con el caso mostrado en la sección anterior. La lista completa
-de atributos asignados a cada tipo de objeto se puede encontrar en la
-referencia del paquete Winston (\href{https://github.com/nolta/Winston.jl/wiki/Reference}),
-así como otros ejemplos en \href{http://winston.readthedocs.org/}.
-También se pueden visualizar la estructura de un gráfico, incluyendo sus
-atributos, con la función \code{dump}:
-
+Su uso se muestra algunos ejemplos que pueden ser más o menos habituales, siguiendo con el caso mostrado en la sección anterior. La lista completa de atributos asignados a cada tipo de objeto se puede encontrar en la referencia del paquete Winston (\url{https://github.com/nolta/Winston.jl/wiki/Reference}), así como otros ejemplos en \url{http://winston.readthedocs.org/}. También se pueden visualizar la estructura de un gráfico, incluyendo sus atributos, con la función \code{dump}:
+ 
 julia> dump(plottable[1,1])
 FramedPlot 
   attr: Dict{Any,Any} len 6
@@ -1247,10 +706,7 @@ FramedPlot
 
 [Output truncado]
 
-En el fragmento mostrado se ven los 6 atributos del panel superior,
-del que el más obvio es el título (\code{title}).
-Por lo tanto, si se quisiera editar el título en cualquier
-momento (por ejemplo para ponerlo en mayúsculas):
+En el fragmento mostrado se ven los 6 atributos del panel superior, del que el más obvio es el título (\code{title}). Por lo tanto, si se quisiera editar el título en cualquier momento (por ejemplo para ponerlo en mayúsculas):
 
 julia> # Con getattr se obtiene el valor actual del atributo
 julia> titulo = getattr(plottable[1,1], "title")
@@ -1259,14 +715,13 @@ julia> # Lo convertimos en mayúscula, y lo reasignamos con setattr
 julia> # usando el argumento con el nombre correspondiente
 julia> setattr(plottable[1,1], title=uppercase(titulo))
 
-También se pueden ver las series de datos representadas por los objetos
-dentro del vector \code{components} en el campo \code{content1} (en el
-fragmento mostrado se ven las primeras líneas referidas a la serie de puntos).\footnote{%
+También se pueden ver las series de datos representadas por los objetos dentro del vector \code{components} en el campo \code{content1} (en el fragmento mostrado se ven las primeras líneas referidas a la serie de puntos).%
+\footnote{%
 Todo gráfico tiene sus contenidos distribuidos en \code{content1} y
 \code{content2}. En los más habituales todo se encuentra dentro de
-\code{content1}.}% 
-El conjunto de componentes se puede extraer con la función \code{getcomponents},
-para facilitar su edición.
+\code{content1}.%
+} 
+El conjunto de componentes se puede extraer con la función \code{getcomponents}, para facilitar su edición.
 
 julia> comp = getcomponents(plottable[1,1])
 4-element Array{Any,1}:
@@ -1275,9 +730,7 @@ julia> comp = getcomponents(plottable[1,1])
  Curve(...) 
  Legend(...)
 
-Las propiedades visuales de las series de datos, como el tipo y color de las
-líneas y los puntos, están en un atributo especial llamado \textt{style}
-(estilo):
+Las propiedades visuales de las series de datos, como el tipo y color de las líneas y los puntos, están en un atributo especial llamado \textt{style} (estilo):
 
 julia> # Atributos del primer componente (serie de puntos)
 julia> # El campo "attr" del objeto "xxx" se extrae como "xxx.attr"
@@ -1308,11 +761,7 @@ Dict{Any,Any} len 3
     linecolor: Uint32 15543344
     linewidth: Float64 2.0
 
-Supongamos que para resaltar los aspectos de interés,
-queremos convertir el color de los puntos a gris, 
-presentar la señal ideal como una línea roja discontinua gruesa,
-y la medida ajustada como una línea azul más delgada (figura XXXX).
-Para ello utilizaremos las siguientes instrucciones:
+Supongamos que para resaltar los aspectos de interés, queremos convertir el color de los puntos a gris, presentar la señal ideal como una línea roja discontinua gruesa, y la medida ajustada como una línea azul más delgada (figura XXXX). Para ello utilizaremos las siguientes instrucciones:
 
 julia> style(comp[1], color="grey")
 julia> style(comp[2], linekind="dashed", linecolor="red", linewidth=3)
@@ -1321,55 +770,19 @@ julia> plottable
 
 Otros gráficos
 
-La función \code{plot} es la más habitual para representar series de datos,
-pero también hay más funciones para otro tipo de representaciones, entre otras:
+La función \code{plot} es la más habitual para representar series de datos, pero también hay más funciones para otro tipo de representaciones, entre otras:
 
 \begin{itemize}
-\item \code{stem}: gráficos de ``tallos''. Representan series de datos,
-al igual que \code{plot}, pero se añaden líneas verticales que conectan
-cada punto con el eje $Y=0$.
-\item \code{scatter}: gráficos de dispersión. Se diferencia de \code{plot}
-en que es necesario especificar los valores en el eje $X$, por defecto se
-representan puntos, no líneas, y también se pueden introducir variables que
-especifican el tipo y el color de cada punto individual.
-\item \code{errorbar}: barras de error. A los valores del eje $X$ e $Y$ se
-les añade el argumento \code{xerr} o \code{yerr}, según si se quieren
-representar barras horizontales o verticales, respectivamente. Este argumento
-ha de escribirse con el nombre explícito, para evitar ambigüedades. Si la serie
-de datos contiene $n$ puntos, este argumento ha de ser un vector numérico de
-longitud $n$ (para barras simétricas) o $2n$ (para especificar distintas
-amplitudes en ambas direcciones a partir de los puntos especificados). En
-este último caso, los valores de $1$ a $n$ del argumento adicional representa
-cuánto se extiende la barra hacia la izquierda (para \code{xerr})
-o hacia abajo (para \code{yerr}), y del $n+1$ hasta el $2n$ cuánto se extiende
-hacia la derecha o hacia arriba, respectivamente.
-\item \code{bar}, \code{barh}: diagramas de barras verticales y horizontales,
-respectivamente. El primer argumento especifica las etiquetas que se presentan
-en los valores del eje $X$ ($Y$ para las barras horizontales). El segundo
-representa las alturas de cada barra; si es una matriz $N\times{}M$, se presentan
-$N$ grupos de $M$ barras coloreadas.
-\item \code{plothist}: histogramas. Se le pasa un vector de datos, e internamente
-usa la función \code{hist} para definir los intervalos del eje $X$ y calcular las frecuencias
-del vector en esos intervalos. Como en esa función,
-se puede definir el número (aproximado) de barras o los límites exactos de las
-mismas añadiendo dichos valores como argumentos adicionales.
-\code{hist2d}: histograma bidimensional. En este caso se le pasa una matriz
-de dos columnas, y los ejes $X$, $Y$ de la imagen se asocian a los intervalos
-de la primera y la segunda columna, respectivamente. Las frecuencias para cada
-combinación de intervalos se representan en una escala de color.
-\code{imagesc}: mapas de color a partir de una matriz de datos.
-Los argumentos requeridos son, en orden:
-el intervalo en el eje $X$, el intervalo en el eje $Y$, la matriz de datos
-a representar ($X$ en filas, $Y$ en columnnas), y el intervalo de valores de
-la matriz al que se ajusta la escala de colores. El único argumento requerido
-es la matriz de datos, y los omitidos se calculan automáticamente.
+  \item \code{stem}: gráficos de ``tallos''. Representan series de datos, al igual que \code{plot}, pero se añaden líneas verticales que conectan cada punto con el eje $Y=0$.
+  \item \code{scatter}: gráficos de dispersión. Se diferencia de \code{plot} en que es necesario especificar los valores en el eje $X$, por defecto se representan puntos, no líneas, y también se pueden introducir variables que especifican el tipo y el color de cada punto individual.
+  \item \code{errorbar}: barras de error. A los valores del eje $X$ e $Y$ se les añade el argumento \code{xerr} o \code{yerr}, según si se quieren representar barras horizontales o verticales, respectivamente. Este argumento ha de escribirse con el nombre explícito, para evitar ambigüedades. Si la serie de datos contiene $n$ puntos, este argumento ha de ser un vector numérico de longitud $n$ (para barras simétricas) o $2n$ (para especificar distintas amplitudes en ambas direcciones a partir de los puntos especificados). En este último caso, los valores de $1$ a $n$ del argumento adicional representa cuánto se extiende la barra hacia la izquierda (para \code{xerr}) o hacia abajo (para \code{yerr}), y del $n+1$ hasta el $2n$ cuánto se extiende hacia la derecha o hacia arriba, respectivamente.
+  %\item \code{bar}, \code{barh}: diagramas de barras verticales y horizontales, respectivamente. El primer argumento especifica las etiquetas que se presentan en los valores del eje $X$ ($Y$ para las barras horizontales). El segundo representa las alturas de cada barra; si es una matriz $N\times{}M$, se presentan $N$ grupos de $M$ barras coloreadas.
+  \item \code{plothist}: histogramas. Se le pasa un vector de datos, e internamente usa la función \code{hist} para definir los intervalos del eje $X$ y calcular las frecuencias del vector en esos intervalos. Como en esa función, se puede definir el número (aproximado) de barras o los límites exactos de las mismas añadiendo dichos valores como argumentos adicionales.
+  \item\code{hist2d}: histograma bidimensional. En este caso se le pasa una matriz de dos columnas, y los ejes $X$, $Y$ de la imagen se asocian a los intervalos de la primera y la segunda columna, respectivamente. Las frecuencias para cada combinación de intervalos se representan en una escala de color.
+  \item\code{imagesc}: mapas de color a partir de una matriz de datos. Los argumentos requeridos son, en orden: el intervalo en el eje $X$, el intervalo en el eje $Y$, la matriz de datos a representar ($X$ en filas, $Y$ en columnnas), y el intervalo de valores de la matriz al que se ajusta la escala de colores. El único argumento requerido es la matriz de datos, y los omitidos se calculan automáticamente.
 \end{itemize}
 
-Las funciones \code{hist2d} o \code{imagesc} utilizan ``mapa de color''
-para representar los datos. Por defecto el mapa empleado es el llamado
-\emph{jet} o ``arcoiris''. Este mapa de colores se puede cambiar por una
-escala de degradados de distintos colores, a través de la función
-\code{colormap} --- que se ha de llamar \emph{antes} de crear el gráfico:
+Las funciones \code{hist2d} o \code{imagesc} utilizan ``mapa de color'' para representar los datos. Por defecto el mapa empleado es el llamado \emph{jet} o ``arcoiris''. Este mapa de colores se puede cambiar por una escala de degradados de distintos colores, a través de la función \code{colormap} --- que se ha de llamar \emph{antes} de crear el gráfico:
 
 colormap("blues")   # Escala de azules
 colormap("greens")  # Escala de verdes
@@ -1381,21 +794,11 @@ colormap("reds")    # Escala de rojos
 
 Condiciones y bucles
 
-En algunos ejemplos de los capítulos anteriores ya se han presentado modelos
-de sentencias condicionales y bucles. Esos ejemplos se han dado sin apenas
-explicaciones, en parte por ser prácticamente autoexplicativos, pero también
-porque ya no solo el concepto, sino también su sintaxis
-son prácticamente un estándar fácilmente reconocible por todo lector con
-una mínima experiencia previa en programación.
+En algunos ejemplos de los capítulos anteriores ya se han presentado modelos de sentencias condicionales y bucles. Esos ejemplos se han dado sin apenas explicaciones, en parte por ser prácticamente autoexplicativos, pero también porque ya no solo el concepto, sino también su sintaxis son prácticamente un estándar fácilmente reconocible por todo lector con una mínima experiencia previa en programación.
 
-Sin embargo, es imperativo para cualquier guía introductoria de programación
-dar en algún punto cuenta de los bloques condicioneales y los distintos tipos de bucles, ya que
-estamos hablando de las estructuras que controlan el ``flujo'' que sigue la
-ejecución del código, y junto a la asiganción de
-valores a variables, vienen a ser el fundamento de cualquier lenguaje de programación.
+Sin embargo, es imperativo para cualquier guía introductoria de programación dar en algún punto cuenta de los bloques condicioneales y los distintos tipos de bucles, ya que estamos hablando de las estructuras que controlan el ``flujo'' que sigue la ejecución del código, y junto a la asiganción de valores a variables, vienen a ser el fundamento de cualquier lenguaje de programación.
 
-Así pues, si bien sea por no dejarlas de mencionar, se presenta a continuación la sintaxis
-básica de estas estructuras:
+Así pues, si bien sea por no dejarlas de mencionar, se presenta a continuación la sintaxis básica de estas estructuras:
 
 Bloques condicionales (\code{if}):
 
@@ -1412,30 +815,22 @@ end
 
 Bucles tipo \code{for}:
 
-for i in serie
-  # Código que se ejecuta de forma repetida
-  # empleando la variable "i" con el valor de cada
-  # uno de los elementos iterables de la variable "serie".
-end
-
 for i = serie
-  # Exactamente lo mismo que lo anterior
-  # utilizando "=" en lugar de la palabra clave "in"
+  # Código que se ejecuta de forma repetida
+  # empleando la variable "i" con el valor de cada uno
+  # de los elementos iterables de la variable "serie".
 end
 
-Cabe mencionar que estas estructuras requieren usar las variables aquí
-ejemplificadas como "condición" y "serie", que han de ser de un tipo especial
-en cada caso: las condiciones han de ser variables lógicas, y las series
-variables iterables. Se entrará más en detalle sobre estos tipos de variables
-en las próximas secciones.
+for i in serie
+  # Exactamente lo mismo que lo anterior
+  # utilizando la palabra clave "in" en lugar de "=".
+end
 
-Antes, conviene adelantar algunas ``extensiones'' a la sintaxis básica,
-que sin ser imprescindibles, facilitan mucho la creación de estas estructuras
-de control de flujo.
+Cabe mencionar que estas estructuras requieren usar las variables aquí ejemplificadas como "condición" y "serie", que han de ser de un tipo especial en cada caso: las condiciones han de ser variables lógicas, y las series variables iterables. Se entrará más en detalle sobre estos tipos de variables en las próximas secciones.
 
-Condiciones alternativas (\code{else}, \code{elseif}). Tras bloque condicionado
-por \code{if}, se pueden intercalar bloques de código a ejecutar si se
-cumplen otras condiciones:
+Antes, conviene adelantar algunas ``extensiones'' a la sintaxis básica, que sin ser imprescindibles, facilitan mucho la creación de estas estructuras de control de flujo.
+
+En primer lugar están las condiciones alternativas (\code{else}, \code{elseif}). Tras un bloque condicionado por \code{if}, se pueden intercalar otros bloques de código a ejecutar si se cumplen otras condiciones:
 
 if condición1
   # Ejecutar este bloque si se cumple "condicion1"
@@ -1449,56 +844,57 @@ else
   # de las condiciones enunciadas
 end
 
-Interrupción de bucles con \code{break} y \code{continue}. Estos comandos
-clave suelen ir en un \code{if} dentro de un bucle \code{while} o \code{for}.
-\code{break} interrumpe el bucle en el punto en que se encuentre, y devuelve
-el control al segmento de código desde el que se llamó el bucle, como si
-éste hubiera terminado. \code{continue} hace algo semejante, pero sólo
-interrumpe una iteración, y salta al comienzo de la siguiente.
+Por otro lado, están los comandos \code{break} y \code{continue} para alterar el flujo habitual de los bucles. Estos comandos suelen ir en un \code{if} dentro de un bucle \code{while} o \code{for}. \code{break} interrumpe el bucle en el punto en que se encuentre, y devuelve el control al segmento de código desde el que se llamó el bucle, como si éste hubiera terminado. \code{continue} hace algo semejante, pero sólo interrumpe una iteración, y salta al comienzo de la siguiente. Veamos un ejemplo práctico, en un código para calcular los números primos del 1 al 100 mediante una implementación literal de la ``criba de Eratóstenes'':%
+\footnote{%
+\url{https://es.wikipedia.org/wiki/Criba_de_Eratóstenes}%
+}
 
-for i in serie
-  # Trozos varios de código
-  if condición_para_interrumpir
-    # Trozo de código antes de interrumpir
-    break; # sale del bucle
+\begin{quote}
+Se forma una tabla con todos los números naturales comprendidos entre $2$ y $n$, y se van tachando los números que no son primos de la siguiente manera: Comenzando por el 2, se tachan todos sus múltiplos; comenzando de nuevo, cuando se encuentra un número entero que no ha sido tachado, ese número es declarado primo, y se procede a tachar todos sus múltiplos, así sucesivamente. El proceso termina cuando el cuadrado del mayor número confirmado como primo es mayor que $n$.
+\end{quote}
+
+n = 100
+# Utilizamos como "criba" un vector lógico,
+# con todos los valores inicialmente definidos como "false"
+eliminados = falses(n)
+# Comenzando por 2...
+for m = 2:n
+  # Si el número (m) ha sido eliminado, pasar al siguiente
+  if eliminados[m]
+    continue
   end
-  if condicion_para _saltar
-    # Trozo de código antes de interrumpir
-    continue;  # Ignora todo lo que sigue y vuelve a otra repetición
+  # Eliminar los múltiplos 2m, 3m ... menores que n
+  k = 2
+  while (mxk = m*k) <= n
+    eliminados[mxk] = true
+    k += 1
   end
-  # Lo que sigue sólo se ejecuta si no se ha cumplido
-  # ninguna de las condiciones anteriores
+  # Terminar si el cuadrado de m es mayor que n 
+  if m^2 > n
+    break
+  end
 end
+# Extraer las posiciones no eliminadas de la criba
+# (usando el operador "~" para convertir true en false, y viceversa
+primos = find(~eliminados)
 
 
 Expresiones lógicas
 
-La condición asociada a los bloques \code{if} o \code{elseif}, así como a los
-bucles \code{while}, ha de expresarse en una variable lógica, de tipo
-\code{Bool}, que no es otra cosa que un número binario, cuyos valores posibles
-son \code{true} y \code{false}.
-Estos valores lógicos se pueden obtener de múltiples maneras. Repasamos aquí
-algunas de las principales. Posiblemente la más habitual es a partir de 
-comparaciones:
+La condición asociada a los bloques \code{if} o \code{elseif}, así como a los bucles \code{while}, ha de expresarse en una variable lógica, de tipo \code{Bool}, que no es otra cosa que un número binario, cuyos valores posibles son \code{true} y \code{false}. Estos valores lógicos se pueden obtener de múltiples maneras. Posiblemente la más habitual es a partir de comparaciones:
 \code{==} (igual), \code{!=} (distinto),
 \code{>} (mayor), \code{>=} (mayor o igual),
 \code{<} (menor), \code{<=} (menor o igual), etc.
 
-Una característica interesante de Julia es que permite concatenar
-estos operadores lógicos como se hace a menudo al escribir relaciones
-matemáticas. Por ejemplo, para verificar si un valor de probabilidad \code{p}
-está efectivamente acotado entre \code{0} y \code{1}:
+Una característica interesante de Julia es que permite concatenar estos operadores lógicos como se hace a menudo al escribir relaciones matemáticas. Por ejemplo, para verificar si un valor de probabilidad \code{p} está efectivamente acotado entre \code{0} y \code{1}:
 
 julia> p = 0.5;
 julia> 0 <= p <= 1
 true
 
-Estas comparaciones se pueden hacer también sobre los distintos elementos
-de un \emph{array}, pero para hacer la comparación elemento a elemento
-hay que utilizar los operadores ``con punto'' (cfr. la sección XXXXX).
-Por ejemplo, si queremos comprobar los elementos de un vector que son mayores que cero:
+Estas comparaciones se pueden hacer también sobre los distintos elementos de un \emph{array}, pero para hacer la comparación elemento a elemento hay que utilizar los operadores ``con punto'' (cfr. la sección XXXXX). Por ejemplo, si queremos comprobar los elementos de un vector que son mayores que cero:
 
-julia> v1 = [1, 4, 0, -5, 2];
+julia> v1 = [1, 4, 0, -1, 2];
 julia> positivos = (v1 .> 0)
 5-element BitArray{1}:
   true
@@ -1507,13 +903,7 @@ julia> positivos = (v1 .> 0)
  false
   true
 
-Los vectores de valores lógicos como este resultado no se pueden usar como
-condición en un \code{if} o \code{while}, que sólo admiten valores de tipo
-\code{Bool} unitarios. Uno de los propósitos con los que se suelen usar
-es para ``seleccionar'' los elementos de otro vector sobre los que se quiere
-realizar alguna operación. Por ejemplo, supongamos que queremos calcular
-el logaritmo del vector \code{v1}, dejando como indefinidos (\code{NaN})
-aquellos elementos cuyo valor en \code{v1} no es estrictamente positivo.
+Los vectores de valores lógicos como este resultado no se pueden usar como condición en un \code{if} o \code{while}, que sólo admiten valores de tipo \code{Bool} unitarios. Uno de los propósitos con los que se suelen usar es para ``seleccionar'' los elementos de otro vector sobre los que se quiere realizar alguna operación. Por ejemplo, supongamos que queremos calcular el logaritmo del vector \code{v1}, dejando como indefinidos (\code{NaN}) aquellos elementos cuyo valor en \code{v1} no es estrictamente positivo.
 
 julia> # Primero creamos un vector del mismo tamaño que v1...
 julia> log_v1 = Array(Float64, size(v1));
@@ -1527,7 +917,7 @@ julia> log_v1[positivos] = log(v1[positivos])
  0.693147
 
 julia> # Ahora vemos todos los números:
-julia> log_v1
+julia> log_v1   # log([1, 4, 0, -1, 2])
 5-element Array{Float64,1}:
    0.0
    1.38629
@@ -1535,19 +925,14 @@ julia> log_v1
  NaN
    0.693147
 
-También es útil mencionar que por convención los valores lógicos se pueden
-interpretar numéricamente, considerando \code{false==0} y \code{true==1}.
-Así pues, se puede comprobar cuántos valores positivos hay en el vector \code{v1}
-mediante:
+También es útil mencionar que por convención los valores lógicos se pueden interpretar numéricamente, considerando \code{false==0} y \code{true==1}. Así pues, se puede comprobar cuántos valores positivos hay en el vector \code{v1} mediante:
 
 julia> sum(positivos)
 3
 
-En el sentido inverso, se considera que el cero es equivalente a \code{false},
-y cualquier otro número (positivo o negativo) equivale a \code{true}. Esta
-conversión se hace con la función \code{bool}:
+En el sentido inverso, se considera que el cero es equivalente a \code{false}, y cualquier otro número (positivo o negativo) equivale a \code{true}. Esta conversión se hace con la función \code{bool}:
 
-julia> bool(v1)
+julia> bool(v1)   # bool([1, 4, 0, -1, 2])
 5-element Array{Bool,1}
   true
   true
@@ -1555,69 +940,52 @@ julia> bool(v1)
   true
   true
 
-Pero es importante señalar que esta conversión no es automática, y una operación
-pensada para valores lógicos puede dar errores o valores inesperados si
-se aplica a valores numéricos. Esto se puede comprobar, por ejemplo, aplicando la
-función \code{any} al vector numérico \code{v1}.
+Pero es importante señalar que esta conversión no es automática, y una operación pensada para valores lógicos puede dar errores o valores inesperados si se aplica a valores numéricos. Esto se puede comprobar, por ejemplo, aplicando la función \code{any} al vector numérico \code{v1}.
 
-Volviendo a los bloques \code{if} y \code{while}, lo que sí se puede hacer con
-los vectores lógicos es, por ejemplo, obtener un valor lógico unitario en función
-de si todos o alguno de sus elementos es verdadero:
+Volviendo a los bloques \code{if} y \code{while}, lo que sí se puede hacer con los vectores lógicos es, por ejemplo, obtener un valor lógico unitario en función de si todos o alguno de sus elementos es verdadero:
 
 julia> all(positivos) # Son *todos* mayores que cero?
 false
 julia> any(positivos) # Hay *alguno* mayor que cero?
 true
 
-Y también hay muchas otras funciones que dan como resultado variables lógicas,
-resultantes de comprobar ciertas condiciones numéricas o de otro tipo.
-Algunas que pueden usarse habitualmente son:
+Y también hay muchas otras funciones que dan como resultado variables lógicas, resultantes de comprobar ciertas condiciones numéricas o de otro tipo. Algunas que pueden usarse habitualmente son:
 
 \begin{description}
-\item[\code{isdefined(x,index)}] \hfill \\
-  Esta función se puede usar de distintas maneras. Si \code{x} es un \emph{array}
-  u otro tipo de variable compuesta por varios componentes,
-  se interroga si esa variable contiene el componente representado por el índice
-  \code{index}; p.ej. \code{isdefined(v1, 5)}. También se puede usar con un
-  solo argumento, consistente en el nombre de una variable en forma de
-  ``símbolo'' ---la forma más sencilla de hacer esto es añadiendo dos
-  puntos delante del nombre---; en ese caso se interroga si existe una
-  variable con ese nombre en el espacio de trabajo, p.ej.
-  \code{isdefined(:v2)}.
-\item[\code{isnan(x)}] \hfill \\
+  \item[\code{isdefined(x,index)}] \hfill \\
+  Esta función se puede usar de distintas maneras. Si \code{x} es un \emph{array} u otro tipo de variable compuesta por varios componentes, se interroga si esa variable contiene el componente representado por el índice \code{index}; p.ej. \code{isdefined(v1, 5)}. También se puede usar con un solo argumento, consistente en el nombre de una variable en forma de ``símbolo'' ---la forma más sencilla de hacer esto es añadiendo dos puntos delante del nombre---; en ese caso se interroga si existe una variable con ese nombre en el espacio de trabajo, p.ej. \code{isdefined(:v2)}.
+  \item[\code{isnan(x)}] \hfill \\
   Comprobar si \code{x} es un \code{NaN} (\emph{not-a-number)}.
-\item[\code{isfinite(x)}, \code{isinf(x)}]: \hfill \\
-  Comprobar si \code{x} es un número finito o infinito, respectivamente.
-  (Un \code{NaN} devuelve \code{false} para ambas funciones.)
-\item[\code{isinteger(x)} \hfill \\
-  Comprobar si \code{x} es un número entero, u otro tipo de variable
-  (p.ej. un vector) que sólo contiene números enteros.
-\item[\code{isreal(x)}] \hfill \\
-  Comprobar si \code{x} es un número real, u otro tipo de variable
-  (p.ej. un vector) que sólo contiene números reales.
-\item[\code{iseven(x)}, \code{isodd(x)}] \hfill \\
+  \item[\code{isfinite(x)}, \code{isinf(x)}]: \hfill \\
+  Comprobar si \code{x} es un número finito o infinito, respectivamente. (Un \code{NaN} devuelve \code{false} para ambas funciones.)
+  \item[\code{isinteger(x)} \hfill \\
+  Comprobar si \code{x} es un número entero, u otro tipo de variable (p.ej. un vector) que sólo contiene números enteros.
+  \item[\code{isreal(x)}] \hfill \\
+  Comprobar si \code{x} es un número real, u otro tipo de variable (p.ej. un vector) que sólo contiene números reales.
+  \item[\code{iseven(x)}, \code{isodd(x)}] \hfill \\
   Comprobar si \code{x} (que ha de ser un número entero) es par o impar, respectivamente.
-\item[\code{isempty(x)}] \hfill \\
-  Aplicable a vectores u otro tipo de ``colecciones'' (véase la siguiente sección).
-  Comprueba si \code{x} está vacío (no tiene ningún elemento).
-\item[\code{in(el,x)}] \hfill \\
+  \item[\code{isempty(x)}] \hfill \\
+  Aplicable a vectores u otro tipo de ``colecciones'' (véase la siguiente sección). Comprueba si \code{x} está vacío (no tiene ningún elemento).
+  \item[\code{in(el,x)}] \hfill \\
   Comprobar si el elemento con el valor \code{el} está presente en la colección \code{x}.
-\item[\code{isa(x,type)}] \hfill \\
-  Comprobar si la variable \code{x} es del tipo \code{type}, p.ej.
-  \code{isa(x, Number)}, \code{isa(x, Bool)},\ldots (ver la sección XXXX sobre tipos).
-\item[\code{iseltype(x,type)}] \hfill \\
-  Equivalente a \code{isa}, pero también válido para \emph{arrays} u otro tipo
-  de colecciones; en el segundo caso comprueba el tipo de todos sus elementos.
+  \item[\code{isa(x,type)}] \hfill \\
+  Comprobar si la variable \code{x} es del tipo \code{type}, p.ej. \code{isa(x, Number)}, \code{isa(x, Bool)},\ldots (ver la sección XXXX sobre tipos).
+  \item[\code{iseltype(x,type)}] \hfill \\
+  Equivalente a \code{isa}, pero también válido para \emph{arrays} u otro tipo de colecciones; en el segundo caso comprueba el tipo de todos sus elementos.
 \end{description}
 
-Las expresiones lógicas a menudo se componen entre sí con operadores lógicos
-que representan la intersección y la unión lógica (\emph{and} y \emph{or},
-respectivamente); también se pueden ``invertir'' (convertir \code{true} en \code{false}
-y viceversa) con el operador de negación (\emph{not}).
-Hay dos tipos de estos operadores lógicos. Por un lugar los 
-operadores elementales \code{&} \code{|}, \code{~} (\emph{and}, \emph{or},
-\emph{not}, respectivamente), que sirven para componer
-\emph{arrays} lógicos ``elemento a elemento''. Por ejemplo:
+Las expresiones lógicas a menudo se componen entre sí con operadores lógicos que representan la intersección y la unión lógica (\emph{and} y \emph{or}, respectivamente); también se pueden ``invertir'' (convertir \code{true} en \code{false} y viceversa) con el operador de negación (\emph{not}). Hay dos tipos de estos operadores lógicos. Por un lugar están los operadores elementales \code{&} \code{|}, \code{~} (\emph{and}, \emph{or}, \emph{not}, respectivamente), que sirven para componer \emph{arrays} lógicos ``elemento a elemento''. Por ejemplo, en el código de la criba de Eratóstenes, el bucle "while" que servía para marcar los múltiplos del número \code{m} se podría haber sustituido por una operación ``vectorizada'', utilizando la función \code{mod} que devuelve el resto de la división. Los múltiplos de \code{m} serían los números para los que el resto de dividir por \code{m} fuese nulo, lo cual puede codificarse en una variable como:
+
+multiplos_m = (mod([1:n], m) .== 0)
+
+Pero esta lista incluye el propio número \code{m}, que no ha de eliminarse. Para excluirlo puede usarse:
+
+multiplos_m = (mod([1:n], m) .== 0) & ([1:n] ~= m)
+
+
+
+
+Por ejemplo:
 
 julia> v1 = [1, 4, 0, -5, 2]; v2 = [-3, 6, -1, 3, 4];
 julia> ambos_positivos = (v1 .> 0) & (v2 .>0)
@@ -1628,36 +996,111 @@ julia> ambos_positivos = (v1 .> 0) & (v2 .>0)
  false
   true
 
-Para valores lógicos unitarios, sin embargo, se suelen usar los llamados
-operadores de ``cortocircuito'', escritos con el símbolo duplicado para el
-\emph{and} y \emph{or}, y con el símbolo de exclamación para el \emph{not}:
-\code{&&}, \code{||} y \code{!}, respectivamente.
-Reciben este nombre porque las expresiones combinadas se van evaluando de
-izquierda a derecha, pero la evaluación se interrumpe tan pronto como se llega
-a un resultado inequívoco (figura XXX).
+Para valores lógicos unitarios, sin embargo, se suelen usar los llamados operadores de ``cortocircuito'', escritos con el símbolo duplicado para el \emph{and} y \emph{or}, y con el símbolo de exclamación para el \emph{not}: \code{&&}, \code{||} y \code{!}, respectivamente. Reciben este nombre porque las expresiones combinadas se van evaluando de izquierda a derecha, pero la evaluación se interrumpe tan pronto como se llega a un resultado inequívoco (figura XXX).
 
-Este comportamiento es útil cuando una de las condiciones a comprobar sólo
-tiene sentido en función de que se cumpla la otra o no.
-Por ejemplo, supongamos que llegados a un punto de un programa, hemos de
-comprobar si se ha creado una variable \code{x} con un valor mayor que cero.
-Esta condición se podría formular del siguiente modo:
+Este comportamiento es útil cuando una de las condiciones a comprobar sólo tiene sentido en función de que se cumpla la otra o no. Por ejemplo, supongamos que llegados a un punto de un programa, hemos de comprobar si se ha creado una variable \code{x} con un valor mayor que cero. Esta condición se podría formular del siguiente modo:
 
 isdefined(:x) && (x > 0)
 
-Literalmente, lo que se está interrogando es si en el espacio de trabajo
-hay definida una variable con el símbolo ``x'', y si se cumple esa condición,
-si el valor asignado es mayor que cero. Obviamente, si no se cumpliese la
-primera, la segunda expresión generaría un error, pero el ``cortocircuito''
-del operador \code{&&} evitaría llegar a ese punto.%
-\footnote{El paréntesis en la segunda expresión es opcional, ya que las
+Literalmente, lo que se está interrogando es si en el espacio de trabajo hay definida una variable con el símbolo ``x'', y si se cumple esa condición, si el valor asignado es mayor que cero. Obviamente, si no se cumpliese la primera, la segunda expresión generaría un error, pero el ``cortocircuito'' del operador \code{&&} evitaría llegar a ese punto.%
+\footnote{%
+El paréntesis en la segunda expresión es opcional, ya que las
 operaciones lógicas tienen precedencia sobre otras, pero en estos ejemplos
 se usan los paréntesis de forma generalizada para facilitar la lectura y
-la interpretación de las expresiones.}
+la interpretación de las expresiones.%
+}
 
 
-Diccionarios y colecciones
 
-Expresiones lógicas abreviadas y ``comprensiones''
+
+
+
+
+Bucles y diccionarios
+
+En todos los ejemplos de bucles \code{for} mostrados hasta este punto
+las iteraciones se han hecho sobre rangos como \code{1:10}, etc.
+Sin embargo, hay otros tipos de objetos ``iterables'' que se pueden
+utilizar para ese propósito. De las dos sintaxis disponibles para estos
+bucles (con el símbolo ``\code{=}'' o con ``\code{in}'', véase arriba),
+la primera se suele usar exclusivamente con rangos, y la segunda con
+cualquier otro tipo de objeto; pero esto es una mera convención, ya
+que son sintaxis completamente equivalentes.
+
+Después de los rangos, los objetos iterables más típicos para usar
+en los bucles \code{for} son los \emph{arrays} y los ``diccionarios''.
+Ya se ha dedicado un capítulo completo a los \emph{arrays}, por lo que
+no hace falta decir nada más sobre ellos aquí.
+Los diccionarios se parecen a los \emph{arrays} en la medida en que
+también son series de valores, numéricos o de otros tipos;
+pero así como los elementos de los \emph{arrays} vienen determinados por su
+posición en la serie, los valores de un diccionario se identifican por
+su asociación con una serie paralela de ``claves'' (\emph{keys}).
+Otra diferencia es que los \emph{arrays} se pueden organizar en varias
+dimensiones, lo cual no tiene cabida en los diccionarios (aunque puede simularse,
+tal como se cuenta más adelante).
+
+Muchos otros lenguajes de programación tienen alguna forma de expresar estas
+series asociativas con parejas de ``clave-valor'', aunque el concepto de
+diccionario tal como está implementado en Julia es sobre todo comparable
+a los objetos del mismo nombre en Python. Sin embargo hay algunas diferencias
+formales. Para definir un diccionario se usan expresiones semejantes a las de
+los \emph{arrays}, pero señalando la relación entre cada clave y su valor
+con el símbolo \code{=>}. Por ejemplo, un diccionario con los datos personales
+de un individuo:
+
+julia> contacto = ["nombre"=>"Pepito", "apellido"=>"Grillo", "edad"=>30]
+Dict{ASCIIString,Any} with 3 entries:
+  "edad"     => 30
+  "nombre"   => "Pepito"
+  "apellido" => "Grillo"
+
+Un primer detalle que llama la atención es que el orden de los elementos
+en la presentación del diccionario no coincide con el orden en el que se han
+especificado en la creación. Esto destaca lo que ya se ha señalado, que los
+valores del diccionario \emph{no} se pueden identificar por posición, sino
+por su asociación con las claves. Así pues, para extraer el apellido:
+
+julia> contacto["apellido"]
+"Grillo"
+
+for k, v in contacto
+end
+
+Otra forma de crear: Dict(claves, valores)
+
+No hay append!, etc., pero sí libertad para extender por simple asignación.
+
+Controlar tipos:
+ Dict{T1,T2}(claves,valores)
+ También Dict(T1,T2) y añadir después.
+ {x=>y}
+(String=>Bool)[.....]
+
+Tuplas
+
+También sirven para iterar, aunque no es lo más frecuente, pero conviene
+mencionarlas aquí.
+Secuencias de valores, aquí si están ordenados. Diferencias:
+1. Inmutable. 2. Sin dimensiones. Si nos fijamos en el tipo, cada elemento viene determinado
+por un tipo distinto.
+¿Para qué entonces?
+Principalmente usado como argumentos de entrada y salida en funciones
+En medio del código, sobre todo para asignaciones a distintas variables
+"de golpe".
+
+Ejemplo trivial:
+
+x, y = a, b
+
+Bucle for, ya lo hemos visto.
+Paréntesis opcional, pero coma obligada.
+
+También se pueden usar para simular diccionarios multidimensionales:
+la clave es una tupla. No es estricto.
+
+No comentar aquí lo de ..., dejar para las funciones.
+
 
 
 
