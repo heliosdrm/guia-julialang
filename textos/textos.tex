@@ -364,7 +364,8 @@ julia> sa = sb[:]
  0 2 3
 
 julia> # Si redefinimos el primer elemento de sa, el cambio ya no se aplica a sb
-julia> sa[1] = 1 1
+julia> sa[1] = 1
+1
 
 julia> sa
 3-element
@@ -377,7 +378,7 @@ julia> sb
 
 Dificultades de los \emph{arrays}. 2: Restricciones de tipo y tamaño.
 
-Además, el tipo de datos y las dimensiones de un \emph{array} no se pueden modificar (aunque sí se le puede reasignar un conjunto de datos nuevo, con otro tipo de datos u otro tamaño). La restricción sobre los tipos de datos puede causar ciertos problemas, ya que los números pueden codificarse de varias maneras, y puede crearse de forma accidental un \emph{array} con un tipo distinto del que se realmente se pretende utilizar. Por eso, al presentar un \emph{array} en pantalla siempre se muestra el tipo de datos y las dimensiones asociadas; en los ejemplos anteriores se han usado los tipos \code{Int32} (enteros de 32 bits) y \code{Float64} (números decimales de doble precisión --- 64 bits ---). Éstos son los tipos por defecto creados en un sistema operativo de 32 bits (en uno de 64 bits los enteros serían \code{Int64}, aunque los decimales serían iguales), según los valores asignados en la creación. También se puede consultar el tipo de una variable (\emph{array} u otro tipo) con la función \code{typeof}.
+Además, el tipo de datos y las dimensiones de un \emph{array} son fijos (aunque sí se le puede reasignar un conjunto de datos nuevo, con otro tipo de datos u otro tamaño). La restricción sobre los tipos de datos puede causar ciertos problemas, ya que los números pueden codificarse de varias maneras, y puede crearse de forma accidental un \emph{array} con un tipo distinto del que se realmente se pretende utilizar. Por eso, al presentar un \emph{array} en pantalla siempre se muestra el tipo de datos y las dimensiones asociadas; en los ejemplos anteriores se han usado los tipos \code{Int32} (enteros de 32 bits) y \code{Float64} (números decimales de doble precisión --- 64 bits ---). Éstos son los tipos por defecto creados en un sistema operativo de 32 bits (en uno de 64 bits los enteros serían \code{Int64}, aunque los decimales serían iguales), según los valores asignados en la creación. También se puede consultar el tipo de una variable (\emph{array} u otro tipo) con la función \code{typeof}.
 
 El problema mencionado se puede ejemplificar con los \emph{arrays} \code{sa} y \code{sb}, que se habían definido a partir de secuencias de números enteros, y por lo tanto son \emph{arrays} del tipo \code{Int32}. Esto significa que asignar un valor decimal a un elemento sería ilegal:
 
@@ -408,7 +409,7 @@ julia> sf = [1.0:3]
 julia> typeof(sf)
 Array{Float64,1}
 
-El truco de la última opción consiste en aprovechar la ``promoción'' automática que realiza Julia al operar con una combinación de números enteros y decimales, por virtud de la cual los enteros se tratan como si fueran decimales.
+El truco de la última opción consiste en aprovechar la ``promoción'' automática que realiza Julia al operar con una combinación de números enteros y decimales, por virtud de la cual los enteros se tratan como si fueran decimales. (Véase la sección XXXXX para más detalles sobre los tipos.)
 
 Julia admite muchos otros tipos de datos; los básicos son enteros con o sin signo y números decimales de distintas precisiones, pero hay muchas más abstracciones, incluyendo números racionales y complejos. Las variables escalares también se clasifican según dichos tipos, aunque en su caso la asignación no muestra estos problemas. Puede consultarse el manual de Julia para un catálogo completo de los tipos numéricos básicos y las reglas de promoción entre ellos.
 
@@ -439,7 +440,7 @@ julia> sa = [sa, 4]
 4-element Array{Int32,1}:
  1 2 3 4
 
-Otra forma de ampliar \emph{arrays} es usar funciones como \code{append!}, \code{prepend!}, \code{insert!}, \code{resize!}, etc. (el signo \code{!} en el nombre es una convención para indicar que la función modifica el argumento. Es típico crear \emph{arrays} que se van ampliando progresivamente en procesos iterativos, pero en la medida de lo posible es recomendable definirlos en un primer momento con el tamaño necesario para contener todos los elementos que requiera, sobredimensionándolo si hace falta y ``recortándolos'' después si se quiere. Esto evita la creación de una nueva variable en cada iteración, que puede consumir más tiempo de procesado que las demás operaciones, y reduce potencialmente el coste computacional en varios órdenes de magnitud.
+Otra forma de ampliar \emph{arrays} es usar funciones como \code{push!}, \code{append!}, \code{unshift!}, \code{prepend!}, \code{insert!}, \code{resize!}, etc. (el signo \code{!} en el nombre es una convención para indicar que la función modifica el argumento). También hay funciones complementarias para eliminar elementos del \emph{array}, como \code{pop!}, \code{shift!} o \code{splice!}, que además devuelven el valor del elemento extraído. Es típico crear \emph{arrays} que se van ampliando progresivamente en procesos iterativos, pero en la medida de lo posible es recomendable definirlos en un primer momento con el tamaño necesario para contener todos los elementos que requiera, sobredimensionándolo si hace falta y ``recortándolos'' después si se quiere. Esto evita la creación de una nueva variable en cada iteración, que puede consumir más tiempo de procesado que las demás operaciones, y reduce potencialmente el coste computacional en varios órdenes de magnitud.
 
 Operaciones matriciales
 
@@ -796,9 +797,9 @@ Condiciones y bucles
 
 En algunos ejemplos de los capítulos anteriores ya se han presentado modelos de sentencias condicionales y bucles. Esos ejemplos se han dado sin apenas explicaciones, en parte por ser prácticamente autoexplicativos, pero también porque ya no solo el concepto, sino también su sintaxis son prácticamente un estándar fácilmente reconocible por todo lector con una mínima experiencia previa en programación.
 
-Sin embargo, es imperativo para cualquier guía introductoria de programación dar en algún punto cuenta de los bloques condicioneales y los distintos tipos de bucles, ya que estamos hablando de las estructuras que controlan el ``flujo'' que sigue la ejecución del código, y junto a la asiganción de valores a variables, vienen a ser el fundamento de cualquier lenguaje de programación.
+Sin embargo, es imperativo para cualquier guía introductoria de programación dar en algún punto cuenta de los bloques condicioneales y los distintos tipos de bucles, ya que estamos hablando de las estructuras que controlan el ``flujo'' que sigue la ejecución del código, y junto a la asiganción de valores a variables, vienen a ser el fundamento de cualquier lenguaje de programación. Por otro lado, este tema también nos sirve para introducir otras estructuras y detalles específicos de Julia.
 
-Así pues, si bien sea por no dejarlas de mencionar, se presenta a continuación la sintaxis básica de estas estructuras:
+Así pues, si bien sea por no dejarlas de mencionar, comenzamos presentando la sintaxis básica de estas estructuras:
 
 Bloques condicionales (\code{if}):
 
@@ -886,77 +887,16 @@ La condición asociada a los bloques \code{if} o \code{elseif}, así como a los 
 \code{>} (mayor), \code{>=} (mayor o igual),
 \code{<} (menor), \code{<=} (menor o igual), etc.
 
-Una característica interesante de Julia es que permite concatenar estos operadores lógicos como se hace a menudo al escribir relaciones matemáticas. Por ejemplo, para verificar si un valor de probabilidad \code{p} está efectivamente acotado entre \code{0} y \code{1}:
-
-julia> p = 0.5;
-julia> 0 <= p <= 1
-true
-
-Estas comparaciones se pueden hacer también sobre los distintos elementos de un \emph{array}, pero para hacer la comparación elemento a elemento hay que utilizar los operadores ``con punto'' (cfr. la sección XXXXX). Por ejemplo, si queremos comprobar los elementos de un vector que son mayores que cero:
-
-julia> v1 = [1, 4, 0, -1, 2];
-julia> positivos = (v1 .> 0)
-5-element BitArray{1}:
-  true
-  true
- false
- false
-  true
-
-Los vectores de valores lógicos como este resultado no se pueden usar como condición en un \code{if} o \code{while}, que sólo admiten valores de tipo \code{Bool} unitarios. Uno de los propósitos con los que se suelen usar es para ``seleccionar'' los elementos de otro vector sobre los que se quiere realizar alguna operación. Por ejemplo, supongamos que queremos calcular el logaritmo del vector \code{v1}, dejando como indefinidos (\code{NaN}) aquellos elementos cuyo valor en \code{v1} no es estrictamente positivo.
-
-julia> # Primero creamos un vector del mismo tamaño que v1...
-julia> log_v1 = Array(Float64, size(v1));
-julia> # Y lo rellenamos con NaN, usando la función fill!
-julia> fill!(log_v1, NaN);
-julia> # El logaritmo sólo se añlica a los números positivos
-julia> log_v1[positivos] = log(v1[positivos])
-3-element Array{Float64,1}:
- 0.0
- 1.38629
- 0.693147
-
-julia> # Ahora vemos todos los números:
-julia> log_v1   # log([1, 4, 0, -1, 2])
-5-element Array{Float64,1}:
-   0.0
-   1.38629
- NaN
- NaN
-   0.693147
-
-También es útil mencionar que por convención los valores lógicos se pueden interpretar numéricamente, considerando \code{false==0} y \code{true==1}. Así pues, se puede comprobar cuántos valores positivos hay en el vector \code{v1} mediante:
-
-julia> sum(positivos)
-3
-
-En el sentido inverso, se considera que el cero es equivalente a \code{false}, y cualquier otro número (positivo o negativo) equivale a \code{true}. Esta conversión se hace con la función \code{bool}:
-
-julia> bool(v1)   # bool([1, 4, 0, -1, 2])
-5-element Array{Bool,1}
-  true
-  true
- false
-  true
-  true
-
-Pero es importante señalar que esta conversión no es automática, y una operación pensada para valores lógicos puede dar errores o valores inesperados si se aplica a valores numéricos. Esto se puede comprobar, por ejemplo, aplicando la función \code{any} al vector numérico \code{v1}.
-
-Volviendo a los bloques \code{if} y \code{while}, lo que sí se puede hacer con los vectores lógicos es, por ejemplo, obtener un valor lógico unitario en función de si todos o alguno de sus elementos es verdadero:
-
-julia> all(positivos) # Son *todos* mayores que cero?
-false
-julia> any(positivos) # Hay *alguno* mayor que cero?
-true
-
-Y también hay muchas otras funciones que dan como resultado variables lógicas, resultantes de comprobar ciertas condiciones numéricas o de otro tipo. Algunas que pueden usarse habitualmente son:
+Sin embargo, también hay muchas otras funciones que dan como resultado variables lógicas, como resultado de comprobar ciertas condiciones numéricas o de otro tipo. Algunas que pueden usarse habitualmente son:
 
 \begin{description}
+  \item[\code{isdefined(x)}] \hfill \\
+  Comprobar si existe la variable identificada por el símbolo \code{x} en el espacio de trabajo. Si una variable tiene por ejemplo el nombre \code{v}, el ``símbolo'' que la identifica es \code{:v} (con dos puntos); es decir, que la forma de llamar a la función sería \code{isdefined(:v)}.
   \item[\code{isdefined(x,index)}] \hfill \\
-  Esta función se puede usar de distintas maneras. Si \code{x} es un \emph{array} u otro tipo de variable compuesta por varios componentes, se interroga si esa variable contiene el componente representado por el índice \code{index}; p.ej. \code{isdefined(v1, 5)}. También se puede usar con un solo argumento, consistente en el nombre de una variable en forma de ``símbolo'' ---la forma más sencilla de hacer esto es añadiendo dos puntos delante del nombre---; en ese caso se interroga si existe una variable con ese nombre en el espacio de trabajo, p.ej. \code{isdefined(:v2)}.
+  Si \code{x} es un \emph{array} u otro tipo de variable compuesta por varios componentes, se interroga si esa variable contiene el componente representado por el índice \code{index}; p.ej. \code{isdefined(v, 5)} para comprobar si existe un quinto elemento en \code{v}.
   \item[\code{isnan(x)}] \hfill \\
   Comprobar si \code{x} es un \code{NaN} (\emph{not-a-number)}.
-  \item[\code{isfinite(x)}, \code{isinf(x)}]: \hfill \\
+  \item[\code{isfinite(x)}, \code{isinf(x)}] \hfill \\
   Comprobar si \code{x} es un número finito o infinito, respectivamente. (Un \code{NaN} devuelve \code{false} para ambas funciones.)
   \item[\code{isinteger(x)} \hfill \\
   Comprobar si \code{x} es un número entero, u otro tipo de variable (p.ej. un vector) que sólo contiene números enteros.
@@ -966,35 +906,36 @@ Y también hay muchas otras funciones que dan como resultado variables lógicas,
   Comprobar si \code{x} (que ha de ser un número entero) es par o impar, respectivamente.
   \item[\code{isempty(x)}] \hfill \\
   Aplicable a vectores u otro tipo de ``colecciones'' (véase la siguiente sección). Comprueba si \code{x} está vacío (no tiene ningún elemento).
-  \item[\code{in(el,x)}] \hfill \\
-  Comprobar si el elemento con el valor \code{el} está presente en la colección \code{x}.
   \item[\code{isa(x,type)}] \hfill \\
   Comprobar si la variable \code{x} es del tipo \code{type}, p.ej. \code{isa(x, Number)}, \code{isa(x, Bool)},\ldots (ver la sección XXXX sobre tipos).
   \item[\code{iseltype(x,type)}] \hfill \\
   Equivalente a \code{isa}, pero también válido para \emph{arrays} u otro tipo de colecciones; en el segundo caso comprueba el tipo de todos sus elementos.
+  \item[\code{in(el,x)}] \hfill \\
+  Comprobar si el elemento con el valor \code{el} está presente en la colección \code{x}.
+  \item[\code{any(x)}] \hfill \\
+  Si \code{x} es un \emph{array} con elementos de tipo \code{Bool}, comprobar si al menos uno de los elementos es \code{true}.
+  \item[\code{all(x)}}] \hfill \\
+  Si \code{x} es un \emph{array} con elementos de tipo \code{Bool}, comprobar si todos los elementos son \code{true}.
 \end{description}
 
-Las expresiones lógicas a menudo se componen entre sí con operadores lógicos que representan la intersección y la unión lógica (\emph{and} y \emph{or}, respectivamente); también se pueden ``invertir'' (convertir \code{true} en \code{false} y viceversa) con el operador de negación (\emph{not}). Hay dos tipos de estos operadores lógicos. Por un lugar están los operadores elementales \code{&} \code{|}, \code{~} (\emph{and}, \emph{or}, \emph{not}, respectivamente), que sirven para componer \emph{arrays} lógicos ``elemento a elemento''. Por ejemplo, en el código de la criba de Eratóstenes, el bucle "while" que servía para marcar los múltiplos del número \code{m} se podría haber sustituido por una operación ``vectorizada'', utilizando la función \code{mod} que devuelve el resto de la división. Los múltiplos de \code{m} serían los números para los que el resto de dividir por \code{m} fuese nulo, lo cual puede codificarse en una variable como:
+Volviendo a los operadores lógicos de comparación, una característica interesante de Julia es que permite concatenarlos como se hace a menudo al escribir relaciones matemáticas. Por ejemplo, para verificar si un valor de probabilidad \code{p} está efectivamente acotado entre \code{0} y \code{1}:
+
+julia> p = 0.5;
+julia> 0 <= p <= 1
+true
+
+Estas comparaciones se pueden hacer también sobre los distintos elementos de un \emph{array}, pero para hacer la comparación elemento a elemento hay que utilizar los operadores ``con punto'' (cfr. la sección XXXXX). Los resultados de estas comparaciones son vectores lógicos, que no se pueden usar como condición en un \code{if} o \code{while} (éstos sólo admiten valores de tipo \code{Bool} unitarios), pero se usan a menudo para seleccionar elementos de otro vector y operar sobre ellos. Por ejemplo, veamos la siguiente alternativa al bucle \code{while} del ejemplo anterior, que también nos sirve para introducir otros detalles sobre las expresiones lógicas:
 
 multiplos_m = (mod([1:n], m) .== 0)
+igual_a_m = ([1:n] ~= m)
+eliminados[multiplos_m & igual_a_m] = true
 
-Pero esta lista incluye el propio número \code{m}, que no ha de eliminarse. Para excluirlo puede usarse:
+La primera línea contiene una de estas comparaciones lógicas con \emph{arrays}. Concretamente calcula un vector de \code{Bool}, que son \code{true} para los múltiplos de \code{m} (dan resto igual a cero al dividirlas por \code{m}). La segunda línea utiliza el operador \code{~=}, que es el equivalente a \code{!=} (``distinto de'') para \emph{arrays}; el resultado es otro vector de \code{Bool} igual a \code{true} en todas las posiciones salvo \code{m}. En la tercera línea se seleccionan los elementos de \code{eliminados} que cumplen ambas condiciones: múltiplos de \code{m} con excepción de \code{m}, y se les asigna el valor \code{true}.%
+\footnote{%
+El paréntesis alrededor de las expresiones lógicas es opcional, ya que las operaciones lógicas tienen precedencia sobre otras, pero en estos ejemplos se usan los paréntesis de forma generalizada para facilitar la lectura y la interpretación de las expresiones.%
+}
 
-multiplos_m = (mod([1:n], m) .== 0) & ([1:n] ~= m)
-
-
-
-
-Por ejemplo:
-
-julia> v1 = [1, 4, 0, -5, 2]; v2 = [-3, 6, -1, 3, 4];
-julia> ambos_positivos = (v1 .> 0) & (v2 .>0)
-5-element Array{Bool,1}
- false
-  true
- false
- false
-  true
+Como en este ejemplo, las expresiones lógicas a menudo se componen entre sí con operadores que representan la intersección y la unión lógica (\emph{and} y \emph{or}, respectivamente); también se pueden ``invertir'' (convertir \code{true} en \code{false} y viceversa) con el operador de negación (\emph{not}). Hay dos tipos de estos operadores lógicos. Por un lugar están los operadores elementales \code{&} \code{|}, \code{~} (\emph{and}, \emph{or}, \emph{not}, respectivamente), que sirven para componer \emph{arrays} lógicos ``elemento a elemento'', como ya se ha visto en los ejemplos anteriores.
 
 Para valores lógicos unitarios, sin embargo, se suelen usar los llamados operadores de ``cortocircuito'', escritos con el símbolo duplicado para el \emph{and} y \emph{or}, y con el símbolo de exclamación para el \emph{not}: \code{&&}, \code{||} y \code{!}, respectivamente. Reciben este nombre porque las expresiones combinadas se van evaluando de izquierda a derecha, pero la evaluación se interrumpe tan pronto como se llega a un resultado inequívoco (figura XXX).
 
@@ -1002,104 +943,221 @@ Este comportamiento es útil cuando una de las condiciones a comprobar sólo tie
 
 isdefined(:x) && (x > 0)
 
-Literalmente, lo que se está interrogando es si en el espacio de trabajo hay definida una variable con el símbolo ``x'', y si se cumple esa condición, si el valor asignado es mayor que cero. Obviamente, si no se cumpliese la primera, la segunda expresión generaría un error, pero el ``cortocircuito'' del operador \code{&&} evitaría llegar a ese punto.%
-\footnote{%
-El paréntesis en la segunda expresión es opcional, ya que las
-operaciones lógicas tienen precedencia sobre otras, pero en estos ejemplos
-se usan los paréntesis de forma generalizada para facilitar la lectura y
-la interpretación de las expresiones.%
-}
+Literalmente, lo que se está interrogando es si en el espacio de trabajo hay definida una variable con el símbolo ``x'', y si se cumple esa condición, si el valor asignado es mayor que cero. Obviamente, si no se cumpliese la primera, la segunda expresión generaría un error, pero el ``cortocircuito'' del operador \code{&&} evitaría llegar a ese punto.
 
+A modo de resumen, la tabla XXXX muestra los distintos operadores de comparación y composición lógica, tanto para variables escalares como vectoriales.
 
-
-
-
+\begin{tabular}
+                      & Escalar       & Vectorial      \\
+A igual que B         & \code{A == B} & \code{A .== B} \\
+A distinto de B       & \code{A != B} & \code{A ~= B}  \\
+A mayor que B         & \code{A > B}  & \code{A .> B}  \\
+A mayor o igual que B & \code{A >= B} & \code{A .>= B} \\
+A menor que B         & \code{A < B}  & \code{A .< B}  \\
+A menor o igual que B & \code{A <= B} & \code{A .<= B} \\
+A y B (intersección)  & \code{A && B} & \code{A & B}   \\
+A o B (unión)         & \code{A || B} & \code{A | B}   \\
+``No'' A (negación)   & \code{!A}     & \code{~A}
+\end{tabular}
 
 
 Bucles y diccionarios
 
-En todos los ejemplos de bucles \code{for} mostrados hasta este punto
-las iteraciones se han hecho sobre rangos como \code{1:10}, etc.
-Sin embargo, hay otros tipos de objetos ``iterables'' que se pueden
-utilizar para ese propósito. De las dos sintaxis disponibles para estos
-bucles (con el símbolo ``\code{=}'' o con ``\code{in}'', véase arriba),
-la primera se suele usar exclusivamente con rangos, y la segunda con
-cualquier otro tipo de objeto; pero esto es una mera convención, ya
-que son sintaxis completamente equivalentes.
+En todos los ejemplos de bucles \code{for} mostrados hasta este punto las iteraciones se han hecho sobre rangos como \code{1:10}, etc. Sin embargo, hay otros tipos de objetos ``iterables'' que se pueden utilizar para ese propósito. De las dos sintaxis disponibles para estos bucles (con el símbolo ``\code{=}'' o con ``\code{in}'', véase arriba), la primera se suele usar exclusivamente con rangos, y la segunda con cualquier otro tipo de objeto; pero esto es una mera convención, ya que son sintaxis completamente equivalentes.
 
-Después de los rangos, los objetos iterables más típicos para usar
-en los bucles \code{for} son los \emph{arrays} y los ``diccionarios''.
-Ya se ha dedicado un capítulo completo a los \emph{arrays}, por lo que
-no hace falta decir nada más sobre ellos aquí.
-Los diccionarios se parecen a los \emph{arrays} en la medida en que
-también son series de valores, numéricos o de otros tipos;
-pero así como los elementos de los \emph{arrays} vienen determinados por su
-posición en la serie, los valores de un diccionario se identifican por
-su asociación con una serie paralela de ``claves'' (\emph{keys}).
-Otra diferencia es que los \emph{arrays} se pueden organizar en varias
-dimensiones, lo cual no tiene cabida en los diccionarios (aunque puede simularse,
-tal como se cuenta más adelante).
+Después de los rangos, los objetos iterables más típicos para usar en los bucles \code{for} son los \emph{arrays} y los ``diccionarios''. Ya se ha dedicado un capítulo completo a los \emph{arrays}, por lo que no hace falta decir nada más sobre ellos aquí. Por otro lado, en el capítulo XXXX se han adelantado algunos ejemplos de diccionarios (los ``atributos'' y ``estilos'' de los gráficos de Winston), aunque no se ha profundizado en su estructura. Los diccionarios se parecen a los \emph{arrays} en la medida en que también son series de valores, numéricos o de otros tipos; pero así como los elementos de los \emph{arrays} vienen determinados por su posición en la serie, los valores de un diccionario se identifican por su asociación con una serie paralela de ``claves'' (\emph{keys}). Otra diferencia es que los \emph{arrays} se pueden organizar en varias dimensiones, lo cual no tiene cabida en los diccionarios.
 
-Muchos otros lenguajes de programación tienen alguna forma de expresar estas
-series asociativas con parejas de ``clave-valor'', aunque el concepto de
-diccionario tal como está implementado en Julia es sobre todo comparable
-a los objetos del mismo nombre en Python. Sin embargo hay algunas diferencias
-formales. Para definir un diccionario se usan expresiones semejantes a las de
-los \emph{arrays}, pero señalando la relación entre cada clave y su valor
-con el símbolo \code{=>}. Por ejemplo, un diccionario con los datos personales
-de un individuo:
+Hay muchas circunstancias en las que es interesante emplear estas series asociativas, aunque los diccionarios son particularmente útiles cuando el conjunto de claves no está predeterminado ni sigue un orden específico.%
+\footnote{%
+Para conjuntos fijos de claves, otras estructuras como los ``tipos abstractos'' pueden ser más adecuadas (véase la sección XXXX).%
+}
+Un buen ejemplo puede ser un conjunto de datos como las tasas de desempleo de países varios (tabla XXXXX). Pongamos como caso que deseamos registrar las tasas de 2014. Esto podría hacerse con un vector de países y otro de datos:
 
-julia> contacto = ["nombre"=>"Pepito", "apellido"=>"Grillo", "edad"=>30]
-Dict{ASCIIString,Any} with 3 entries:
-  "edad"     => 30
-  "nombre"   => "Pepito"
-  "apellido" => "Grillo"
+\begin{tabular}
+& 2011 & 2012 & 2013 & 2014 \\
+Germany & 5.8 & 5.4 & 5.2 & 5.0 \\
+Greece & 17.9 & 24.5 & 27.5 & 26.5 \\
+Spain & 21.4 & 24.8 & 26.1 & 24.5 \\
+France & 9.2 & 9.8 & 10.3 & 10.2 \\
+Italy & 8.4 & 10.7 & 12.1 & 12.7 \\
+Portugal & 12.9 & 15.8 & 16.4 & 14.1 \\
+United Kingdom & 8.1 & 7.9 & 7.6 & 6.3 \\
+\end{tabular}
+Fuente: Eurostat
 
-Un primer detalle que llama la atención es que el orden de los elementos
-en la presentación del diccionario no coincide con el orden en el que se han
-especificado en la creación. Esto destaca lo que ya se ha señalado, que los
-valores del diccionario \emph{no} se pueden identificar por posición, sino
-por su asociación con las claves. Así pues, para extraer el apellido:
+paises = ["Germany", "Greece", "Spain", "France", "United Kingdom"]
+desempleo_2014 = [5, 26.5, 24.5, 10.2, 6.3]
 
-julia> contacto["apellido"]
-"Grillo"
+Pero extraer, por ejemplo, el valor correspondiente a España, requiere buscar el índice correspondiente en \code{paises} y utilizarlo para indexar \code{desempleo_2014:
 
-for k, v in contacto
+julia> desempleo_2014[paises .== "Spain"]
+1-element Array{Float64,1}:
+ 24.5
+
+Además, esta operación no devuelve el resultado como un escalar, sino como un vector (aunque sea con un solo elemento), ya que nada impediría que hubiera varios elementos del vector \code{paises} iguales a \code{"Spain"}. Para extraer un escalar, se podría utilizar la función \code{findfirst} que da el índice de sólo la primera coincidencia:
+
+julia> desempleo_2014[findfirst(paises, "Spain")]
+24.5
+
+Sin embargo, el uso de un diccionario aquí simplifica las cosas:
+
+julia> dic_desempleo_2014 = ["Germany" => 5,
+                       "Greece" => 26.5,
+                       "Spain" => 24.5,
+                       "France" => 10.2,
+                       "United Kingdom" => 6.3]
+Dict{ASCIIString,Any} with 5 entries:
+  "Germany"        => 5
+  "United Kingdom" => 6.3
+  "Spain"          => 24.5
+  "Greece"         => 26.5
+  "France"         => 10.2
+
+julia> dic_desempleo_2014["Spain"]
+24.5
+
+Un primer detalle que llama la atención es que el orden de los elementos en la presentación del diccionario no coincide con el orden en el que se han especificado en la creación. Esto destaca lo que ya se ha señalado, que los valores del diccionario \emph{no} se pueden identificar por posición, sino por su asociación con las claves.
+
+La forma de ampliar los diccionarios también es distinta a como se haría con un \emph{array}. Las funciones que se emplean con éstos, como \code{push!}, \code{append!}, etc., no sirven para los diccionarios. Añadir un elemento a un diccionario es más sencillo; por ejemplo, para añadir el dato de desempleo de Italia (12.7%) basta escribir:
+
+dic_desempleo_2014["Italy"] = 12.7
+
+Por otro lado, para eliminar una entrada a partir de su clave se utiliza la función \code{delete!}. 
+
+La forma de iterar con diccionarios en un bucle \code{for} también es distinta a como se haría con un rango o un \code{array}, ya que cada elemento está determinado por dos variables (la clave y el valor), y tampoco se sigue un orden determinado para las iteraciones. Por verlo de forma práctica, consideremos de nuevo el ejemplo anterior. Supongamos que queremos crear un informe con las tasas de desempleo; este informe debería contener una línea con cada dato, siguiendo el formato \code{Spain: 24.5%}, etc. En cada iteración podemos conocer tanto la clave como el valor de elemento a presentar, asignándolos a una pareja de variables (en ese orden) en la misma llamada al \code{for}:
+
+for (k, v) in dic_desempleo_2014
+  print(k)
+  print(": ")
+  print(v)
+  println("\%")
 end
 
-Otra forma de crear: Dict(claves, valores)
+En cada iteración, la clave (\emph{key}) se asigna a la variable \code{k} y el valor a \code{v}; la función \code{print} imprime en pantalla el contenido especificado, y \code{println} añade una nueva línea al final, con lo que tras ejecutar las tres iteraciones aparece en pantalla:
 
-No hay append!, etc., pero sí libertad para extender por simple asignación.
+Germany: 5%
+United Kingdom: 6.3%
+Spain: 24.5%
+Italy: 12.7%
+Greece: 26.5%
+France: 10.2%
 
-Controlar tipos:
- Dict{T1,T2}(claves,valores)
- También Dict(T1,T2) y añadir después.
- {x=>y}
-(String=>Bool)[.....]
+Una alternativa sería registrar previamente las claves del diccionario con la función \code{keys}, y utilizarlas en cada iteración para extraer los valores asociados. Por ejemplo:
+
+claves = keys(dic_desempleo_2014)
+for k in claves
+  print(k)
+  print(": ")
+  print(dic_desempleo_2014[k])
+  println("\%")
+end
+
+El resultado es exactamente el mismo que el anterior, y el código es ligeramente más complejo. Pero para cierto tipo de claves esta estrategia puede ser útil. Por ejemplo, en este caso en el que las claves son etiquetas textuales, podría interesarnos que se presenten por orden alfabético. En ese caso, antes del bucle se puede aplicar la función \code{sort!} para ordenar las claves. Pero antes hay que convertir la salida de \code{keys} a un \emph{array} al que se le pueda aplicar esa función. Esto se hace con la función \code{collect}, como sigue:%
+\footnote{%
+Podría parecer natural que \code{keys} devolviese por defecto un \emph{array} para evitarse el paso de la función \code{collect}. Pero potencialmente \code{keys} podría aplicarse a otro tipo de colecciones, cuyas claves no pudieran disponerse en forma de \emph{array}. Así que, por consistencia de tipos (véase el capítulo XXXXXX), se mantiene esta característica.%
+}
+
+claves = collect(keys(dic_desempleo_2014))
+sort!(claves)
+
+Como complemento a \code{keys}, existe la función \code{values} para extraer los valores de un diccionario (p.ej. \code{values(dic_desempleo_2014)}. Por otro lado, también es posible crear un diccionario con la función \code{Dict} a partir de dos vectores: el primero para las claves y el segundo para los valores. Usando las variables definidas al comienzo de esta sección:
+
+julia> Dict(paises, desempleo_2014)
+Dict{ASCIIString,Float64} with 5 entries:
+  "Germany"        => 5.0
+  "United Kingdom" => 6.3
+  "Spain"          => 24.5
+  "Greece"         => 26.5
+  "France"         => 10.2
+
+Este resultado sirve también para ilustrar una diferencia entre la creación de \emph{arrays} y la de diccionarios. Al juntar datos de distintos tipos, como el valor entero \code{5} asignado a Alemania y los valores decimales de los otros países, en la creación de \emph{arrays} se aplican las reglas de promoción de tipos y todos los datos se codifican como \code{Float64} (véase la sección XXXXX sobre estas reglas). Por eso, el diccionario definido a partir de \emph{arrays} es del tipo \code{Dict{ASCIIString,Float64}}, y el valor entero aparece con decimales (\code{5.0}). La definición literal de diccionarios, por el contrario, no realiza ninguna promoción de tipos: el valor entero se mantiene sin cambios, y la lista completa de valores pasa a ser de tipo \code{Any}, para poder contener tanto enteros como decimales.
+
+El tipo de las claves y los valores puede controlarse al definir los diccionarios, de manera semejante a como se hace con los \emph{arrays}. Por ejemplo, si quisieran usarse tipos más genéricios como \code{String} para las claves y \code{Real} para los valores, podría haberse utilizado alguna de las siguientes sintaxis:
+
+# Ejemplo con sólo dos países para abreviar
+(String=>Real)["Germany"=>5, "Spain"=>24.5]
+Dict{String,Real}(paises, desempleo_2014)
+
+Asimismo, se pueden crear diccionarios del tipo \code{Dict{Any,Any}} empleando llaves en vez de corchetes:
+
+julia> {"Germany"=>5, "Spain"=>24.5} 
+Dict{Any,Any} with 2 entries:
+  "Germany" => 5.0
+  "Spain"   => 24.5
+
 
 Tuplas
 
-También sirven para iterar, aunque no es lo más frecuente, pero conviene
-mencionarlas aquí.
-Secuencias de valores, aquí si están ordenados. Diferencias:
-1. Inmutable. 2. Sin dimensiones. Si nos fijamos en el tipo, cada elemento viene determinado
-por un tipo distinto.
-¿Para qué entonces?
-Principalmente usado como argumentos de entrada y salida en funciones
-En medio del código, sobre todo para asignaciones a distintas variables
-"de golpe".
+Vistos los diccionarios y la forma de trabajar con ellos, es oportuno hablar de otro tipo de colección, que guarda otras semejanzas y diferencias con los \emph{arrays}. Las ``tuplas'' (\emph{tuples} en inglés) son series de variables separadas por comas --- y a menudo enmarcadas entre paréntesis, aunque esto se hace sólo por claridad o para evitar ambigüedades, como en otros usos de los paréntesis. Por ejemplo:
 
-Ejemplo trivial:
+julia> unos = 1, 1.0, 1+0im, true
+(1,1.0,1 + 0im,true)
 
-x, y = a, b
+Las tuplas se parecen a los \emph{arrays} en que sus elementos vienen determinados por su posición en la serie; por ejemplo el número entero del ejemplo anterior es \code{unos[1]}, el número complejo es \code{unos[3]}, etc. Sin embargo, en un \emph{array} todos los elementos han de ser del mismo tipo (aunque sea un ``supertipo'' como \code{Any} que comprende otros tipos más específicos). Por el contrario, cada elemento de una tupla puede ser de un tipo distinto: 
 
-Bucle for, ya lo hemos visto.
-Paréntesis opcional, pero coma obligada.
+julia> typeof(unos)
+(Int64,Float64,Complex{Int64},Bool)
 
+Las tuplas también se diferencian de los \emph{arrays} en que sólo pueden tener una dimensión, y en que son objetos ``inmutables''; es decir, que una tupla no se puede ampliar ni reducir, ni se puede cambiar uno de sus elementos por otro (aunque se puede sustituir la tupla completa por otro contenido).
+
+julia> unos[1]=11
+ERROR: `setindex!` has no method matching setindex!(::(Int64,Float64,Complex{Int
+64},Bool), ::Int64, ::Int64)
+
+Hay que destacar, sin embargo, que esta inmutabilidad sólo afecta a la tupla en sí: técnicamente no se puede cambiar un elemento por otro, pero puede parecer lo contrario si se trata de un elemento que \emph{sí} es mutable, por ejemplo un \emph{array}:
+
+julia> x = [1,2]; y=[3,4];
+julia> tup = x,y
+([1,2],[3,4])
+
+julia> # Intentamos reemplazar el primer elemento -- mal
+julia> tup[1] = [0.1, 0.2]
+ERROR: `setindex!` has no method matching setindex!(::(Array{Int64,1},Array{Int6
+4,1}), ::Array{Float64,1}, ::Int64)
+
+julia> # Ahora lo hacemos bien: 1 - modificar el contenido del elemento
+julia> tup[1][1] = 10
+10
+
+julia> # 2 - modificar el vector x
+julia> x[2] = 20
+20
+
+julia> tup
+([10,20],[3,4])
+
+La clave para entender lo que ha pasado en ese ejemplo es lo que ya se contó en la sección XXXXX: el primer elemento de la tupla \code{tup}, al ser un \emph{rray}, no hace referencia a sus valores (inicialmente $1$ y $2$), sino a la estructura de memoria que conforma ese \emph{array}. Lo que se muestra al usuario, sin embargo, son los valores contenidos. Por eso se puede hacer un cambio en el vector entro o fuera de la tupla, y esos cambios luego se reflejan en el otro objeto.
+
+Ahora bien, la característica más notable de las tuplas es la que determina su principal utilidad: es posible definir una tupla de variables en el lado izquierdo de una asignación, lo que sirve para hacer un conjunto de asignaciones ``en paralelo''. Un ejemplo trivial: asignar el valor $1$ a la variable \code{x} y $2$ a \code{y}:
+
+julia> x,y = 1,2
+(1,2)
+
+julia> # Ahora vemos las variables asignadas:
+julia> x
+1
+
+julia> y
+2
+
+El orden en el que se realizan las operaciones es el siguiente: primero se evalúa la parte derecha de la asignación (se determinan los valores a asignar), y luego la parte izquierda (se enlaza cada valor a la variable asignada); pero en cada una de las dos partes, la tupla se evalúa en el orden de lectura. Veamos un ejemplo pequeño, pero algo retorcido:
+
+julia> w,z = (z=10),(w=2z)
+(10,20)
+
+julia> w
+10
+
+julia> z
+20
+
+Como se ha dicho, primero se evalúa la parte derecha en el orden de lectura: se determina el primer elemento de una tupla asignando el valor $10$ a la variable \code{z}, y el doble de este valor ($20$) se usa para el segundo elemento de la tupla, asignándolo a \code{w}. Luego se evalúa la parte izquierda de la expresión, donde los valores de la tupla derecha se asignan a las variables \code{w}, \code{z} ---al margen del valor que se les dio a las mismas variables en el paso anterior, que era precisamente el opuesto---.
+
+Ya se ha visto un caso práctico de tuplas usadas para asignar simultáneamente valores a distintas variables: la declaración de los bucles \code{for} con diccionarios. Cuando se itera sobre un diccionario, el elemento pasado en cada iteración es una tupla con dos componentes: el primero es la clave y el segundo es el valor. La sintaxis \code{for (k,v) in diccionario} lo que hace es ``distribuir'' estos dos componentes en las dos variables \code{k} y \code{v}, respectivamente, del mismo modo que en los ejemplos anteriores. En el capítulo XXXXX se verán más utilidades de las tuplas, en relación con las entradas y salidas de las funciones.
+
+Sin embargo, cabe hacer mención aquí d
 También se pueden usar para simular diccionarios multidimensionales:
 la clave es una tupla. No es estricto.
-
-No comentar aquí lo de ..., dejar para las funciones.
 
 
 
