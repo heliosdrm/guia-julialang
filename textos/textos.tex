@@ -1,13 +1,20 @@
-﻿\documentclass[spanish]{article}
-\usepackage[T1]{fontenc}
-\usepackage[latin9]{inputenc}
-\usepackage{babel}
-\addto\shorthandsspanish{\spanishdeactivate{~<>}}
+﻿\documentclass{article}
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX]{Liberation Sans}
+\setmonofont[Scale=0.75]{Liberation Mono}
+%\defaultfontfeatures{Ligatures=TeX}
+\usepackage{polyglossia}
+%\setdefaultlanguage{spanish}
+
+\newcommand{\code}{\texttt}
+
+
 \usepackage{url}
-\usepackage[unicode=true, pdfusetitle,
- bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
- breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
- {hyperref}
+%\usepackage{hyperref}
+
+
+\usepackage{minted}
+
 
 \begin{document}
 
@@ -48,6 +55,7 @@ Veamos ahora un ejemplo práctico de ambas formas de uso, con un programa sencil
 \ulr{http://berndt-schwerdtfeger.de/cal/cal.pdf}%
 } Se trata de un algoritmo simple, que podría traducirse a Julia mediante el siguiente código: 
 
+\begin{juliacode}
 function gauss_diasemana(d, m, y)
 # d, m, y son los números del día, mes y año, respectivamente
 # La función devuelve una cadena de texto con el día de la semana
@@ -70,6 +78,7 @@ function gauss_diasemana(d, m, y)
   w = mod(d + e + f + g + div(g, 4), 7)
   return(warray[w+1])
 end
+\end{juliacode}
 
 Supongamos que ese código está guardado en un archivo llamado \texttt{calc_diasemana.jl} (el nombre del archivo es arbitrario, y puede ser cualquier nombre aceptado por el sistema operativo). El programa consiste en una sola función con 3 argumentos (los números del día, el mes y el año), basada en unas pocas divisiones enteras (definidas en la función \code{div}) y el cálculo de ``restos'' de dichas divisiones (\code{mod}),%
 \footnote{%
@@ -207,9 +216,9 @@ A continuación se presenta una lista de algunos de los paquetes que pueden ser 
   \item Depuración de funciones (básico): \texttt{Debug}.
 \end{itemize}
 
-Por otro lado, la interfaz de línea de comandos es para muchos usuarios una herramienta de trabajo poco amigable, y las ``ayudas'' que proporciona (invocación de instrucciones anteriores usando las flechas de ``arriba''/``abajo'', combinaciones de teclas disponibles para acelerar las operaciones de corta-y-pega, etc.) son insuficientes. En respuesta a esa necesidad, hay entornos de programación más completos. Uno recomendado por los propios desarrolladores de Julia es \href{http://junolab.org/}{Juno}, basado en la plataforma \href{http://lighttable.com/}{Light Table}. Otra opción interesante es \href{http://forio.com/products/julia-studio/}{Julia Studio}, con una interfaz clásica con consola interactiva y editor de código por separado.
+Por otro lado, la interfaz de línea de comandos es para muchos usuarios una herramienta de trabajo poco amigable, y las ``ayudas'' que proporciona (invocación de instrucciones anteriores usando las flechas de ``arriba''/``abajo'', combinaciones de teclas disponibles para acelerar las operaciones de corta-y-pega, etc.) son insuficientes. En respuesta a esa necesidad, hay algunos entornos de programación adaptados al uso de Julia, aunque en la fecha en la que se ha elaborado este documento no se puede decir que haya una solución definitiva. Por ejemplo está \href{http://junolab.org/}{Juno}, una aplicación basada en la plataforma \href{http://lighttable.com/}{Light Table}.
 
-Otra interfaz avanzada, especialmente útil para documentar las sesiones de trabajo (combinando código, texto con formato y gráficas), es ``IJulia'', basada en IPython (una interfaz análoga para Python). Se puede iniciar desde dentro de Julia como un paquete más (requiere tener IPython y otros componentes asociados instalados en el sistema), o desde ``la nube'' en un navegador de Internet a través de \href{https://www.juliabox.org/}{JuliaBox}, sin instalar nada en el ordenador (ni siquiera Julia).
+Otra interfaz avanzada, especialmente útil para documentar las sesiones de trabajo (combinando código, texto con formato y gráficas), es ``IJulia'', basada en IPython (una interfaz análoga para Python). Se puede iniciar desde dentro de Julia como un paquete más (requiere tener IPython y otros componentes asociados instalados en el sistema), o desde ``la nube'' en un navegador de Internet a través de  sin instalar nada en el ordenador (ni siquiera Julia).
 
 
 \section{Variables de tipo \emph{array}}
@@ -221,7 +230,7 @@ Creación de \emph{arrays}
 Un \emph{array} se define entre corchetes, con cada valor individual separado por comas:
 
 julia> primos = [1,2,3,5,7,11]
-6-element Array{Int32,1}:
+6-element Array{Int64,1}:
  1
  2
  3
@@ -290,10 +299,10 @@ Estos conjuntos de índices se pueden escribir de forma más cómoda a través d
 julia> impares = 1:2:10
 1:2:9
 
-En este ejemplo el valor final asignado (10) no es compatible con la definición del valor inicial y el paso, por lo tanto se sustituye automáticamente por 9, el valor compatible más cercano (\emph{dentro} del rango entre los valores inicial y final asignados). El conjunto de valores representados se entiende más fácilmente si el resultado se convierte a un vector, usando el operador de los corchetes:
+En este ejemplo el valor final asignado (10) no es compatible con la definición del valor inicial y el paso, por lo tanto se sustituye automáticamente por 9, el valor compatible más cercano (\emph{dentro} del rango entre los valores inicial y final asignados). El conjunto de valores representados se entiende más fácilmente si el resultado se convierte a un vector, usando la operación \code{collect}:
 
-julia> [impares]
-5-element Array{Int32,1}:
+julia> collect(impares)
+5-element Array{Int64,1}:
  1
  3
  5
@@ -302,22 +311,22 @@ julia> [impares]
 
 Los números de un rango no han de ser necesariamente enteros ni positivos, aunque es lo lógico cuando se quiere definir un conjunto de índices. Por otro lado, el paso \code{s} es un valor opcional, que por defecto se asume igual a 1. Para construir una serie ordenada de mayor a menor, además de definir los valores inicial y final en el orden adecuado, se ha de definir un paso negativo. Olvidar este detalle hace que la serie creada sea vacía. Por ejemplo, para una ``cuenta atrás'' de 5 a 1 (convertida a vector para más claridad):
 
-julia> [5:-1:1] # Correcto
-5-element Array{Int32,1}:
+julia> collect(5:-1:1) # Correcto
+5-element Array{Int64,1}:
  5
  4
  3
  2
  1 
 
-julia> [5:1] # Serie vacía
-0-element Array{Int32,1}:
+julia> collect(5:1) # Serie vacía
+0-element Array{Int64,1}:
 
 Algunos trucos útiles con rangos cuando se usan como índices son: la palabra clave \code{end} hace referencia a la última posición/fila/columna indexable en el \emph{array} manipulado; y los dos puntos aislados (\code{:}) hacen referencia a ``todas'' las posiciones, filas o columnas.
 
 julia> # Serie de números primos al revés:
 julia> primos[end:-1:1]
-6-element Array{Int32,1}:
+6-element Array{Int64,1}:
  11
  7
  5
@@ -335,99 +344,95 @@ julia> mat
 
 Dificultades de los \emph{arrays}. 1: ``mutabilidad''
 
-Es importante tener en cuenta que los \emph{arrays} en Julia no son sólo agrupaciones de valores para manejarlos de forma conjunta. Son un tipo de variable diferente a los valores escalares, que muestra unos comportamientos muy distintos. Para empezar, si \code{a} es un \emph{array} (de cualesquiera dimensiones), el propio símbolo \code{a} no hace referencia a los valores contenidos (que se identifican individualmente como \code{a[i]}), sino a la estructura de memoria que los contiene. Esto resultará familiar a los programadores que conozcan C, y como en ese lenguaje tiene que ver con la eficiencia a la hora de manipular los datos.
+Es importante tener en cuenta que los \emph{arrays} en Julia no son sólo agrupaciones de valores para manejarlos de forma conjunta. Son un tipo de variable diferente a los valores escalares, que muestra un comportamiento distinto. Para empezar, es lo que se llama un objeto ``mutable''; por ejemplo se pueden cambiar uno o más valores del \emph{array} manteniendo el resto sin alterar. Esto hay que tenerlo en cuenta cuando se ``copian'' variables, porque puede llevar a resultados inesperados. Por ejemplo:
 
-En la práctica este aspecto afecta sobre todo al resultado de las asignaciones, y hay que tenerlo muy encuenta para evitar cambios inesperados en las variables.
-
-En particular, \code{b = a} significa que \text{b} será el mismo \emph{array} que \code{a}, no una copia de sus contenidos, es decir que cualquier cambio en los valores de \code{a} se reflejarán también en \code{b}, y viceversa, salvo que uno de los dos \emph{arrays} se haya reasignado antes.
-
-julia> # sa y sb son una secuencia de 1 a 3 (la misma secuencia)
-julia> sa = sb = [1:3]
-2-element Array{Int32,1}:
- 1 2 3
-
-julia> # Los cambios en sa se reflejan en sb
+julia> sa = [1, 2, 3];
+julia> # Creamos otro array sb "igual a sa"
+julia> sb = sa;
+julia> # Ahora modificamos sa...
 julia> sa[1] = 0;
+julia> # Volvemos a cambiar su contenido, multiplicándolo por 10
+julia> sa = sa*10;
+julia> # Esto es lo que podía esperarse
 julia> sa
-3-element Array{Int32,1}:
- 0 2 3
+3-element Array{Int64,1}:
+  0
+ 20
+ 30
 
-julia> sb 3-element
-Array{Int32,1}:
- 0 2 3
+julia> # ¿Pero por qué sb no coincide con el contenido inicial de sa?
+julia> sb
+3-element Array{Int64,1}:
+ 0
+ 2
+ 3
+Una forma de entender lo que pasa en este ejemplo es considerar que las variables \code{sa}, \code{sb} no son lo mismo que los objetos contenidos en ellas (en este caso los \emph{arrays}), sino meras referencias, una especie de ``etiquetas'' que pueden asignarse de forma independiente, e incluso redundante a los diversos objetos que hay en el espacio de trabajo. La figura [XXXXX] muestra gráficamente lo que ocurre en cada una de las operaciones.
+
+[XXXXXXX]
+
+Como los \emph{arrays} son elementos mutables, al hacer que \code{sb} se identifique con \code{sa}, los cambios realizados a una de las variables afecta también a la otra ---a no ser que una de las variables se reasigne, como ocurre en el cuarto paso.
 
 Este comportamiento se puede evitar definiendo los \emph{arrays} explícitamente como ``copias'' de otros. La forma más concisa es haciendo referencia a todos los valores individuales (con \code{[:]}).
 
 julia> # sa se redefine como un array que contiene "todos los valores de sb"
 julia> sa = sb[:]
-3-element Array{Int32,1}:
- 0 2 3
+3-element Array{Int64,1}:
+ 0
+ 2
+ 3
 
 julia> # Si redefinimos el primer elemento de sa, el cambio ya no se aplica a sb
-julia> sa[1] = 1
-1
-
+julia> sa[1] = 1;
 julia> sa
-3-element
-Array{Int32,1}:
- 1 2 3
+3-element Array{Int64,1}:
+ 1
+ 2
+ 3
 
 julia> sb
-3-element Array{Int32,1}:
- 0 2 3
+3-element Array{Int64,1}:
+ 0
+ 2
+ 3
+
 
 Dificultades de los \emph{arrays}. 2: Restricciones de tipo y tamaño.
 
-Además, el tipo de datos y las dimensiones de un \emph{array} son fijos (aunque sí se le puede reasignar un conjunto de datos nuevo, con otro tipo de datos u otro tamaño). La restricción sobre los tipos de datos puede causar ciertos problemas, ya que los números pueden codificarse de varias maneras, y puede crearse de forma accidental un \emph{array} con un tipo distinto del que se realmente se pretende utilizar. Por eso, al presentar un \emph{array} en pantalla siempre se muestra el tipo de datos y las dimensiones asociadas; en los ejemplos anteriores se han usado los tipos \code{Int32} (enteros de 32 bits) y \code{Float64} (números decimales de doble precisión --- 64 bits ---). Éstos son los tipos por defecto creados en un sistema operativo de 32 bits (en uno de 64 bits los enteros serían \code{Int64}, aunque los decimales serían iguales), según los valores asignados en la creación. También se puede consultar el tipo de una variable (\emph{array} u otro tipo) con la función \code{typeof}.
+Además, el tipo de datos y las dimensiones de un \emph{array} son fijos (aunque sí se le puede reasignar un conjunto de datos nuevo, con otro tipo de datos u otro tamaño). La restricción sobre los tipos de datos puede causar ciertos problemas, ya que los números pueden codificarse de varias maneras, y puede crearse de forma accidental un \emph{array} con un tipo distinto del que se realmente se pretende utilizar. Por eso, al presentar un \emph{array} en pantalla siempre se muestra el tipo de datos y las dimensiones asociadas; en los ejemplos anteriores se han usado los tipos \code{Int64} (enteros de 32 bits) y \code{Float64} (números decimales de doble precisión --- 64 bits ---). Éstos son los tipos por defecto creados en un sistema operativo de 32 bits (en uno de 64 bits los enteros serían \code{Int64}, aunque los decimales serían iguales), según los valores asignados en la creación. También se puede consultar el tipo de una variable (\emph{array} u otro tipo) con la función \code{typeof}.
 
-El problema mencionado se puede ejemplificar con los \emph{arrays} \code{sa} y \code{sb}, que se habían definido a partir de secuencias de números enteros, y por lo tanto son \emph{arrays} del tipo \code{Int32}. Esto significa que asignar un valor decimal a un elemento sería ilegal:
+El problema mencionado se puede ejemplificar con los \emph{arrays} \code{sa} y \code{sb}, que se habían definido a partir de secuencias de números enteros, y por lo tanto son \emph{arrays} del tipo \code{Int64}. Esto significa que asignar un valor decimal a un elemento sería ilegal:
 
 julia> sa[1] = 0.5
 ERROR: InexactError()
+ in setindex! at array.jl:313
 
 Si se hubiera querido crear una secuencia de 1 a 3 con números decimales, habría varias alternativas:
 
 julia> # 1. Declarar el tipo de datos del vector en su creación
-julia> sf = (Float64)[1:3]
+julia> sf = Float64[1,2,3];
 julia> typeof(sf)
 Array{Float64,1}
 
 julia> # 2. Crear primero el vector declarando el tipo de datos y el tamaño
 julia> sf = Array(Float64, 3);
-julia> sf[:] = [1:3];
+julia> sf[:] = [1,2,3];
 julia> typeof(sf)
 Array{Float64,1}
 
 julia> # 3. Convertir la secuencia de enteros explícitamente a tipo float
-julia> sf = float([1:3]);
+julia> sf = float([1,2,3]);
 julia> typeof(sf)
 Array{Float64,1}
 
 julia> # 4. Introducir números explícitamente decimales al definir la secuencia
 julia> # (vale con que un sólo valor sea decimal)
-julia> sf = [1.0:3]
+julia> sf = [1.0, 2, 3];
 julia> typeof(sf)
 Array{Float64,1}
 
 El truco de la última opción consiste en aprovechar la ``promoción'' automática que realiza Julia al operar con una combinación de números enteros y decimales, por virtud de la cual los enteros se tratan como si fueran decimales. (Véase la sección XXXXX para más detalles sobre los tipos.)
 
-Julia admite muchos otros tipos de datos; los básicos son enteros con o sin signo y números decimales de distintas precisiones, pero hay muchas más abstracciones, incluyendo números racionales y complejos. Las variables escalares también se clasifican según dichos tipos, aunque en su caso la asignación no muestra estos problemas. Puede consultarse el manual de Julia para un catálogo completo de los tipos numéricos básicos y las reglas de promoción entre ellos.
-
-Por otro lado, una forma alternativa de evitar problemas con los tipos de datos es emplear \emph{arrays} que admitan valores de \emph{cualquier} tipo ---en realidad valores del ``supertipo'' \code{Any}, que incluye todos los tipos que puedan existir en Julia---. La forma más concisa de hacer esto es cambiar los corchetes por llaves en la definición del \emph{array}:
-
-julia> {1,2,3}
-3-element Array{Any,1}:
- 1
- 2
- 3
-
-Para crear una secuencia de números de tipo \code{Any}, el truco de expandir un rango no es tan inmediato, ya que Julia interpretaría que el rango es en sí mismo un posible elemento dentro de la categoría \code{Any}:
-
-julia> {1:3}
-1-element Array{Any,1}:
- 1:3
-
-Este caso ilustra cómo no conviene abusar de los vectores de tipo \code{Any}, ya que además de que los programas son más eficientes cuanto más concretos son los tipos de las variables empleadas, ser demasiado tolerante con los tipos también aumenta la probabilidad de cometer errores que pasen inadvertidos.
+Julia admite muchos otros tipos de datos; los básicos son enteros con o sin signo y números decimales de distintas precisiones, pero hay muchas más abstracciones, incluyendo números racionales y complejos. Y hay también un ``supertipo'' \code{Any}, que incluye todos los tipos de objetos que pueden existir en Julia. Las variables escalares también se clasifican según dichos tipos, aunque en su caso la asignación no muestra estos problemas. Puede consultarse el manual de Julia para un catálogo completo de los tipos numéricos básicos y las reglas de promoción entre ellos.
 
 Vista ya la cuestión de las restricciones de tipo, el otro error típico a la hora de manipular \emph{arrays} consiste en intentar la lectura o modificación de un valor más allá de su tamaño predefinido, aunque el \emph{array} siempre se puede cambiar por otro nuevo de mayor tamaño:
 
@@ -437,8 +442,11 @@ ERROR: BoundsError()
 
 julia> # Se puede concatenar sa con el cuarto valor, y reasignar el resultado:
 julia> sa = [sa, 4]
-4-element Array{Int32,1}:
- 1 2 3 4
+4-element Array{Int64,1}:
+ 1 
+ 2 
+ 3 
+ 4
 
 Otra forma de ampliar \emph{arrays} es usar funciones como \code{push!}, \code{append!}, \code{unshift!}, \code{prepend!}, \code{insert!}, \code{resize!}, etc. (el signo \code{!} en el nombre es una convención para indicar que la función modifica el argumento). También hay funciones complementarias para eliminar elementos del \emph{array}, como \code{pop!}, \code{shift!} o \code{splice!}, que además devuelven el valor del elemento extraído. Es típico crear \emph{arrays} que se van ampliando progresivamente en procesos iterativos, pero en la medida de lo posible es recomendable definirlos en un primer momento con el tamaño necesario para contener todos los elementos que requiera, sobredimensionándolo si hace falta y ``recortándolos'' después si se quiere. Esto evita la creación de una nueva variable en cada iteración, que puede consumir más tiempo de procesado que las demás operaciones, y reduce potencialmente el coste computacional en varios órdenes de magnitud.
 
@@ -475,7 +483,10 @@ Instrucciones básicas
 
 Vistos algunos de los aspectos básicos del manejo de números y \emph{arrays}, podemos abordar el tema de la representación gráfica de los datos. A menudo, cuando se hace un análisis de datos, lo primero que se desea es visualizarlos en un gráfico. Además, aprender a dibujar gráficos sencillos suele ser más satisfactorio, y da la sensación de poder hacer ``cosas útiles'' desde el principio, más que hacer operaciones numéricas de complejidad equivalente.
 
-La distribución básica de Julia no ofrece utilidades gráficas, pero existen varios paquetes que permiten hacerlas. El más elemental, que utilizaremos aquí, es Winston (https://github.com/nolta/Winston.jl).% \footnote{Los usuarios de R, y en particular del paquete ggplot2, encontrarán también útil el paquete Gadfly (https://github.com/dcjones/Gadfly.jl), que permite hacer gráficos mucho más complejos utilizando una sintaxis semejante. Los que tengan Python y su módulo gráfico Matplotlib instalado en el ordenador, también pueden usarlo a través de Julia con el paquete PyPlot(https://github.com/stevengj/PyPlot.jl).}% Recordamos aquí que para instalar este paquete, la forma más sencilla es ejecutar la línea:
+La distribución básica de Julia no ofrece utilidades gráficas, pero existen varios paquetes que permiten hacerlas. El más elemental, que utilizaremos aquí, es Winston (https://github.com/nolta/Winston.jl).%
+\footnote{%
+Los usuarios de R, y en particular del paquete ggplot2, encontrarán también útil el paquete Gadfly (https://github.com/dcjones/Gadfly.jl), que permite hacer gráficos mucho más complejos utilizando una sintaxis semejante. Los que tengan Python y su módulo gráfico Matplotlib instalado en el ordenador, también pueden usarlo a través de Julia con el paquete PyPlot(https://github.com/stevengj/PyPlot.jl).}%
+Recordamos aquí que para instalar este paquete, la forma más sencilla es ejecutar la línea:
 
 julia> Pkg.add("Winston")
 
@@ -988,7 +999,7 @@ Fuente: Eurostat
 paises = ["Germany", "Greece", "Spain", "France", "United Kingdom"]
 desempleo_2014 = [5, 26.5, 24.5, 10.2, 6.3]
 
-Pero extraer, por ejemplo, el valor correspondiente a España, requiere buscar el índice correspondiente en \code{paises} y utilizarlo para indexar \code{desempleo_2014:
+Pero extraer, por ejemplo, el valor correspondiente a España, requiere buscar el índice correspondiente en \code{paises} y utilizarlo para indexar \code{desempleo_2014}:
 
 julia> desempleo_2014[paises .== "Spain"]
 1-element Array{Float64,1}:
@@ -1001,11 +1012,11 @@ julia> desempleo_2014[findfirst(paises, "Spain")]
 
 Sin embargo, el uso de un diccionario aquí simplifica las cosas:
 
-julia> dic_desempleo_2014 = ["Germany" => 5,
+julia> dic_desempleo_2014 = Dict("Germany" => 5,
                        "Greece" => 26.5,
                        "Spain" => 24.5,
                        "France" => 10.2,
-                       "United Kingdom" => 6.3]
+                       "United Kingdom" => 6.3)
 Dict{ASCIIString,Any} with 5 entries:
   "Germany"        => 5
   "United Kingdom" => 6.3
@@ -1072,18 +1083,11 @@ Dict{ASCIIString,Float64} with 5 entries:
 
 Este resultado sirve también para ilustrar una diferencia entre la creación de \emph{arrays} y la de diccionarios. Al juntar datos de distintos tipos, como el valor entero \code{5} asignado a Alemania y los valores decimales de los otros países, en la creación de \emph{arrays} se aplican las reglas de promoción de tipos y todos los datos se codifican como \code{Float64} (véase la sección XXXXX sobre estas reglas). Por eso, el diccionario definido a partir de \emph{arrays} es del tipo \code{Dict{ASCIIString,Float64}}, y el valor entero aparece con decimales (\code{5.0}). La definición literal de diccionarios, por el contrario, no realiza ninguna promoción de tipos: el valor entero se mantiene sin cambios, y la lista completa de valores pasa a ser de tipo \code{Any}, para poder contener tanto enteros como decimales.
 
-El tipo de las claves y los valores puede controlarse al definir los diccionarios, de manera semejante a como se hace con los \emph{arrays}. Por ejemplo, si quisieran usarse tipos más genéricios como \code{String} para las claves y \code{Real} para los valores, podría haberse utilizado alguna de las siguientes sintaxis:
+El tipo de las claves y los valores puede controlarse al definir los diccionarios, de manera semejante a como se hace con los \emph{arrays}. Por ejemplo, si quisieran usarse tipos más genéricios como \code{AbstractString} para las claves y \code{Real} para los valores, podría haberse utilizado la siguiente instrucción:
 
 # Ejemplo con sólo dos países para abreviar
-(String=>Real)["Germany"=>5, "Spain"=>24.5]
-Dict{String,Real}(paises, desempleo_2014)
+Dict{AbstractString,Real}(paises, desempleo_2014)
 
-Asimismo, se pueden crear diccionarios del tipo \code{Dict{Any,Any}} empleando llaves en vez de corchetes:
-
-julia> {"Germany"=>5, "Spain"=>24.5} 
-Dict{Any,Any} with 2 entries:
-  "Germany" => 5.0
-  "Spain"   => 24.5
 
 
 Tuplas
@@ -1153,13 +1157,19 @@ julia> z
 
 Como se ha dicho, primero se evalúa la parte derecha en el orden de lectura: se determina el primer elemento de una tupla asignando el valor $10$ a la variable \code{z}, y el doble de este valor ($20$) se usa para el segundo elemento de la tupla, asignándolo a \code{w}. Luego se evalúa la parte izquierda de la expresión, donde los valores de la tupla derecha se asignan a las variables \code{w}, \code{z} ---al margen del valor que se les dio a las mismas variables en el paso anterior, que era precisamente el opuesto---.
 
-Ya se ha visto un caso práctico de tuplas usadas para asignar simultáneamente valores a distintas variables: la declaración de los bucles \code{for} con diccionarios. Cuando se itera sobre un diccionario, el elemento pasado en cada iteración es una tupla con dos componentes: el primero es la clave y el segundo es el valor. La sintaxis \code{for (k,v) in diccionario} lo que hace es ``distribuir'' estos dos componentes en las dos variables \code{k} y \code{v}, respectivamente, del mismo modo que en los ejemplos anteriores. En el capítulo XXXXX se verán más utilidades de las tuplas, en relación con las entradas y salidas de las funciones.
+Ya se ha visto un caso práctico de tuplas usadas para asignar simultáneamente valores a distintas variables: la declaración de los bucles \code{for} con diccionarios. Cuando se itera sobre un diccionario, el elemento pasado en cada iteración es una tupla con dos componentes: el primero es la clave y el segundo es el valor. La sintaxis \code{for (k,v) in diccionario} lo que hace es ``distribuir'' estos dos componentes en las dos variables \code{k} y \code{v}, respectivamente, del mismo modo que en los ejemplos anteriores.
 
-Sin embargo, cabe hacer mención aquí d
-También se pueden usar para simular diccionarios multidimensionales:
-la clave es una tupla. No es estricto.
+Además, en el capítulo XXXX se verán más utilidades de las tuplas, en relación con las entradas y salidas de las funciones. Y con imaginación, se pueden encontrar muchas otras aplicaciones a las tuplas. Por ejemplo, pueden servir para simular ``diccionarios multidimensionales''. Pongamos como ejemplo la tabla de desempleo en el ejemplo [anterior]. Esta tabla se podría haber definido del siguiente modo (ponemos sólo los datos de las dos primeras filas y columnas por simplificar):
 
+julia> desempleo = Dict(("Germany",2011)=>5.8, ("Germany",2012)=>5.4,
+       ("Greece",2011)=>17.9, ("Greece",2012)=>24.5)
+Dict{Tuple{ASCIIString,Int64},Float64} with 4 entries:
+  ("Germany",2012) => 5.4
+  ("Greece",2012)  => 24.5
+  ("Greece",2011)  => 17.9
+  ("Germany",2011) => 5.8
 
+El diccionario sigue siendo en realidad unidimensional, pero utilizar parejas de valores en las claves proporciona una apariencia de bidimensionalidad que puede ser útil en algunas circunstancias.
 
 
 
@@ -1400,7 +1410,7 @@ es posible modificar las cadenas de texto mediante reasignación de
 los valores individuales.
 
 julia> cadena[1] = 'a'
-ERROR: no method setindex!(ASCIIString,Char,Int32)
+ERROR: no method setindex!(ASCIIString,Char,Int64)
 
 Hay muchas funciones para transformar:
 uppercase, lowercase, replace.

@@ -1,0 +1,102 @@
+﻿\documentclass{article}
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX]{Liberation Sans}
+\setmonofont[Scale=0.75]{Liberation Mono}
+%\defaultfontfeatures{Ligatures=TeX}
+\usepackage{polyglossia}
+%\setdefaultlanguage{spanish}
+\enablehyphenation
+
+
+\usepackage{url}
+%\usepackage{hyperref}
+
+
+\usepackage{minted}
+\newminted{jlcon}{}
+\newminted{julia}{}
+\begin{document}
+
+\section{¿Por qué \emph{Julia}?}
+
+Los lenguajes de programación dinámicos son una herramienta esencial en muchas profesiones científicas, que a menudo requieren realizar cálculos complejos en un corto plazo de tiempo; cálculos que además suponen un problema nuevo en cada ocasión, en el que los algoritmos a utilizar suelen basarse en trabajos anteriores, pero siempre necesitan ciertos retoques o extensiones.
+
+La utilidad y popularidad de los distintos lenguajes existentes, y de las herramientas de software que los implementan, dependen de varios factores, y en particular del campo de aplicación y el contexto institucional. Tres de los más imporantes son R, Matlab y Python.
+
+R es principalmente una herramienta para cálculos estadísticos, aunque también es posible utilizarlo para muchos otros propósitos. Se trata de una implementación a modo de software libre del lenguaje utilizado por el programa S-PLUS, con una comunidad de usuarios y desarrolladores espectacularmente activa, que ha extendido su potencia y funcionalidades a casi cualquier tipo de tratamiento de datos. En consecuencia, R es la opción más usada en la ciencia estadística, especialmente en el entorno académico (en ciertos sectores industriales tiene más presencia el programa y el lenguaje de SAS, propiedad de la compañía privada del mismo nombre).
+
+Matlab es una de las soluciones más empleadas para la computación numérica en ciencias físicas e ingeniería, tanto por la industria como por la academia, gracias a la potencia de sus utilidades gráficas, numerosas \emph{toolboxes}, y un excelente entorno de desarrollo. Al contrario que R, se trata de un software cerrado y privado; existe también una implementación libre de Matlab (GNU Octave), que podría compararse con el caso de R respecto a S-PLUS, pero en este caso la herramienta libre no goza de tanta popularidad.
+
+Python, por su lado, es un lenguaje de programación genérico, implementado en forma de software libre, que tiene la comunidad de usuarios más entusiasta y numerosa de todos los lenguajes citados. El campo de aplicación de Python va en realidad mucho más allá del científico, siendo un lenguaje que sirve para prácticamente cualquier tipo de operación informática. Pero existen varios módulos de Python recogidos en el paquete SciPy, específicamente dedicados a la computación numérica, que también se presentan como una alternativa libre a Matlab.
+
+En este contexto, el Massachusets Institute of Technology (MIT) publicó en 2012 Julia, otro lenguaje dinámico para computación científica, bajo la licencia del MIT para software libre. A la vista del tipo de funciones y operaciones que ofrece, podría parecer que Julia intenta reinventar la rueda, aunque sus autores son plenamente conocedores del estado de la ciencia en lenguajes de programación. De hecho, la documentación oficial parece especialmente dirigida a programadores que ya conocen otros lenguajes, y en particular los tres mencionados. Según las propias declaraciones de los creadores de Julia,%
+\footnote{%
+\url{http://julialang.org/blog/2012/02/why-we-created-julia/}%
+}
+su finalidad es combinar lo mejor de cada uno de esos (y otros) lenguajes, y salvar el mayor obstáculo común de todos ellos: la velocidad para cálculos complejos y tratamiento de ficheros y bases de datos muy voluminosas.
+
+El \emph{leit motiv} de Julia es principalmente su velocidad, comparable a la de programas compilados en C, sin dejar de ser un lenguaje plenamente dinámico y que permita trabajar con el paradigma del \emph{read-eval-print loop}. Esto hace que, incluso en su fase inicial de desarrollo, y con las carencias propias de la misma (pocos editores de código e interfaces para el desarrollo de programas, utilidades para depuración limitadas, etc.), Julia tenga un nicho de aplicación muy atractivo: la ejecución de operaciones conceptualmente sencillas, como algoritmos iterativos o rutinas masivas de lectura y escritura de dispositivos y archivos, que en lenguajes de bajo nivel pueden ser muy eficientes, pero a la hora de ejecutarlas en alguno de los lenguajes antes mencionados puedan consumir hasta horas de trabajo de la máquina. Con poco esfuerzo de programación, una hora de procesamiento en Matlab puede traducirse en unos pocos segundos de Julia.
+
+
+\section{Primeros pasos}
+
+
+\subsection{Instalación y uso básico de Julia}
+
+Explicar los primeros pasos para usar un lenguaje de programación es algo delicado y difícil. Es habitual comenzar con ejercicios triviales como el del "`Hola mundo"', pero esos ejemplos no resultan muy estimulantes, ni dan tampoco una idea clara de cómo es el lenguaje. El extremo opuesto es comenzar con un fragmento de código para una aplicación relativamente compleja, que contenga buena parte de las características principales que se quieren explicar, e ir desgranándolas poco a poco, asumiendo que la mayor parte del programa será incomprensible para el lector hasta que haya avanzado bastante. Lo cierto es que ésa es una aproximación más cercana al modo en el que la mayoría acaba haciendo frente a cualquier lenguaje en la ``vida real'', aunque también puede ser frustrante. Así que buscando un punto de compromiso, en esta sección se partirá de ejemplos prácticos pero sencillos, que se puedan entender por entero aunque los conceptos incluidos no se expliquen en detalle hasta secciones posteriores.
+
+Ahora bien, antes de poner en práctica cualquier ejemplo, es necesario tener instaladas las herramientas que permiten usar el lenguaje de programación. El software básico para usar Julia está disponible en su página oficial (\url{http://julialang.org/downloads}), en forma de código fuente así como en binarios preparados para instalar en Windows, Mac OS X, y algunas distribuciones de Linux (por lo menos Ubuntu). Desde esa página se pueden encontrar también enlaces con explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son específicas para cada sistema, y por lo tanto no desarrollaremos aquí.
+
+Por defecto, al ejecutar Julia se abre el ``intérprete'' de comandos para trabajar de forma interactiva, que es el modo de uso de Julia más útil para aprender y hacer pruebas sencillas. Por otro lado, para ejecutar rutinas más complejas, y siempre que se quiera obtener resultados reproducibles, es recomendable escribir las instrucciones en un archivo de código, y luego ejecutarlo en Julia. Los entornos de desarrollo integrados, ``IDE'' en inglés, suelen tener editores de código que permiten combinar ambas tareas ---escribir instrucciones en un archivo de código y ejecutarlas--- desde la misma interfaz, lo cual facilita el trabajo del programador. (Véase más abajo sobre algunos IDE para Julia.)
+
+Veamos ahora un ejemplo práctico de ambas formas de uso, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.%
+\footnote{%
+\url{http://berndt-schwerdtfeger.de/cal/cal.pdf}%
+} Se trata de un algoritmo simple, que podría traducirse a Julia mediante el siguiente código: 
+
+
+\begin{juliacode}
+function gauss_diasemana(d, m, y)
+# d, m, y son los números del día, mes y año, respectivamente
+# La función devuelve una cadena de texto con el día de la semana
+  # Enero y febrero (m=1, m=2) se tratan como el año anterior
+  # en torno a los años bisiestos
+  if m < 3
+    y = y - 1
+  end
+  # Dividir el año entre centenas (c) y el resto (g)
+  c = div(y, 100)
+  g = mod(y, 100)
+  # Definir e y f en función del mes (de 1 a 12) y el siglo
+  # (en ciclos de 400 años --- 4 siglos)
+  earray = [0,3,2,5,0,3,5,1,4,6,2,4]
+  farray = [0,5,3,1]
+  e = earray[m]
+  f = farray[mod(c,4)+1]
+  # Seleccionar el día de la semana en función del cálculo de Gauss
+  warray = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"]
+  w = mod(d + e + f + g + div(g, 4), 7)
+  return(warray[w+1])
+end
+\end{juliacode}
+
+
+Una de ellas es el paréntesis inicial de la llamada a ``macros''. A nivel de usuario una macro no resulta muy distinta a una función cualquiera, salvo en que el nombre empieza por la arroba ($@$), y en este detalle: el paréntesis ha de seguir al nombre de las macros sin ningún espacio intermedio (esta restricción no aplica a las funciones). Por ejemplo, para la macro \mintinline{julia}{@printf} (usada para presentar valores en cadenas de texto con un formato específico):
+
+\begin{jlconcode}
+julia> # Correcto:
+julia> @printf("El numero pi es %.4f", pi)
+El numero pi es 3.1416
+julia> # ¡Mal!
+julia> @printf ("El numero pi es %.4f", pi)
+ERROR: first or second argument must be a format string
+
+Por otra parte, los argumentos de las macros pueden escribirse sin
+paréntesis y separados por espacios, sin comas:
+
+julia> # Esto también vale:
+julia> @printf "El numero pi es %.4f" pi
+El numero pi es 3.1416
+\end{jlconcode}
+
+\end{document}
