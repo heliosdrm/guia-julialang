@@ -1,0 +1,23 @@
+﻿\documentclass[a4paper]{book}
+\usepackage{geometry}
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX]{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+%\defaultfontfeatures{Ligatures=TeX}
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+
+\usepackage{url}
+%\usepackage{hyperref}
+
+\usepackage{minted}
+\newminted{jlcon}{fontsize=\small}
+\newminted{julia}{fontsize=\small}
+\newmint{jlcon}{fontsize=\small}
+\newmintinline{julia}{breaklines=true, breakafter=()\[\]\{\}\,\.+-*/}
+\newcommand{\jl}{\juliainline}
+
+\begin{document}
+\include{textos/introduccion}
+\include{textos/arrays}
+\end{document}

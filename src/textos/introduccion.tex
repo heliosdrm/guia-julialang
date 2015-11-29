@@ -1,0 +1,225 @@
+\chapter{Introducción}
+
+\section{¿Por qué \emph{Julia}?}
+
+Los lenguajes de programación dinámicos son una herramienta esencial en muchas profesiones científicas, que a menudo requieren realizar cálculos complejos en un corto plazo de tiempo; cálculos que además suponen un problema nuevo en cada ocasión, en el que los algoritmos a utilizar suelen basarse en trabajos anteriores, pero siempre necesitan ciertos retoques o extensiones.
+
+La utilidad y popularidad de los distintos lenguajes existentes, y de las herramientas de software que los implementan, dependen de varios factores, y en particular del campo de aplicación y el contexto institucional. Tres de los más imporantes son R, Matlab y Python.
+
+R es principalmente una herramienta para cálculos estadísticos, aunque también es posible utilizarlo para muchos otros propósitos. Se trata de una implementación a modo de software libre del lenguaje utilizado por el programa S-PLUS, con una comunidad de usuarios y desarrolladores espectacularmente activa, que ha extendido su potencia y funcionalidades a casi cualquier tipo de tratamiento de datos. En consecuencia, R es la opción más usada en la ciencia estadística, especialmente en el entorno académico (en ciertos sectores industriales tiene más presencia el programa y el lenguaje de SAS, propiedad de la compañía privada del mismo nombre).
+
+Matlab es una de las soluciones más empleadas para la computación numérica en ciencias físicas e ingeniería, tanto por la industria como por la academia, gracias a la potencia de sus utilidades gráficas, numerosas \emph{toolboxes}, y un excelente entorno de desarrollo. Al contrario que R, se trata de un software cerrado y privado; existe también una implementación libre de Matlab (GNU Octave), que podría compararse con el caso de R respecto a S-PLUS, pero en este caso la herramienta libre no goza de tanta popularidad.
+
+Python, por su lado, es un lenguaje de programación genérico, implementado en forma de software libre, que tiene la comunidad de usuarios más entusiasta y numerosa de todos los lenguajes citados. El campo de aplicación de Python va en realidad mucho más allá del científico, siendo un lenguaje que sirve para prácticamente cualquier tipo de operación informática. Pero existen varios módulos de Python recogidos en el paquete SciPy, específicamente dedicados a la computación numérica, que también se presentan como una alternativa libre a Matlab.
+
+En este contexto, el Massachusets Institute of Technology (MIT) publicó en 2012 Julia, otro lenguaje dinámico para computación científica, bajo la licencia del MIT para software libre. A la vista del tipo de funciones y operaciones que ofrece, podría parecer que Julia intenta reinventar la rueda, aunque sus autores son plenamente conocedores del estado de la ciencia en lenguajes de programación. De hecho, la documentación oficial parece especialmente dirigida a programadores que ya conocen otros lenguajes, y en particular los tres mencionados. Según las propias declaraciones de los creadores de Julia,%
+\footnote{%
+\url{http://julialang.org/blog/2012/02/why-we-created-julia/}%
+}
+su finalidad es combinar lo mejor de cada uno de esos (y otros) lenguajes, y salvar el mayor obstáculo común de todos ellos: la velocidad para cálculos complejos y tratamiento de ficheros y bases de datos muy voluminosas.
+
+El \emph{leit motiv} de Julia es principalmente su velocidad, comparable a la de programas compilados en C, sin dejar de ser un lenguaje plenamente dinámico y que permita trabajar con el paradigma del \emph{read-eval-print loop}. Esto hace que, incluso en su fase inicial de desarrollo, y con las carencias propias de la misma (pocos editores de código e interfaces para el desarrollo de programas, utilidades para depuración limitadas, etc.), Julia tenga un nicho de aplicación muy atractivo: la ejecución de operaciones conceptualmente sencillas, como algoritmos iterativos o rutinas masivas de lectura y escritura de dispositivos y archivos, que en lenguajes de bajo nivel pueden ser muy eficientes, pero a la hora de ejecutarlas en alguno de los lenguajes antes mencionados puedan consumir hasta horas de trabajo de la máquina. Con poco esfuerzo de programación, una hora de procesamiento en Matlab puede traducirse en unos pocos segundos de Julia.
+
+
+\section{Primeros pasos}
+
+\subsection{Instalación y uso básico de Julia}
+
+Explicar los primeros pasos para usar un lenguaje de programación es algo delicado y difícil. Es habitual comenzar con ejercicios triviales como el del ``Hola mundo'', pero esos ejemplos no resultan muy estimulantes, ni dan tampoco una idea clara de cómo es el lenguaje. El extremo opuesto es comenzar con un fragmento de código para una aplicación relativamente compleja, que contenga buena parte de las características principales que se quieren explicar, e ir desgranándolas poco a poco, asumiendo que la mayor parte del programa será incomprensible para el lector hasta que haya avanzado bastante. Lo cierto es que esa es una aproximación más cercana al modo en el que la mayoría acaba haciendo frente a cualquier lenguaje en la ``vida real'', aunque también puede ser frustrante. Así que buscando un punto de compromiso, en esta sección se partirá de ejemplos prácticos pero sencillos, que se puedan entender por entero aunque los conceptos incluidos no se expliquen en detalle hasta secciones posteriores.
+
+Ahora bien, antes de poner en práctica cualquier ejemplo, es necesario tener instaladas las herramientas que permiten usar el lenguaje de programación. El software básico para usar Julia está disponible en su página oficial (\url{http://julialang.org/downloads}), en forma de código fuente así como en binarios preparados para instalar en Windows, Mac OS X, y algunas distribuciones de Linux (por lo menos Ubuntu). Desde esa página se pueden encontrar también enlaces con explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son específicas para cada sistema, y por lo tanto no desarrollaremos aquí.
+
+Por defecto, al ejecutar Julia se abre el ``intérprete'' de comandos para trabajar de forma interactiva, que es el modo de uso de Julia más útil para aprender y hacer pruebas sencillas. Por otro lado, para ejecutar rutinas más complejas, y siempre que se quiera obtener resultados reproducibles, es recomendable escribir las instrucciones en un archivo de código, y luego ejecutarlo en Julia. Los entornos de desarrollo integrados, ``IDE'' en inglés, suelen tener editores de código que permiten combinar ambas tareas ---escribir instrucciones en un archivo de código y ejecutarlas--- desde la misma interfaz, lo cual facilita el trabajo del programador. (Véase más abajo sobre algunos IDE para Julia.)
+
+Veamos ahora un ejemplo práctico de ambas formas de uso, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.%
+\footnote{%
+\url{http://berndt-schwerdtfeger.de/cal/cal.pdf}%
+} Se trata de un algoritmo simple, que podría traducirse a Julia mediante el siguiente código: 
+
+\begin{juliacode}
+function gauss_diasemana(d, m, y)
+# d, m, y son los números del día, mes y año, respectivamente
+# La función devuelve una cadena de texto con el día de la semana
+  # Enero y febrero (m=1, m=2) se tratan como el año anterior
+  # en torno a los años bisiestos
+  if m < 3
+    y = y - 1
+  end
+  # Dividir el año entre centenas (c) y el resto (g)
+  c = div(y, 100)
+  g = mod(y, 100)
+  # Definir e y f en función del mes (de 1 a 12) y el siglo
+  # (en ciclos de 400 años --- 4 siglos)
+  earray = [0,3,2,5,0,3,5,1,4,6,2,4]
+  farray = [0,5,3,1]
+  e = earray[m]
+  f = farray[mod(c,4)+1]
+  # Seleccionar el día de la semana en función del cálculo de Gauss
+  warray = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"]
+  w = mod(d + e + f + g + div(g, 4), 7)
+  return(warray[w+1])
+end
+\end{juliacode}
+
+Supongamos que ese código está guardado en un archivo llamado \jl{calc_diasemana.jl} (el nombre del archivo es arbitrario, y puede ser cualquier nombre aceptado por el sistema operativo). El programa consiste en una sola función con 3 argumentos (los números del día, el mes y el año), basada en unas pocas divisiones enteras (definidas en la función \jl{div}) y el cálculo de ``restos'' de dichas divisiones (\jl{mod}),%
+\footnote{%
+Existen dos funciones para el resto de una división: \jl{mod} y \jl{rem}, que funcionan de forma distinta cuando alguno de los dos operandos es negativo. Para el caso que nos ocupa esa diferencia no es relevante.%
+}
+más la selección de unos valores a partir de los resultados intermedios y unas listas predefinidas.
+
+Este programa se puede ejecutar de forma interactiva, usando la función \jl{include} en el intérprete de Julia. Esto es lo que se debería ver en pantalla (el texto \jl{julia>} al comienzo de la primera línea solo marca el punto de inserción del código; no es parte del código, y puede variar entre sistemas):
+
+\begin{jlconcode}
+julia> include("calc_diasemana.jl")
+calc_diasemana (generic function with 1 method)
+\end{jlconcode}
+
+El resultado es algo decepcionante, porque lo único que se ha hecho es definir una función, que por sí misma no da ningún resultado. Por otro lado, lo más probable es que al introducir esa línea sin más ni siquiera se obtenga ese resultado, sino un error debido a que no se encuentra el archivo de código.%
+\footnote{%
+Ref. a sección con información sobre LOAD\_PATH y require()%
+}
+Para asegurarse de que Julia encuentra el archivo,
+hay varias alternativas:
+
+\begin{enumerate}
+  \item Copiar el archivo de código \jl{calc_diasemana.jl} al directorio de trabajo de Julia. La ruta de ese directorio se puede obtener con la función \jl{pwd()} --- sin ningún argumento---.
+  \item Cambiar el directorio de trabajo al lugar que contiene el archivo. El cambio de directorio se hace con la función \jl{cd}, que recibe un solo argumento: el nombre del directorio destino. Este se puede definir literalmente como un texto entre comillas dobles, o ser una variable que contiene dicho texto. En sistemas operativos con entornos gráficos, puede ser práctico copiar el nombre del directorio desde el gestor de archivos al ``portapapeles'', y utilizarlo directamente en Julia con la función \jl{clipboard}; es decir, introduciendo la expresión \jl{cd(clipboard())}.%
+  \footnote{%
+  Esta solución es particularmente recomendable en Windows, donde los directorios de una ruta suelen presentarse divididos por ``barras invertidas''. Por ejemplo, el directorio de trabajo podría ser \jl{C:\julia}. Pero la expresión \jl{cd("C:\julia")} no daría el resultado esperado, porque la barra invertida se interpreta como inicio de una ``secuencia de escape'' para caracteres no imprimibles. Para que funcionase, habría que escribir \jl{cd("C:/julia")} o \jl{cd("C:\\julia")}. La función \jl{clipboard} ahorra este tipo de problemas.%
+  }
+  \item Introducir la ruta completa del archivo de código en la llamada a \jl{include}. Esta se puede escribir literalmente, o si el directorio que contiene el archivo está definido en una variable (supongamos que esta variable se llama \jl{dir_include}, la ruta se puede componer con la función \jl{joinpath}. Es decir, la expresión anterior sería \jl{include(joinpath(dir_include, "calc_diasemana.jl"))}. También en este caso se podría utilizar \jl{clipboard} para identificar el directorio destino a través del portapapeles.
+\end{enumerate}
+
+Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó el San Valentín de 2012:
+
+\begin{jlconcode}
+julia> gauss_diasemana(14, 2, 2012)
+"martes"
+\end{jlconcode}
+
+Lo que se hace ``en un día cualquiera'' usando Julia es esencialmente este modelo de rutina, con funciones más complicadas y muchas más operaciones interactivas, explorando resultados, corrigiendo argumentos y repitiendo operaciones, claro está.
+
+
+\subsection{Obtener ayuda}
+Ayuda: help, documentación...
+
+
+\subsection{Reglas sintácticas}
+
+La sintaxis de los lenguajes de programación implica una multitud de reglas, la mayoría de las cuales en realidad no es necesario explicar, ya que son reglas de escritura lógicas e intuitivas, o se desprenden directamente de la lectura de ejemplos. Sin embargo, hay unos pocos detalles que pueden resultar menos claros y conviene mencionar.
+
+Uno de estos detalles es el tipo de nombres permitidos para las variables y funciones. Las reglas son básicamente las habituales: pueden estar formados por cualquier combinación de letras y números, más guiones bajos, exceptuando nombres que comiencen por números y las palabras clave del lenguaje (como \jl{for}, \jl{if}, \jl{end}, etc.). Además, también se admiten nombres con caracteres Unicode más allá del ASCII básico (letras acentuadas, griegas, etc.), así como el signo de exclamación (\jl{!}) en posición no inicial, aunque conviene usarlos con mesura: emplear caracteres extendidos aumenta el riesgo de problemas de portabilidad de los programas, y la exclamación se suele resevar para el nombre de cierto tipo de funciones (las que modifican sus argumentos de entrada).
+
+Hay seis constantes predefinidas que se pueden sobreescribir, pero conviene evitarlo (si se han usado antes en la sesión de Julia, aparecerá una advertencia al asignarles cualquier valor). Cuatro de ellas tienen dos nombres (tres con letras griegas), lo cual da más margen para reutilizar sus nombres:
+
+\begin{itemize}
+  \item \jl{pi}, \jl{$\pi$}: el número pi.
+  \item \jl{e}, \jl{eu}: el número de Euler
+  \item \jl{eulergamma}, \jl{$\gamma$}: la constante de Euler-Mascheroni.
+  \item \jl{golden}, \jl{$\Phi$}: la proporción áurea.
+  \item \jl{catalan}: la constante de Catalan.
+  \item \jl{im}: la unidad imaginaria.
+\end{itemize}
+
+Los espacios entre nombres de variables, funciones, etc. son normalmente irrelevantes: siempre que haya algun símbolo delimitador (operadores matemáticos, signos de puntuación, paréntesis\ldots) pueden usarse uno, varios o ningún espacio entre ellos, o al principio de la línea. El uso de los espacio responde más a una cuestión de estilo que a la sintaxis. Por ejemplo, los distintos bloques de código (funciones, bucles, etc.) suelen sangrarse con un número de espacios en función del nivel de anidamiento (véase la función \jl{gauss_diasemana} y el \jl{if} anidado en ella), pero esto se hace para mejorar la legibilidad, no por necesidad (al contrario que en Python). Hay, sin embargo, dos excepciones.
+
+Una de ellas es el paréntesis inicial de la llamada a ``macros''. A nivel de usuario una macro no resulta muy distinta a una función cualquiera, salvo en que el nombre empieza por la arroba (\jl{@}), y en este detalle: el paréntesis ha de seguir al nombre de las macros sin ningún espacio intermedio (esta restricción no aplica a las funciones). Por ejemplo, para la macro \jl{@printf} (usada para presentar valores en cadenas de texto con un formato específico):
+
+\begin{jlconcode}
+julia> # Correcto:
+julia> @printf("El numero pi es %.4f", pi)
+El numero pi es 3.1416
+julia> # ¡Mal!
+julia> @printf ("El numero pi es %.4f", pi)
+ERROR: first or second argument must be a format string
+\end{jlconcode}
+
+Por otra parte, los argumentos de las macros pueden escribirse sin
+paréntesis y separados por espacios, sin comas:
+
+\begin{jlconcode}
+julia> # Esto también vale:
+julia> @printf "El numero pi es %.4f" pi
+El numero pi es 3.1416
+\end{jlconcode}
+
+La otra excepción es la premultiplicación de variables por números literales. Como ya se ha dicho, el nombre de una variable no puede comenzar por un número, pero sí se puede \emph{añadir} un número ante el nombre de una variable, lo cual funciona como si esa variable se multiplicara por ese valor (como se hace muchas veces al escribir fórmulas textualmente). Por ejemplo:
+
+\begin{jlconcode}
+julia> 2pi # Equivale a 2*pi
+6.283185307179586
+\end{jlconcode}
+
+Otro detalle importante es el uso del punto para distinguir números enteros y decimales. Para Julia el número \jl{1} no es el mismo que \jl{1.0}, aunque simbolicen el mismo valor. El primero es un número entero, cuya representación en la memoria del ordenador no es compatible con la de los números decimales, y para mayor eficiencia Julia usa procedimientos distintos para operar con cada tipo de número. En la mayoría de los casos el usuario puede pasar por alto esta distinción, ya que el procesador se encarga de hacer automáticamente las conversiones necesarias (normalmente transformando los números enteros a decimales). Sin embargo, en secciones posteriores, en particular al hablar de los \emph{arrays}, se verá que a veces hay que tener cuidado con estos detalles. Para definir un número explícitamente como decimal basta con incluir el punto; si su valor es entero no hace falta incluir los ceros a la derecha.
+
+\begin{jlconcode}
+julia> # Los enteros no son "iguales" a los decimales, aunque valen lo mismo
+julia> 1 == 1.0
+true
+julia> isequal(1, 1.0)
+false
+julia> # Comprobar formas equivalentes de escribir números decimales
+julia> isequal(1., 1.0)
+true
+julia> isequal(0.1, .1)
+true
+\end{jlconcode}
+
+Finalmente, cabe mencionar el uso opcional del punto y coma (\jl{;}) al final de las expresiones. Normalmente cada expresión de Julia se termina con un salto de línea, pero puede usarse un punto y coma en su lugar, lo cual tiene dos efectos. Por un lado, es posible añadir otra expresión tras el punto y coma en la misma línea. Por ejemplo:
+
+\begin{jlconcode}
+julia> a = 1; b = 2
+\end{jlconcode}
+
+Por otro lado, si se está trabajando en modo interactivo y no se añade ninguna otra expresión tras el punto y coma antes del salto de línea, no se presenta ningún resultado en pantalla. Este efecto no siempre es apreciable, ya que el procesador de Julia es por sí mismo bastante parco a la hora de presentar resultados. De hecho, \emph{nunca} presenta los resultados de las expresiones contenidas dentro de un bloque de código, independientemente de si llevan o no punto y coma al final.
+
+En ocasiones esta última regla puede parecer confusa. Por ejemplo, considérese el siguiente bloque de código (delimitado por \jl{begin} y \jl{end} para forzar el agrupamiento de todas las líneas en un bloque):
+
+\begin{juliacode}
+begin
+  x = 1
+  y = 2
+  z = 3
+end
+\end{juliacode}
+
+Si se prueba a escribir y ejecutar el bloque en modo interactivo, se verá en pantalla el resultado de la última línea (\jl{3}), pero no el de las demás. Sin embargo esto no tiene nada que ver con el hecho de que esa (o las otras líneas) lleven o no punto y coma. De hecho, ocurriría lo mismo si se añade el punto y coma a la tercera línea o cualquiera de las demás.
+
+¿Por qué aparece entonces el \jl{3} en pantalla? La respuesta es que el bloque delimitado por \jl{begin}/\jl{end} es también una expresión de Julia (una expresión compuesta), cuyo resultado es el de la última línea del código que contiene. Lo que se muestra en pantalla es por tanto el resultado del bloque completo. La prueba es que si se añade el punto y coma al final del mismo, tras la palabra \jl{end}, ya no se verá nada en pantalla.
+
+Algo semejante ocurre al cargar un fichero de código con la función \jl{include}. Esta función también devuelve un resultado, que es el de la última línea del archivo, y se verá reproducido en pantalla salvo que se añada el punto y coma en la llamada a \jl{include}.
+
+\subsection{Complementos principales}
+
+La distribución básica de Julia es realmente ``básica'', y carece de bastantes utilidades que son consideradas como muy importantes, incluso fundamentales, por la mayoría de los potenciales usuarios de un lenguaje de ese tipo, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (\emph{debugging}), etc.
+
+Esta limitación está cubierta por el desarrollo coordinado (aunque independiente) de cientos de ``paquetes'' que contienen dichas utilidades. Como el propio proyecto Julia, todos los paquetes oficiales están publicados con el sistema de \url{http://git-scm.com/}{Git}. Julia mantiene un catálogo online de los paquetes oficiales, cuya lista se puede consultar con la expresión \jl{Pkg.available()}.
+
+Su instalación y desinstalación se controla desde dentro de Julia, mediante las funciones \jl{Pkg.add} y \jl{Pkg.rm}, respectivamente, que toman como argumento el nombre del paquete a instalar o desinstalar. Estas operaciones consisten esencialmente en ``clonar'' el paquete publicado en un lugar determinado del sistema, o borrarlo de ese sitio (definido en la variable \jl{JULIA_PKGDIR} si existe, o por defecto en el directorio designado por la función \jl{Pkg.dir}). Por ejemplo, el proceso para instalar el paquete \jl{Winston} (el más básico para representaciones gráficas) podría ser como sigue:
+
+\begin{jlconcode}
+julia> # Consultar si está instalado (en cuyo caso no hace falta instalarlo)
+julia> Pkg.installed("Winston")
+
+julia> # Si devuelve "nothing" (no está instalado):
+julia> Pkg.add("Winston")
+\end{jlconcode}
+
+Esta operación solo hay que hacerla una vez (actualizaciones aparte). Sin embargo, tener el paquete instalado no basta para poder usarlo. Para esto último hay que cargarlo explícitamente en cada sesión de trabajo, con la instrucción \jl{using}:
+
+\begin{jlconcode}
+julia> using Winston
+\end{jlconcode}
+
+A continuación se presenta una lista de algunos de los paquetes que pueden ser fundamentales para la mayoría de usuarios:
+
+\begin{itemize}
+  \item Gráficos: \jl{Winston} (el paquete más básico), \jl{Gadfly} (semejante al ggplot2 de R), \jl{PyPlot} basado en Matplotlib, depende de tener instalada esa librería de Python.
+  \item Salvar y leer variables generadas entre sesiones de Julia: \jl{HDF5}.
+  \item Depuración de funciones (básico): \jl{Debug}.
+\end{itemize}
+
+Por otro lado, la interfaz de línea de comandos es para muchos usuarios una herramienta de trabajo poco amigable, y las ``ayudas'' que proporciona (invocación de instrucciones anteriores usando las flechas de ``arriba''/``abajo'', combinaciones de teclas disponibles para acelerar las operaciones de corta-y-pega, etc.) son insuficientes. En respuesta a esa necesidad, hay algunos entornos de programación adaptados al uso de Julia, aunque en la fecha en la que se ha elaborado este documento no se puede decir que haya una solución definitiva. Por ejemplo está \url{http://junolab.org/}{Juno}, una aplicación basada en la plataforma \url{http://lighttable.com/}{Light Table}.
+
+Otra interfaz avanzada, especialmente útil para documentar las sesiones de trabajo (combinando código, texto con formato y gráficas), es ``IJulia'', basada en IPython (una interfaz análoga para Python). Se puede iniciar desde dentro de Julia como un paquete más (requiere tener IPython y otros componentes asociados instalados en el sistema), o desde ``la nube'' en un navegador de Internet a través de  sin instalar nada en el ordenador (ni siquiera Julia).
+

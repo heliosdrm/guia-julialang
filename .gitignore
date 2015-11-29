@@ -1,2 +1,6 @@
 *.sty
 *~
+*.aux
+*.log
+*.pdf
+src/_minted-*

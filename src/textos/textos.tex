@@ -1,0 +1,1659 @@
+﻿\documentclass{article}
+\usepackage{fontspec}
+\setmainfont[Ligatures=TeX]{Liberation Sans}
+\setmonofont[Scale=0.75]{Liberation Mono}
+%\defaultfontfeatures{Ligatures=TeX}
+\usepackage{polyglossia}
+%\setdefaultlanguage{spanish}
+
+\newcommand{\jl}{\texttt}
+
+
+\usepackage{url}
+%\usepackage{hyperref}
+
+
+\usepackage{minted}
+
+
+\begin{document}
+
+\section{¿Por qué \emph{Julia}?}
+
+Los lenguajes de programación dinámicos son una herramienta esencial en muchas profesiones científicas, que a menudo requieren realizar cálculos complejos en un corto plazo de tiempo; cálculos que además suponen un problema nuevo en cada ocasión, en el que los algoritmos a utilizar suelen basarse en trabajos anteriores, pero siempre necesitan ciertos retoques o extensiones.
+
+La utilidad y popularidad de los distintos lenguajes existentes, y de las herramientas de software que los implementan, dependen de varios factores, y en particular del campo de aplicación y el contexto institucional. Tres de los más imporantes son R, Matlab y Python.
+
+R es principalmente una herramienta para cálculos estadísticos, aunque también es posible utilizarlo para muchos otros propósitos. Se trata de una implementación a modo de software libre del lenguaje utilizado por el programa S-PLUS, con una comunidad de usuarios y desarrolladores espectacularmente activa, que ha extendido su potencia y funcionalidades a casi cualquier tipo de tratamiento de datos. En consecuencia, R es la opción más usada en la ciencia estadística, especialmente en el entorno académico (en ciertos sectores industriales tiene más presencia el programa y el lenguaje de SAS, propiedad de la compañía privada del mismo nombre).
+
+Matlab es una de las soluciones más empleadas para la computación numérica en ciencias físicas e ingeniería, tanto por la industria como por la academia, gracias a la potencia de sus utilidades gráficas, numerosas \emph{toolboxes}, y un excelente entorno de desarrollo. Al contrario que R, se trata de un software cerrado y privado; existe también una implementación libre de Matlab (GNU Octave), que podría compararse con el caso de R respecto a S-PLUS, pero en este caso la herramienta libre no goza de tanta popularidad.
+
+Python, por su lado, es un lenguaje de programación genérico, implementado en forma de software libre, que tiene la comunidad de usuarios más entusiasta y numerosa de todos los lenguajes citados. El campo de aplicación de Python va en realidad mucho más allá del científico, siendo un lenguaje que sirve para prácticamente cualquier tipo de operación informática. Pero existen varios módulos de Python recogidos en el paquete SciPy, específicamente dedicados a la computación numérica, que también se presentan como una alternativa libre a Matlab.
+
+En este contexto, el Massachusets Institute of Technology (MIT) publicó en 2012 Julia, otro lenguaje dinámico para computación científica, bajo la licencia del MIT para software libre. A la vista del tipo de funciones y operaciones que ofrece, podría parecer que Julia intenta reinventar la rueda, aunque sus autores son plenamente conocedores del estado de la ciencia en lenguajes de programación. De hecho, la documentación oficial parece especialmente dirigida a programadores que ya conocen otros lenguajes, y en particular los tres mencionados. Según las propias declaraciones de los creadores de Julia,%
+\footnote{%
+\url{http://julialang.org/blog/2012/02/why-we-created-julia/}%
+}
+su finalidad es combinar lo mejor de cada uno de esos (y otros) lenguajes, y salvar el mayor obstáculo común de todos ellos: la velocidad para cálculos complejos y tratamiento de ficheros y bases de datos muy voluminosas.
+
+El \emph{leit motiv} de Julia es principalmente su velocidad, comparable a la de programas compilados en C, sin dejar de ser un lenguaje plenamente dinámico y que permita trabajar con el paradigma del \emph{read-eval-print loop}. Esto hace que, incluso en su fase inicial de desarrollo, y con las carencias propias de la misma (pocos editores de código e interfaces para el desarrollo de programas, utilidades para depuración limitadas, etc.), Julia tenga un nicho de aplicación muy atractivo: la ejecución de operaciones conceptualmente sencillas, como algoritmos iterativos o rutinas masivas de lectura y escritura de dispositivos y archivos, que en lenguajes de bajo nivel pueden ser muy eficientes, pero a la hora de ejecutarlas en alguno de los lenguajes antes mencionados puedan consumir hasta horas de trabajo de la máquina. Con poco esfuerzo de programación, una hora de procesamiento en Matlab puede traducirse en unos pocos segundos de Julia.
+
+
+\section{Primeros pasos}
+
+
+\subsection{Instalación y uso básico de Julia}
+
+Explicar los primeros pasos para usar un lenguaje de programación es algo delicado y difícil. Es habitual comenzar con ejercicios triviales como el del ``Hola mundo'', pero esos ejemplos no resultan muy estimulantes, ni dan tampoco una idea clara de cómo es el lenguaje. El extremo opuesto es comenzar con un fragmento de código para una aplicación relativamente compleja, que contenga buena parte de las características principales que se quieren explicar, e ir desgranándolas poco a poco, asumiendo que la mayor parte del programa será incomprensible para el lector hasta que haya avanzado bastante. Lo cierto es que esa es una aproximación más cercana al modo en el que la mayoría acaba haciendo frente a cualquier lenguaje en la ``vida real'', aunque también puede ser frustrante. Así que buscando un punto de compromiso, en esta sección se partirá de ejemplos prácticos pero sencillos, que se puedan entender por entero aunque los conceptos incluidos no se expliquen en detalle hasta secciones posteriores.
+
+Ahora bien, antes de poner en práctica cualquier ejemplo, es necesario tener instaladas las herramientas que permiten usar el lenguaje de programación. El software básico para usar Julia está disponible en su página oficial (\url{http://julialang.org/downloads}), en forma de código fuente así como en binarios preparados para instalar en Windows, Mac OS X, y algunas distribuciones de Linux (por lo menos Ubuntu). Desde esa página se pueden encontrar también enlaces con explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son específicas para cada sistema, y por lo tanto no desarrollaremos aquí.
+
+Por defecto, al ejecutar Julia se abre el ``intérprete'' de comandos para trabajar de forma interactiva, que es el modo de uso de Julia más útil para aprender y hacer pruebas sencillas. Por otro lado, para ejecutar rutinas más complejas, y siempre que se quiera obtener resultados reproducibles, es recomendable escribir las instrucciones en un archivo de código, y luego ejecutarlo en Julia. Los entornos de desarrollo integrados, ``IDE'' en inglés, suelen tener editores de código que permiten combinar ambas tareas ---escribir instrucciones en un archivo de código y ejecutarlas--- desde la misma interfaz, lo cual facilita el trabajo del programador. (Véase más abajo sobre algunos IDE para Julia.)
+
+Veamos ahora un ejemplo práctico de ambas formas de uso, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.%
+\footnote{%
+\ulr{http://berndt-schwerdtfeger.de/cal/cal.pdf}%
+} Se trata de un algoritmo simple, que podría traducirse a Julia mediante el siguiente código: 
+
+\begin{juliacode}
+function gauss_diasemana(d, m, y)
+# d, m, y son los números del día, mes y año, respectivamente
+# La función devuelve una cadena de texto con el día de la semana
+  # Enero y febrero (m=1, m=2) se tratan como el año anterior
+  # en torno a los años bisiestos
+  if m < 3
+    y = y - 1
+  end
+  # Dividir el año entre centenas (c) y el resto (g)
+  c = div(y, 100)
+  g = mod(y, 100)
+  # Definir e y f en función del mes (de 1 a 12) y el siglo
+  # (en ciclos de 400 años --- 4 siglos)
+  earray = [0,3,2,5,0,3,5,1,4,6,2,4]
+  farray = [0,5,3,1]
+  e = earray[m]
+  f = farray[mod(c,4)+1]
+  # Seleccionar el día de la semana en función del cálculo de Gauss
+  warray = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"]
+  w = mod(d + e + f + g + div(g, 4), 7)
+  return(warray[w+1])
+end
+\end{juliacode}
+
+Supongamos que ese código está guardado en un archivo llamado \texttt{calc_diasemana.jl} (el nombre del archivo es arbitrario, y puede ser cualquier nombre aceptado por el sistema operativo). El programa consiste en una sola función con 3 argumentos (los números del día, el mes y el año), basada en unas pocas divisiones enteras (definidas en la función \jl{div}) y el cálculo de ``restos'' de dichas divisiones (\jl{mod}),%
+\footnote{%
+Existen dos funciones para el resto de una división: \jl{mod} y \jl{rem}, que funcionan de forma distinta cuando alguno de los dos operandos es negativo. Para el caso que nos ocupa esa diferencia no es relevante.%
+}
+más la selección de unos valores a partir de los resultados intermedios y unas listas predefinidas.
+
+Este programa se puede ejecutar de forma interactiva, usando la función \jl{include} en el intérprete de Julia. Esto es lo que se debería ver en pantalla (el texto \jl{julia>} al comienzo de la primera línea solo marca el punto de inserción del código; no es parte del código, y puede variar entre sistemas):
+
+julia> include("calc_diasemana.jl")
+calc_diasemana (generic function with 1 method)
+
+El resultado es algo decepcionante, porque lo único que se ha hecho es definir una función, que por sí misma no da ningún resultado. Por otro lado, lo más probable es que al introducir esa línea sin más ni siquiera se obtenga ese resultado, sino un error debido a que no se encuentra el archivo de código.%
+\footnote{%
+Ref. a sección con información sobre LOAD\_PATH y require()%
+}
+Para asegurarse de que Julia encuentra el archivo,
+hay varias alternativas:
+
+\begin{enumerate}
+  \item Copiar el archivo de código \jl{calc_diasemana.jl} al directorio de trabajo de Julia. La ruta de ese directorio se puede obtener con la función \jl{pwd()} --- sin ningún argumento---.
+  \item Cambiar el directorio de trabajo al lugar que contiene el archivo. El cambio de directorio se hace con la función \jl{cd}, que recibe un solo argumento: el nombre del directorio destino. Este se puede definir literalmente como un texto entre comillas dobles, o ser una variable que contiene dicho texto. En sistemas operativos con entornos gráficos, puede ser práctico copiar el nombre del directorio desde el gestor de archivos al ``portapapeles'', y utilizarlo directamente en Julia con la función \jl{clipboard}; es decir, introduciendo la expresión \jl{cd(clipboard())}.%
+  \footnote{%
+  Esta solución es particularmente recomendable en Windows, donde los directorios de una ruta suelen presentarse divididos por ``barras invertidas''. Por ejemplo, el directorio de trabajo podría ser \texttt{C:\\julia}. Pero la expresión \jl{cd("C:\\julia")} no daría el resultado esperado, porque la barra invertida se interpreta como inicio de una ``secuencia de escape'' para caracteres no imprimibles. Para que funcionase, habría que escribir \jl{cd("C:/julia")} o \jl{cd("C:\\\\julia")}. La función \jl{clipboard} ahorra este tipo de problemas.%
+  }
+  \item Introducir la ruta completa del archivo de código en la llamada a \jl{include}. Esta se puede escribir literalmente, o si el directorio que contiene el archivo está definido en una variable (supongamos que esta variable se llama \jl{dir_include}, la ruta se puede componer con la función \jl{joinpath}. Es decir, la expresión anterior sería \jl{include(joinpath(dir_include, "calc_diasemana.jl"))}. También en este caso se podría utilizar \jl{clipboard} para identificar el directorio destino a través del portapapeles.
+\end{enumerate}
+
+Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó el San Valentín de 2012:
+
+julia> gauss_diasemana(14, 2, 2012)
+"martes"
+
+Lo que se hace ``en un día cualquiera'' usando Julia es esencialmente este modelo de rutina, con funciones más complicadas y muchas más operaciones interactivas, explorando resultados, corrigiendo argumentos y repitiendo operaciones, claro está.
+
+Ayuda: help, documentación...
+
+\subsection{Reglas sintácticas}
+
+La sintaxis de los lenguajes de programación implica una multitud de reglas, la mayoría de las cuales en realidad no es necesario explicar, ya que son reglas de escritura lógicas e intuitivas, o se desprenden directamente de la lectura de ejemplos. Sin embargo, hay unos pocos detalles que pueden resultar menos claros y conviene mencionar.
+
+Uno de estos detalles es el tipo de nombres permitidos para las variables y funciones. Las reglas son básicamente las habituales: pueden estar formados por cualquier combinación de letras y números, más guiones bajos, exceptuando nombres que comiencen por números y las palabras clave del lenguaje (como \jl{for}, \jl{if}, \jl{end}, etc.). Además, también se admiten nombres con caracteres Unicode más allá del ASCII básico (letras acentuadas, griegas, etc.), así como el signo de exclamación (\jl{!}) en posición no inicial, aunque conviene usarlos con mesura: emplear caracteres extendidos aumenta el riesgo de problemas de portabilidad de los programas, y la exclamación se suele resevar para el nombre de cierto tipo de funciones (las que modifican sus argumentos de entrada).
+
+Hay seis constantes predefinidas que se pueden sobreescribir, pero conviene evitarlo (si se han usado antes en la sesión de Julia, aparecerá una advertencia al asignarles cualquier valor). Cuatro de ellas tienen dos nombres (tres con letras griegas), lo cual da más margen para reutilizar sus nombres:
+
+\begin{itemize}
+  \item \jl{pi}, \jl{$\pi$}: el número pi.
+  \item \jl{e}, \jl{eu}: el número de Euler
+  \item \jl{eulergamma}, \jl{$\gamma$}: la constante de Euler-Mascheroni.
+  \item \jl{golden}, \jl{$\Phi$}: la proporción áurea.
+  \item \jl{catalan}: la constante de Catalan.
+  \item \jl{im}: la unidad imaginaria.
+\end{itemize}
+
+Los espacios entre nombres de variables, funciones, etc. son normalmente irrelevantes: siempre que haya algun símbolo delimitador (operadores matemáticos, signos de puntuación, paréntesis\ldots) pueden usarse uno, varios o ningún espacio entre ellos, o al principio de la línea. El uso de los espacio responde más a una cuestión de estilo que a la sintaxis. Por ejemplo, los distintos bloques de código (funciones, bucles, etc.) suelen sangrarse con un número de espacios en función del nivel de anidamiento (véase la función \jl{gauss_diasemana} y el \jl{if} anidado en ella), pero esto se hace para mejorar la legibilidad, no por necesidad (al contrario que en Python). Hay, sin embargo, dos excepciones.
+
+Una de ellas es el paréntesis inicial de la llamada a ``macros''. A nivel de usuario una macro no resulta muy distinta a una función cualquiera, salvo en que el nombre empieza por la arroba (\jl{@}), y en este detalle: el paréntesis ha de seguir al nombre de las macros sin ningún espacio intermedio (esta restricción no aplica a las funciones). Por ejemplo, para la macro \jl{@printf} (usada para presentar valores en cadenas de texto con un formato específico):
+
+julia> # Correcto:
+julia> @printf("El numero pi es %.4f", pi)
+El numero pi es 3.1416
+julia> # ¡Mal!
+julia> @printf ("El numero pi es %.4f", pi)
+ERROR: first or second argument must be a format string
+
+Por otra parte, los argumentos de las macros pueden escribirse sin
+paréntesis y separados por espacios, sin comas:
+
+julia> # Esto también vale:
+julia> @printf "El numero pi es %.4f" pi
+El numero pi es 3.1416
+
+La otra excepción es la premultiplicación de variables por números literales. Como ya se ha dicho, el nombre de una variable no puede comenzar por un número, pero sí se puede \emph{añadir} un número ante el nombre de una variable, lo cual funciona como si esa variable se multiplicara por ese valor (como se hace muchas veces al escribir fórmulas textualmente). Por ejemplo:
+
+julia> 2pi # Equivale a 2*pi
+6.283185307179586
+
+Otro detalle importante es el uso del punto para distinguir números enteros y decimales. Para Julia el número \jl{1} no es el mismo que \jl{1.0}, aunque simbolicen el mismo valor. El primero es un número entero, cuya representación en la memoria del ordenador no es compatible con la de los números decimales, y para mayor eficiencia Julia usa procedimientos distintos para operar con cada tipo de número. En la mayoría de los casos el usuario puede pasar por alto esta distinción, ya que el procesador se encarga de hacer automáticamente las conversiones necesarias (normalmente transformando los números enteros a decimales). Sin embargo, en secciones posteriores, en particular al hablar de los \emph{arrays}, se verá que a veces hay que tener cuidado con estos detalles. Para definir un número explícitamente como decimal basta con incluir el punto; si su valor es entero no hace falta incluir los ceros a la derecha.
+
+julia> # Los enteros no son "iguales" a los decimales, aunque valen lo mismo
+julia> 1 == 1.0
+true
+julia> isequal(1, 1.0)
+false
+julia> # Comprobar formas equivalentes de escribir números decimales
+julia> isequal(1., 1.0)
+true
+julia> isequal(0.1, .1)
+true
+
+Finalmente, cabe mencionar el uso opcional del punto y coma (\jl{;}) al final de las expresiones. Normalmente cada expresión de Julia se termina con un salto de línea, pero puede usarse un punto y coma en su lugar, lo cual tiene dos efectos. Por un lado, es posible añadir otra expresión tras el punto y coma en la misma línea. Por ejemplo:
+
+julia> a = 1; b = 2
+
+Por otro lado, si se está trabajando en modo interactivo y no se añade ninguna otra expresión tras el punto y coma antes del salto de línea, no se presenta ningún resultado en pantalla. Este efecto no siempre es apreciable, ya que el procesador de Julia es por sí mismo bastante parco a la hora de presentar resultados. De hecho, \emph{nunca} presenta los resultados de las expresiones contenidas dentro de un bloque de código, independientemente de si llevan o no punto y coma al final.
+
+En ocasiones esta última regla puede parecer confusa. Por ejemplo, considérese el siguiente bloque de código (delimitado por \jl{begin} y \jl{end} para forzar el agrupamiento de todas las líneas en un bloque):
+
+begin
+  x = 1
+  y = 2
+  z = 3
+end
+
+Si se prueba a escribir y ejecutar el bloque en modo interactivo, se verá en pantalla el resultado de la última línea (\jl{3}), pero no el de las demás. Sin embargo esto no tiene nada que ver con el hecho de que esa (o las otras líneas) lleven o no punto y coma. De hecho, ocurriría lo mismo si se añade el punto y coma a la tercera línea o cualquiera de las demás.
+
+¿Por qué aparece entonces el \jl{3} en pantalla? La respuesta es que el bloque delimitado por \jl{begin}/\jl{end} es también una expresión de Julia (una expresión compuesta), cuyo resultado es el de la última línea del código que contiene. Lo que se muestra en pantalla es por tanto el resultado del bloque completo. La prueba es que si se añade el punto y coma al final del mismo, tras la palabra \jl{end}, ya no se verá nada en pantalla.
+
+Algo semejante ocurre al cargar un fichero de código con la función \jl{include}. Esta función también devuelve un resultado, que es el de la última línea del archivo, y se verá reproducido en pantalla salvo que se añada el punto y coma en la llamada a \jl{include}.
+
+
+\subsection{Complementos principales}
+
+La distribución básica de Julia es realmente ``básica'', y carece de bastantes utilidades que son consideradas como muy importantes, incluso fundamentales, por la mayoría de los potenciales usuarios de un lenguaje de ese tipo, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (\emph{debugging}), etc.
+
+Esta limitación está cubierta por el desarrollo coordinado (aunque independiente) de cientos de ``paquetes'' que contienen dichas utilidades. Como el propio proyecto Julia, todos los paquetes oficiales están publicados con el sistema de \href{http://git-scm.com/}{Git}. Julia mantiene un catálogo online de los paquetes oficiales, cuya lista se puede consultar con la expresión \jl{Pkg.available()}.
+
+Su instalación y desinstalación se controla desde dentro de Julia, mediante las funciones \jl{Pkg.add} y \jl{Pkg.rm}, respectivamente, que toman como argumento el nombre del paquete a instalar o desinstalar. Estas operaciones consisten esencialmente en ``clonar'' el paquete publicado en un lugar determinado del sistema, o borrarlo de ese sitio (definido en la variable \jl{JULIA_PKGDIR} si existe, o por defecto en el directorio designado por la función \jl{Pkg.dir}). Por ejemplo, el proceso para instalar el paquete \jl{Winston} (el más básico para representaciones gráficas) podría ser como sigue:
+
+julia> # Consultar si está instalado (en cuyo caso no hace falta instalarlo)
+julia> Pkg.installed("Winston")
+
+julia> # Si devuelve "nothing" (no está instalado):
+julia> Pkg.add("Winston")
+
+Esta operación solo hay que hacerla una vez (actualizaciones aparte). Sin embargo, tener el paquete instalado no basta para poder usarlo. Para esto último hay que cargarlo explícitamente en cada sesión de trabajo, con la instrucción \jl{using}:
+
+julia> using Winston
+
+A continuación se presenta una lista de algunos de los paquetes que pueden ser fundamentales para la mayoría de usuarios:
+
+\begin{itemize}
+  \item Gráficos: \texttt{Winston} (el paquete más básico), \texttt{Gadfly} (semejante al ggplot2 de R), \texttt{PyPlot} basado en Matplotlib, depende de tener instalada esa librería de Python.
+  \item Salvar y leer variables generadas entre sesiones de Julia: \texttt{HDF5}.
+  \item Depuración de funciones (básico): \texttt{Debug}.
+\end{itemize}
+
+Por otro lado, la interfaz de línea de comandos es para muchos usuarios una herramienta de trabajo poco amigable, y las ``ayudas'' que proporciona (invocación de instrucciones anteriores usando las flechas de ``arriba''/``abajo'', combinaciones de teclas disponibles para acelerar las operaciones de corta-y-pega, etc.) son insuficientes. En respuesta a esa necesidad, hay algunos entornos de programación adaptados al uso de Julia, aunque en la fecha en la que se ha elaborado este documento no se puede decir que haya una solución definitiva. Por ejemplo está \href{http://junolab.org/}{Juno}, una aplicación basada en la plataforma \href{http://lighttable.com/}{Light Table}.
+
+Otra interfaz avanzada, especialmente útil para documentar las sesiones de trabajo (combinando código, texto con formato y gráficas), es ``IJulia'', basada en IPython (una interfaz análoga para Python). Se puede iniciar desde dentro de Julia como un paquete más (requiere tener IPython y otros componentes asociados instalados en el sistema), o desde ``la nube'' en un navegador de Internet a través de  sin instalar nada en el ordenador (ni siquiera Julia).
+
+
+\section{Variables de tipo \emph{array}}
+
+Las variables pueden ser valores escalares, como en el ejemplo de la sección anterior, o también series organizadas de valores (\emph{arrays}), que pueden tener varias dimensiones (matrices o hipermatrices, que formalmente reciben el nombre de \emph{multi-dimensional arrays}). Su definición y uso no es uno de los aspectos más sencillos del lenguaje, y de hecho acarrea bastantes complicaciones, pero conviene introducirlos en este punto ya que hay muchos otros conceptos que se entienden mejor habiendo conocido lo que son y cómo son los \emph{arrays}, o incluso no se pueden entender de otra manera. Además, los \emph{arrays} son un elemento fundamental para la mayoría de cálculos numéricos, por lo que tiene doble sentido hablar de ellos desde un principio.
+
+Creación de \emph{arrays}
+
+Un \emph{array} se define entre corchetes, con cada valor individual separado por comas:
+
+julia> primos = [1,2,3,5,7,11]
+6-element Array{Int64,1}:
+ 1
+ 2
+ 3
+ 5
+ 7
+ 11
+
+Como se comprueba en este ejemplo, los \emph{arrays} unidimensionales son equivalentes a ``vectores columna''. Por lo tanto, en la práctica la coma puede sustituirse por el punto y coma (\jlt{;}), que se utiliza como forma abreviada de la función \jl{vcat} (``concatenación vertical''). Pero no es legal combinar la coma y el punto y coma de forma indiscriminada:
+
+julia> # Comparar definición con puntos y comas
+julia> primos == [1;2;3;5;7;11]
+true
+
+julia> # Sintaxis errónea
+julia> [1,2;3]
+ERROR: syntax: unexpected semicolon in array expression
+
+En matrices de más de una dimensión, las columnas se concatenan horizontalmente mediante la función \jl{hcat}, o más compactamente mediante espacios:
+
+julia> # Equivale a mat = hcat([1,2,3], [10,20,30], [0.1,0.2,0.3])
+julia> mat = [[1,2,3] [10,20,30] [0.1,0.2,0.3]]
+3x3 Array{Float64,2}:
+ 1.0 10.0 0.1
+ 2.0 20.0 0.2
+ 3.0 30.0 0.3
+
+Por otro lado, para construir matrices siguiendo la habitual definición ``línea a línea'', los valores de cada línea se separan con espacios, y las líneas se separan entre sí mediante el punto y coma (también se puede usar la función \jl{hvcat}, especificando cuántas columnas tiene cada línea):
+
+julia> # Equivale a mat = hvcat(3, 1, 10, 0.1, 2, 20, 0.2, 3, 30, 0.3)
+julia> mat = [1 10 0.1; 2 20 0.2; 3 30 0.3]
+3x3 Array{Float64,2}:
+ 1.0 10.0 0.1
+ 2.0 20.0 0.2
+ 3.0 30.0 0.3
+
+Otras operaciones útiles para la construcción de matrices son la transposición (con la función \jl{transpose} o el operador apóstrofe \jl{'}), la función \jl{cat}, que se utiliza de forma general para concatenar series o matrices en cualquier dimensión, más allá de las dos primeras (filas o columnas), y la función \jl{reshape}, para reorganizar las dimensiones de un \emph{array}.
+
+Indexación y manipulación. Variables de tipo ``rango''
+
+Para leer o modificar un valor de un \emph{array}, se indexa la posición seleccionar entre corchetes(\jl{[]}), siguiendo el orden fila-columna-etc. (la primera posición se indica con el número 1). Si solo se utiliza un índice de posición, hay que tener en cuenta que los valores están internamente ordenados por columnas:
+
+julia> # Cuarto número primo:
+julia> primos[4]
+5
+
+julia> # Primera fila, segunda columna de mat:
+julia> mat[1, 2]
+10
+
+julia> # O lo que es lo mismo, primer valor tras la primera columna:
+julia> mat[3 + 1]
+10
+
+Se pueden utilizar vectores de índices, para seleccionar varios valores o combinaciones de filas y columnas en la misma operación. Por ejemplo, para intercambiar la segunda y tercera filas de \jl{mat} (completas, es decir los valores de las tres columnas para esas dos filas):
+
+julia> # Véase que los índices de las filas se invierten al reasignarlos:
+julia> mat[[2,3],[1,2,3]] = mat[[3,2],[1,2,3]];
+julia> mat
+3x3 Array{Float64,2}:
+ 1 10 0.1
+ 3 30 0.3
+ 2 20 0.2
+
+Estos conjuntos de índices se pueden escribir de forma más cómoda a través de ``rangos'' (\emph{ranges}), un tipo especial de variable que representa una serie aritmética acotada. Los rangos se definen a través de tres valores: el primero y último de la serie (\jl{a} y \jl{b}, respectivamente), más el ``paso'' o diferencia entre dos números consecutivos (\jl{s}), con la sintaxis \jl{a:s:b}. Por ejemplo, la serie de números impares entre 1 y 10:
+
+julia> impares = 1:2:10
+1:2:9
+
+En este ejemplo el valor final asignado (10) no es compatible con la definición del valor inicial y el paso, por lo tanto se sustituye automáticamente por 9, el valor compatible más cercano (\emph{dentro} del rango entre los valores inicial y final asignados). El conjunto de valores representados se entiende más fácilmente si el resultado se convierte a un vector, usando la operación \jl{collect}:
+
+julia> collect(impares)
+5-element Array{Int64,1}:
+ 1
+ 3
+ 5
+ 7
+ 9
+
+Los números de un rango no han de ser necesariamente enteros ni positivos, aunque es lo lógico cuando se quiere definir un conjunto de índices. Por otro lado, el paso \jl{s} es un valor opcional, que por defecto se asume igual a 1. Para construir una serie ordenada de mayor a menor, además de definir los valores inicial y final en el orden adecuado, se ha de definir un paso negativo. Olvidar este detalle hace que la serie creada sea vacía. Por ejemplo, para una ``cuenta atrás'' de 5 a 1 (convertida a vector para más claridad):
+
+julia> collect(5:-1:1) # Correcto
+5-element Array{Int64,1}:
+ 5
+ 4
+ 3
+ 2
+ 1 
+
+julia> collect(5:1) # Serie vacía
+0-element Array{Int64,1}:
+
+Algunos trucos útiles con rangos cuando se usan como índices son: la palabra clave \jl{end} hace referencia a la última posición/fila/columna indexable en el \emph{array} manipulado; y los dos puntos aislados (\jl{:}) hacen referencia a ``todas'' las posiciones, filas o columnas.
+
+julia> # Serie de números primos al revés:
+julia> primos[end:-1:1]
+6-element Array{Int64,1}:
+ 11
+ 7
+ 5
+ 3
+ 2
+ 1
+
+julia> # Intercambiar las filas primera y segunda (antes tercera) de mat
+julia> mat[1:2,:] = mat[[2,1],:];
+julia> mat
+3x3 Array{Float64,2}:
+ 3 30 0.3
+ 1 10 0.1
+ 2 20 0.2
+
+Dificultades de los \emph{arrays}. 1: ``mutabilidad''
+
+Es importante tener en cuenta que los \emph{arrays} en Julia no son solo agrupaciones de valores para manejarlos de forma conjunta. Son un tipo de variable diferente a los valores escalares, que muestra un comportamiento distinto. Para empezar, es lo que se llama un objeto ``mutable''; por ejemplo se pueden cambiar uno o más valores del \emph{array} manteniendo el resto sin alterar. Esto hay que tenerlo en cuenta cuando se ``copian'' variables, porque puede llevar a resultados inesperados. Por ejemplo:
+
+julia> sa = [1, 2, 3];
+julia> # Creamos otro array sb "igual a sa"
+julia> sb = sa;
+julia> # Ahora modificamos sa...
+julia> sa[1] = 0;
+julia> # Volvemos a cambiar su contenido, multiplicándolo por 10
+julia> sa = sa*10;
+julia> # Esto es lo que podía esperarse
+julia> sa
+3-element Array{Int64,1}:
+  0
+ 20
+ 30
+
+julia> # ¿Pero por qué sb no coincide con el contenido inicial de sa?
+julia> sb
+3-element Array{Int64,1}:
+ 0
+ 2
+ 3
+Una forma de entender lo que pasa en este ejemplo es considerar que las variables \jl{sa}, \jl{sb} no son lo mismo que los objetos contenidos en ellas (en este caso los \emph{arrays}), sino meras referencias, una especie de ``etiquetas'' que pueden asignarse de forma independiente, e incluso redundante a los diversos objetos que hay en el espacio de trabajo. La figura [XXXXX] muestra gráficamente lo que ocurre en cada una de las operaciones.
+
+[XXXXXXX]
+
+Como los \emph{arrays} son elementos mutables, al hacer que \jl{sb} se identifique con \jl{sa}, los cambios realizados a una de las variables afecta también a la otra ---a no ser que una de las variables se reasigne, como ocurre en el cuarto paso.
+
+Este comportamiento se puede evitar definiendo los \emph{arrays} explícitamente como ``copias'' de otros. La forma más concisa es haciendo referencia a todos los valores individuales (con \jl{[:]}).
+
+julia> # sa se redefine como un array que contiene "todos los valores de sb"
+julia> sa = sb[:]
+3-element Array{Int64,1}:
+ 0
+ 2
+ 3
+
+julia> # Si redefinimos el primer elemento de sa, el cambio ya no se aplica a sb
+julia> sa[1] = 1;
+julia> sa
+3-element Array{Int64,1}:
+ 1
+ 2
+ 3
+
+julia> sb
+3-element Array{Int64,1}:
+ 0
+ 2
+ 3
+
+
+Dificultades de los \emph{arrays}. 2: Restricciones de tipo y tamaño.
+
+Además, el tipo de datos y las dimensiones de un \emph{array} son fijos (aunque sí se le puede reasignar un conjunto de datos nuevo, con otro tipo de datos u otro tamaño). La restricción sobre los tipos de datos puede causar ciertos problemas, ya que los números pueden codificarse de varias maneras, y puede crearse de forma accidental un \emph{array} con un tipo distinto del que se realmente se pretende utilizar. Por eso, al presentar un \emph{array} en pantalla siempre se muestra el tipo de datos y las dimensiones asociadas; en los ejemplos anteriores se han usado los tipos \jl{Int64} (enteros de 32 bits) y \jl{Float64} (números decimales de doble precisión --- 64 bits ---). Estos son los tipos por defecto creados en un sistema operativo de 32 bits (en uno de 64 bits los enteros serían \jl{Int64}, aunque los decimales serían iguales), según los valores asignados en la creación. También se puede consultar el tipo de una variable (\emph{array} u otro tipo) con la función \jl{typeof}.
+
+El problema mencionado se puede ejemplificar con los \emph{arrays} \jl{sa} y \jl{sb}, que se habían definido a partir de secuencias de números enteros, y por lo tanto son \emph{arrays} del tipo \jl{Int64}. Esto significa que asignar un valor decimal a un elemento sería ilegal:
+
+julia> sa[1] = 0.5
+ERROR: InexactError()
+ in setindex! at array.jl:313
+
+Si se hubiera querido crear una secuencia de 1 a 3 con números decimales, habría varias alternativas:
+
+julia> # 1. Declarar el tipo de datos del vector en su creación
+julia> sf = Float64[1,2,3];
+julia> typeof(sf)
+Array{Float64,1}
+
+julia> # 2. Crear primero el vector declarando el tipo de datos y el tamaño
+julia> sf = Array(Float64, 3);
+julia> sf[:] = [1,2,3];
+julia> typeof(sf)
+Array{Float64,1}
+
+julia> # 3. Convertir la secuencia de enteros explícitamente a tipo float
+julia> sf = float([1,2,3]);
+julia> typeof(sf)
+Array{Float64,1}
+
+julia> # 4. Introducir números explícitamente decimales al definir la secuencia
+julia> # (vale con que un solo valor sea decimal)
+julia> sf = [1.0, 2, 3];
+julia> typeof(sf)
+Array{Float64,1}
+
+El truco de la última opción consiste en aprovechar la ``promoción'' automática que realiza Julia al operar con una combinación de números enteros y decimales, por virtud de la cual los enteros se tratan como si fueran decimales. (Véase la sección XXXXX para más detalles sobre los tipos.)
+
+Julia admite muchos otros tipos de datos; los básicos son enteros con o sin signo y números decimales de distintas precisiones, pero hay muchas más abstracciones, incluyendo números racionales y complejos. Y hay también un ``supertipo'' \jl{Any}, que incluye todos los tipos de objetos que pueden existir en Julia. Las variables escalares también se clasifican según dichos tipos, aunque en su caso la asignación no muestra estos problemas. Puede consultarse el manual de Julia para un catálogo completo de los tipos numéricos básicos y las reglas de promoción entre ellos.
+
+Vista ya la cuestión de las restricciones de tipo, el otro error típico a la hora de manipular \emph{arrays} consiste en intentar la lectura o modificación de un valor más allá de su tamaño predefinido, aunque el \emph{array} siempre se puede cambiar por otro nuevo de mayor tamaño:
+
+julia> # Así no se puede añadir un cuarto valor a sa:
+julia> sa[4] = 4
+ERROR: BoundsError()
+
+julia> # Se puede concatenar sa con el cuarto valor, y reasignar el resultado:
+julia> sa = [sa, 4]
+4-element Array{Int64,1}:
+ 1 
+ 2 
+ 3 
+ 4
+
+Otra forma de ampliar \emph{arrays} es usar funciones como \jl{push!}, \jl{append!}, \jl{unshift!}, \jl{prepend!}, \jl{insert!}, \jl{resize!}, etc. (el signo \jl{!} en el nombre es una convención para indicar que la función modifica el argumento). También hay funciones complementarias para eliminar elementos del \emph{array}, como \jl{pop!}, \jl{shift!} o \jl{splice!}, que además devuelven el valor del elemento extraído. Es típico crear \emph{arrays} que se van ampliando progresivamente en procesos iterativos, pero en la medida de lo posible es recomendable definirlos en un primer momento con el tamaño necesario para contener todos los elementos que requiera, sobredimensionándolo si hace falta y ``recortándolos'' después si se quiere. Esto evita la creación de una nueva variable en cada iteración, que puede consumir más tiempo de procesado que las demás operaciones, y reduce potencialmente el coste computacional en varios órdenes de magnitud.
+
+Operaciones matriciales
+
+Un caso especial de los \emph{arrays} es de las matrices bidimensionales, que son un elemento fundamental del álgebra lineal. (En el resto de esta sección se hablará simplemente de ``matrices'' sobreentendiéndose el calificativo de ``bidimensional''). La relevancia de las matrices implica que hay una cantidad muy importante de operaciones matemáticas dirigidas a este tipo de variables, y que no son válidas para \emph{arrays} de más dimensiones.
+
+Por ejemplo, las operaciones de multiplicación y división en ambos sentidos (\jl{*}, \jl{/}, \jl{\\} ), así como la potenciación por un escalar (\jl{^}) se interpretan como operaciones específicas para matrices. También pueden aplicarse a escalares o vectores unidimensionales, aunque esto se debe a que pueden considerarse matrices de tamaño $1\times{}1$ o de una sola columna, respectivamente.
+
+Sin embargo, estas operaciones también podrían querer aplicarse a cada elemento individual del \emph{array} (o \emph{arrays}) de entrada. Por ese motivo, existe una versión ``elemento-a-elemento'' de esos operadores, que se distinguen por un punto precedente (\jl{.*}, \jl{./}, \jl{.\\}).
+
+También existe esta versión para operadores de comparación (\jl{.==}, \jl{.!=}, etc.), así como para  la suma y la resta (\jl{.+}, \jl{.-}, respectivamente), aunque la definición matricial y elemento a elemento de estas dos últimas no tiene distinción. De hecho, las sumas y restas ``con punto'' y ``sin punto'' sirven igualmente para todo tipo de \emph{arrays} (si las dimensiones de los operandos son iguales). La principal diferencia consiste en que las versiones con punto hacen una expansión automática de los operandos (\emph{broadcasting}) si algunas dimensiones son unitarias. Por ejemplo:
+
+julia> # Filas con unidades distintas, columnas con decimales distintos
+julia> # Solo se suma un vector columna más un vector fila
+julia> [1,2,3] .+ [0.1 0.2 0.3]
+3x3 Array{Float64,2}:
+ 1.1 1.2 1.3
+ 2.1 2.2 2.3
+ 3.1 3.2 3.3
+
+Este truco no tiene lugar en la suma ``sin punto'', que por otro lado es más rápida. Por lo tanto, si se busca seguridad ante errores de programación (evitar expansiones si por accidente se suman \emph{arrays} de dimensiones incoherentes) y eficiencia en el procesado, es preferible usar la versión sin punto. La expansión automática siempre puede forzarse de forma eficiente con la función \jl{broadcast}.
+
+Para las funciones ``con nombre'' que tienen una definición matricial específica, como la exponencial, el criterio es el contrario: la función con el nombre ``normal'' (\jl{exp}) hace la operación elemento a elemento cuando se aplica a cualquier tipo de \emph{array}; y se utiliza un nombre especial para la operación matricial (\jl{expm}).
+
+Muchas otras funciones (p.ej. las funciones trigonométricas) solo tienen sentido en \emph{arrays} si se hacen elemento a elemento, y por lo tanto son válidas tal cual con el mismo nombre para \emph{arrays} y para escalares.
+
+
+
+
+Gráficos con Winston
+
+Instrucciones básicas
+
+Vistos algunos de los aspectos básicos del manejo de números y \emph{arrays}, podemos abordar el tema de la representación gráfica de los datos. A menudo, cuando se hace un análisis de datos, lo primero que se desea es visualizarlos en un gráfico. Además, aprender a dibujar gráficos sencillos suele ser más satisfactorio, y da la sensación de poder hacer ``cosas útiles'' desde el principio, más que hacer operaciones numéricas de complejidad equivalente.
+
+La distribución básica de Julia no ofrece utilidades gráficas, pero existen varios paquetes que permiten hacerlas. El más elemental, que utilizaremos aquí, es Winston (https://github.com/nolta/Winston.jl).%
+\footnote{%
+Los usuarios de R, y en particular del paquete ggplot2, encontrarán también útil el paquete Gadfly (https://github.com/dcjones/Gadfly.jl), que permite hacer gráficos mucho más complejos utilizando una sintaxis semejante. Los que tengan Python y su módulo gráfico Matplotlib instalado en el ordenador, también pueden usarlo a través de Julia con el paquete PyPlot(https://github.com/stevengj/PyPlot.jl).}%
+Recordamos aquí que para instalar este paquete, la forma más sencilla es ejecutar la línea:
+
+julia> Pkg.add("Winston")
+
+Esta operación se hace una sola vez, y al mismo tiempo que Winston, instalará (si no se tienen ya) los distintos paquetes de los que depende. Además, en cada sesión en la que se desee emplear esta herramienta habrá que ``cargar'' el paquete mediante la orden:
+
+julia> using Winston
+
+La función principal es \jl{plot}, que se utiliza de manera casi idéntica a la función del mismo nombre en otros lenguajes como Matlab o la biblioteca PyPlot de Python. Partamos de un ejemplo trivial [Ref. a figura]:
+
+julia> # Dibujar el coseno de x entre 0 y 3pi con 100 puntos
+julia> x = linspace(0, 3pi, 100)
+julia> plot(x, cos(y), "-or")
+
+El primer argumento (vector de puntos en el eje $X$) es opcional: si solo se pasa un vector de datos, estos se dispondrán como si el eje $X$ fuese \jl{[1:length(y)]}. El tercer argumento (también opcional) es una cadena de texto que indica los atributos gráficos de la serie dibujada (por defecto una linea continua negra). En este caso, una línea continua (\jl{'-'}), con puntos marcados como círculos (\jl{'o'}), todo ello de color rojo (\jl{'r'}). Estos atributos pueden consistir en tipos de linea (FigXX), marcas de puntos (FigXX), o colores (FigXX), y se pueden combinar en cualquier orden, con una excepción: \jl{"-."} representa ``linea discontinua alternada con puntos'', mientras que \jl{".-"} equivale a ``marcadores en forma de puntos'' + ``linea continua''.
+
+
+p = FramedPlot()
+setattr(p.frame, draw_nothing=true)
+c1=Curve([0],[0], linetype="solid")
+setattr(c1, label="solid: \"-\"")
+c2=Curve([0],[0], linetype="dotted")
+setattr(c2, label="dotted: \":\"")
+c3=Curve([0],[0], linetype="dotdashed")
+setattr(c3, label="dotdashed: \"-.\", \";\"")
+c4=Curve([0],[0], linetype="dashed")
+setattr(c4, label="dashed: \"--\"")
+add(p, c1, Legend(0.05,0.95,{c1,c2,c3,c4}))
+
+p = FramedPlot()
+setattr(p.frame, draw_nothing=true)
+m1=Points([0],[0], symboltype="dot")
+setattr(m1, label="dot: \".\"")
+m2=Points([0],[0], symboltype="circle")
+setattr(m2, label="circle: \"o\"")
+m3=Points([0],[0], symboltype="asterisk")
+leg1 = Legend(0.05, 0.95, {m1,m2,m3})
+setattr(m3, label="asterisk: \"*\"")
+m4=Points([0],[0], symboltype="plus")
+setattr(m4, label="plus: \"+\"")
+m5=Points([0],[0], symboltype="cross")
+setattr(m5, label="cross: \"x\"")
+m6=Points([0],[0], symboltype="square")
+setattr(m6, label="square: \"s\"")
+leg2 = Legend(0.38, 0.95, {m4,m5,m6})
+m7=Points([0],[0], symboltype="diamond")
+setattr(m7, label="diamond: \"d\"")
+m8=Points([0],[0], symboltype="triangle")
+setattr(m8, label="triangle: \"^^\"")
+m9=Points([0],[0], symboltype="down-triangle")
+setattr(m9, label="down-triangle: \"v\"")
+leg3 = Legend(0.71, 0.95, {m7,m8,m9})
+add(p, c1, leg1, leg2, leg3)
+
+``y``     yellow
+``m``     magenta
+``c``     cyan
+``r``     red
+``g``     green
+``b``     blue
+``w``     white
+``k``     black
+
+La función \jl{plot}, además de representar el gráfico especificado en pantalla, crea en memoria un objeto de la clase \jl{FramedPlot} con los contenidos del gráfico, que es el valor devuelto por la función. Es decir, que si hubiéramos escrito, por ejemplo:
+
+julia> p = plot(x, y, "-or")
+
+la variable \jl{p} contendría los contenidos del gráfico en cuestión. De este modo, si se cierra la ventana del gráfico o se cambia su contenido, este se puede volver a mostrar invocando a esta variable.
+
+
+Series de datos superpuestas
+
+Asignar un gráfico a una variable también sirve para añadirle nuevas series de datos u otros componentes. Si a la función \jl{plot} le añadimos un primer argumento con el contenido de un gráfico anterior:
+
+julia> # Dibujar sobre el gráfico "p"
+julia> plot(p, x, cos(x))
+
+veremos una nueva linea dibujada sobre la anterior (figura XXX). Si no se hubiera especificado ese primer argumento, simplemente se habría creado un nuevo gráfico que sustituiría al anterior, en lugar de superponerse.
+
+Esta forma de añadir componentes es especialmente útil si se trabaja con varios gráficos a al vez. Si solo se trabaja con uno, basta con utilizar la función \jl{oplot} (forma abreviada de \emph{overplot}), que funciona igual que \jl{plot} pero siempre añade la serie de datos especificada al último gráfico que se haya creado.
+
+Otra opción es emplear la función \jl{hold}, que altera el comportamiento de \jl{plot} en este aspecto:
+
+julia> hold(false) # comportamiento por defecto de "plot"
+julia> hold(true)  # cambia "plot" para hacer lo mismo que "oplot"
+julia> hold()      # alterna ambos comportamientos de "plot"
+
+Alternativamente, se puede llamar a \jl{plot} especificando múltiples series de datos, para que las represente superpuestas en un solo paso.
+
+julia> # Esta instrucción también genera el gráfico de la figura XXX
+julia> plot(x, sin(x), "-or", x, cos(x) "k")
+
+Como se ve en el ejemplo, los grupos de argumentos (datos en el eje $X$, datos en el eje $Y$, y atributos visuales) se añaden secuencialmente. Los argumentos opcionales (eje $X$ y atributos) se pueden omitir si la secuencia resultante no es ambigua.
+
+Y también hay otra alternativa más sencilla en el caso de que las series de datos tengan la misma longitud: juntar los valores del eje $Y$ en una sola matriz, con cada serie en una columna. La función \jl{plot} asigna a cada columna un color distinto por defecto, repitiéndose esta secuencia cada 8 columnas: (1) negro, (2) rojo, (3) verde, (4) azul, (5) naranja, (6) morado/índigo, (7) marrón, (8) violeta/púrpura.
+
+julia> # seno en una línea negra, coseno en una línea roja
+julia> plot(x, [sin(x) cos(x)])
+
+
+Trabajar con múltiples figuras
+
+Para trabajar con más de un gráfico en pantalla, se deben abrir distintas figuras o ventanas gráficas.%
+\footnote{%
+Esto es así al menos cuando se trabaja con la interfaz básica de Julia. Los distintos IDEs pueden cambiar la forma de visualizar los gráficos.%
+}
+Conviene tener clara la diferencia entre los conceptos de ``figura'' y ``gráfico'' (en términos técnicos, \emph{Figure} y \emph{FramedPlot}, respectivamente). El segundo es siempre un contenido de la primera, como se muestra en la figura XXX.
+
+Para crear una nueva figura se utiliza la función \jl{figure} sin ningún argumento. Esta función devuelve un número entero que identifica a la figura mientras esta se encuentre abierta. Además hará que esa figura sea la ``activa'', es decir que que desde ese momento todas las operaciones gráficas se hagan sobre ella y sus contenidos.
+
+julia> # Crear una nueva figura y asignar su identificador a f
+julia> f = figure()
+
+Si posteriormente se crean otras figuras, se puede volver a activar una anterior, empleando este identificador como argumento de \jl{figure}:
+
+julia> # f vuelve a ser la figura activa
+julia> figure(f)
+
+La operación complementaria de eliminar una figura creada se lleva a cabo con la función \jl{closefig} (aparte de la posibilidad hacer ``click'' sobre el botón para cerrar la figura, cuando se trabaja en modo interactivo):
+
+julia> # Cerrar la figura f
+julia> closefig(f)
+
+Es importante mencionar que las figuras recién creadas están ``vacías''; no contienen ningún gráfico, ni siquiera en blanco, hasta que se llama a la función \jl{plot} o una equivalente. Esto significa que la función \jl{oplot} no actuará sobre ellas. Y tampoco se puede utilizar el identificador de la figura como primer argumento de \jl{plot}, ya que se trata de un objeto de distinto tipo. Si se quiere, para crear un gráfico en blanco se puede emplear a la función ``constructora'' \jl{FramedPlot}.
+
+Por otro lado, si no hay ninguna figura abierta, las funciones como \jl{plot}, \jl{FramedPlot}, etc. la crean automáticamente, aunque no dan información sobre ella. Si hace falta, el identificador de la figura activa se puede recuperar con la función \jl{gcf} ---sin argumentos---, cuyo nombre representa el acrónimo de \emph{get current figure}.
+
+julia> # f identifica a la figura que contiene el gráfico p
+julia> p = plot(x, y)
+julia> f = gcf()
+
+
+Tablas de gráficos, decoraciones y otras complejidades
+
+Para mostrar de forma práctica otros aspectos de la composición de gráficos, a continuación se plantea un ejemplo algo más complejo, que incluye un par de rutinas habituales: la definición de ``decoraciones'' como títulos, leyendas o etiquetas de los ejes, ajustar el rango de los ejes, y organizar una tabla de gráficos en la misma figura. Este ejemplo también sirve para ver el uso de algunas operaciones rutinarias en cálculos numéricos.
+
+El ejemplo consiste en una composición de dos gráficos (figura XXXX): el gráfico superior muestra una señal de frecuencia modulada y amplitud amortiguada (línea negra), a la que se le ha añadido un error aleatorio (puntos grises), y se ha ajustado con una media ponderada móvil (línea roja). El aspecto más ``ruidoso'' de la señal ajustada en el tramo final se representa en forma de razón entre señal y ruido (\emph{signal-to-noise ratio}, SNR) en el panel inferior. El código para generar este gráfico es el siguiente:
+
+# x es la variable independiente
+x = linspace(0, 50pi^2, 1000)
+# f = señal ideal, y = señal observada
+f = 10cos(sqrt(x)) .* exp(-x/100)
+y = f+0.25randn(1000)
+# yfit = señal ajustada con una media ponderada móvil
+yfit = fill(NaN, 1000)
+b = [1, 2, 3, 2, 1]/9
+for t = 3:998
+  yfit[t] = sum(y[t-2:t+2] .* b)
+end
+# Signal-to-noise ratio
+# (ver comentario)
+signal_pow = fill(NaN, 1000)
+noise_pow = fill(NaN, 1000)
+noise = yfit - f
+for t = 3:998
+  signal_pow[t] = sum((f[t-2:t+2] - mean(f[t-2:t+2])).^2)
+  noise_pow[t] = sum((noise[t-2:t+2] - mean(noise[t-2:t+2])).^2)
+end
+snr = (signal_pow./noise_pow)[5:end]
+# Aquí empiezan los gráficos
+plottable = Table(2, 1)
+plottable[1,1] = plot(x[1:2:end], y[1:2:end], ".c", x, [f yfit])
+xlim(0,50pi^2)
+title("Ejemplo de ajuste por media móvil")
+grid(true)
+legend(["medida bruta", "señal", "medida ajustada"], 0.75, 0.9)
+plottable[2,1] = semilogy(x[3:end-2], snr)
+xlim(0,50pi^2)
+xlabel("x")
+ylabel("Signal-to-noise-ratio")
+grid(true)
+plottable
+savefig(plottable, "figura.png")
+
+Las primeras líneas de este ejemplo son las operaciones realizadas para obtener los datos del panel superior. Se usa la función \jl{linspace} para crear un vector de 1000 puntos equiespaciados entre $0$ y $50\pi$, unas sencillas funciones matemáticas para la señal ideal, y la función \jl{randn} para añadirle el ruido aleatorio (procedente de una distribución gaussiana).
+
+Este ruido se intenta cancelar con una media ponderada móvil, de ventana triangular de 5 puntos representada por el vector de coeficientes \jl{b}. Este último cálculo se realiza con el bucle \jl{for}, que es autoexplicativo --- los detalles de esta técnica se presentan en  el siguiente capítulo.%
+\footnote{%
+Sería mucho más eficiente hacer esta operación con la
+función \jl{filt}, pero se opta por esta solución más trivial para no
+complicar el ejemplo con cuestiones relativas al tratamiento de señales digitales.%
+}
+Los dos primeros y últimos puntos de la señal ajustada no se calculan, y se dejan como \emph{not-a-numbers} (\jl{NaN}), para evitar ``efectos de borde''. Luego se calcula la medida en que varían la señal original y la filtrada para obtener la SNR. Estas variaciones se calculan como una ``suma de cuadrados móvil'' con un ancho de 5 puntos. Esto se hace con un bucle semejante al usado para la media ponderada móvil.
+
+A esto le siguen las operaciones gráficas. Para construir una tabla de gráficos se emplea la función \jl{Table} con dos argumentos: el número de filas y columnas de la tabla, respectivamente. El valor devuelto es un objeto del tipo \jl{PlotContainer} (véase al figura XXX). La gráfica creada con la función \jl{plot} se asigna al panel que corresponde de esta tabla, del mismo modo que si trabajásemos con \emph{arrays} de datos numéricos.
+
+En este ejemplo, la primera llamada a \jl{plot} se utiliza para representar tres series de datos al mismo tiempo. La primera secuencia es la de los puntos observados (\jl{".c"} son puntos en color cian), representados de dos en dos para que el gráfico sea menos denso. La segunda secuencia son las dos líneas con la señal original y la ajustada, puestas como un solo conjunto de datos en forma de matriz.
+
+El panel inferior representa la razón entre señal y ruido (\jl{snr}), pero en lugar de \jl{plot} se utiliza la función \jl{semilogy}, porque queremos que el eje Y se represente en escala logarítmica para visualizar mejor cómo varía esta medida. Para poner en escala logarítmica el eje X o ambos, se emplean las funcioines \jl{semilogx} y \jl{loglog}, respectivamente.
+
+También se muestra el uso de algunas funciones habituales para ajustar los límites del gráfico y ``decorar'' el contexto. (véase que estas funciones se han llamado tras crear los objetos gráficos del panel que se quiere modificar):
+
+
+\begin{itemize}
+  \item \jl{xlim} define los límites inferior y superior del eje $X$ (el eje $Y$ se ajusta con \jl{ylim})
+  \item Las funciones \jl{title}, \jl{xlabel}, \jl{ylabel} sirven para añadir texto al título y los dos ejes, respectivamente
+  \item \jl{grid} se emplea para añadir o eliminar la cuadrícula en el area gráfica
+  \item \jl{legend} añade una leyenda con los textos especificados para las distintas series de datos representadas; el primer argumento es un vector de cadenas de texto, ordenadas según se han creado los elementos gráficos que se etiquetan en la leyenda; los dos siguientes argumentos son las coordenadas de la ``caja'' que contiene la leyenda, relativas al área de la figura ($(0,0)$ representa la esquina inferior izquierda, y $(1,1)$ la superior derecha).
+\end{itemize}
+
+Hacia el final se llama a la tabla de gráficos por su nombre, para mostrar el resultado una vez terminado el proceso. El motivo es que si las líneas del código se ejecutan una a una en modo interactivo, se verá que al llamar a la función \jl{Table} aparece una figura en blanco; luego, cuando se crea cada uno de los gráficos, estos sustituyen a la figura vacía ocupando toda la ventana gráfica. La tabla con los dos gráficos combinados solo aparece al volver a llamar a la tabla de gráficos al final. Este comportamiento recalca la importancia de asignar el objeto devuelto por \jl{Table} a una variable, ya que para visualizar la tabla de gráficos hay que llamarla explícitamente después de crearla. Ni siquiera ocultando los dos gráficos individuales (por ejemplo añadiendo un punto y coma tras las líneas segunda y tercera) se hubiera actualizado la vista de la tabla, hasta llamar la última línea.
+
+Finalmente, para salvar el resultado a un archivo gráfico, basta con darle el nombre del archivo a la función \jl{savefig}. Los tipos de archivo soportados por la función son EPS, PDF, SVG y PNG. El identificador del gráfico es opcional ---por defecto se imprime el gráfico de la figura activa---, y en el caso de guardarse un archivo de tipo PDF, se puede asignar un vector de gráficos (objetos de tipo \jl{PlotContainer}), cada uno de los cuales se imprimirá en una página distinta.
+
+
+Edición de gráficos
+
+De vez en cuando se desea cambiar algún atributo de las gráficas creadas, lo cual puede conseguirse habitualmente con las funciones \jl{setattr} y \jl{style}.
+
+Su uso se muestra algunos ejemplos que pueden ser más o menos habituales, siguiendo con el caso mostrado en la sección anterior. La lista completa de atributos asignados a cada tipo de objeto se puede encontrar en la referencia del paquete Winston (\url{https://github.com/nolta/Winston.jl/wiki/Reference}), así como otros ejemplos en \url{http://winston.readthedocs.org/}. También se pueden visualizar la estructura de un gráfico, incluyendo sus atributos, con la función \jl{dump}:
+ 
+julia> dump(plottable[1,1])
+FramedPlot 
+  attr: Dict{Any,Any} len 6
+    title_style: Dict{Symbol,Any} len 1
+      fontsize: Float64 3.0
+    aspect_ratio: Nothing nothing
+    gutter: Float64 0.1
+    page_margin: Float64 0.1
+    title_offset: Float64 1.0
+    title: UTF8String "Ejemplo de ajuste por media móvil"
+  content1: PlotComposite 
+    attr: Dict{Any,Any} len 1
+      style: Dict{Symbol,Any} len 0
+    components: Array(Any,(3,))
+      1: Points 
+        attr: Dict{Any,Any} len 1
+          style: Dict{Symbol,Any} len 3
+        x: Array(Float64,(500,)) [0.0,0.987948,1.9759,2.96385,3.95179 …  
+
+[Output truncado]
+
+En el fragmento mostrado se ven los 6 atributos del panel superior, del que el más obvio es el título (\jl{title}). Por lo tanto, si se quisiera editar el título en cualquier momento (por ejemplo para ponerlo en mayúsculas):
+
+julia> # Con getattr se obtiene el valor actual del atributo
+julia> titulo = getattr(plottable[1,1], "title")
+"Ejemplo de media móvil"
+julia> # Lo convertimos en mayúscula, y lo reasignamos con setattr
+julia> # usando el argumento con el nombre correspondiente
+julia> setattr(plottable[1,1], title=uppercase(titulo))
+
+También se pueden ver las series de datos representadas por los objetos dentro del vector \jl{components} en el campo \jl{content1} (en el fragmento mostrado se ven las primeras líneas referidas a la serie de puntos).%
+\footnote{%
+Todo gráfico tiene sus contenidos distribuidos en \jl{content1} y
+\jl{content2}. En los más habituales todo se encuentra dentro de
+\jl{content1}.%
+} 
+El conjunto de componentes se puede extraer con la función \jl{getcomponents}, para facilitar su edición.
+
+julia> comp = getcomponents(plottable[1,1])
+4-element Array{Any,1}:
+ Points(...)
+ Curve(...) 
+ Curve(...) 
+ Legend(...)
+
+Las propiedades visuales de las series de datos, como el tipo y color de las líneas y los puntos, están en un atributo especial llamado \textt{style} (estilo):
+
+julia> # Atributos del primer componente (serie de puntos)
+julia> # El campo "attr" del objeto "xxx" se extrae como "xxx.attr"
+julia> dump(comp[1].attr)
+Dict{Any,Any} len 2
+  label: UTF8String "medida bruta"
+  style: Dict{Symbol,Any} len 3
+    color: ASCIIString "cyan"
+    symbolkind: ASCIIString "dot"
+    symbolsize: Float64 1.0
+
+julia> # Lo mismo para las dos líneas
+julia> dump(comp[2].attr)
+Dict{Any,Any} len 3
+  label: UTF8String "señal"
+  kw_defaults: Dict{Symbol,Any} len 1
+    linewidth: Float64 2.0
+  style: Dict{Symbol,Any} len 2
+    linecolor: Uint32 0
+    linewidth: Float64 2.0
+
+julia> dump(comp[3].attr)
+Dict{Any,Any} len 3
+  label: UTF8String "medida ajustada"
+  kw_defaults: Dict{Symbol,Any} len 1
+    linewidth: Float64 2.0
+  style: Dict{Symbol,Any} len 2
+    linecolor: Uint32 15543344
+    linewidth: Float64 2.0
+
+Supongamos que para resaltar los aspectos de interés, queremos convertir el color de los puntos a gris, presentar la señal ideal como una línea roja discontinua gruesa, y la medida ajustada como una línea azul más delgada (figura XXXX). Para ello utilizaremos las siguientes instrucciones:
+
+julia> style(comp[1], color="grey")
+julia> style(comp[2], linekind="dashed", linecolor="red", linewidth=3)
+julia> style(comp[3], linewidth=1.5, linecolor="blue")
+julia> plottable
+
+Otros gráficos
+
+La función \jl{plot} es la más habitual para representar series de datos, pero también hay más funciones para otro tipo de representaciones, entre otras:
+
+\begin{itemize}
+  \item \jl{stem}: gráficos de ``tallos''. Representan series de datos, al igual que \jl{plot}, pero se añaden líneas verticales que conectan cada punto con el eje $Y=0$.
+  \item \jl{scatter}: gráficos de dispersión. Se diferencia de \jl{plot} en que es necesario especificar los valores en el eje $X$, por defecto se representan puntos, no líneas, y también se pueden introducir variables que especifican el tipo y el color de cada punto individual.
+  \item \jl{errorbar}: barras de error. A los valores del eje $X$ e $Y$ se les añade el argumento \jl{xerr} o \jl{yerr}, según si se quieren representar barras horizontales o verticales, respectivamente. Este argumento ha de escribirse con el nombre explícito, para evitar ambigüedades. Si la serie de datos contiene $n$ puntos, este argumento ha de ser un vector numérico de longitud $n$ (para barras simétricas) o $2n$ (para especificar distintas amplitudes en ambas direcciones a partir de los puntos especificados). En este último caso, los valores de $1$ a $n$ del argumento adicional representa cuánto se extiende la barra hacia la izquierda (para \jl{xerr}) o hacia abajo (para \jl{yerr}), y del $n+1$ hasta el $2n$ cuánto se extiende hacia la derecha o hacia arriba, respectivamente.
+  %\item \jl{bar}, \jl{barh}: diagramas de barras verticales y horizontales, respectivamente. El primer argumento especifica las etiquetas que se presentan en los valores del eje $X$ ($Y$ para las barras horizontales). El segundo representa las alturas de cada barra; si es una matriz $N\times{}M$, se presentan $N$ grupos de $M$ barras coloreadas.
+  \item \jl{plothist}: histogramas. Se le pasa un vector de datos, e internamente usa la función \jl{hist} para definir los intervalos del eje $X$ y calcular las frecuencias del vector en esos intervalos. Como en esa función, se puede definir el número (aproximado) de barras o los límites exactos de las mismas añadiendo dichos valores como argumentos adicionales.
+  \item\jl{hist2d}: histograma bidimensional. En este caso se le pasa una matriz de dos columnas, y los ejes $X$, $Y$ de la imagen se asocian a los intervalos de la primera y la segunda columna, respectivamente. Las frecuencias para cada combinación de intervalos se representan en una escala de color.
+  \item\jl{imagesc}: mapas de color a partir de una matriz de datos. Los argumentos requeridos son, en orden: el intervalo en el eje $X$, el intervalo en el eje $Y$, la matriz de datos a representar ($X$ en filas, $Y$ en columnnas), y el intervalo de valores de la matriz al que se ajusta la escala de colores. El único argumento requerido es la matriz de datos, y los omitidos se calculan automáticamente.
+\end{itemize}
+
+Las funciones \jl{hist2d} o \jl{imagesc} utilizan ``mapa de color'' para representar los datos. Por defecto el mapa empleado es el llamado \emph{jet} o ``arcoiris''. Este mapa de colores se puede cambiar por una escala de degradados de distintos colores, a través de la función \jl{colormap} --- que se ha de llamar \emph{antes} de crear el gráfico:
+
+colormap("blues")   # Escala de azules
+colormap("greens")  # Escala de verdes
+colormap("grays")   # Escala de grises
+colormap("oranges") # Escala de naranjas
+colormap("purples") # Escala de púrpuras
+colormap("reds")    # Escala de rojos
+
+
+Condiciones y bucles
+
+En algunos ejemplos de los capítulos anteriores ya se han presentado modelos de sentencias condicionales y bucles. Esos ejemplos se han dado sin apenas explicaciones, en parte por ser prácticamente autoexplicativos, pero también porque ya no solo el concepto, sino también su sintaxis son prácticamente un estándar fácilmente reconocible por todo lector con una mínima experiencia previa en programación.
+
+Sin embargo, es imperativo para cualquier guía introductoria de programación dar en algún punto cuenta de los bloques condicioneales y los distintos tipos de bucles, ya que estamos hablando de las estructuras que controlan el ``flujo'' que sigue la ejecución del código, y junto a la asiganción de valores a variables, vienen a ser el fundamento de cualquier lenguaje de programación. Por otro lado, este tema también nos sirve para introducir otras estructuras y detalles específicos de Julia.
+
+Así pues, si bien sea por no dejarlas de mencionar, comenzamos presentando la sintaxis básica de estas estructuras:
+
+Bloques condicionales (\jl{if}):
+
+if condición
+  # Código que se ejecuta si se cumple "condición"
+end
+
+Bucles tipo \jl{while}:
+
+while condición
+  # Código que se ejecuta de forma repetida
+  # mientras se siga cumpliendo "condición"
+end
+
+Bucles tipo \jl{for}:
+
+for i = serie
+  # Código que se ejecuta de forma repetida
+  # empleando la variable "i" con el valor de cada uno
+  # de los elementos iterables de la variable "serie".
+end
+
+for i in serie
+  # Exactamente lo mismo que lo anterior
+  # utilizando la palabra clave "in" en lugar de "=".
+end
+
+Cabe mencionar que estas estructuras requieren usar las variables aquí ejemplificadas como "condición" y "serie", que han de ser de un tipo especial en cada caso: las condiciones han de ser variables lógicas, y las series variables iterables. Se entrará más en detalle sobre estos tipos de variables en las próximas secciones.
+
+Antes, conviene adelantar algunas ``extensiones'' a la sintaxis básica, que sin ser imprescindibles, facilitan mucho la creación de estas estructuras de control de flujo.
+
+En primer lugar están las condiciones alternativas (\jl{else}, \jl{elseif}). Tras un bloque condicionado por \jl{if}, se pueden intercalar otros bloques de código a ejecutar si se cumplen otras condiciones:
+
+if condición1
+  # Ejecutar este bloque si se cumple "condicion1"
+elseif condición2
+  # Ejecutar este bloque si no se cumple la condición anterior,
+  # pero sí se cumple "condicion2"
+  # Se pueden poner tantas condiciones alternativas como se quiera...
+  # ...
+else
+  # Bloque que se ejecuta si no se cumple *ninguna*
+  # de las condiciones enunciadas
+end
+
+La función \jl{ifelse} también sirve como alternativa a la estructura \jl{if}/\jl{else} para algunos casos sencillos. Por ejemplo, esta forma de comprobar si un número se puede considerar entero (aunque esté codificado como decimal):
+
+# Comprobación con estructura if/else
+if mod(numero,1) == 0
+  print("Es un número entero")
+else
+  print("Es un número decimal")
+end
+
+# Comprobación con la función ifelse
+print(ifelse(mod(numero,1)==0, "Es un número entero", "Es un número decimal"))
+
+Por otro lado, están los comandos \jl{break} y \jl{continue} para alterar el flujo habitual de los bucles. Estos comandos suelen ir en un \jl{if} dentro de un bucle \jl{while} o \jl{for}. \jl{break} interrumpe el bucle en el punto en que se encuentre, y devuelve el control al segmento de código desde el que se llamó el bucle, como si este hubiera terminado. \jl{continue} hace algo semejante, pero solo interrumpe una iteración, y salta al comienzo de la siguiente. Veamos un ejemplo práctico, en un código para calcular los números primos del 1 al 100 mediante una implementación literal de la ``criba de Eratóstenes'':%
+\footnote{%
+\url{https://es.wikipedia.org/wiki/Criba_de_Eratóstenes}%
+}
+
+\begin{quote}
+Se forma una tabla con todos los números naturales comprendidos entre $2$ y $n$, y se van tachando los números que no son primos de la siguiente manera: Comenzando por el 2, se tachan todos sus múltiplos; comenzando de nuevo, cuando se encuentra un número entero que no ha sido tachado, ese número es declarado primo, y se procede a tachar todos sus múltiplos, así sucesivamente. El proceso termina cuando el cuadrado del mayor número confirmado como primo es mayor que $n$.
+\end{quote}
+
+n = 100
+# Utilizamos como "criba" un vector lógico,
+# con todos los valores inicialmente definidos como "false"
+eliminados = falses(n)
+# Comenzando por 2...
+for m = 2:n
+  # Si el número (m) ha sido eliminado, pasar al siguiente
+  if eliminados[m]
+    continue
+  end
+  # Eliminar los múltiplos 2m, 3m ... menores que n
+  k = 2
+  while (mxk = m*k) <= n
+    eliminados[mxk] = true
+    k += 1
+  end
+  # Terminar si el cuadrado de m es mayor que n 
+  if m^2 > n
+    break
+  end
+end
+# Extraer las posiciones no eliminadas de la criba
+# (usando el operador "~" para convertir true en false, y viceversa
+primos = find(~eliminados)
+
+
+Expresiones lógicas
+
+La condición asociada a los bloques \jl{if} o \jl{elseif}, así como a los bucles \jl{while}, ha de expresarse en una variable lógica, de tipo \jl{Bool}, que no es otra cosa que un número binario, cuyos valores posibles son \jl{true} y \jl{false}. Estos valores lógicos se pueden obtener de múltiples maneras. Posiblemente la más habitual es a partir de comparaciones:
+\jl{==} (igual), \jl{!=} (distinto),
+\jl{>} (mayor), \jl{>=} (mayor o igual),
+\jl{<} (menor), \jl{<=} (menor o igual), etc.
+
+Sin embargo, también hay muchas otras funciones que dan como resultado variables lógicas, como resultado de comprobar ciertas condiciones numéricas o de otro tipo. Algunas que pueden usarse habitualmente son:
+
+\begin{description}
+  \item[\jl{isdefined(x)}] \hfill \\
+  Comprobar si existe la variable identificada por el símbolo \jl{x} en el espacio de trabajo. Si una variable tiene por ejemplo el nombre \jl{v}, el ``símbolo'' que la identifica es \jl{:v} (con dos puntos); es decir, que la forma de llamar a la función sería \jl{isdefined(:v)}.
+  \item[\jl{isdefined(x,index)}] \hfill \\
+  Si \jl{x} es un \emph{array} u otro tipo de variable compuesta por varios componentes, se interroga si esa variable contiene el componente representado por el índice \jl{index}; p.ej. \jl{isdefined(v, 5)} para comprobar si existe un quinto elemento en \jl{v}.
+  \item[\jl{isnan(x)}] \hfill \\
+  Comprobar si \jl{x} es un \jl{NaN} (\emph{not-a-number)}.
+  \item[\jl{isfinite(x)}, \jl{isinf(x)}] \hfill \\
+  Comprobar si \jl{x} es un número finito o infinito, respectivamente. (Un \jl{NaN} devuelve \jl{false} para ambas funciones.)
+  \item[\jl{isinteger(x)} \hfill \\
+  Comprobar si \jl{x} es un número entero, u otro tipo de variable (p.ej. un vector) que solo contiene números enteros.
+  \item[\jl{isreal(x)}] \hfill \\
+  Comprobar si \jl{x} es un número real, u otro tipo de variable (p.ej. un vector) que solo contiene números reales.
+  \item[\jl{iseven(x)}, \jl{isodd(x)}] \hfill \\
+  Comprobar si \jl{x} (que ha de ser un número entero) es par o impar, respectivamente.
+  \item[\jl{isempty(x)}] \hfill \\
+  Aplicable a vectores u otro tipo de ``colecciones'' (véase la siguiente sección). Comprueba si \jl{x} está vacío (no tiene ningún elemento).
+  \item[\jl{isa(x,type)}] \hfill \\
+  Comprobar si la variable \jl{x} es del tipo \jl{type}, p.ej. \jl{isa(x, Number)}, \jl{isa(x, Bool)},\ldots (ver la sección XXXX sobre tipos).
+  \item[\jl{iseltype(x,type)}] \hfill \\
+  Equivalente a \jl{isa}, pero también válido para \emph{arrays} u otro tipo de colecciones; en el segundo caso comprueba el tipo de todos sus elementos.
+  \item[\jl{in(el,x)}] \hfill \\
+  Comprobar si el elemento con el valor \jl{el} está presente en la colección \jl{x}.
+  \item[\jl{any(x)}] \hfill \\
+  Si \jl{x} es un \emph{array} con elementos de tipo \jl{Bool}, comprobar si al menos uno de los elementos es \jl{true}.
+  \item[\jl{all(x)}}] \hfill \\
+  Si \jl{x} es un \emph{array} con elementos de tipo \jl{Bool}, comprobar si todos los elementos son \jl{true}.
+\end{description}
+
+Volviendo a los operadores lógicos de comparación, una característica interesante de Julia es que permite concatenarlos como se hace a menudo al escribir relaciones matemáticas. Por ejemplo, para verificar si un valor de probabilidad \jl{p} está efectivamente acotado entre \jl{0} y \jl{1}:
+
+julia> p = 0.5;
+julia> 0 <= p <= 1
+true
+
+Estas comparaciones se pueden hacer también sobre los distintos elementos de un \emph{array}, pero para hacer la comparación elemento a elemento hay que utilizar los operadores ``con punto'' (cfr. la sección XXXXX). Los resultados de estas comparaciones son vectores lógicos, que no se pueden usar como condición en un \jl{if} o \jl{while} (estos solo admiten valores de tipo \jl{Bool} unitarios), pero se usan a menudo para seleccionar elementos de otro vector y operar sobre ellos. Por ejemplo, veamos la siguiente alternativa al bucle \jl{while} del ejemplo anterior, que también nos sirve para introducir otros detalles sobre las expresiones lógicas:
+
+multiplos_m = (mod([1:n], m) .== 0)
+igual_a_m = ([1:n] ~= m)
+eliminados[multiplos_m & igual_a_m] = true
+
+La primera línea contiene una de estas comparaciones lógicas con \emph{arrays}. Concretamente calcula un vector de \jl{Bool}, que son \jl{true} para los múltiplos de \jl{m} (dan resto igual a cero al dividirlas por \jl{m}). La segunda línea utiliza el operador \jl{~=}, que es el equivalente a \jl{!=} (``distinto de'') para \emph{arrays}; el resultado es otro vector de \jl{Bool} igual a \jl{true} en todas las posiciones salvo \jl{m}. En la tercera línea se seleccionan los elementos de \jl{eliminados} que cumplen ambas condiciones: múltiplos de \jl{m} con excepción de \jl{m}, y se les asigna el valor \jl{true}.%
+\footnote{%
+El paréntesis alrededor de las expresiones lógicas es opcional, ya que las operaciones lógicas tienen precedencia sobre otras, pero en estos ejemplos se usan los paréntesis de forma generalizada para facilitar la lectura y la interpretación de las expresiones.%
+}
+
+Como en este ejemplo, las expresiones lógicas a menudo se componen entre sí con operadores que representan la intersección y la unión lógica (\emph{and} y \emph{or}, respectivamente); también se pueden ``invertir'' (convertir \jl{true} en \jl{false} y viceversa) con el operador de negación (\emph{not}). Hay dos tipos de estos operadores lógicos. Por un lugar están los operadores elementales \jl{&} \jl{|}, \jl{~} (\emph{and}, \emph{or}, \emph{not}, respectivamente), que sirven para componer \emph{arrays} lógicos ``elemento a elemento'', como ya se ha visto en los ejemplos anteriores.
+
+Para valores lógicos unitarios, sin embargo, se suelen usar los llamados operadores de ``cortocircuito'', escritos con el símbolo duplicado para el \emph{and} y \emph{or}, y con el símbolo de exclamación para el \emph{not}: \jl{&&}, \jl{||} y \jl{!}, respectivamente. Reciben este nombre porque las expresiones combinadas se van evaluando de izquierda a derecha, pero la evaluación se interrumpe tan pronto como se llega a un resultado inequívoco (figura XXX).
+
+Este comportamiento es útil cuando una de las condiciones a comprobar solo tiene sentido en función de que se cumpla la otra o no. Por ejemplo, supongamos que llegados a un punto de un programa, hemos de comprobar si se ha creado una variable \jl{x} con un valor mayor que cero. Esta condición se podría formular del siguiente modo:
+
+isdefined(:x) && (x > 0)
+
+Literalmente, lo que se está interrogando es si en el espacio de trabajo hay definida una variable con el símbolo ``x'', y si se cumple esa condición, si el valor asignado es mayor que cero. Obviamente, si no se cumpliese la primera, la segunda expresión generaría un error, pero el ``cortocircuito'' del operador \jl{&&} evitaría llegar a ese punto.
+
+En relación con esto, es interesante destacar que la estructura \jl{if}/\jl{else} también hace de cortocircuito (solo se evalúa lo que hay dentro del \jl{if} o el \jl{else}, según el resultado de la condición), pero la función \jl{ifelse} no (todos sus argumentos se evalúan aunque uno no tenga efectos sobre el resultado). Como alternativa, está el operador ternario \jl{?}, que sí evalua únicamente la expresión que corresponde. Por ejemplo tomemos estas formas de devolver el doble de un número si este se encuentra definido, o un objeto vacío (\jl{nothing}) si el número no existe (y por lo tanto no se puede hacer la operación):
+
+# Opcion 1: con if/else
+if isdefined(numero)
+  doble = 2numero
+else
+  doble = nothing
+end
+
+# Opción 2: con ifelse, puede dar error si no existe el número
+doble = ifelse(isdefined(numero), 2numero, nothing)
+
+# Opción 3: con el operador ternario, que sí cortocircuita
+doble = isdefined(numero) ? 2numero : nothing
+
+A modo de resumen, la tabla XXXX muestra los distintos operadores de comparación y composición lógica, tanto para variables escalares como vectoriales.
+
+\begin{tabular}
+                      & Escalar       & Vectorial      \\
+A igual que B         & \jl{A == B} & \jl{A .== B} \\
+A distinto de B       & \jl{A != B} & \jl{A ~= B}  \\
+A mayor que B         & \jl{A > B}  & \jl{A .> B}  \\
+A mayor o igual que B & \jl{A >= B} & \jl{A .>= B} \\
+A menor que B         & \jl{A < B}  & \jl{A .< B}  \\
+A menor o igual que B & \jl{A <= B} & \jl{A .<= B} \\
+A y B (intersección)  & \jl{A && B} & \jl{A & B}   \\
+A o B (unión)         & \jl{A || B} & \jl{A | B}   \\
+``No'' A (negación)   & \jl{!A}     & \jl{~A}
+\end{tabular}
+
+
+Bucles y diccionarios
+
+En todos los ejemplos de bucles \jl{for} mostrados hasta este punto las iteraciones se han hecho sobre rangos como \jl{1:10}, etc. Sin embargo, hay otros tipos de objetos ``iterables'' que se pueden utilizar para ese propósito. De las dos sintaxis disponibles para estos bucles (con el símbolo ``\jl{=}'' o con ``\jl{in}'', véase arriba), la primera se suele usar exclusivamente con rangos, y la segunda con cualquier otro tipo de objeto; pero esto es una mera convención, ya que son sintaxis completamente equivalentes.
+
+Después de los rangos, los objetos iterables más típicos para usar en los bucles \jl{for} son los \emph{arrays} y los ``diccionarios''. Ya se ha dedicado un capítulo completo a los \emph{arrays}, por lo que no hace falta decir nada más sobre ellos aquí. Por otro lado, en el capítulo XXXX se han adelantado algunos ejemplos de diccionarios (los ``atributos'' y ``estilos'' de los gráficos de Winston), aunque no se ha profundizado en su estructura. Los diccionarios se parecen a los \emph{arrays} en la medida en que también son series de valores, numéricos o de otros tipos; pero así como los elementos de los \emph{arrays} vienen determinados por su posición en la serie, los valores de un diccionario se identifican por su asociación con una serie paralela de ``claves'' (\emph{keys}). Otra diferencia es que los \emph{arrays} se pueden organizar en varias dimensiones, lo cual no tiene cabida en los diccionarios.
+
+Hay muchas circunstancias en las que es interesante emplear estas series asociativas, aunque los diccionarios son particularmente útiles cuando el conjunto de claves no está predeterminado ni sigue un orden específico.%
+\footnote{%
+Para conjuntos fijos de claves, otras estructuras como los ``tipos abstractos'' pueden ser más adecuadas (véase la sección XXXX).%
+}
+Un buen ejemplo puede ser un conjunto de datos como las tasas de desempleo de países varios (tabla XXXXX). Pongamos como caso que deseamos registrar las tasas de 2014. Esto podría hacerse con un vector de países y otro de datos:
+
+\begin{tabular}
+& 2011 & 2012 & 2013 & 2014 \\
+Germany & 5.8 & 5.4 & 5.2 & 5.0 \\
+Greece & 17.9 & 24.5 & 27.5 & 26.5 \\
+Spain & 21.4 & 24.8 & 26.1 & 24.5 \\
+France & 9.2 & 9.8 & 10.3 & 10.2 \\
+Italy & 8.4 & 10.7 & 12.1 & 12.7 \\
+Portugal & 12.9 & 15.8 & 16.4 & 14.1 \\
+United Kingdom & 8.1 & 7.9 & 7.6 & 6.3 \\
+\end{tabular}
+Fuente: Eurostat
+
+paises = ["Germany", "Greece", "Spain", "France", "United Kingdom"]
+desempleo_2014 = [5, 26.5, 24.5, 10.2, 6.3]
+
+Pero extraer, por ejemplo, el valor correspondiente a España, requiere buscar el índice correspondiente en \jl{paises} y utilizarlo para indexar \jl{desempleo_2014}:
+
+julia> desempleo_2014[paises .== "Spain"]
+1-element Array{Float64,1}:
+ 24.5
+
+Además, esta operación no devuelve el resultado como un escalar, sino como un vector (aunque sea con un solo elemento), ya que nada impediría que hubiera varios elementos del vector \jl{paises} iguales a \jl{"Spain"}. Para extraer un escalar, se podría utilizar la función \jl{findfirst} que da el índice de solo la primera coincidencia:
+
+julia> desempleo_2014[findfirst(paises, "Spain")]
+24.5
+
+Sin embargo, el uso de un diccionario aquí simplifica las cosas:
+
+julia> dic_desempleo_2014 = Dict("Germany" => 5,
+                       "Greece" => 26.5,
+                       "Spain" => 24.5,
+                       "France" => 10.2,
+                       "United Kingdom" => 6.3)
+Dict{ASCIIString,Any} with 5 entries:
+  "Germany"        => 5
+  "United Kingdom" => 6.3
+  "Spain"          => 24.5
+  "Greece"         => 26.5
+  "France"         => 10.2
+
+julia> dic_desempleo_2014["Spain"]
+24.5
+
+Un primer detalle que llama la atención es que el orden de los elementos en la presentación del diccionario no coincide con el orden en el que se han especificado en la creación. Esto destaca lo que ya se ha señalado, que los valores del diccionario \emph{no} se pueden identificar por posición, sino por su asociación con las claves.
+
+La forma de ampliar los diccionarios también es distinta a como se haría con un \emph{array}. Las funciones que se emplean con éstos, como \jl{push!}, \jl{append!}, etc., no sirven para los diccionarios. Añadir un elemento a un diccionario es más sencillo; por ejemplo, para añadir el dato de desempleo de Italia (12.7%) basta escribir:
+
+dic_desempleo_2014["Italy"] = 12.7
+
+Por otro lado, para eliminar una entrada a partir de su clave se utiliza la función \jl{delete!}. 
+
+La forma de iterar con diccionarios en un bucle \jl{for} también es distinta a como se haría con un rango o un \jl{array}, ya que cada elemento está determinado por dos variables (la clave y el valor), y tampoco se sigue un orden determinado para las iteraciones. Por verlo de forma práctica, consideremos de nuevo el ejemplo anterior. Supongamos que queremos crear un informe con las tasas de desempleo; este informe debería contener una línea con cada dato, siguiendo el formato \jl{Spain: 24.5%}, etc. En cada iteración podemos conocer tanto la clave como el valor de elemento a presentar, asignándolos a una pareja de variables (en ese orden) en la misma llamada al \jl{for}:
+
+for (k, v) in dic_desempleo_2014
+  print(k)
+  print(": ")
+  print(v)
+  println("\%")
+end
+
+En cada iteración, la clave (\emph{key}) se asigna a la variable \jl{k} y el valor a \jl{v}; la función \jl{print} imprime en pantalla el contenido especificado, y \jl{println} añade una nueva línea al final, con lo que tras ejecutar las tres iteraciones aparece en pantalla:
+
+Germany: 5%
+United Kingdom: 6.3%
+Spain: 24.5%
+Italy: 12.7%
+Greece: 26.5%
+France: 10.2%
+
+Una alternativa sería registrar previamente las claves del diccionario con la función \jl{keys}, y utilizarlas en cada iteración para extraer los valores asociados. Por ejemplo:
+
+claves = keys(dic_desempleo_2014)
+for k in claves
+  print(k)
+  print(": ")
+  print(dic_desempleo_2014[k])
+  println("\%")
+end
+
+El resultado es exactamente el mismo que el anterior, y el código es ligeramente más complejo. Pero para cierto tipo de claves esta estrategia puede ser útil. Por ejemplo, en este caso en el que las claves son etiquetas textuales, podría interesarnos que se presenten por orden alfabético. En ese caso, antes del bucle se puede aplicar la función \jl{sort!} para ordenar las claves. Pero antes hay que convertir la salida de \jl{keys} a un \emph{array} al que se le pueda aplicar esa función. Esto se hace con la función \jl{collect}, como sigue:%
+\footnote{%
+Podría parecer natural que \jl{keys} devolviese por defecto un \emph{array} para evitarse el paso de la función \jl{collect}. Pero potencialmente \jl{keys} podría aplicarse a otro tipo de colecciones, cuyas claves no pudieran disponerse en forma de \emph{array}. Así que, por consistencia de tipos (véase el capítulo XXXXXX), se mantiene esta característica.%
+}
+
+claves = collect(keys(dic_desempleo_2014))
+sort!(claves)
+
+Como complemento a \jl{keys}, existe la función \jl{values} para extraer los valores de un diccionario (p.ej. \jl{values(dic_desempleo_2014)}. Por otro lado, también es posible crear un diccionario con la función \jl{Dict} a partir de dos vectores: el primero para las claves y el segundo para los valores. Usando las variables definidas al comienzo de esta sección:
+
+julia> Dict(paises, desempleo_2014)
+Dict{ASCIIString,Float64} with 5 entries:
+  "Germany"        => 5.0
+  "United Kingdom" => 6.3
+  "Spain"          => 24.5
+  "Greece"         => 26.5
+  "France"         => 10.2
+
+Este resultado sirve también para ilustrar una diferencia entre la creación de \emph{arrays} y la de diccionarios. Al juntar datos de distintos tipos, como el valor entero \jl{5} asignado a Alemania y los valores decimales de los otros países, en la creación de \emph{arrays} se aplican las reglas de promoción de tipos y todos los datos se codifican como \jl{Float64} (véase la sección XXXXX sobre estas reglas). Por eso, el diccionario definido a partir de \emph{arrays} es del tipo \jl{Dict{ASCIIString,Float64}}, y el valor entero aparece con decimales (\jl{5.0}). La definición literal de diccionarios, por el contrario, no realiza ninguna promoción de tipos: el valor entero se mantiene sin cambios, y la lista completa de valores pasa a ser de tipo \jl{Any}, para poder contener tanto enteros como decimales.
+
+El tipo de las claves y los valores puede controlarse al definir los diccionarios, de manera semejante a como se hace con los \emph{arrays}. Por ejemplo, si quisieran usarse tipos más genéricos como \jl{AbstractString} para las claves y \jl{Real} para los valores, podría haberse utilizado la siguiente instrucción:
+
+# Ejemplo con solo dos países para abreviar
+Dict{AbstractString,Real}(paises, desempleo_2014)
+
+
+
+Tuplas
+
+Vistos los diccionarios y la forma de trabajar con ellos, es oportuno hablar de otro tipo de colección, que guarda otras semejanzas y diferencias con los \emph{arrays}. Las ``tuplas'' (\emph{tuples} en inglés) son series de variables separadas por comas --- y a menudo enmarcadas entre paréntesis, aunque esto se hace solo por claridad o para evitar ambigüedades, como en otros usos de los paréntesis. Por ejemplo:
+
+julia> unos = 1, 1.0, 1+0im, true
+(1,1.0,1 + 0im,true)
+
+Las tuplas se parecen a los \emph{arrays} en que sus elementos vienen determinados por su posición en la serie; por ejemplo el número entero del ejemplo anterior es \jl{unos[1]}, el número complejo es \jl{unos[3]}, etc. Sin embargo, en un \emph{array} todos los elementos han de ser del mismo tipo (aunque sea un ``supertipo'' como \jl{Any} que comprende otros tipos más específicos). Por el contrario, cada elemento de una tupla puede ser de un tipo distinto: 
+
+julia> typeof(unos)
+(Int64,Float64,Complex{Int64},Bool)
+
+Las tuplas también se diferencian de los \emph{arrays} en que solo pueden tener una dimensión, y en que son objetos ``inmutables''; es decir, que una tupla no se puede ampliar ni reducir, ni se puede cambiar uno de sus elementos por otro (aunque se puede sustituir la tupla completa por otro contenido).
+
+julia> unos[1]=11
+ERROR: `setindex!` has no method matching setindex!(::(Int64,Float64,Complex{Int
+64},Bool), ::Int64, ::Int64)
+
+Hay que destacar, sin embargo, que esta inmutabilidad solo afecta a la tupla en sí: técnicamente no se puede cambiar un elemento por otro, pero puede parecer lo contrario si se trata de un elemento que \emph{sí} es mutable, por ejemplo un \emph{array}:
+
+julia> x = [1,2]; y=[3,4];
+julia> tup = x,y
+([1,2],[3,4])
+
+julia> # Intentamos reemplazar el primer elemento -- mal
+julia> tup[1] = [0.1, 0.2]
+ERROR: `setindex!` has no method matching setindex!(::(Array{Int64,1},Array{Int6
+4,1}), ::Array{Float64,1}, ::Int64)
+
+julia> # Ahora lo hacemos bien: 1 - modificar el contenido del elemento
+julia> tup[1][1] = 10
+10
+
+julia> # 2 - modificar el vector x
+julia> x[2] = 20
+20
+
+julia> tup
+([10,20],[3,4])
+
+Ahora bien, la característica más notable de las tuplas es la que determina su principal utilidad: es posible definir una tupla de variables en el lado izquierdo de una asignación, lo que sirve para hacer un conjunto de asignaciones ``en paralelo''. Un ejemplo trivial: asignar el valor $1$ a la variable \jl{x} y $2$ a \jl{y}:
+
+julia> x,y = 1,2
+(1,2)
+
+julia> # Ahora vemos las variables asignadas:
+julia> x
+1
+
+julia> y
+2
+
+El orden en el que se realizan las operaciones es el siguiente: primero se evalúa la parte derecha de la asignación (se determinan los valores a asignar), y luego la parte izquierda (se enlaza cada valor a la variable asignada); pero en cada una de las dos partes, la tupla se evalúa en el orden de lectura. Veamos un ejemplo pequeño, pero algo retorcido:
+
+julia> w,z = (z=10),(w=2z)
+(10,20)
+
+julia> w
+10
+
+julia> z
+20
+
+Como se ha dicho, primero se evalúa la parte derecha en el orden de lectura: se determina el primer elemento de una tupla asignando el valor $10$ a la variable \jl{z}, y el doble de este valor ($20$) se usa para el segundo elemento de la tupla, asignándolo a \jl{w}. Luego se evalúa la parte izquierda de la expresión, donde los valores de la tupla derecha se asignan a las variables \jl{w}, \jl{z} ---al margen del valor que se les dio a las mismas variables en el paso anterior, que era precisamente el opuesto---.
+
+Ya se ha visto un caso práctico de tuplas usadas para asignar simultáneamente valores a distintas variables: la declaración de los bucles \jl{for} con diccionarios. Cuando se itera sobre un diccionario, el elemento pasado en cada iteración es una tupla con dos componentes: el primero es la clave y el segundo es el valor. La sintaxis \jl{for (k,v) in diccionario} lo que hace es ``distribuir'' estos dos componentes en las dos variables \jl{k} y \jl{v}, respectivamente, del mismo modo que en los ejemplos anteriores.
+
+Además, en el capítulo XXXX se verán más utilidades de las tuplas, en relación con las entradas y salidas de las funciones. Y con imaginación, se pueden encontrar muchas otras aplicaciones a las tuplas. Por ejemplo, pueden servir para simular ``diccionarios multidimensionales''. Pongamos como ejemplo la tabla de desempleo en el ejemplo [anterior]. Esta tabla se podría haber definido del siguiente modo (ponemos solo los datos de las dos primeras filas y columnas por simplificar):
+
+julia> desempleo = Dict(("Germany",2011)=>5.8, ("Germany",2012)=>5.4,
+       ("Greece",2011)=>17.9, ("Greece",2012)=>24.5)
+Dict{Tuple{ASCIIString,Int64},Float64} with 4 entries:
+  ("Germany",2012) => 5.4
+  ("Greece",2012)  => 24.5
+  ("Greece",2011)  => 17.9
+  ("Germany",2011) => 5.8
+
+El diccionario sigue siendo en realidad unidimensional, pero utilizar parejas de valores en las claves proporciona una apariencia de bidimensionalidad que puede ser útil en algunas circunstancias.
+
+
+
+Cadenas de texto
+
+Hasta este punto hemos trabajado principalmente con números. Pero antes de entrar en otras cuestiones sobre programación, conviene hacer un repaso a los aspectos esenciales de las ``cadenas de texto'' (en inglés \emph{text strings}, o simplemente \emph{strings} para abreviar), otro tipo básico de variables con las que se trabaja en casi cualquier programa. Para los ejemplos en los próximos capítulos sobre funciones, gestión de ficheros, etc. vendrá bien utilizar estas cadenas y las operaciones sencillas con ellas que se introducen aquí. En realidad hay mucho más que contar sobre las cadenas de texto, pero otros detalles más complejos los dejamos para más adelante en el capítulo XXXXXX.
+
+Ya hemos visto cadenas de texto en las claves de los diccionarios y otros sitios. Pero tomemos ahora un ejemplo sencillo para ilustrar qué son y cómo se trabaja con las cadenas de texto. Partimos de la función de los días de la semana que se empleó al principio de la guía (\jl{gauss_diasemana}), y a partir de ellas creamos la siguiente función, que compone una cadena de texto con el su resultado:
+
+
+function fechaentexto(d, m, y)
+  diasemana = gauss_diasemana(d, m, y)
+  meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+  texto = "Hoy es " * diasemana * "," * 
+    string(d) * " de " * meses[m] * " de " * string(y)
+  println(texto)
+end
+
+Al ejecutar esta función obtenemos:
+
+julia> fechaentexto(14, 2, 2014)
+Hoy es martes, 14 de febrero de 2014
+
+Este ejemplo muestra que, como ocurre con los números, las cadenas de texto se pueden agrupar en \emph{arrays} u otras estructuras (diccionarios, tuplas, etc.). Así, \jl{meses} es un \emph{array} de cadenas, con los nombres de los meses del año (esto mismo ya lo utilizamos anteriormente en la función \jl{gauss_diasemana} para dar el nombre del día de la semana). Además, se emplea una de las operaciones más habituales con cadenas de texto: la composición con otras cadenas escritas literalmente, o creadas a partir de números (en este caso a través de la función \jl{string}, que se aplica al número del día y al año).
+
+Como se puede ver, los textos se pueden concatenar con el operador \jl{*}. Pero esto es algo engorroso cuando se enlazan muchos textos y algunos de ellos son muy cortos, como las comas y palabras del ejemplo. Para estos casos, Julia ofrece la posibilidad de ``interpolar'' variables en un texto, a través del símbolo \jl{$}. Así La definición de la variable \jl{texto} se podría haber sustituido por:
+
+texto = "Hoy es $diasemana, $d de $(meses[m]) de $y"
+
+Dentro de una cadena de texto, las palabras que siguen inmediatamente al símbolo \jl{$} se interpretan como el nombre de una variable, y se sustituyen por su valor en forma de texto, sin tener que usar siquiera la función \jl{string}. Cuando el valor a escribir está representado por una expresión que requiere más de una palabra (como el nombre del mes, representado por \jl{meses[m]}), la expresión se ha de poner entre paréntesis.
+
+Pero las cadenas de texto no solo pueden unirse; también es posible extraer fragmentos de ellas:
+
+julia> cadena = "palabra";
+julia> # Porción de la cadena (tres primeras letras)
+julia> cadena[1:3]
+"pal"
+
+Como se ve en el ejemplo, la forma de referirse a un fragmento de una cadena es igual a como se haría con un \emph{array} de números. De hecho, una cadena de texto en Julia es algo semejante a un \emph{array} unidimensional de letras y símbolos, que se codifican como objetos de tipo \jl{Char}. No es lo mismo, sin embargo, un carácter de tipo \jl{Char} y una cadena de una sola letra, como se explica con más detalle en el capítulo XXXXX. Para distinguirlos, en Julia los \jl{Char} se representan entre comillas simples, y las cadenas de texto (independientemente de su longitud) entre comillas dobles.
+
+julia> typeof('A')
+Char
+
+julia> typeof("A")
+ASCIIString
+
+Cuando se extrae una sola letra de una cadena, el resultado se interpreta como un \jl{Char}. Para forzar a que sea otra cadena, hay que hacer la referencia en forma de rango:
+
+julia> # Letra individual (tipo Char)
+julia> cadena[1]
+'p'
+
+julia> # Cadena con solo una letra (tipo ASCIIString)
+julia> cadena[1:1]
+"p"
+
+
+Ahora bien, un detalle en el que las cadenas de texto son notablemente distintas de los \emph{arrays} normales es que se trata de objetos ``inmutables''. Por ejemplo, no es posible modificar las cadenas de texto mediante reasignación de los valores individuales.
+
+julia> cadena[1] = 'P'
+ERROR: MethodError: `setindex!` has no method matching setindex!(::ASCIIString,
+::Char, ::Int64)
+
+Por otro lado, hay múltiples funciones y operadores que sirven para manipular cadenas de texto, aunque en realidad más que modificarlas lo que hacen es reemplazarlas por variantes de las mismas. Veaos algunos ejemplos:
+
+julia> uppercase("convertir en mayúsculas")
+"CONVERTIR EN MAYÚSCULAS"
+
+julia> lowercase("CONVERTIR EN MINÚSCULAS")
+"convertir en minúsculas"
+
+julia> ucfirst("poner en mayúscula solo la primera letra")
+"Poner en mayúscula solo la primera letra"
+
+julia> lcfirst("Lo mismo, pero ponerla en minúscula")
+"lo mismo, pero ponerla en minúscula"
+
+julia> replace("reemplazar fragmentos", "reemplazar", "sustituir")
+"sustituir fragmentos"
+
+julia> strip("   limpiar espacios al principio y al final   ")
+"limpiar espacios al principio y al final"
+
+Una operación frecuente relacionada con las cadenas de texto consiste en analizar y componer nombres de archivos para leer o escribir datos. Para ello suelen emplearse caracteres específicos que delimitan partes del texto, como guiones, puntos, barras, etc. Algunas funciones bastante útiles para este tipo de operaciones son:
+
+\begin{itemize}
+  \item \jl{search} para encontrar la primera posición de un carácter o serie de caracteres en una cadena.
+  \item \jl{join} para unir varias cadenas con un carácter u otra cadena dadas.
+  \item \jl{split} para la operación contraria: separar una cadena en varias delimitadas por el mismo caracter o ``subcadena''.
+\end{itemize}
+
+Al trabajar con nombres de archivos, una de las necesidades más habituales es separar las partes correspondientes al directorio, o definir una nueva ruta. Para facilitar estas rutinas están las funciones \jl{joinpath} y \jl{splitdir}, que hacen lo mismo que \jl{join} y \jl{split}, respectivamente, pero tomando como delimitador la barra separadora de nombes de directorios (\jl{/}).%
+\footnote{%
+En Windows los directorios suelen delimitarse con la barrra invertida (\jl{\}). Pero Julia emplea la convención habitual en sistemas de tipo Unix.%
+}
+Del mismo modo, \jl{splitext} separa la extensión del nombre del archivo. Por ejemplo:
+
+julia> joinpath("directorio", "fichero.txt")
+"directorio/fichero.txt"
+
+julia> splitdir("ruta/de/un/archivo.txt")
+("ruta/de/un","archivo.txt")
+
+julia> splitext("ruta/de/un/archivo.txt")
+("ruta/de/un/archivo",".txt")
+
+julia> 
+
+julia> 
+
+julia> directorio, archivo = splitdir("ruta/de/un/archivo.txt")
+("ruta/de/un","archivo.txt")
+
+julia> nombre_base, extension = splitext(archivo)
+("archivo",".txt")
+
+Y en general, hay muchas otras operaciones que resulta útil conocer para trabajar con textos, pero como ya se ha comentado, las dejaremos para el capítulo XXXXX, pues antes es interesante abordar otros temas básicos, como la definición de funciones y la gestión de ficheros.
+
+
+Funciones
+
+
+ Así que cerramos aquí esta primera aproximación a las cadenas de texto, con un ejemplo algo más sofisticado que los presentados hasta el momento, y que combina nociones de varios capítulos ya tratados (\emph{arrays}, bucles, condiciones, diccionarios, etc.), más algunas que se verán en los capítulos que siguen.
+
+En este ejemplo volvemos a trabajar con la función \jl{gauss_diasemana}, pero ahora para crear el calendario de febrero de 2012 en una tabla de HTML.
+
+
+
+El resultado de esa función era precisamente una cadena de texto, con el nombre del día de la semana que correspondía a un día concreto del calendario (``lunes'', ``martes'', etc.).
+
+Algunas operaciones propias de variables numéricas también pueden aplicarse a las cadenas de texto. Esto tiene sentido especialmente con las operaciones de comparación. Por ejemplo, podemos hacer una función que compara el día correspondiente al 1 de marzo de un año cualquiera con el de un supuesto 29 de febrero, para ver si ese año es bisiesto:
+
+es_bisiesto = function(y)
+  uno_de_marzo = gauss_diasemana(1,3,y)
+  veintinueve_de_febrero = gauss_diasemana(29,2,y)
+  # Operación lógica de comparación (!=) aplicada a cadenas de texo
+  return(uno_de_marzo != veintinueve_de_febrero)
+end
+
+Además de las comparaciones de igualdad y desigualdad (\jl{==}, \jl{!=}), también es posible utilizar las de mayor y menor (\jl{>}, \jl{<}, \jl{>=}, \jl{<=}), que se basan en el orden alfabético para determinar el resultado. La operación de multiplicación (\jl{*}) también tiene un significado con las cadenas de texto, que es la ``combinación'' de las mismas. Por ejemplo
+
+dias = ["lunes","martes","miércoles","jueves","viernes","sábado", "domingo"]
+# Días contenidos en cada mes:
+# Utilizamos la función "es_bisiesto" definida anteriormente
+# para ver los días de febrero
+dias_mes = Dict("enero" => 31,
+  "febrero" => es_bisiesto ? 29 : 28,
+  "marzo" => 31,
+  "abril" => 30,
+  "mayo"=> 31,
+  "junio" => 30,
+  "julio" => 31,
+  "agosto" => 31,
+  "septiembre" => 30,
+  "octubre" => 31,
+  "noviembre" => 30,
+  "diciembre" => 31)
+tablahtml = "<table>\n<tr>"
+# Cabecera con los nombres de los días
+for dtexto in dias
+  tablahtml *= "<td>$(uppercase(dtexto))</td>"
+end
+tablahtml *= "</tr>\n<tr>"
+# Buscar la posición del primer día del mes
+# y rellenar los anteriores
+primerdia = gauss_diasemana(1, 2, 2012)
+d = 0
+for d = 1:7
+  if dias[d] != primerdia
+    tablahtml *= "<td></td>"
+  else
+    break
+  end
+end
+# Rellenar el calendario con los números de los días
+for nd = 1:29
+  tablahtml *= "<td>$nd</td>"
+  # Seguimos aumentando el dia de la semana d,
+  # comprobando si se pasa de semana (múltiplo de 7)
+  if rem(d, 7) == 0
+    tablahtml *= "</tr>\n"
+    if nd < 29
+      tablahtml *= "<tr>"
+    end
+  end
+  d += 1
+end
+# Rellenar la última semana (si está empezada) hasta el domingo
+faltan = rem(d, 7) - 1
+if faltan > 0
+  for dfin = 1:faltan
+    tablahtml *= "<td></td>"
+  end
+  tablahtml *= "</tr>\n"
+end
+tablahtml *= "</table>"
+# Preguntar por el nombre del fichero para guardar el calendario
+print("Escribe el nombre del fichero para el calendario")
+respuesta = readline()
+# Limpiar el nombre del fichero (respuesta)
+# "chomp" para quitar el retorno de carro
+# y "splitext" para añadir extensión ".html" si no la tiene
+respuesta = chomp(respuesta)
+nombre, extension = splitext(respuesta)
+if isempty(extension)
+  nombre *= ".html"
+end
+# Escribir el HTML completo
+html_completo =
+  "<html>
+  <head>
+  <meta charset=\"utf-8\">
+  <title>Febrero de 2012</title>
+  </head>
+  <body>
+  $tablahtml
+  </body>
+  </html>"
+f = open(nombre,"w")
+write(f, html_completo)
+close(f)
+
+Explicar:
+*=
+Multilinea
+Escape: \"
+
+Las cadenas de texto son en esencia
+series de valores de tipo \texttt{Char},%
+\footnote{El tipo \texttt{Char} normalmente es un byte, equivalente en valor
+al tipo \texttt{Uint8}, pero también se admite cualquier símbolo Unicode,
+que pueden ocupar más de un byte.%
+} que en lugar de mostrarse como números se representan a modo de letras
+(o {}``secuencias de escape'' equivalentes cuando el sistema no
+{}``sabe'' cómo imprimir el símbolo). Las cadenas de texto se introducen
+también a través de letras o secuencias de escape, entrecomilladas
+con comillas dobles (las comillas simples se utilizan para marcar
+valores de \texttt{Char} individuales).
+
+Como tales series de \texttt{Char}, es posible leer letras o grupos
+de letras de una cadena de texto como se hace con los valores de un
+\emph{array} numérico.
+
+julia> cadena = "palabra";
+julia> # Porción de la cadena (tres primeras letras)
+julia> cadena[1:3]
+"pal"
+
+julia> # Letra individual (tipo Char)
+julia> cadena[1]
+'p'
+
+julia> # Cadena con solo una letra (tipo String)
+julia> cadena[1:1]
+"p"
+
+Sin embargo, al contrario de lo que ocurre con un \emph{array}, no
+es posible modificar las cadenas de texto mediante reasignación de
+los valores individuales.
+
+julia> cadena[1] = 'a'
+ERROR: no method setindex!(ASCIIString,Char,Int64)
+
+Hay muchas funciones para transformar:
+uppercase, lowercase, replace.
+Una transformación típica (p.ej. para manipular nombres de ficheros)
+consiste en tomar trozos de una o varias cadenas, y unirlos entre sí o
+con representaciones literales de números. Hay múltiples funciones y
+operadores que ayudan a hacer estas rutinas.
+
+Concatenar con \texttt{*}, repetir con \texttt{^}.
+
+``interpolar'' con \texttt{$}
+
+Atajos: unir con un delimitador mediante \texttt{join}, lo contrario con
+\texttt{split}. En el caso de ficheros, \texttt{joinpath}, \texttt{splitdir},
+\texttt{splitext}, y otras más.
+
+
+Para determinar los puntos de corte
+se suelen buscar letras o ``subcadenas'' específicas. Esto último se
+puede hacer con las funciones \texttt{search}, (busca la primera aparición)
+o \texttt{rsearch} (busca la última). Hay diversas variantes.
+
+Para búsquedas especialmente complicadas, regular expressions
+r"xxx", y \texttt{match}. Ejemplos ...
+
+Sustituciones más complejas de números. En lugar de la forma canónica
+(como sería con \texttt{print}, una macro basada en la típica función de C:
+\texttt{@printf}.
+
+No hay equivalente de scanf.
+
+
+
+
+
+
+...
+[Comentar operaciones lógicas, y lexical scope]
+
+Los usuarios con algo de experiencia en lenguajes de programación
+dinámico estarán familiarizados con uno de los típicos inconvenientes
+de los bucles: el tiempo consumido en su ejecución, en comparación con otros
+fragmentos de código de longitud semejante. Esta lentitud es una
+consecuencia natural del hecho de que ese código se ejecuta una y otra vez,
+hasta que se sale del bucle. No es que sea un problema constante:
+en la mayoría de casos los programas ejecutan esas líneas de código lo
+bastante rápido como para que las repeticiones apenas se noten. Pero
+cuando los bucles se repiten cientos, miles, o hasta millones de veces
+(caso no especialmente descabellado, sobre todo si se trabaja con
+conjuntos de datos muy voluminosos), puede llegar a ser una pesadilla,
+quedándose con un ordenador ocupado durante horas y hasta días
+ejecutando un programa que no parecía muy complejo.
+
+En muchos lenguajes de programación dinámica
+el factor multiplicador de este tiempo consumido por los bucles no
+es tanto el tiempo que requiere realizar las operaciones indicadas por
+el código, sino el tiempo extra que necesita el ``intérprete'' del lenguaje
+(el programa en el que se trabaja con ese lenguaje, para entendernos).
+Cuando se ejecuta un \emph{script} de uno de estos lenguajes dinámicos,
+normalmente el intérprete lee cada línea de código, traduce las operaciones al
+lenguaje de la máquina, se comunica con el sistema operativo para
+realizar la operación y recibir el resultado, y luego este se vuelca en la
+estructura de memoria que utiliza el intérprete durante la sesión de trabajo.
+
+Todo esto consume mucho tiempo, del que la mayoría se ahorra cuando el lenguaje
+permite compilar el código en un archivo ejecutable. Pero los programas
+compilados pierden portabilidad (solo los entienden máquinas con el
+mismo sistema operativo para el que se compiló), y el paso adicional
+de compilar para pasar de código fuente a algo útil hace más engorroso
+el proceso de ``prototipado'', que es precisamente para lo que se suelen
+utilizar los lenguajes de programación dinámicos.
+
+Para ganar tiempo de ejecución sin tener que compilar, lo que se suele
+recomendar es ``vectorizar'' el código. Esto se aplica especialmente para
+los bucles \emph{for}, que se ejecutan un número predefinido de veces
+(a menudo para trabajar con los distintos elementos de un \emph{array}
+de tamaño determinado). El concepto de vectorización consiste en
+traducir la secuencia de operaciones que contiene el bucle en una sola
+operación (o unas pocas), que se puedan aplicar ``de golpe'' sobre todos los 
+elementos de uno o varios \emph{arrays} que contienen todos los datos
+necesarios.
+
+Ejemplo, cálculo de velocidades y aceleraciones a partir de posiciiones.
+
+v_i \approx (x_{i-1} - x_{i+1})/2dt
+a_i \approx (x_i+1 + x_i-1 - 2x_i)/dt^2
+
+
+v = nan(size(x))
+a = nan(size(x))
+for i = 2:size(x,1)-1
+  v[i,:] = (x[i+1,:] - x[i-1,:])/(t[i+1] - t[i-1])
+  a[i,:] = (x[i+1,:] - 2x[i,:] + x[i,:])/(t[i+1] - t[i])/(t[i] - t[i-1])
+end
+
+v[2:end-1,:] = (x[3:end,:]-x[1:end-2,:])./(t[3:end] - t[1:end-2])
+a[2:end-1,:] = (x[3:end,:] - 2x[2:end-1] + x[1:end-2,:]) ./
+  (t[2:end-1].*(t[3:end-2] - t[2:end-1] + t[1:end-2]) - t[3:end].*t[1:end-2])
+
+Este ejemplo es sencillo, pero también muestra una de las desventajas de
+la vectorización: hace que el código se parezca menos a la definición
+de las operaciones implícitas, y por lo tanto resulta más ``misterioso''
+(aunque muchos disfrutan con el reto intelectual que esto supone).
+Otra desventaja, menos obvia, es que el código vectorizado implica
+cálculos con \emph{arrays} que pueden llegar a ser muy grandes, y
+consumen más memoria. En casos extremos se puede llegar al límite
+de memoria permitida por el sistema, lo que haría imposible
+realizar la operación (si es que no llega a bloquearse el ordenador).
+
+En el ejemplo mostrado, el inconveniente de consumo de memoria sería
+más notorio si no se quisiera guardar el valor de las velocidades y
+aceleraciones de todos los instantes, sino solo utilizarlos dentro
+del bucle para hacer otras operaciones. En ese caso, los cálculos del bucle
+podrían asignarse a variables \texttt{v}, \texttt{a} con la información de solo
+un instante. Pero la solución vectorizada requeriría los \emph{arrays}
+completos.
+
+Ahora bien, en el caso de Julia uno puede olvidarse en general
+de la vectorización y sus problemas. Como se decía al comienzo, el principal punto
+fuerte de este lenguaje es la rapidez de ejecución, la cual se debe
+sobre todo a que el código se compila a tiempo real en el momento de
+su ejecución (sin que el usuario tenga que intervenir). Esto hace
+que los bucles no solo sean normalmente ``inofensivos'' para la
+eficiencia del programa, sino incluso beneficiosos: cuando un
+fragmento de código se ejecuta en bucle, Julia solo necesita
+interpretarlo la primera vez, y el resto de iteraciones se realizan
+a una velocidad drásticamente mayor. La consecuencia es que
+el código vectorizado, que también se tiene que interpretar y
+en general consume más memoria, es a menudo más lento que un bucle
+equivalente, al contrario que con otros lenguajes.
+
+
+Intermezzo: otras formas de ejecutar Julia
+
+Llegados a este punto, es recomendable comentar algunas cuestiones prácticas
+sobre la interacción con Julia. Hasta ahora se han presentado ejemplos
+que se podrían realizar con la interfaz interactiva. Pero para ejecutar
+rutinas más complejas, y siempre que
+se quiera obtener resultados reproducibles, es recomendable escribir
+las instrucciones en un archivo de código, y luego ejecutarlo en Julia.
+
+Ya se ha comentado cómo ejecutar un script desde la interfaz, a través de
+la función \texttt{include}. [Ejecutar desde comandos, para otros efectos.]
+
+
+
+
+
+Salvar y cargar datos en archivos JLD
+
+En muchos proyectos es necesario guardar los resultados en un archivo que
+se mantenga tras cerrar la sesión de trabajo, para recuperar los datos en
+una sesión posterior, compartirlos con otros usuarios, etc. El paquete
+\texttt{HDF5} aporta varias utilidades sencillas con esta finalidad, empleando
+el formato de datos estándar que le da nombre. Dentro de este paquete se
+proporciona el módulo \texttt{JLD}, que permite guardar y cargar datos
+en el formato ``nativo'' de Julia. Como todos los demás paquetes,
+es necesario instalarlo la primera vez antes de utlizarlo:
+
+Pkg.add("HDF5")
+
+Y también hay que cargarlo (incluyendo el módulo \texttt{JLD}) en cada
+sesión de trabajo en la que se quiera hacer uso de él:
+
+using HDF5, JLD
+
+El procedimiento \emph{quick-and-dirty} consiste en usar las ``macros''
+\texttt{@save} y \texttt{@load}:
+
+# Salvar todo el espacio de trabajo en el archivo "datos.jld"
+@save "datos.jld"
+# Salvar solo las variables a, b y c
+@save "datos.jld" a b c
+# Cargar los datos del archivo anterior en el espacio de trabajo actual
+@load "datos.jld"
+
+Las funciones (no macros) \texttt{save} y \texttt{load} permiten hacer
+estas rutinas de forma más flexible. Por ejemplo, supongamos que se quiere 
+
+
+Siguiente: secuencias de control.
+if - elseif - else. Con valores lógicos (normalmente resultado de comparaciones)
+``Cortocircuito''
+
+for y while. Break y continue.
+
+
+Avanzado básico:
+
+``Type stability'': el valor devuelto por las funciones debe de ser de un
+tipo determinado, para que el código sea eficiente. Es uno de los principios
+del programa. Puede ser violado por el usuario, pero el diseño básico no lo hace.
+
+Esto hace que: las funciones que devuelven complejos tengan que hacerse a partir
+de números complejos. (ejemplo de raíz cuadrada de negativos).
+Problemas de overflow con enteros (``native integer machine arithmetic'').
+
+ 
+\end{document}
