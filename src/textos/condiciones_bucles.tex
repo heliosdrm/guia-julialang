@@ -1,0 +1,215 @@
+\chapter{Condiciones y bucles}
+
+\section{\code{if}, \code{while}, \code{for}...}
+
+En algunos ejemplos de los capítulos anteriores ya se han presentado modelos de sentencias condicionales y bucles. Esos ejemplos se han dado sin apenas explicaciones, en parte por ser prácticamente autoexplicativos, pero también porque ya no solo el concepto, sino también su sintaxis son prácticamente un estándar fácilmente reconocible por todo lector con una mínima experiencia previa en programación.
+
+Sin embargo, es imperativo para cualquier guía introductoria de programación dar en algún punto cuenta de los bloques condicioneales y los distintos tipos de bucles, ya que estamos hablando de las estructuras que controlan el ``flujo'' que sigue la ejecución del código, y junto a la asiganción de valores a variables, vienen a ser el fundamento de cualquier lenguaje de programación. Por otro lado, este tema también nos sirve para introducir otras estructuras y detalles específicos de Julia.
+
+Así pues, si bien sea por no dejarlas de mencionar, comenzamos presentando la sintaxis básica de estas estructuras:
+
+\textbf{Bloques condicionales (\code{if}):}
+
+\begin{juliacode}
+if condición
+  # Código que se ejecuta si se cumple "condición"
+end
+\end{juliacode}
+
+\textbf{Bucles tipo \code{while}:}
+
+\begin{juliacode}
+while condición
+  # Código que se ejecuta de forma repetida
+  # mientras se siga cumpliendo "condición"
+end
+\end{juliacode}
+
+\textbf{Bucles tipo \code{for}:}
+
+\begin{juliacode}
+for i = serie
+  # Código que se ejecuta de forma repetida
+  # empleando la variable "i" con el valor de cada uno
+  # de los elementos iterables de la variable "serie".
+end
+
+for i in serie
+  # Exactamente lo mismo que lo anterior
+  # utilizando la palabra clave "in" en lugar de "=".
+end
+\end{juliacode}
+
+Cabe mencionar que estas estructuras requieren usar las variables aquí ejemplificadas como "condición" y "serie", que han de ser de un tipo especial en cada caso: las condiciones han de ser variables lógicas, y las series variables iterables. Se entrará más en detalle sobre estos tipos de variables en las próximas secciones.
+
+Antes, conviene adelantar algunas ``extensiones'' a la sintaxis básica, que sin ser imprescindibles, facilitan mucho la creación de estas estructuras de control de flujo.
+
+En primer lugar están las condiciones alternativas (\code{else}, \code{elseif}). Tras un bloque condicionado por \code{if}, se pueden intercalar otros bloques de código a ejecutar si se cumplen otras condiciones:
+
+\begin{juliacode}
+if condición1
+  # Ejecutar este bloque si se cumple "condicion1"
+elseif condición2
+  # Ejecutar este bloque si no se cumple la condición anterior,
+  # pero sí se cumple "condicion2"
+  # Se pueden poner tantas condiciones alternativas como se quiera...
+  # ...
+else
+  # Bloque que se ejecuta si no se cumple *ninguna*
+  # de las condiciones enunciadas
+end
+\end{juliacode}
+
+La función \code{ifelse} también sirve como alternativa a la estructura \code{if}/\code{else} para algunos casos sencillos. Por ejemplo, esta forma de comprobar si un número se puede considerar entero (aunque esté codificado como decimal):
+
+\begin{juliacode}
+# Comprobación con estructura if/else
+if mod(numero,1) == 0
+  print("Es un número entero")
+else
+  print("Es un número decimal")
+end
+
+# Comprobación con la función ifelse
+print(ifelse(mod(numero,1)==0, "Es un número entero", "Es un número decimal"))
+\end{juliacode}
+
+Por otro lado, están los comandos \code{break} y \code{continue} para alterar el flujo habitual de los bucles. Estos comandos suelen ir en un \code{if} dentro de un bucle \code{while} o \code{for}. \code{break} interrumpe el bucle en el punto en que se encuentre, y devuelve el control al segmento de código desde el que se llamó el bucle, como si este hubiera terminado. \code{continue} hace algo semejante, pero solo interrumpe una iteración, y salta al comienzo de la siguiente. Veamos un ejemplo práctico, en un código para calcular los números primos del 1 al 100 mediante una implementación literal de la ``criba de Eratóstenes'':%
+\footnote{%
+\url{https://es.wikipedia.org/wiki/Criba_de_Eratóstenes}%
+}
+
+\begin{quote}
+Se forma una tabla con todos los números naturales comprendidos entre $2$ y $n$, y se van tachando los números que no son primos de la siguiente manera: Comenzando por el 2, se tachan todos sus múltiplos; comenzando de nuevo, cuando se encuentra un número entero que no ha sido tachado, ese número es declarado primo, y se procede a tachar todos sus múltiplos, así sucesivamente. El proceso termina cuando el cuadrado del mayor número confirmado como primo es mayor que $n$.
+\end{quote}
+
+\begin{juliacode}
+n = 100
+# Utilizamos como "criba" un vector lógico,
+# con todos los valores inicialmente definidos como "false"
+eliminados = falses(n)
+# Comenzando por 2...
+for m = 2:n
+  # Si el número (m) ha sido eliminado, pasar al siguiente
+  if eliminados[m]
+    continue
+  end
+  # Eliminar los múltiplos 2m, 3m ... menores que n
+  k = 2
+  while (mxk = m*k) <= n
+    eliminados[mxk] = true
+    k += 1
+  end
+  # Terminar si el cuadrado de m es mayor que n 
+  if m^2 > n
+    break
+  end
+end
+# Extraer las posiciones no eliminadas de la criba
+# (usando el operador "~" para convertir true en false, y viceversa
+primos = find(~eliminados)
+\end{juliacode}
+
+\section{Expresiones lógicas}
+
+La condición asociada a los bloques \code{if} o \code{elseif}, así como a los bucles \code{while}, ha de expresarse en una variable lógica, de tipo \code{Bool}, que no es otra cosa que un número binario, cuyos valores posibles son \code{true} y \code{false}. Estos valores lógicos se pueden obtener de múltiples maneras. Posiblemente la más habitual es a partir de comparaciones:
+\code{==} (igual), \code{!=} (distinto),
+\code{>} (mayor), \code{>=} (mayor o igual),
+\code{<} (menor), \code{<=} (menor o igual), etc.
+
+Sin embargo, también hay muchas otras funciones que dan como resultado variables lógicas, como resultado de comprobar ciertas condiciones numéricas o de otro tipo. Algunas que pueden usarse habitualmente son:
+
+\begin{description}
+  \item[\code{isdefined(x)}] \hfill \\
+  Comprobar si existe la variable identificada por el símbolo \code{x} en el espacio de trabajo. Si una variable tiene por ejemplo el nombre \code{v}, el ``símbolo'' que la identifica es \code{:v} (con dos puntos); es decir, que la forma de llamar a la función sería \code{isdefined(:v)}.
+  \item[\code{isdefined(x,index)}] \hfill \\
+  Si \code{x} es un \emph{array} u otro tipo de variable compuesta por varios componentes, se interroga si esa variable contiene el componente representado por el índice \code{index}; p.ej. \code{isdefined(v, 5)} para comprobar si existe un quinto elemento en \code{v}.
+  \item[\code{isnan(x)}] \hfill \\
+  Comprobar si \code{x} es un \code{NaN} (\emph{not-a-number)}.
+  \item[\code{isfinite(x)}, \code{isinf(x)}] \hfill \\
+  Comprobar si \code{x} es un número finito o infinito, respectivamente. (Un \code{NaN} devuelve \code{false} para ambas funciones.)
+  \item[\code{isinteger(x)}] \hfill \\
+  Comprobar si \code{x} es un número entero, u otro tipo de variable (p.ej. un vector) que solo contiene números enteros.
+  \item[\code{isreal(x)}] \hfill \\
+  Comprobar si \code{x} es un número real, u otro tipo de variable (p.ej. un vector) que solo contiene números reales.
+  \item[\code{iseven(x)}, \code{isodd(x)}] \hfill \\
+  Comprobar si \code{x} (que ha de ser un número entero) es par o impar, respectivamente.
+  \item[\code{isempty(x)}] \hfill \\
+  Aplicable a vectores u otro tipo de ``colecciones'' (véase la siguiente sección). Comprueba si \code{x} está vacío (no tiene ningún elemento).
+  \item[\code{isa(x,type)}] \hfill \\
+  Comprobar si la variable \code{x} es del tipo \code{type}, p.ej. \code{isa(x, Number)}, \code{isa(x, Bool)},\ldots (ver la sección XXXX sobre tipos).
+  \item[\code{iseltype(x,type)}] \hfill \\
+  Equivalente a \code{isa}, pero también válido para \emph{arrays} u otro tipo de colecciones; en el segundo caso comprueba el tipo de todos sus elementos.
+  \item[\code{in(el,x)}] \hfill \\
+  Comprobar si el elemento con el valor \code{el} está presente en la colección \code{x}.
+  \item[\code{any(x)}] \hfill \\
+  Si \code{x} es un \emph{array} con elementos de tipo \code{Bool}, comprobar si al menos uno de los elementos es \code{true}.
+  \item[\code{all(x)}] \hfill \\
+  Si \code{x} es un \emph{array} con elementos de tipo \code{Bool}, comprobar si todos los elementos son \code{true}.
+\end{description}
+
+Volviendo a los operadores lógicos de comparación, una característica interesante de Julia es que permite concatenarlos como se hace a menudo al escribir relaciones matemáticas. Por ejemplo, para verificar si un valor de probabilidad \code{p} está efectivamente acotado entre \code{0} y \code{1}:
+
+\begin{jlconcode}
+julia> p = 0.5;
+julia> 0 <= p <= 1
+true
+\end{jlconcode}
+
+Estas comparaciones se pueden hacer también sobre los distintos elementos de un \emph{array}, pero para hacer la comparación elemento a elemento hay que utilizar los operadores ``con punto'' (cfr. la sección XXXXX). Los resultados de estas comparaciones son vectores lógicos, que no se pueden usar como condición en un \code{if} o \code{while} (estos solo admiten valores de tipo \code{Bool} unitarios), pero se usan a menudo para seleccionar elementos de otro vector y operar sobre ellos. Por ejemplo, veamos la siguiente alternativa al bucle \code{while} del ejemplo anterior, que también nos sirve para introducir otros detalles sobre las expresiones lógicas:
+
+\begin{juliacode}
+multiplos_m = (mod([1:n], m) .== 0)
+igual_a_m = ([1:n] ~= m)
+eliminados[multiplos_m & igual_a_m] = true
+\end{juliacode}
+
+La primera línea contiene una de estas comparaciones lógicas con \emph{arrays}. Concretamente calcula un vector de \code{Bool}, que son \code{true} para los múltiplos de \code{m} (dan resto igual a cero al dividirlas por \code{m}). La segunda línea utiliza el operador \code{~=}, que es el equivalente a \code{!=} (``distinto de'') para \emph{arrays}; el resultado es otro vector de \code{Bool} igual a \code{true} en todas las posiciones salvo \code{m}. En la tercera línea se seleccionan los elementos de \code{eliminados} que cumplen ambas condiciones: múltiplos de \code{m} con excepción de \code{m}, y se les asigna el valor \code{true}.%
+\footnote{%
+El paréntesis alrededor de las expresiones lógicas es opcional, ya que las operaciones lógicas tienen precedencia sobre otras, pero en estos ejemplos se usan los paréntesis de forma generalizada para facilitar la lectura y la interpretación de las expresiones.%
+}
+
+Como en este ejemplo, las expresiones lógicas a menudo se componen entre sí con operadores que representan la intersección y la unión lógica (\emph{and} y \emph{or}, respectivamente); también se pueden ``invertir'' (convertir \code{true} en \code{false} y viceversa) con el operador de negación (\emph{not}). Hay dos tipos de estos operadores lógicos. Por un lugar están los operadores elementales \code{&} \code{|}, \code{~} (\emph{and}, \emph{or}, \emph{not}, respectivamente), que sirven para componer \emph{arrays} lógicos ``elemento a elemento'', como ya se ha visto en los ejemplos anteriores.
+
+Para valores lógicos unitarios, sin embargo, se suelen usar los llamados operadores de ``cortocircuito'', escritos con el símbolo duplicado para el \emph{and} y \emph{or}, y con el símbolo de exclamación para el \emph{not}: \code{&&}, \code{||} y \code{!}, respectivamente. Reciben este nombre porque las expresiones combinadas se van evaluando de izquierda a derecha, pero la evaluación se interrumpe tan pronto como se llega a un resultado inequívoco (figura XXX).
+
+Este comportamiento es útil cuando una de las condiciones a comprobar solo tiene sentido en función de que se cumpla la otra o no. Por ejemplo, supongamos que llegados a un punto de un programa, hemos de comprobar si se ha creado una variable \code{x} con un valor mayor que cero. Esta condición se podría formular del siguiente modo:
+
+\begin{juliacode}
+isdefined(:x) && (x > 0)
+\end{juliacode}
+
+Literalmente, lo que se está interrogando es si en el espacio de trabajo hay definida una variable con el símbolo ``x'', y si se cumple esa condición, si el valor asignado es mayor que cero. Obviamente, si no se cumpliese la primera, la segunda expresión generaría un error, pero el ``cortocircuito'' del operador \code{&&} evitaría llegar a ese punto.
+
+En relación con esto, es interesante destacar que la estructura \code{if}/\code{else} también hace de cortocircuito (solo se evalúa lo que hay dentro del \code{if} o el \code{else}, según el resultado de la condición), pero la función \code{ifelse} no (todos sus argumentos se evalúan aunque uno no tenga efectos sobre el resultado). Como alternativa, está el operador ternario \code{?}, que sí evalua únicamente la expresión que corresponde. Por ejemplo tomemos estas formas de devolver el doble de un número si este se encuentra definido, o un objeto vacío (\code{nothing}) si el número no existe (y por lo tanto no se puede hacer la operación):
+
+\begin{juliacode}
+# Opcion 1: con if/else
+if isdefined(numero)
+  doble = 2numero
+else
+  doble = nothing
+end
+
+# Opción 2: con ifelse, puede dar error si no existe el número
+doble = ifelse(isdefined(numero), 2numero, nothing)
+
+# Opción 3: con el operador ternario, que sí cortocircuita
+doble = isdefined(numero) ? 2numero : nothing
+\end{juliacode}
+
+A modo de resumen, la tabla XXXX muestra los distintos operadores de comparación y composición lógica, tanto para variables escalares como vectoriales.
+
+\begin{tabular}{lll}
+                      & Escalar     & Vectorial    \\
+A igual que B         & \code{A == B} & \code{A .== B} \\
+A distinto de B       & \code{A != B} & \code{A ~= B}  \\
+A mayor que B         & \code{A > B}  & \code{A .> B}  \\
+A mayor o igual que B & \code{A >= B} & \code{A .>= B} \\
+A menor que B         & \code{A < B}  & \code{A .< B}  \\
+A menor o igual que B & \code{A <= B} & \code{A .<= B} \\
+A y B (intersección)  & \code{A && B} & \code{A & B}   \\
+A o B (unión)         & \code{A || B} & \code{A | B}   \\
+``No'' A (negación)   & \code{!A}     & \code{~A}
+\end{tabular}
+

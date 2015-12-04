@@ -1,0 +1,237 @@
+\chapter{Otros elementos iterables: diccionarios y tuplas}
+
+\section{Diccionarios}
+
+En todos los ejemplos de bucles \code{for} mostrados hasta este punto las iteraciones se han hecho sobre rangos como \code{1:10}, etc. Sin embargo, hay otros tipos de objetos ``iterables'' que se pueden utilizar para ese propósito. De las dos sintaxis disponibles para estos bucles (con el símbolo ``\code{=}'' o con ``\code{in}'', véase arriba), la primera se suele usar exclusivamente con rangos, y la segunda con cualquier otro tipo de objeto; pero esto es una mera convención, ya que son sintaxis completamente equivalentes.
+
+Después de los rangos, los objetos iterables más típicos para usar en los bucles \code{for} son los \emph{arrays} y los ``diccionarios''. Ya se ha dedicado un capítulo completo a los \emph{arrays}, por lo que no hace falta decir nada más sobre ellos aquí. Por otro lado, en el capítulo XXXX se han adelantado algunos ejemplos de diccionarios (los ``atributos'' y ``estilos'' de los gráficos de Winston), aunque no se ha profundizado en su estructura. Los diccionarios se parecen a los \emph{arrays} en la medida en que también son series de valores, numéricos o de otros tipos; pero así como los elementos de los \emph{arrays} vienen determinados por su posición en la serie, los valores de un diccionario se identifican por su asociación con una serie paralela de ``claves'' (\emph{keys}). Otra diferencia es que los \emph{arrays} se pueden organizar en varias dimensiones, lo cual no tiene cabida en los diccionarios.
+
+Hay muchas circunstancias en las que es interesante emplear estas series asociativas, aunque los diccionarios son particularmente útiles cuando el conjunto de claves no está predeterminado ni sigue un orden específico.%
+\footnote{%
+Para conjuntos fijos de claves, otras estructuras como los ``tipos abstractos'' pueden ser más adecuadas (véase la sección XXXX).%
+}
+Un buen ejemplo puede ser un conjunto de datos como las tasas de desempleo de países varios (tabla XXXXX). Pongamos como caso que deseamos registrar las tasas de 2014. Esto podría hacerse con un vector de países y otro de datos:
+
+\begin{tabular}{lrrrr}
+& 2011 & 2012 & 2013 & 2014 \\
+Germany & 5.8 & 5.4 & 5.2 & 5.0 \\
+Greece & 17.9 & 24.5 & 27.5 & 26.5 \\
+Spain & 21.4 & 24.8 & 26.1 & 24.5 \\
+France & 9.2 & 9.8 & 10.3 & 10.2 \\
+Italy & 8.4 & 10.7 & 12.1 & 12.7 \\
+Portugal & 12.9 & 15.8 & 16.4 & 14.1 \\
+United Kingdom & 8.1 & 7.9 & 7.6 & 6.3 \\
+\end{tabular}
+
+Fuente: Eurostat
+
+\begin{juliacode}
+paises = ["Germany", "Greece", "Spain", "France", "United Kingdom"]
+desempleo_2014 = [5, 26.5, 24.5, 10.2, 6.3]
+\end{juliacode}
+
+Pero extraer, por ejemplo, el valor correspondiente a España, requiere buscar el índice correspondiente en \code{paises} y utilizarlo para indexar \code{desempleo_2014}:
+
+\begin{jlconcode}
+julia> desempleo_2014[paises .== "Spain"]
+1-element Array{Float64,1}:
+ 24.5
+\end{jlconcode}
+
+Además, esta operación no devuelve el resultado como un escalar, sino como un vector (aunque sea con un solo elemento), ya que nada impediría que hubiera varios elementos del vector \code{paises} iguales a \code{"Spain"}. Para extraer un escalar, se podría utilizar la función \code{findfirst} que da el índice de solo la primera coincidencia:
+
+\begin{jlconcode}
+julia> desempleo_2014[findfirst(paises, "Spain")]
+24.5
+\end{jlconcode}
+
+Sin embargo, el uso de un diccionario aquí simplifica las cosas:
+
+\begin{jlconcode}
+julia> dic_desempleo_2014 = Dict("Germany" => 5,
+          "Greece" => 26.5,
+          "Spain" => 24.5,
+          "France" => 10.2,
+          "United Kingdom" => 6.3)
+
+Dict{ASCIIString,Any} with 5 entries:
+  "Germany"        => 5
+  "United Kingdom" => 6.3
+  "Spain"          => 24.5
+  "Greece"         => 26.5
+  "France"         => 10.2
+
+julia> dic_desempleo_2014["Spain"]
+24.5
+\end{jlconcode}
+
+Un primer detalle que llama la atención es que el orden de los elementos en la presentación del diccionario no coincide con el orden en el que se han especificado en la creación. Esto destaca lo que ya se ha señalado, que los valores del diccionario \emph{no} se pueden identificar por posición, sino por su asociación con las claves.
+
+La forma de ampliar los diccionarios también es distinta a como se haría con un \emph{array}. Las funciones que se emplean con éstos, como \code{push!}, \code{append!}, etc., no sirven para los diccionarios. Añadir un elemento a un diccionario es más sencillo; por ejemplo, para añadir el dato de desempleo de Italia ($12.7\%$) basta escribir:
+
+\begin{juliacode}
+dic_desempleo_2014["Italy"] = 12.7
+\end{juliacode}
+
+Por otro lado, para eliminar una entrada a partir de su clave se utiliza la función \code{delete!}. 
+
+La forma de iterar con diccionarios en un bucle \code{for} también es distinta a como se haría con un rango o un \code{array}, ya que cada elemento está determinado por dos variables (la clave y el valor), y tampoco se sigue un orden determinado para las iteraciones. Por verlo de forma práctica, consideremos de nuevo el ejemplo anterior. Supongamos que queremos crear un informe con las tasas de desempleo; este informe debería contener una línea con cada dato, siguiendo el formato \code{Spain: 24.5%}, etc. En cada iteración podemos conocer tanto la clave como el valor de elemento a presentar, asignándolos a una pareja de variables (en ese orden) en la misma llamada al \code{for}:
+
+\begin{juliacode}
+for (k, v) in dic_desempleo_2014
+  print(k)
+  print(": ")
+  print(v)
+  println("%")
+end
+\end{juliacode}
+
+En cada iteración, la clave (\emph{key}) se asigna a la variable \code{k} y el valor a \code{v}; la función \code{print} imprime en pantalla el contenido especificado, y \code{println} añade una nueva línea al final, con lo que tras ejecutar las tres iteraciones aparece en pantalla:
+
+\begin{jlconcode}
+Germany: 5%
+United Kingdom: 6.3%
+Spain: 24.5%
+Italy: 12.7%
+Greece: 26.5%
+France: 10.2%
+\end{jlconcode}
+
+Una alternativa sería registrar previamente las claves del diccionario con la función \code{keys}, y utilizarlas en cada iteración para extraer los valores asociados. Por ejemplo:
+
+\begin{juliacode}
+claves = keys(dic_desempleo_2014)
+for k in claves
+  print(k)
+  print(": ")
+  print(dic_desempleo_2014[k])
+  println("%")
+end
+\end{juliacode}
+
+El resultado es exactamente el mismo que el anterior, y el código es ligeramente más complejo. Pero para cierto tipo de claves esta estrategia puede ser útil. Por ejemplo, en este caso en el que las claves son etiquetas textuales, podría interesarnos que se presenten por orden alfabético. En ese caso, antes del bucle se puede aplicar la función \code{sort!} para ordenar las claves. Pero antes hay que convertir la salida de \code{keys} a un \emph{array} al que se le pueda aplicar esa función. Esto se hace con la función \code{collect}, como sigue:%
+\footnote{%
+Podría parecer natural que \code{keys} devolviese por defecto un \emph{array} para evitarse el paso de la función \code{collect}. Pero potencialmente \code{keys} podría aplicarse a otro tipo de colecciones, cuyas claves no pudieran disponerse en forma de \emph{array}. Así que, por consistencia de tipos (véase el capítulo XXXXXX), se mantiene esta característica.%
+}
+
+\begin{juliacode}
+claves = collect(keys(dic_desempleo_2014))
+sort!(claves)
+\end{juliacode}
+
+Como complemento a \code{keys}, existe la función \code{values} para extraer los valores de un diccionario (p.ej. \code{values(dic_desempleo_2014)}. Por otro lado, también es posible crear un diccionario con la función \code{Dict} a partir de dos vectores: el primero para las claves y el segundo para los valores. Usando las variables definidas al comienzo de esta sección:
+
+\begin{jlconcode}
+julia> Dict(paises, desempleo_2014)
+Dict{ASCIIString,Float64} with 5 entries:
+  "Germany"        => 5.0
+  "United Kingdom" => 6.3
+  "Spain"          => 24.5
+  "Greece"         => 26.5
+  "France"         => 10.2
+\end{jlconcode}
+
+Este resultado sirve también para ilustrar una diferencia entre la creación de \emph{arrays} y la de diccionarios. Al juntar datos de distintos tipos, como el valor entero \code{5} asignado a Alemania y los valores decimales de los otros países, en la creación de \emph{arrays} se aplican las reglas de promoción de tipos y todos los datos se codifican como \code{Float64} (véase la sección XXXXX sobre estas reglas). Por eso, el diccionario definido a partir de \emph{arrays} es del tipo \code|Dict{ASCIIString,Float64}|, y el valor entero aparece con decimales (\code{5.0}). La definición literal de diccionarios, por el contrario, no realiza ninguna promoción de tipos: el valor entero se mantiene sin cambios, y la lista completa de valores pasa a ser de tipo \code{Any}, para poder contener tanto enteros como decimales.
+
+El tipo de las claves y los valores puede controlarse al definir los diccionarios, de manera semejante a como se hace con los \emph{arrays}. Por ejemplo, si quisieran usarse tipos más genéricos como \code{AbstractString} para las claves y \code{Real} para los valores, podría haberse utilizado la siguiente instrucción:
+
+\begin{juliacode}
+# Ejemplo con solo dos países para abreviar
+Dict{AbstractString,Real}(paises, desempleo_2014)
+\end{juliacode}
+
+
+\section{Tuplas}
+
+Vistos los diccionarios y la forma de trabajar con ellos, es oportuno hablar de otro tipo de colección, que guarda otras semejanzas y diferencias con los \emph{arrays}. Las ``tuplas'' (\emph{tuples} en inglés) son series de variables separadas por comas --- y a menudo enmarcadas entre paréntesis, aunque esto se hace solo por claridad o para evitar ambigüedades, como en otros usos de los paréntesis. Por ejemplo:
+
+\begin{jlconcode}
+julia> unos = 1, 1.0, 1+0im, true
+(1,1.0,1 + 0im,true)
+\end{jlconcode}
+
+Las tuplas se parecen a los \emph{arrays} en que sus elementos vienen determinados por su posición en la serie; por ejemplo el número entero del ejemplo anterior es \code{unos[1]}, el número complejo es \code{unos[3]}, etc. Sin embargo, en un \emph{array} todos los elementos han de ser del mismo tipo (aunque sea un ``supertipo'' como \code{Any} que comprende otros tipos más específicos). Por el contrario, cada elemento de una tupla puede ser de un tipo distinto: 
+
+\begin{jlconcode}
+julia> typeof(unos)
+(Int64,Float64,Complex{Int64},Bool)
+\end{jlconcode}
+
+Las tuplas también se diferencian de los \emph{arrays} en que solo pueden tener una dimensión, y en que son objetos ``inmutables''; es decir, que una tupla no se puede ampliar ni reducir, ni se puede cambiar uno de sus elementos por otro (aunque se puede sustituir la tupla completa por otro contenido).
+
+\begin{jlconcode}
+julia> unos[1]=11
+ERROR: `setindex!` has no method matching setindex!(::(Int64,Float64,Complex{Int
+64},Bool), ::Int64, ::Int64)
+\end{jlconcode}
+
+Hay que destacar, sin embargo, que esta inmutabilidad solo afecta a la tupla en sí: técnicamente no se puede cambiar un elemento por otro, pero puede parecer lo contrario si se trata de un elemento que \emph{sí} es mutable, por ejemplo un \emph{array}:
+
+\begin{jlconcode}
+julia> x = [1,2]; y=[3,4];
+julia> tup = x,y
+([1,2],[3,4])
+
+julia> # Intentamos reemplazar el primer elemento -- mal
+julia> tup[1] = [0.1, 0.2]
+ERROR: `setindex!` has no method matching setindex!(::(Array{Int64,1},Array{Int6
+4,1}), ::Array{Float64,1}, ::Int64)
+
+julia> # Ahora lo hacemos bien: 1 - modificar el contenido del elemento
+julia> tup[1][1] = 10
+10
+
+julia> # 2 - modificar el vector x
+julia> x[2] = 20
+20
+
+julia> tup
+([10,20],[3,4])
+\end{jlconcode}
+
+Ahora bien, la característica más notable de las tuplas es la que determina su principal utilidad: es posible definir una tupla de variables en el lado izquierdo de una asignación, lo que sirve para hacer un conjunto de asignaciones ``en paralelo''. Un ejemplo trivial: asignar el valor $1$ a la variable \code{x} y $2$ a \code{y}:
+
+\begin{jlconcode}
+julia> x,y = 1,2
+(1,2)
+
+julia> # Ahora vemos las variables asignadas:
+julia> x
+1
+
+julia> y
+2
+\end{jlconcode}
+
+El orden en el que se realizan las operaciones es el siguiente: primero se evalúa la parte derecha de la asignación (se determinan los valores a asignar), y luego la parte izquierda (se enlaza cada valor a la variable asignada); pero en cada una de las dos partes, la tupla se evalúa en el orden de lectura. Veamos un ejemplo pequeño, pero algo retorcido:
+
+\begin{jlconcode}
+julia> w,z = (z=10),(w=2z)
+(10,20)
+
+julia> w
+10
+
+julia> z
+20
+\end{jlconcode}
+
+Como se ha dicho, primero se evalúa la parte derecha en el orden de lectura: se determina el primer elemento de una tupla asignando el valor $10$ a la variable \code{z}, y el doble de este valor ($20$) se usa para el segundo elemento de la tupla, asignándolo a \code{w}. Luego se evalúa la parte izquierda de la expresión, donde los valores de la tupla derecha se asignan a las variables \code{w}, \code{z} ---al margen del valor que se les dio a las mismas variables en el paso anterior, que era precisamente el opuesto---.
+
+Ya se ha visto un caso práctico de tuplas usadas para asignar simultáneamente valores a distintas variables: la declaración de los bucles \code{for} con diccionarios. Cuando se itera sobre un diccionario, el elemento pasado en cada iteración es una tupla con dos componentes: el primero es la clave y el segundo es el valor. La sintaxis \code{for (k,v) in diccionario} lo que hace es ``distribuir'' estos dos componentes en las dos variables \code{k} y \code{v}, respectivamente, del mismo modo que en los ejemplos anteriores.
+
+Además, en el capítulo XXXX se verán más utilidades de las tuplas, en relación con las entradas y salidas de las funciones. Y con imaginación, se pueden encontrar muchas otras aplicaciones a las tuplas. Por ejemplo, pueden servir para simular ``diccionarios multidimensionales''. Pongamos como ejemplo la tabla de desempleo en el ejemplo [anterior]. Esta tabla se podría haber definido del siguiente modo (ponemos solo los datos de las dos primeras filas y columnas por simplificar):
+
+\begin{jlconcode}
+julia> desempleo = Dict(("Germany",2011)=>5.8, ("Germany",2012)=>5.4,
+       ("Greece",2011)=>17.9, ("Greece",2012)=>24.5)
+Dict{Tuple{ASCIIString,Int64},Float64} with 4 entries:
+  ("Germany",2012) => 5.4
+  ("Greece",2012)  => 24.5
+  ("Greece",2011)  => 17.9
+  ("Germany",2011) => 5.8
+\end{jlconcode}
+
+El diccionario sigue siendo en realidad unidimensional, pero utilizar parejas de valores en las claves proporciona una apariencia de bidimensionalidad que puede ser útil en algunas circunstancias.
+
+

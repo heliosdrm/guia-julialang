@@ -1,9 +1,9 @@
 ﻿\documentclass[a4paper]{book}
 \usepackage{geometry}
 \usepackage{fontspec}
-\setmainfont[Ligatures=TeX]{DejaVu Sans}
+%\setmainfont[Ligatures=TeX]{DejaVu Sans}
 \setmonofont{DejaVu Sans Mono}
-%\defaultfontfeatures{Ligatures=TeX}
+\defaultfontfeatures{Ligatures=TeX}
 \usepackage{polyglossia}
 \setmainlanguage{spanish}
 
@@ -14,10 +14,21 @@
 \newminted{jlcon}{fontsize=\small}
 \newminted{julia}{fontsize=\small}
 \newmint{jlcon}{fontsize=\small}
-\newmintinline{julia}{breaklines=true, breakafter=()\[\]\{\}\,\.+-*/}
-\newcommand{\jl}{\juliainline}
+\newmintinline{text}{breaklines=true, breakafter=()\[\]\{\}\,\.+-*/}
+\newcommand{\code}{\textinline}
+% Remove red boxes
+\makeatletter
+\expandafter\def\csname PYGdefault@tok@err\endcsname{\def\PYGdefault@bc##1{{\strut ##1}}}
+\makeatother
+
+%\usepackage{titlesec}
+%\titleformat{\chapter}{\normalfont\huge}{\thechapter.}{20pt}{\huge\it}
 
 \begin{document}
 \include{textos/introduccion}
 \include{textos/arrays}
+\include{textos/strings1}
+\include{textos/winston}
+\include{textos/condiciones_bucles}
+\include{textos/iterables}
 \end{document}

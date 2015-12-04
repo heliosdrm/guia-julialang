@@ -1,0 +1,94 @@
+es_bisiesto = function(y)
+  uno_de_marzo = gauss_diasemana(1,3,y)
+  veintinueve_de_febrero = gauss_diasemana(29,2,y)
+  # Operación lógica de comparación (!=) aplicada a cadenas de texo
+  return(uno_de_marzo != veintinueve_de_febrero)
+end
+
+Además de las comparaciones de igualdad y desigualdad (\jl{==}, \jl{!=}), también es posible utilizar las de mayor y menor (\jl{>}, \jl{<}, \jl{>=}, \jl{<=}), que se basan en el orden alfabético para determinar el resultado. La operación de multiplicación (\jl{*}) también tiene un significado con las cadenas de texto, que es la ``combinación'' de las mismas. Por ejemplo
+
+dias = ["lunes","martes","miércoles","jueves","viernes","sábado", "domingo"]
+# Días contenidos en cada mes:
+# Utilizamos la función "es_bisiesto" definida anteriormente
+# para ver los días de febrero
+dias_mes = Dict("enero" => 31,
+  "febrero" => es_bisiesto ? 29 : 28,
+  "marzo" => 31,
+  "abril" => 30,
+  "mayo"=> 31,
+  "junio" => 30,
+  "julio" => 31,
+  "agosto" => 31,
+  "septiembre" => 30,
+  "octubre" => 31,
+  "noviembre" => 30,
+  "diciembre" => 31)
+tablahtml = "<table>\n<tr>"
+# Cabecera con los nombres de los días
+for dtexto in dias
+  tablahtml *= "<td>$(uppercase(dtexto))</td>"
+end
+tablahtml *= "</tr>\n<tr>"
+# Buscar la posición del primer día del mes
+# y rellenar los anteriores
+primerdia = gauss_diasemana(1, 2, 2012)
+d = 0
+for d = 1:7
+  if dias[d] != primerdia
+    tablahtml *= "<td></td>"
+  else
+    break
+  end
+end
+# Rellenar el calendario con los números de los días
+for nd = 1:29
+  tablahtml *= "<td>$nd</td>"
+  # Seguimos aumentando el dia de la semana d,
+  # comprobando si se pasa de semana (múltiplo de 7)
+  if rem(d, 7) == 0
+    tablahtml *= "</tr>\n"
+    if nd < 29
+      tablahtml *= "<tr>"
+    end
+  end
+  d += 1
+end
+# Rellenar la última semana (si está empezada) hasta el domingo
+faltan = rem(d, 7) - 1
+if faltan > 0
+  for dfin = 1:faltan
+    tablahtml *= "<td></td>"
+  end
+  tablahtml *= "</tr>\n"
+end
+tablahtml *= "</table>"
+# Preguntar por el nombre del fichero para guardar el calendario
+print("Escribe el nombre del fichero para el calendario")
+respuesta = readline()
+# Limpiar el nombre del fichero (respuesta)
+# "chomp" para quitar el retorno de carro
+# y "splitext" para añadir extensión ".html" si no la tiene
+respuesta = chomp(respuesta)
+nombre, extension = splitext(respuesta)
+if isempty(extension)
+  nombre *= ".html"
+end
+# Escribir el HTML completo
+html_completo =
+  "<html>
+  <head>
+  <meta charset=\"utf-8\">
+  <title>Febrero de 2012</title>
+  </head>
+  <body>
+  $tablahtml
+  </body>
+  </html>"
+f = open(nombre,"w")
+write(f, html_completo)
+close(f)
+
+Explicar:
+*=
+Multilinea
+Escape: \"

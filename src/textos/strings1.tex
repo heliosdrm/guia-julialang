@@ -1,0 +1,278 @@
+\chapter{Trabajar con textos y archivos}
+
+\section{Cadenas de texto}
+
+\subsection{Composición de textos con ``cifras y letras''}
+
+Hasta este punto hemos trabajado principalmente con números. Pero antes de entrar en otras cuestiones sobre programación, conviene hacer un breve repaso a los aspectos esenciales de las ``cadenas de texto'' (en inglés \emph{text strings}, o simplemente \emph{strings} para abreviar), otro tipo básico de variables con las que se trabaja en casi cualquier programa. Para los ejemplos de los siguients capítulos vendrá bien utilizar estas cadenas y las operaciones sencillas con ellas que se introducen aquí. En realidad hay mucho más que contar sobre las cadenas de texto, pero otros detalles más complejos los dejamos para más adelante en el capítulo XXXXXX.
+
+Ya hemos visto cadenas de texto en la función \code{gauss_diasemana}, que devuelve el día de la semana precisamente en forma de texto. Para ilustrar mejor cómo trabajar con ellas, veamos una sencilla extensión de la función, que utiliza el resultado para crear un texto más largo:
+
+\begin{juliacode}
+function fechaentexto(d, m, y)
+  diasemana = gauss_diasemana(d, m, y)
+  meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+  texto = "Hoy es " * diasemana * "," * 
+    string(d) * " de " * meses[m] * " de " * string(y)
+  println(texto)
+end
+\end{juliacode}
+
+Al ejecutar esta función obtenemos:
+
+\begin{jlconcode}
+julia> fechaentexto(14, 2, 2013)
+Hoy es jueves, 14 de febrero de 2013
+\end{jlconcode}
+
+Este ejemplo muestra que, como ocurre con los números, las cadenas de texto se pueden agrupar en \emph{arrays}. Así, \code{meses} es un \emph{array} de cadenas, con los nombres de los meses del año (esto mismo ya lo utilizamos anteriormente en la función \code{gauss_diasemana} para dar el nombre del día de la semana). Además, se emplea una de las operaciones más habituales con cadenas de texto: la composición con otras cadenas escritas literalmente, o creadas a partir de números (en este caso a través de la función \code{string}, que se aplica al número del día y al año).
+
+Como se puede ver, los textos se pueden concatenar con el operador \code{*}. Pero esto es algo engorroso cuando se enlazan muchos textos y algunos de ellos son muy cortos, como las comas y palabras del ejemplo. Para estos casos, Julia ofrece la posibilidad de ``interpolar'' variables en un texto, a través del símbolo \code{$}. Así La definición de la variable \code{texto} se podría haber sustituido por:%$
+
+\begin{juliacode}
+texto = "Hoy es $diasemana, $d de $(meses[m]) de $y"
+\end{juliacode}
+
+Dentro de una cadena de texto, las palabras que siguen inmediatamente al símbolo \code{$} se interpretan como el nombre de una variable, y se sustituyen por su valor en forma de texto, sin tener que usar siquiera la función \code{string}. Cuando el valor a escribir está representado por una expresión que requiere más de una palabra (como el nombre del mes, representado por \code{meses[m]}), la expresión se ha de poner entre paréntesis.
+
+\subsection{Secuencias de escape}
+
+Evidentemente, el uso del símbolo \code{$} para interpolar variables en el texto supone un problema cuando se quiere escribir un texto que incluye ese mismo símbolo. Para solventarlo existe la ``secuencia de escape'' \code{\$}, que al introducirla se interpreta como el símbolo literal. Lo vemos con un ejemplo (usamos la función \code{print} para que muestre en pantalla la cadena ``interpretada'', sin las secuencias de escape):
+
+\begin{jlconcode}
+julia> # Mal: "$" se interpreta como símbolo para interpolar
+julia> print("Precio: $10")
+ERROR: syntax: invalid interpolation syntax: "$1"
+
+julia> # Correcto:
+julia> print("Precio \$10")
+Precio $10
+\end{jlconcode}
+
+Hay muchas otras secuencias de este tipo, para introducir caracteres que pueden no tener su representación en el teclado (por ejemplo letras de alfabetos particulares), o que al introducirlas tienen una interpretación especial. Entre ellas se incluyen todas las secuencias estándar de C.%
+\footnote{%
+\url{https://en.wikipedia.org/wiki/Escape_sequences_in_C}
+%
+}
+Entre las más útiles se pueden contar:
+
+\begin{itemize}
+  \item \code{\\} para la barra invertida. \\
+  \item \code{\t} para el tabulador. \\
+  \item \code{\n} para el carácter de ``nueva línea''.%
+  \footnote{%
+  En Windows, el cambio de línea en un texto se codifica generalmente con la ``secuencia doble'' \code{\r\n}.} \\
+  \item \code{\"} para las comillas dobles. \\
+\end{itemize}
+
+Las secuencias de escape son útiles, pero también pueden resultar engorrosas si se desea introducir textos largos en el código, como párrafos de varias líneas, posiblemente con texto entrecomillado. Julia considera también formas alternativas y más legibles de codificar nuevas líneas y comillas, especialmente pensadas para estos casos. Por una parte, si la línea en la que se escribe una cadena de texto se termina sin las comillas de cierre, Julia interpreta que hay un carácter de nueva línea y que el texto continúa en la siguiente:
+
+\begin{jlconcode}
+julia> "Este es un texto
+       que ocupa dos líneas"
+"Este es un texto\nque ocupa dos líneas"
+\end{jlconcode}
+
+Además, si la cadena se delimita con \emph{tres} comillas dobles, se puede escribir texto entrecomillado de forma natural. Estos dos ``trucos'' combinados permiten escribir cosas como lo que sigue:
+
+\begin{jlconcode}
+julia> texto = """Curiosidades matemáticas:
+       El resultado de "56^2-45^2" es $(56^2-45^2),
+       El resultado de "556^2-445^2" es $(556^2-445^2),
+       etc.""";
+
+julia> print(texto)
+Curiosidades matemáticas:
+El resultado de "56^2-45^2" es 1111,
+El resultado de "556^2-445^2" es 111111,
+etc.
+\end{jlconcode}
+
+\subsection{Manipulación de cadenas y fragmentos}
+
+Hemos visto como escribir y componer cadenas de texto. Pero además de unirlas, también es posible extraer fragmentos de ellas:
+
+\begin{jlconcode}
+julia> cadena = "palabra";
+julia> # Porción de la cadena (tres primeras letras)
+julia> cadena[1:3]
+"pal"
+\end{jlconcode}
+
+Como se ve en el ejemplo, la forma de referirse a un fragmento de una cadena es igual a como se haría con un \emph{array} de números. De hecho, una cadena de texto en Julia es algo semejante a un \emph{array} unidimensional de letras y símbolos, que se codifican como objetos de tipo \code{Char}. No es lo mismo, sin embargo, un carácter de tipo \code{Char} y una cadena de una sola letra, como se explica con más detalle en el capítulo XXXXX. Para distinguirlos, en Julia los \code{Char} se representan entre comillas simples, y las cadenas de texto (independientemente de su longitud) entre comillas dobles.
+
+\begin{jlconcode}
+julia> typeof('A')
+Char
+
+julia> typeof("A")
+ASCIIString
+\end{jlconcode}
+
+Cuando se extrae una sola letra de una cadena, el resultado se interpreta como un \code{Char}. Para forzar a que sea otra cadena, hay que hacer la referencia en forma de rango:
+
+\begin{jlconcode}
+julia> # Letra individual (tipo Char)
+julia> cadena[1]
+'p'
+
+julia> # Cadena con solo una letra (tipo ASCIIString)
+julia> cadena[1:1]
+"p"
+\end{jlconcode}
+
+Ahora bien, un detalle en el que las cadenas de texto son notablemente distintas de los \emph{arrays} normales es que se trata de objetos ``inmutables''. Por ejemplo, no es posible modificar las cadenas de texto mediante reasignación de los valores individuales.
+
+\begin{jlconcode}
+julia> cadena[1] = 'P'
+ERROR: MethodError: `setindex!` has no method matching setindex!(::ASCIIString,
+::Char, ::Int64)
+\end{jlconcode}
+
+Por otro lado, hay múltiples funciones y operadores que sirven para manipular cadenas de texto, aunque en realidad más que modificarlas lo que hacen es reemplazarlas por variantes de las mismas. Veaos algunos ejemplos:
+
+\begin{jlconcode}
+julia> uppercase("convertir en mayúsculas")
+"CONVERTIR EN MAYÚSCULAS"
+
+julia> lowercase("CONVERTIR EN MINÚSCULAS")
+"convertir en minúsculas"
+
+julia> ucfirst("poner en mayúscula solo la primera letra")
+"Poner en mayúscula solo la primera letra"
+
+julia> lcfirst("Lo mismo, pero ponerla en minúscula")
+"lo mismo, pero ponerla en minúscula"
+
+julia> replace("reemplazar fragmentos", "reemplazar", "sustituir")
+"sustituir fragmentos"
+
+julia> strip("   limpiar espacios al principio y al final   ")
+"limpiar espacios al principio y al final"
+\end{jlconcode}
+
+Una operación frecuente relacionada con las cadenas de texto consiste en analizar y componer nombres de archivos para leer o escribir datos. Para ello suelen emplearse caracteres específicos que delimitan partes del texto, como guiones, puntos, barras, etc. Algunas funciones bastante útiles para este tipo de operaciones son:
+
+\begin{itemize}
+  \item \code{search} para encontrar la primera posición de un carácter o serie de caracteres en una cadena.
+  \item \code{join} para unir varias cadenas con un carácter u otra cadena dadas.
+  \item \code{split} para la operación contraria: separar una cadena en varias delimitadas por el mismo caracter o ``subcadena''.
+\end{itemize}
+
+Al trabajar con nombres de archivos, una de las necesidades más habituales es separar las partes correspondientes al directorio, o definir una nueva ruta. Para facilitar estas rutinas están las funciones \code{joinpath} y \code{splitdir}, que hacen lo mismo que \code{join} y \code{split}, respectivamente, pero tomando como delimitador la barra separadora de nombes de directorios (\code{/}).%
+\footnote{%
+En Windows los directorios suelen delimitarse con la barrra invertida. Pero Julia emplea la convención habitual en sistemas de tipo Unix.%
+}
+Del mismo modo, \code{splitext} separa la extensión del nombre del archivo. Por ejemplo:
+
+\begin{jlconcode}
+julia> joinpath("directorio", "fichero.txt")
+"directorio/fichero.txt"
+
+julia> (directorio, archivo) = splitdir("ruta/de/un/archivo.txt")
+("ruta/de/un","archivo.txt")
+
+julia> (nombre_base, extension) = splitext(archivo)
+("archivo",".txt")
+\end{jlconcode}
+
+\section{Lectura y escritura de archivos}
+
+Llegados a este punto, podemos hacer alguna cosa interesante con textos y archivos. Combinando los aspectos del lenguaje que hemos visto (\emph{arrays}, cadenas de texto y nombres de archivo), más la función \code{gauss_diasemana}, vamos a crear un calendario de febrero de 2013. Por simplificar, demos por supuesto que sabemos que es un mes de cinco semanas, por lo que podemos crear una ``plantilla'' para el calendario como una matriz de $5x7$ ---aunque la creamos con las dimensiones traspuestas para facilitar las operaciones, ya que los elementos de las matrices se ordenan ``por columnas''.
+
+\begin{juliacode}
+# Tabla de 7 días x 5 semanas
+tabla_calendario = zeros(Int64,7,5)
+\end{juliacode}
+
+Esta matriz está formada por ceros, que sustituimos por la secuencia del $1$ al $28$, empezando por el día de la semana que identificamos como el 1 de febrero, con la función \code{gauss_diasemana}.
+
+\begin{juliacode}
+# Buscar la posición del primer día del mes
+primerdia = gauss_diasemana(1, 2, 2013)
+dias = ["lunes","martes","miércoles","jueves","viernes","sábado", "domingo"]
+posicion_primerdia = find(primerdia .== dias)
+# Rellenar la tabla a partir del primer día y los siguientes 27
+tabla_calendario[posicion_primerdia[1]+(0:27)] = collect(1:28)
+# Trasponer para que cada semana esté en una fila
+tabla_calendario = transpose(tabla_calendario)
+\end{juliacode}
+
+Con esto ya tenemos el calendario en una tabla numérica, que podemos guardar en un archivo de texto con la función \code{writedlm} (``escribir con delimitadores''). Supongamos que se quiere guardar en el fichero con nombre \code{febrero_2012.txt}, separando las columnas de la tabla por tabuladores:
+
+\begin{juliacode}
+writedlm("febrero_2012.txt", tabla_calendario, '\t')
+\end{juliacode}
+
+La función \code{writedlm} tiene su correspondencia para la operación de lectura, \code{readdlm}. Esta es una función más versátil, con diversos argumentos opcionales que permiten determinar el tipo de elemento con el que se desea codificar los datos leídos, si la tabla contiene una cabecera, etc. Para ver los detalles, puede consultarse la ayuda de la función, que es bastante extensa.
+
+
+Este es un ejemplo mínimo, pero no demasiado bueno. Tenemos la tabla, que se podría abrir en una hoja de cálculo, pero sólo con los números (sin los nombres del día de la semana), y además con ceros que no tienen sentido. Veamos una serie de operaciones algo más compleja, pero con un resultado más interesante, que es guardar la tabla en formato HTML. Esto nos sirve también para poner en práctica algunas de las técnicas antes comentadas, como  la función \code{replace} para modificar textos, y las operaciones de unión e interpolación. Aquí mostramos bloques de código largos, pero para ver qué ocurre con cada instrucción es interesante realizarlas una a una y observar el resultado.
+
+\begin{juliacode}
+# Convertir la tabla en texto
+tabla_texto = string(tabla_calendario)
+# Añadir tags de HTML con la función "replace"
+# Los espacios delimitan celdas de la misma fila
+tabla_texto = replace(tabla_texto, " ", "</td><td>")
+# Los retornos de carro delimitan filas
+tabla_texto = replace(tabla_texto, "\n", "</td></tr> \n <tr><td>")
+# Los corchetes [] delimitan el principio y el final
+tabla_texto = replace(tabla_texto, "[", "<tr><td>")
+tabla_texto = replace(tabla_texto, "]", "</td></tr>")
+# Eliminar las celdas con 0
+tabla_texto = replace(tabla_texto, "<td>0</td>", "<td></td>")
+
+# Añadir la cabecera con los días de la semana
+# Los strings con los nombres los unimos con "join"
+cabecera = join(dias, "</td><td>")
+cabecera = "<th><td>$cabecera</td></th>"
+tabla_texto = cabecera * "\n" * tabla_texto
+# Escribir el HTML completo
+html_completo =
+"<html>
+<head>
+<meta charset=\"utf-8\">
+<title>Febrero de 2012</title>
+</head>
+<body>
+<table>
+$tabla_texto
+</table>
+</body>
+</html>"
+\end{juliacode}
+
+Con estas operaciones tenemos el código HTML completo, pero en una cadena de texto, no en un archivo. Para volcar todo ese texto en el archivo, en primer lugar tenemos que crearlo y ``abrirlo''. Para hacerlo más interesante, podemos ver cómo escoger manualmente el nombre del archivo. Aunque hay soluciones básicas para hacerlo a través de la línea de comandos, lo más natural para la mayoría de la gente es utilizar diálogos gráficos para este tipo de cosas. Julia también permite hacerlo, aunque para ello hay que utilizar paquetes complementarios para la construcción de interfaces gráficas. Uno de los paquetes básicos es \code{Tk}, basado en la librería Tcl/Tk, que dispone de las siguientes funciones para seleccionar archivos o directorios:
+
+\begin{juliacode}
+# Seleccionar la ruta completa a un archivo existente en el string "nombre"
+# (no permite introducir el nombre de un archivo inexistente):
+nombre = GetOpenFile()
+
+# Seleccionar la ruta de un archivo nuevo o existente
+# (emite un aviso si el archivo ya existe):
+nombre = GetSaveFile()
+
+# Seleccionar la ruta de un directorio nuevo o existente:
+nombre = ChooseDirectory()
+\end{juliacode}
+
+En este caso nos interesa utilizar la función \code{GetSaveFile}. Con el nombre del archivo, la función \code{open} permite crear un objeto \code{IOStream}, que es un puntero a el archivo con ese nombre en el ordenador. Esta función utiliza dos argumentos: la ruta del archivo (absoluta, o relativa desde el directorio de trabajo de Julia), y un código de texto para señalar en qué modo abrirlo:
+
+\begin{itemize}
+  \item \code{"r"} para abrir el archivo en modo de solo lectura, apuntando al principio del mismo. (El archivo ha de existir.) \\
+  \item \code{"w"} para crear el archivo en modo de escritura si no existe, o sobreescribiéndolo en caso contrario. \\
+  \item \code{"a"} para abrir el archivo en modo de escritura si no existe, o ampliándolo en caso contrario. La diferencia con el modo \code{"w"} es que el puntero apunta al final del archivo, por lo que las operaciones de escritura no alteran el contenido ya existente. \\ 
+\end{itemize}
+
+Los tres modos tienen una variante ``extendida'' con el símbolo \code{+} (\code{"r+"}, \code{"w+"}, \code{"a+"}), que abren el archivo tanto para lectura como para escritura. En este caso, nos interesa cualquiera de los modos de escritura. A continuación escribimos el contenido HTML en el archivo, y lo cerramos (con la función \code{close}) para completar la operación:
+
+\begin{juliacode}
+f = open(nombre,"w")
+write(f, html_completo)
+close(f)
+\end{juliacode}
+
+En este ejemplo hemos trabajado la escritura de archivos. Por otro lado, hay diversas funciones para leer un archivo abierto con \code{open}. Por ejemplo, \code{readall} lee todo el contenido y lo pasa a una sola cadena de texto, pero en ocasiones no interesa hacerlo así, por el tamaño o la estructura del texto. En tales casos, pueden ser útiles alternativas como \code{readlines}, que crea un vector de cadenas ---una por cada línea del archivo---, o \code{readline}, que solo lee la línea en la que se encuentra el puntero ---y avanza a la siguiente línea---.
