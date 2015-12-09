@@ -167,7 +167,9 @@ julia> sb
 
 Una forma de entender lo que pasa en este ejemplo es considerar que las variables \code{sa}, \code{sb} no son lo mismo que los objetos contenidos en ellas (en este caso los \emph{arrays}), sino meras referencias, una especie de ``etiquetas'' que pueden asignarse de forma independiente, e incluso redundante a los diversos objetos que hay en el espacio de trabajo. La figura [XXXXX] muestra gráficamente lo que ocurre en cada una de las operaciones.
 
-[XXXXXXX]
+\begin{figure}
+\includegraphics{arrays-asignacion-modificacion}
+\end{figure}
 
 Como los \emph{arrays} son elementos mutables, al hacer que \code{sb} se identifique con \code{sa}, los cambios realizados a una de las variables afecta también a la otra ---a no ser que una de las variables se reasigne, como ocurre en el cuarto paso.
 
