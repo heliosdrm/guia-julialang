@@ -14,6 +14,7 @@ Requisitos:
   + minted 2.0+
   + fontspec
   + polyglossia
+  + hyphen-spanish
 * Python (2.6+)
   + Pygments
 

@@ -20,63 +20,31 @@ Esta operación se hace una sola vez, y al mismo tiempo que Winston, instalará 
 julia> using Winston
 \end{jlconcode}
 
-La función principal es \code{plot}, que se utiliza de manera casi idéntica a la función del mismo nombre en otros lenguajes como Matlab o la biblioteca PyPlot de Python. Partamos de un ejemplo trivial [Ref. a figura]:
+La función principal es \code{plot}, que se utiliza de manera casi idéntica a la función del mismo nombre en otros lenguajes como Matlab o la biblioteca PyPlot de Python. Partamos de un ejemplo trivial (figura \ref{fig:winston-coseno}):
 
 \begin{jlconcode}
 julia> # Dibujar el coseno de x entre 0 y 3pi con 100 puntos
-julia> x = linspace(0, 3pi, 100)
-julia> plot(x, cos(y), "-or")
+julia> x = linspace(0, 3pi, 100);
+julia> y = cos(x);
+julia> plot(x, y, "-or")
 \end{jlconcode}
 
-El primer argumento (vector de puntos en el eje $X$) es opcional: si solo se pasa un vector de datos, estos se dispondrán como si el eje $X$ fuese \code{[1:length(y)]}. El tercer argumento (también opcional) es una cadena de texto que indica los atributos gráficos de la serie dibujada (por defecto una linea continua negra). En este caso, una línea continua (\code{'-'}), con puntos marcados como círculos (\code{'o'}), todo ello de color rojo (\code{'r'}). Estos atributos pueden consistir en tipos de linea (FigXX), marcas de puntos (FigXX), o colores (FigXX), y se pueden combinar en cualquier orden, con una excepción: \code{"-."} representa ``linea discontinua alternada con puntos'', mientras que \code{".-"} equivale a ``marcadores en forma de puntos'' + ``linea continua''.
+\begin{figure}
+\centering
+\includegraphics{winston-coseno}
+\caption{Ejemplo de gráfico en Winston}
+\label{fig:winston-coseno}
+\end{figure}
 
-\begin{juliacode}
-p = FramedPlot()
-setattr(p.frame, draw_nothing=true)
-c1=Curve([0],[0], linetype="solid")
-setattr(c1, label="solid: \"-\"")
-c2=Curve([0],[0], linetype="dotted")
-setattr(c2, label="dotted: \":\"")
-c3=Curve([0],[0], linetype="dotdashed")
-setattr(c3, label="dotdashed: \"-.\", \";\"")
-c4=Curve([0],[0], linetype="dashed")
-setattr(c4, label="dashed: \"--\"")
-add(p, c1, Legend(0.05,0.95,{c1,c2,c3,c4}))
+El primer argumento (vector de puntos en el eje $X$) es opcional: si solo se pasa un vector de datos, estos se dispondrán como si el eje $X$ fuese \code{[1:length(y)]}. El tercer argumento (también opcional) es una cadena de texto que indica los atributos gráficos de la serie dibujada (por defecto una linea continua negra). En este caso, una línea continua (\code{'-'}), con puntos marcados como círculos (\code{'o'}), todo ello de color rojo (\code{'r'}). Estos atributos pueden consistir en tipos de linea, marcas de puntos, o colores (figura \ref{fig:winston-modificadores}), y se pueden combinar en cualquier orden, con una excepción: \code{"-."} representa ``linea discontinua alternada con puntos'', mientras que \code{".-"} equivale a ``marcadores en forma de puntos'' + ``linea continua''.
 
-p = FramedPlot()
-setattr(p.frame, draw_nothing=true)
-m1=Points([0],[0], symboltype="dot")
-setattr(m1, label="dot: \".\"")
-m2=Points([0],[0], symboltype="circle")
-setattr(m2, label="circle: \"o\"")
-m3=Points([0],[0], symboltype="asterisk")
-leg1 = Legend(0.05, 0.95, {m1,m2,m3})
-setattr(m3, label="asterisk: \"*\"")
-m4=Points([0],[0], symboltype="plus")
-setattr(m4, label="plus: \"+\"")
-m5=Points([0],[0], symboltype="cross")
-setattr(m5, label="cross: \"x\"")
-m6=Points([0],[0], symboltype="square")
-setattr(m6, label="square: \"s\"")
-leg2 = Legend(0.38, 0.95, {m4,m5,m6})
-m7=Points([0],[0], symboltype="diamond")
-setattr(m7, label="diamond: \"d\"")
-m8=Points([0],[0], symboltype="triangle")
-setattr(m8, label="triangle: \"^^\"")
-m9=Points([0],[0], symboltype="down-triangle")
-setattr(m9, label="down-triangle: \"v\"")
-leg3 = Legend(0.71, 0.95, {m7,m8,m9})
-add(p, c1, leg1, leg2, leg3)
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{winston-modificadores}
+\caption{Especificaciones de colores, líneas y marcadores}
+\label{fig:winston-specs}
+\end{figure}
 
-``y``     yellow
-``m``     magenta
-``c``     cyan
-``r``     red
-``g``     green
-``b``     blue
-``w``     white
-``k``     black
-\end{juliacode}
 
 La función \code{plot}, además de representar el gráfico especificado en pantalla, crea en memoria un objeto de la clase \code{FramedPlot} con los contenidos del gráfico, que es el valor devuelto por la función. Es decir, que si hubiéramos escrito, por ejemplo:
 
@@ -92,10 +60,17 @@ Asignar un gráfico a una variable también sirve para añadirle nuevas series d
 
 \begin{jlconcode}
 julia> # Dibujar sobre el gráfico "p"
-julia> plot(p, x, cos(x))
+julia> plot(p, x, sin(x))
 \end{jlconcode}
 
-veremos una nueva linea dibujada sobre la anterior (figura XXX). Si no se hubiera especificado ese primer argumento, simplemente se habría creado un nuevo gráfico que sustituiría al anterior, en lugar de superponerse.
+veremos una nueva linea dibujada sobre la anterior (figura \ref{fig:winston-superposicion}). Si no se hubiera especificado ese primer argumento, simplemente se habría creado un nuevo gráfico que sustituiría al anterior, en lugar de superponerse.
+
+\begin{figure}
+\centering
+\includegraphics{winston-coseno-seno}
+\caption{Superposición de gráficos}
+\label{fig:winston-superposicion}
+\end{figure}
 
 Esta forma de añadir componentes es especialmente útil si se trabaja con varios gráficos a al vez. Si solo se trabaja con uno, basta con utilizar la función \code{oplot} (forma abreviada de \emph{overplot}), que funciona igual que \code{plot} pero siempre añade la serie de datos especificada al último gráfico que se haya creado.
 
@@ -110,8 +85,8 @@ julia> hold()      # alterna ambos comportamientos de "plot"
 Alternativamente, se puede llamar a \code{plot} especificando múltiples series de datos, para que las represente superpuestas en un solo paso.
 
 \begin{jlconcode}
-julia> # Esta instrucción también genera el gráfico de la figura XXX
-julia> plot(x, sin(x), "-or", x, cos(x) "k")
+julia> # Esta instrucción también genera el gráfico con dos líneas
+julia> plot(x, y, "-or", x, sin(x), "k")
 \end{jlconcode}
 
 Como se ve en el ejemplo, los grupos de argumentos (datos en el eje $X$, datos en el eje $Y$, y atributos visuales) se añaden secuencialmente. Los argumentos opcionales (eje $X$ y atributos) se pueden omitir si la secuencia resultante no es ambigua.
@@ -167,7 +142,14 @@ julia> f = gcf()
 
 Para mostrar de forma práctica otros aspectos de la composición de gráficos, a continuación se plantea un ejemplo algo más complejo, que incluye un par de rutinas habituales: la definición de ``decoraciones'' como títulos, leyendas o etiquetas de los ejes, ajustar el rango de los ejes, y organizar una tabla de gráficos en la misma figura. Este ejemplo también sirve para ver el uso de algunas operaciones rutinarias en cálculos numéricos.
 
-El ejemplo consiste en una composición de dos gráficos (figura XXXX): el gráfico superior muestra una señal de frecuencia modulada y amplitud amortiguada (línea negra), a la que se le ha añadido un error aleatorio (puntos grises), y se ha ajustado con una media ponderada móvil (línea roja). El aspecto más ``ruidoso'' de la señal ajustada en el tramo final se representa en forma de razón entre señal y ruido (\emph{signal-to-noise ratio}, SNR) en el panel inferior. El código para generar este gráfico es el siguiente:
+El ejemplo consiste en una composición de dos gráficos (figura \ref{fig:winston-ejemplo-completo}): el gráfico superior muestra una señal de frecuencia modulada y amplitud amortiguada (línea negra), a la que se le ha añadido un error aleatorio (puntos grises), y se ha ajustado con una media ponderada móvil (línea roja). El aspecto más ``ruidoso'' de la señal ajustada en el tramo final se representa en forma de razón entre señal y ruido (\emph{signal-to-noise ratio}, SNR) en el panel inferior. El código para generar este gráfico es el siguiente:
+
+\begin{figure}
+\centering
+\includegraphics{winston-ejemplo-completo}
+\caption{Ejemplo de composición de gráficos}
+\label{fig:winston-ejemplo-completo}
+\end{figure}
 
 \begin{juliacode}
 # x es la variable independiente
@@ -217,7 +199,7 @@ complicar el ejemplo con cuestiones relativas al tratamiento de señales digital
 }
 Los dos primeros y últimos puntos de la señal ajustada no se calculan, y se dejan como \emph{not-a-numbers} (\code{NaN}), para evitar ``efectos de borde''. Luego se calcula la medida en que varían la señal original y la filtrada para obtener la SNR. Estas variaciones se calculan como una ``suma de cuadrados móvil'' con un ancho de 5 puntos. Esto se hace con un bucle semejante al usado para la media ponderada móvil.
 
-A esto le siguen las operaciones gráficas. Para construir una tabla de gráficos se emplea la función \code{Table} con dos argumentos: el número de filas y columnas de la tabla, respectivamente. El valor devuelto es un objeto del tipo \code{PlotContainer} (véase al figura XXX). La gráfica creada con la función \code{plot} se asigna al panel que corresponde de esta tabla, del mismo modo que si trabajásemos con \emph{arrays} de datos numéricos.
+A esto le siguen las operaciones gráficas. Para construir una tabla de gráficos se emplea la función \code{Table} con dos argumentos: el número de filas y columnas de la tabla, respectivamente. El valor devuelto es un objeto del tipo \code{Winston.PlotContainer}. La gráfica creada con la función \code{plot} se asigna al panel que corresponde de esta tabla, del mismo modo que si trabajásemos con \emph{arrays} de datos numéricos.
 
 En este ejemplo, la primera llamada a \code{plot} se utiliza para representar tres series de datos al mismo tiempo. La primera secuencia es la de los puntos observados (\code{".c"} son puntos en color cian), representados de dos en dos para que el gráfico sea menos denso. La segunda secuencia son las dos líneas con la señal original y la ajustada, puestas como un solo conjunto de datos en forma de matriz.
 
@@ -245,23 +227,28 @@ Su uso se muestra algunos ejemplos que pueden ser más o menos habituales, sigui
 
 \begin{jlconcode}
 julia> dump(plottable[1,1])
-FramedPlot 
+Winston.FramedPlot 
   attr: Dict{Any,Any} len 6
+    title_offset: Float64 1.0
+    page_margin: Float64 0.1
+    gutter: Float64 0.1
+    aspect_ratio: Void nothing
+    title: UTF8String "Ejemplo de ajuste por media móvil"
     title_style: Dict{Symbol,Any} len 1
       fontsize: Float64 3.0
-    aspect_ratio: Nothing nothing
-    gutter: Float64 0.1
-    page_margin: Float64 0.1
-    title_offset: Float64 1.0
-    title: UTF8String "Ejemplo de ajuste por media móvil"
-  content1: PlotComposite 
+  content1: Winston.PlotComposite 
     attr: Dict{Any,Any} len 1
       style: Dict{Symbol,Any} len 0
-    components: Array(Any,(3,))
-      1: Points 
-        attr: Dict{Any,Any} len 1
+    components: Array(Any,(4,))
+      1: Winston.Points 
+        attr: Dict{Any,Any} len 2
           style: Dict{Symbol,Any} len 3
-        x: Array(Float64,(500,)) [0.0,0.987948,1.9759,2.96385,3.95179 …  
+          label: UTF8String "medida bruta"
+        x: LinSpace{Float64} 
+          start: Float64 0.0
+          stop: Float64 492.9862458602192
+          len: Float64 500.0
+          divisor: Float64 499.0
 
 [Output truncado]
 \end{jlconcode}
@@ -271,10 +258,12 @@ En el fragmento mostrado se ven los 6 atributos del panel superior, del que el m
 \begin{jlconcode}
 julia> # Con getattr se obtiene el valor actual del atributo
 julia> titulo = getattr(plottable[1,1], "title")
-"Ejemplo de media móvil"
+"Ejemplo de ajuste  media móvil"
 julia> # Lo convertimos en mayúscula, y lo reasignamos con setattr
 julia> # usando el argumento con el nombre correspondiente
 julia> setattr(plottable[1,1], title=uppercase(titulo))
+julia> # Volvemos a llamar al gráfico para que se vea el resultado
+julia> plottable
 \end{jlconcode}
 
 También se pueden ver las series de datos representadas por los objetos dentro del vector \code{components} en el campo \code{content1} (en el fragmento mostrado se ven las primeras líneas referidas a la serie de puntos).%
@@ -288,10 +277,10 @@ El conjunto de componentes se puede extraer con la función \code{getcomponents}
 \begin{jlconcode}
 julia> comp = getcomponents(plottable[1,1])
 4-element Array{Any,1}:
- Points(...)
- Curve(...) 
- Curve(...) 
- Legend(...)
+ Winston.Points(...)
+ Winston.Curve(...) 
+ Winston.Curve(...) 
+ Winston.Legend(...)
 \end{jlconcode}
 
 Las propiedades visuales de las series de datos, como el tipo y color de las líneas y los puntos, están en un atributo especial llamado \code{style} (estilo):
@@ -301,33 +290,39 @@ julia> # Atributos del primer componente (serie de puntos)
 julia> # El campo "attr" del objeto "xxx" se extrae como "xxx.attr"
 julia> dump(comp[1].attr)
 Dict{Any,Any} len 2
-  label: UTF8String "medida bruta"
   style: Dict{Symbol,Any} len 3
-    color: ASCIIString "cyan"
     symbolkind: ASCIIString "dot"
+    color: ColorTypes.RGB{FixedPointNumbers.UFixed{UInt8,8}} 
+      r: FixedPointNumbers.UFixed{UInt8,8} 
+        i: UInt8 0
+      g: FixedPointNumbers.UFixed{UInt8,8} 
+        i: UInt8 255
+      b: FixedPointNumbers.UFixed{UInt8,8} 
+        i: UInt8 255
     symbolsize: Float64 1.0
+  label: UTF8String "medida bruta"
 
 julia> # Lo mismo para las dos líneas
 julia> dump(comp[2].attr)
 Dict{Any,Any} len 3
+  style: Dict{Symbol,Any} len 2
+    linecolor: UInt32 0
+    linewidth: Float64 2.0
   label: UTF8String "señal"
   kw_defaults: Dict{Symbol,Any} len 1
-    linewidth: Float64 2.0
-  style: Dict{Symbol,Any} len 2
-    linecolor: Uint32 0
     linewidth: Float64 2.0
 
 julia> dump(comp[3].attr)
 Dict{Any,Any} len 3
+  style: Dict{Symbol,Any} len 2
+    linecolor: UInt32 15543344
+    linewidth: Float64 2.0
   label: UTF8String "medida ajustada"
   kw_defaults: Dict{Symbol,Any} len 1
     linewidth: Float64 2.0
-  style: Dict{Symbol,Any} len 2
-    linecolor: Uint32 15543344
-    linewidth: Float64 2.0
 \end{jlconcode}
 
-Supongamos que para resaltar los aspectos de interés, queremos convertir el color de los puntos a gris, presentar la señal ideal como una línea roja discontinua gruesa, y la medida ajustada como una línea azul más delgada (figura XXXX). Para ello utilizaremos las siguientes instrucciones:
+Supongamos que para resaltar los aspectos de interés, queremos convertir el color de los puntos a gris, presentar la señal ideal como una línea roja discontinua gruesa, y la medida ajustada como una línea azul más delgada (figura \ref{fig:winston-ejemplo-modificado}). Para ello utilizaremos las siguientes instrucciones:
 
 \begin{jlconcode}
 julia> style(comp[1], color="grey")
@@ -335,6 +330,13 @@ julia> style(comp[2], linekind="dashed", linecolor="red", linewidth=3)
 julia> style(comp[3], linewidth=1.5, linecolor="blue")
 julia> plottable
 \end{jlconcode}
+
+\begin{figure}
+\centering
+\includegraphics{winston-ejemplo-modificado}
+\caption{Superposición de gráficos}
+\label{fig:winston-ejemplo-modificado}
+\end{figure}
 
 \section{Otros gráficos}
 
