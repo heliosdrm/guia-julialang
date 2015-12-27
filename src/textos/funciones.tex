@@ -98,3 +98,199 @@ Explicar:
 *=
 Multilinea
 Escape: \"
+
+
+
+La anomalía media es una posición angular desde el llamado ``pericentro''.
+
+function amanecer_anochecer(d, m, y, long, lat, evento, criterio="normal")
+	# Coseno del cénit según el criterio escogido
+	cz = Dict("normal" => -0.01454,
+		"civil" => -0.10453,
+		"nautico" => -0.20791,
+		"astronomico" => -0.30902)[criterio]
+	# Formulas
+	mean_anomaly = t -> 0.9856t - 3.289                             # (1)
+	true_longitude = M -> M + 1.916sind(M) + .02sind(2M) + 282.634  # (2)
+	right_ascension = L -> atand(0.91746tand(L))                    # (3)
+	sin_decl = L -> 0.39782sind(L)                                  # (4)
+	cH = (cz, sδ, cδ, sφ, cφ) -> (cz-sδ*sφ)/(cδ*cφ)                 # (5)
+	local_time = (H,RA) -> H + RA - 0.065710t - 6.622               # (6)
+	universal_time = (t, λ) -> t - λ                                # (7)
+	# Paso 0. Calcular t:
+	# tiempo aproximado del fenómeno en días desde el comienzo del año
+	# El día desde el comienzo del año se calcula según la pág. B1 del
+	# Almanac for Computers (1990)
+	N = floor(275m/9) - floor((m+9)/12)*(1+floor((mod(y,4)+2)/3)) + d - 30
+	# A N se le añaden 6 horas para el amanecer, y 18 para el anochecer,
+	# menos la longitud del lugar objetivo expresada en horas
+	# (λ = long (grados) *24 (horas) /360 (grados) = long/15)
+	λ = long/15
+	t_aprox = Dict("amanecer"=>6.0, "anochecer"=>18.0)[evento]
+	t = N + (t_aprox-λ)/24
+	# Paso 1. A partir del tiempo t: usar (1) y (2) para calcular
+	# la anomalía media (M) y la longitud verdadera del Sol (L)
+	M = mean_anomaly(t)
+	L = true_longitude(M)
+	# Paso 2. Calcular la ascensión recta (RA) en t a partir de (3).
+	# Ajustando el resultado para que esté en el mismo cuadrante que L
+	# (como atand da el resultado en ±π/2, cambiarlo si cosd(L) < 0)
+	RA = right_ascension(L)
+	if cosd(L) < 0
+		RA += 180
+	end
+	# Transformar RA en horas para usarlo en (6)
+	RA /= 15
+	# Paso 3. Calcular el seno de la declinación solar en t (sδ) a través de (4),
+	# y el coseno correspondiente (cδ, con valor positivo) para usarlos en (5)
+	sδ = sin_decl(L)
+	cδ = sqrt(1 - sδ^2)
+	# Paso 4. Calcular el coseno del ángulo horario del Sol (cH) a partir de (5),
+	# usando el coseno del cénit (cz) y el seno y coseno de la latitud (cφ, sφ).
+	x = cH(cz, sδ, cδ, sind(lat), cosd(lat))
+	# No considerar casos en que |x| > 1
+	# (no hay amanecer o anochecer en esa latitud para ese día)
+	if abs(x) > 1
+		error("No hay amanecer o anochecer en el día y lugar especificados")
+	end
+	# Calcular el ángulo horario H como positivo o negativo según si se
+	# considera el amanecer o el anochecer, y expresar en horas:
+	H = Dict(
+		"amanecer" => (360.0 - acosd(x))/15.0,
+		"anochecer" => acosd(x)/15.0
+		)[evento]
+	# Paso 5. Calcular la hora local exacta del amanecer y el anochecer (T)
+	# a partir de (6), convertida al rango (0-24h)
+	T = mod(local_time(H, RA), 24)
+	# Paso 6. Convertir a hora universal (desde el meridiano de Greenwich)
+	# usando la ecuación (7)
+	UT = mod(universal_time(T, λ), 24)
+end
+
+
+España
+México
+Colombia
+Argentina
+Perú
+Venezuela
+Chile
+Ecuador
+Guatemala
+Cuba
+Bolivia
+República Dominicana
+Honduras
+Paraguay
+El Salvador
+Costa Rica
+Puerto Rico
+Panamá
+Uruguay
+
+
+
+Hora de amanecer:
+
+Source:
+	Almanac for Computers, 1990
+	published by Nautical Almanac Office
+	United States Naval Observatory
+	Washington, DC 20392
+
+Inputs:
+	day, month, year:      date of sunrise/sunset
+	latitude, longitude:   location for sunrise/sunset
+	zenith:                Sun's zenith for sunrise/sunset
+	  offical      = 90 degrees 50'
+	  civil        = 96 degrees
+	  nautical     = 102 degrees
+	  astronomical = 108 degrees
+	
+	NOTE: longitude is positive for East and negative for West
+        NOTE: the algorithm assumes the use of a calculator with the
+        trig functions in "degree" (rather than "radian") mode. Most
+        programming languages assume radian arguments, requiring back
+        and forth convertions. The factor is 180/pi. So, for instance,
+        the equation RA = atan(0.91764 * tan(L)) would be coded as RA
+        = (180/pi)*atan(0.91764 * tan((pi/180)*L)) to give a degree
+        answer with a degree input for L.
+
+
+1. first calculate the day of the year
+
+	N1 = floor(275 * month / 9)
+	N2 = floor((month + 9) / 12)
+	N3 = (1 + floor((year - 4 * floor(year / 4) + 2) / 3))
+	N = N1 - (N2 * N3) + day - 30
+
+2. convert the longitude to hour value and calculate an approximate time
+
+	lngHour = longitude / 15
+	
+	if rising time is desired:
+	  t = N + ((6 - lngHour) / 24)
+	if setting time is desired:
+	  t = N + ((18 - lngHour) / 24)
+
+3. calculate the Sun's mean anomaly
+	
+	M = (0.9856 * t) - 3.289
+
+4. calculate the Sun's true longitude
+	
+	L = M + (1.916 * sin(M)) + (0.020 * sin(2 * M)) + 282.634
+	NOTE: L potentially needs to be adjusted into the range [0,360) by adding/subtracting 360
+
+5a. calculate the Sun's right ascension
+	
+	RA = atan(0.91764 * tan(L))
+	NOTE: RA potentially needs to be adjusted into the range [0,360) by adding/subtracting 360
+
+5b. right ascension value needs to be in the same quadrant as L
+
+	Lquadrant  = (floor( L/90)) * 90
+	RAquadrant = (floor(RA/90)) * 90
+	RA = RA + (Lquadrant - RAquadrant)
+
+5c. right ascension value needs to be converted into hours
+
+	RA = RA / 15
+
+6. calculate the Sun's declination
+
+	sinDec = 0.39782 * sin(L)
+	cosDec = cos(asin(sinDec))
+
+7a. calculate the Sun's local hour angle
+	
+	cosH = (cos(zenith) - (sinDec * sin(latitude))) / (cosDec * cos(latitude))
+	
+	if (cosH >  1) 
+	  the sun never rises on this location (on the specified date)
+	if (cosH < -1)
+	  the sun never sets on this location (on the specified date)
+
+7b. finish calculating H and convert into hours
+	
+	if if rising time is desired:
+	  H = 360 - acos(cosH)
+	if setting time is desired:
+	  H = acos(cosH)
+	
+	H = H / 15
+
+8. calculate local mean time of rising/setting
+	
+	T = H + RA - (0.06571 * t) - 6.622
+
+9. adjust back to UTC
+	
+	UT = T - lngHour
+	NOTE: UT potentially needs to be adjusted into the range [0,24) by adding/subtracting 24
+
+10. convert UT value to local time zone of latitude/longitude
+	
+	localT = UT + localOffset
+
+
