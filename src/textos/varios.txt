@@ -1,0 +1,13 @@
+Ref. a sección con información sobre LOAD\_PATH y require()
+Reglas de sintaxis
+whos
+macros
+debug
+DataFrames
+paquetes
+figuras de REPL, JuliaPro y Julia Box
+rangos - detalles
+mutables, inmutables
+map
+secuencias de escape, triples comillas
+tuplas: poner el número adecuado de argumentos de salida

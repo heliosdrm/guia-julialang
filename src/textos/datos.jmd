@@ -1,0 +1,229 @@
+# Representando datos
+
+```julia; echo=false
+import Weave
+Weave.set_chunk_defaults(Dict{Symbol,Any}(:display=>true))
+```
+
+Vamos a ver un ejemplo. Tenemos un conjunto de datos extraidos de un experimento. Tenemos dos columnas de datos, la de tiempos y la medida. El archivo `muestra1.txt` tiene:
+
+[EJEMPLO]
+
+Están todos en el directorio `datos`. Vamos a crearnos una tabla de datos, con el tiempo en el que se da el máximo y ese valor.
+
+
+```julia; eval=false
+# Leemos los nombres de los archivos del directorio datos
+archivos = readdir("datos")
+# ¿Cuantos archivos tenemos?
+n = length(archivos)
+# Creamos dos vectores de números con tantos ceros como archivos hay:
+# uno para los tiempos y otro para los valores máximos
+tmax = zeros(n)
+vmax = zeros(n)
+# Ahora vamos explorando los archivos uno a uno y rellenando datos
+for i=1:n
+    datos = readdlm(archivos[i])
+    # La primera columna de datos tiene los tiempos y la segunda los valores
+    tiempo  = datos[:,1]
+    valores = datos[:,2]
+    # Buscamos el valor absoluto máximo y la fila en la que se encuentra
+    valores_absolutos = abs.(valores)
+    valor_maximo, fila_maximo =  findmax(valores_absolutos)
+    # Y asignamos los datos que corresponden a los vectores tmax, vmax
+    tmax[i] = tiempo[fila_maximo]
+    vmax[i] = valor_maxmo
+end
+# Para terminar escribimos los datos en una tabla con tres columnas:
+# 1: el nombre del archivo
+# 2: el tiempo del punto máximo
+# 3: el valor máximo
+tabla_resultados = [archivos tmax vmax]
+# Lo escribimos todo en el archivo "resultados.txt"
+writedlm("resultados.txt" tabla_resultados)
+```
+
+
+
+## Números escalares y vectores
+
+Cuando se habla de "datos" o "variables", lo más inmediato es pensar en números, que es también el tipo de datos para el que es más sencillo escribir instrucciones. Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones: los nombres de las funciones y la sintaxis de las operaciones numéricas es común a muchos otros lenguajes de programación, y consisten esencialmente en una transposición a texto simple de las fórmulas matemáticas correspondientes a la operación que se desea realizar. En Julia este principio se lleva incluso más lejos que en otros lenguajes; por ejemplo:
+
+  * Si `a` es el nombre de una variable, `2a` significa "2 veces `a`" (y lo mismo con cualquier otro número, sea entero, decimal o de otro tipo). Esto es posible gracias a que los nombres de variables no pueden comenzar por números, por lo que no hay ambigüedad posible. En otros lenguajes es obligatorio expresarlo como un producto explícito, es decir `2*a`.
+  * Se pueden utilizar símbolos matemáticos de Unicode para representar algunos operadores matemáticos habituales que no están en el conjunto de caracteres ASCII: `≠` para "no es igual que" (equivalente a `!=` cuando se escribe solo con ASCII), o `≤` y `≥` para "menor que" y "mayor que", respectivamente (equivalentes a `<=`, `>=`). 
+  * Es posible escribir comparaciones lógicas concatenadas, como `0 ≤ x ≤ 1` para comprobar si la variable `x` se encuentra entre `0` y `1`. (En otros lenguajes es necesario expresarlo de forma más compleja, como `(0 <= x) && (x <= 1)`.
+  
+Por otro lado, con mucha frecuencia las variables con las que interesa trabajar no representan números escalares, sino series organizadas de números o vectores. Este es el caso del ejemplo: teníamos dos vectores en las entradas (el de tiempos y el de los valores), y hemos generado otras dos series de números, con el tiempo el valor máximo y el tiempo en el que ocurre para cada serie.
+
+En Julia los vectores son un caso específico de los *arrays*, conjuntos de datos ordenados (numéricos o también de otros tipos) entre los que también se incluyen las matrices e hipermatrices. Su manejo es un tema extenso, que se trata de forma más detallada en el capítulo XXXXXXXXXXXX. Por ahora, como introducción solo veremos superficialmente los vectores (*arrays* unidimensionales). Un vector se puede definir a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:
+
+```julia
+primos = [1,3,5,7,11,13,17]
+```
+
+Es posible extraer un valor concreto del vector, utilizando también los corchetes para señalar el "índice" que se quiere tomar. Estos índices pueden ser números enteros, o la palabra clave `end` para referirse al último elemento:
+
+```julia
+primos[3]
+primos[end]
+primos[end-1]
+```
+
+Esto es lo que hemos hecho en la línea `tiempo[fila_maximo]`.
+
+
+
+Rizando el rizo, se puede utilizar un vector de índices para extraer un subconjunto de valores de otro vector. Para abreviar, un rango de índices correlativos se puede expresar como `a:b`, que significa "desde `a` hasta `b`. Por ejemplo:
+
+```julia
+# Dos alternativas para tomar los tres primeros números primos
+primos[ [1,2,3] ]
+primos[1:3]
+```
+
+El contenido de los vectores también se puede modificar, teniendo en cuenta dos restricciones importantes: solo se pueden incorporar datos del mismo tipo que el vector original, en posiciones existentes. Por ejemplo:
+
+```julia; eval=false
+numeros = [1,2,3,4,5,6]
+numeros[1] = 0   # Esto no es problema
+numeros[1] = 0.5 # Pero esto sí, porque eran números enteros
+```
+```
+ERROR: InexactError()
+```
+```julia; eval=false
+numeros[7] = 10  # Esto también, porque el vector solo tenía 6 elementos
+```
+```
+ERROR: BoundsError: attempt to access 6-element Array{Int64,1} at index [7]
+```
+
+Finalmente, también se puede aplicar una misma operación a todos los elementos del vector a la vez. Cualquier función `f` que admite como argumentos números escalares y devuelve otro escalar puede operar "elemento a elemento" sobre vectores, devolviendo otro vector de la misma longitud que sus argumentos. Para evitar ambigüedades hay que añadir un punto tras el nombre de la función, o en el caso de operadores (como `+` para la suma, etc.), antes del símbolo que lo representa:
+
+```julia
+# Valor absoluto de los elementos de un vector
+abs.([1,2,-1,-2])
+# División de enteros
+div.([10,20,30], [3,5,7])
+# Suma elemento a elemento
+[1,2,3] .+ [10,20,30]
+```
+
+En el caso de operadores o funciones con más de un argumento, todos los argumentos han de ser vectores de la misma longitud, aunque también se pueden combinar con números escalares. En ese caso los números escalares operan por igual sobre todos los elementos de los otros vectores, como si se "expandieran" a vectores de la misma longitud con valores repetidos (lo que se conoce como *broadcasting*):
+
+```julia
+# Esto es lo mismo que [1,2,3].^[2,2,2]
+[1,2,3].^2
+```
+
+## Cadenas de texto y símbolos
+
+Julia es un lenguaje pensado especialmente para trabajar con números, pero también tiene herramientas para manejar cadenas de texto (*strings*), lo cual es esencial, para empezar, a la hora de acceder, leer y escribir archivos de datos. Las cadenas de texto son esencialmente secuencias de letras que se presentan delimitadas por comillas dobles (`"`). En parte se pueden comparar a vectores de letras, ya que es posible extraer letras aisladas o partes del texto con la misma sintaxis que se utiliza con los *arrays* (nótese cómo las letras individuales se delimitan con comillas simples (`'`), en lugar de las dobles usadas para las cadenas de texto):
+
+```julia
+txt = "hola"
+txt[1]
+txt[1:2]
+```
+
+Sin embargo, al contrario que los *arrays* convencionales, las cadenas de texto son objetos "inmutables", y no es posible modificar sus letras de la misma manera que haríamos con los contenidos de un vector:
+
+```julia; eval=false
+txt[3] = 'r'
+```
+```
+ERROR: MethodError: no method matching setindex!(::String, ::Char, ::Int64)
+```
+
+Como alternativa hay múltipes funciones para manipular cadenas de texto, las más importantes de las cuales se comentan en el capítulo XXXXXXXXXXXXX dedicado a este tema. Pero hay una forma de componer cadenas de texto que es especialmente práctica y vale la pena adelantar: la "interpolación". Dada una variable `x`, sea numérica o literal, su contenido puede insertarse dentro de un texto utilizando el signo del dólar (`$`) para marcarla. También se puede interpolar una expresión más compleja encerrándola entre paréntesis:
+
+```julia
+x = 2
+txt1 = "uno más uno es igual a $x"
+txt2 = "y $x al cuadrado es $(x^2)"
+```
+
+El uso de `$` para interpolar datos en una cadena de texto impide que se pueda escribir tal cual, si lo que queremos es incluir ese signo en el texto. Para este y otros casos se utilizan "secuencias de escape", que generalmente comienzan con una barra invertida (`\`). Las secuencias de escape más útiles son:
+
+  * `\$` para el signo del dólar.
+  * `\\` para la barra invertida.
+  * `\"` para las comillas dobles.
+  * `\t` para el tabulador.
+  * `\n` para el carácter de nueva línea.
+  * `\r` para el carácter de "retorno de carro" (normalmente combinado como `\r\n` para definir una nueva línea en Windows).
+  
+Por ejemplo, para escribir la cadena de texto `j print("El símbolo del dólar es \"\$\"")` tendría utilizarse el código: `"El símbolo del dólar es \"\$\""`. 
+  
+Finalmente haremos mención a un tipo especial de cadenas de texto, los *símbolos*: se trata de secuencias de caracteres alfanuméricos o signos que pueden representar nombres de variables, funciones u operadores, que se escriben precediéndolas de dos puntos (`:`) para distinguirlas de cadenas de texto convencionales. Los símbolos pueden referirse a operaciones o variables existentes como `:+`, `:log`, `:include`, o también inexistentes. Están particularmente pensados para procesos de [metaprogramación](XXXXXXXXXXXXXXXX), es decir para manipular y crear código programáticamente, que es una forma de uso particularmente avanzado de Julia, y que en esta guía solo trataremos superficialmente. Pero incluso en el uso cotidiano nos encontraremos de vez en cuando con este tipo de símbolos, como veremos a continuación, y por eso vale la pena introducirlos ahora.
+
+## Matrices y tablas de datos
+
+Una de las formas más comunes de trabajar es con datos tabulados. El modo más sencillo de representar esa estructura de datos es mediante matrices. Una matriz es un *arrays* de dos dimensiones, y se puede definir y manipular de forma semejante a los vectores. La forma habitual de componer una matriz a mano es escribirla "por filas", separando las columnas de cada fila por espacios y una fila de la siguiente por un punto y coma:
+
+```julia
+# Escribimos las filas en líneas separadas por claridad, pero no es necesario
+mat = [1 10 0.1;
+       2 20 0.2;
+       3 30 0.3]
+```
+
+Dada la matriz `mat`, para extraer un cruce de filas y columnas se utiliza la expresión `mat[f,c]`, donde `f` son los índices correspondientes a las filas escogidas (como cuando se extrae parte de un vector), y `c` los índices de las columnas. Dos puntos sin más (`:`) significan "todas las filas" o "todas las columnas", según corresponda.
+
+```julia
+# Tomamos las dos primeras filas y todas las columnas de `mat`
+mat[1:2,:]
+```
+
+Ahora bien, en muchos casos nos encontraremos con datos tabulados que ya están escritos en un archivo que tenemos que leer. Podemos, por ejemplo, tener el archivo [desempleo.txt](XXXXXXXXXXXXXXXXX) con las tasas de desempleo de algunos países de Europa entre 2011 y 2015 (datos extraídos de [Eurostat](http://ec.europa.eu/eurostat)).
+
+[PONER TABLA]
+
+Si tenemos ese archivo de texto guardado en la ruta que indica la variable `rutadatos`, podemos leer la tabla de datos del siguiente modo con la función `readdlm`:
+
+```julia; display=false
+(desempleo, columnas) = readdlm(rutadatos, '\t', header=true)
+```
+
+El segundo argumento indica que las columnas se encuentran separadas por tabulaciones (se puede cambiar por el carácter que corresponda en cada caso: coma, punto y coma, espacio... siempre escrito entre comillas simples, para indicar que es un carácter aislado y no una cadena de texto). En este caso podríamos omitirlo porque la tabulación es el carácter de separación por defecto para `readdlm`. (La función `readcsv` es una variante que usa la coma como carácter por defecto.)
+
+El argumento `header=true` indica que la primera línea del archivo contiene los nombres de las columnas. Por lo tanto la función `readdlm` lee por separado la primera línea de las siguientes, guarda la matriz de datos en el primer argumento de salida (`desempleo`) y un vector con los nombres de las columnas en el segundo (`columnas`). Si el archivo no tuviera encabezado se podría omitir ese argumento (por defecto se considera `header=false`), y la función solo devolvería la matriz.[^1]
+
+[^1]: También se podría utilizar el argumento `skipstart=1` para saltarse la primera línea del archivo sin devolver su contenido. En el caso de usar ambos argumentos (`header=true, skipstart=n`), la función obviaría las primeras `n` líneas y tomaría como encabezado la línea `n+1`.
+
+Si la tabla del archivo solo hubiese contenido números, la variable `desempleo` sería una matriz numérica del tipo correspondiente, pero en este caso tenemos también la primera columna de texto con los nombres de los países, y la tabla es una mezcla de texto y números, gracias al "supertipo" de variable `Any` que comprende cualquier tipo de datos posible.
+
+```julia
+desempleo
+```
+
+Antes dijimos que a la hora de modificar un vector --y por extensión cualquier tipo de *array*-- solo se pueden utilizar datos del mismo tipo que el del *array* original; obviamente estas matrices de tipo `Any` nos dan mucha flexibilidad para trabajar: en esta tabla podríamos cambiar cualquier valor por otro de cualquier tipo. Sin embargo, no siempre interesa que esto sea así, y para ciertos tipos de análisis conviene que las tablas de datos tengan una estructura más concreta.
+
+Para esta finalidad existe el paquete [`DataFrames`](https://github.com/JuliaStats/DataFrames.jl/), que incorpora un tipo de tabla de datos más sofisticado que las matrices. Este paquete proporciona la función `readtable`. Es una función semejante a `readdlm` o `readcsv`, pero el carácter de separación entre columnas se ha de pasar con el nombre `separator`, y en este caso se asume por defecto que *sí* existe una fila de encabezado (`header=true`), que aparece incorporada en la propia tabla que genera la función.
+
+```julia
+# Usar Pkg.add("DataFrames") si no se ha instalado el paquete antes
+using DataFrames
+desempleo = readtable(rutadatos, separator='\t')
+```
+
+Este tipo de tablas de datos también se pueden crear a mano, con la función "constructora" `DataFrame`. Al contrario que las matrices convencionales, la forma normal de construir estas tablas es introduciendo los datos por columnas, a cada una de las cuales se le asigna un nombre. Por ejemplo, supongamos que se ha  realizado una serie de mediciones en un experimento, que hemos
+
+
+
+```julia
+```
+
+Por lo demás, en general una tabla de datos se puede manipular de forma semejante a una matriz, aunque cada columna es un vector independiente de un tipo específico (definido en función de los contenidos que se han leído), y también se puede hacer referencia a las columnas por su nombre, no solo por la posición que ocupan en la tabla. SÍMBOLOS
+
+
+
+
+
+
+
+```julia; echo=false
+Weave.restore_chunk_defaults()
+```
+
+
+
