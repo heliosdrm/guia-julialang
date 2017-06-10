@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{n}{condici}\PYG{err}{ó}\PYG{n}{n}
+  \PYG{c}{\PYGZsh{} Código que se ejecuta si se cumple \PYGZdq{}condición\PYGZdq{}}
+\PYG{k}{end}
+\end{Verbatim}

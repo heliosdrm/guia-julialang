@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+Pkg.available()
+\end{Verbatim}

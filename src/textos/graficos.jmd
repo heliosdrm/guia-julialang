@@ -1,0 +1,196 @@
+# Gráficos
+
+```julia; echo=false; results="hidden"
+import Weave
+Weave.set_chunk_defaults(Dict{Symbol,Any}(:display=>true))
+dirbase = pwd()
+cd("../../datos")
+```
+
+En los capítulos anteriores de esta guía hemos hecho un tratamiento superficial, incluso podría decirse que apresurado, de unos pocos aspectos básicos en los que muchos otros manuales, sean de Julia o cualquier otro lenguaje de programación, suelen ser más detallados en sus capítulos introductorios. En este capítulo dedicado a los gráficos, sin embargo, vamos a detenernos más a pesar de que es una funcionalidad bastante avanzada, y requiere instalar unos cuantos paquetes auxiliares y librerías externas para empezar.
+
+Hay una buena razón para hacerlo así. El usuario de una herramienta informática normalmente no juzga si una tarea es "básica" o "avanzada" según las complejidades que supone para esa herramienta, sino por cuestiones más prácticas. Y uno de los primeros pasos, si no el primero, que se hace tras recoger los datos de un estudio es explorarlos visualmente. Desde ese punto de vista, pues, la representación gráfica es realmente una de las funciones más básicas. Tanto es así que si un entorno de programación no lo pone fácil para leer las
+
+
+
+
+
+La representación de gráficos es una de las primeras cosas que se hace...
+
+```julia
+using Plots
+datos = readdlm("series/sA01.txt")
+plot(datos[:,1],datos[:,2:3])
+```
+
+
+
+
+Controlar los atributos de las series de datos. Ejemplo, todo en negro y línea punteada para el segundo:
+Ponerlos en columnas.
+
+plot(datos[:,1], datos[:,2:3], color=:black, style=[:solid :dash])
+
+
+
+Tienen varios alias. Lista completa:
+https://juliaplots.github.io/attributes/
+
+Ver en REPL:
+En jerarquía
+plotattr(:Plot)
+plotattr(:Subplot)
+plotattr(:Axis)
+plotattr(:Series)
+
+plotattr("color")
+
+No todo vale siempre:
+https://juliaplots.github.io/supported
+
+
+Vamos a verlo de forma estructurada
+
+1. Elementos geométricos
+`linetype` (oficialmente `seriestype`): `:path` o `:line`, `:steppre`, `:steppost`, `:none`
+Marcador: `shape`, (`markershape`): `:circle`, `:rect`, `:diamond`, `:utriangle`, `:dtriangle`, `:cross`..., `:none` o `:auto`.
+
+Tiene su propia función: scatter
+Otras 1D: bar, pie
+2D: heatmap, surface (proy. 3D); contour, wireframe
+
+
+2. Estética:
+Color: `color` (el nombre oficial es `seriescolor`). Texto, símbolo (¿código?)
+Transparencia: `alpha` (`seriesalpha`). Número entre 0 y 1.
+¿Colores con valores numéricos?
+https://www.w3.org/TR/css3-color/
+colorant"..."
+
+Estilo de línea `style` (`linestyle`): `:solid`, `:dash`, `:dot`, `:dashdot`, `:auto`.
+Ancho: `width` (`linewdith`): número entero en píxeles.
+Tamaño del marcador: `markersize`: número con el radio del marcador en píxeles.
+
+
+El color (y transparencia) puede ser genérico, o especificar para línea, contorno o relleno del marcador
+`linecolor`, `linealpha`, `markercolor`, `markeralpha`, `markerstrokecolor`, `markerstrokealpha`.
+También `markerstrokewidth` y `markerstrokestyle`.
+
+Se pueden utilizar detalles estéticos para identificar grupos
+
+Gráfico de dispersión
+Aprovechamos para mostrar el uso de series de un Data Frame. Plots hechos secuencialmente.
+Control de la leyenda
+
+```
+using DataFrames
+tabla  = readtable("tabla.txt", separator=';')
+scatter(tabla[1:15,2], tabla[1:15,3], label="A")
+scatter!(tabla[16:30,2], tabla[16:30,3], label="B")
+```
+
+
+grupo = repeat(["A","B"], inner=15)
+scatter(tabla[:tiempo], tabla[:distancia], group=grupo)
+
+Uso de `plot!` para modificar atributos. También puede hacerse en la primera llamada, pero a menudo el primer plot se hace sencillo, y luego se va ajustando la estética.
+
+
+
+3. Anotaciones
+
+4. Ejes, escalas
+
+5. ....
+
+
+
+
+Título y etiquetas
+
+plot!(title="Separación entre extremos", xlabel="Tiempo", ylabel="Distancia")
+
+También
+title!()
+xlabel!
+ylabel!
+xlims!
+ylims!
+zlims!
+xflip!
+yflip!
+
+
+Modificar la leyenda
+
+plot!(legend=:right, background_color_legend=:lightgray)
+
+
+`legend` puede ser (dependiendo del backend): `:none`, `:best`, `:right`, `:left`, `:top`, `:bottom`, `:inside`, `:legend`, `:topright`, `:topleft`, `:bottomleft`, `:bottomright`
+
+
+grid
+
+
+Subplots
+Asignar cada plot a una variable, y luego plot(p1, p2, ...)
+Controla con el atributo `layout`, tuple.
+
+
+
+bar: en el x se pueden poner textos (También para otros tipos de gráficos)
+
+histogram [nbins]
+histogram2d [nbins]
+
+pie: empieza con el más grande, y sigue.
+
+contour
+surface
+
+plot3d
+scatter3d
+
+
+annotate
+Más bien annotate!(x,y,texto)
+texto ha de ser un vector de textos tan largo como y (o x)
+puede ser text(texto, atributos...)
+atributos de la fuente de texto:
+family: "times", "helvetica", "courier", "bookman", "newcenturyschlbk", "avantgarde", "palatino"
+pointsize: Int64
+halign: :left, :hcenter, :right
+valing: :top, :vcenter, :bottom
+rotation: Float64
+color
+
+
+
+quiver
+
+
+plot(..., proj=:polar)
+
+reuse=false
+
+savefig
+
+
+Stats:
+
+density
+boxplot
+violin
+
+
+
+colores
+
+
+
+
+```julia; echo=false
+cd(dirbase)
+Weave.restore_chunk_defaults()
+```
+

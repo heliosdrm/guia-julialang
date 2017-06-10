@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{for} \PYG{n}{i} \PYG{o}{=} \PYG{n}{serie}
+  \PYG{c}{\PYGZsh{} Código que se ejecuta de forma repetida}
+  \PYG{c}{\PYGZsh{} empleando la variable \PYGZdq{}i\PYGZdq{} con el valor de cada uno}
+  \PYG{c}{\PYGZsh{} de los elementos iterables de la variable \PYGZdq{}serie\PYGZdq{}.}
+\PYG{k}{end}
+
+\PYG{k}{for} \PYG{n}{i} \PYG{k}{in} \PYG{n}{serie}
+  \PYG{c}{\PYGZsh{} Exactamente lo mismo que lo anterior}
+  \PYG{c}{\PYGZsh{} utilizando la palabra clave \PYGZdq{}in\PYGZdq{} en lugar de \PYGZdq{}=\PYGZdq{}.}
+\PYG{k}{end}
+\end{Verbatim}

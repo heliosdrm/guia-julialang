@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{function}\PYG{n+nf}{ gauss\PYGZus{}diasemana}\PYG{p}{(}\PYG{n}{d}\PYG{p}{,} \PYG{n}{m}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} d, m, y son los números del día, mes y año, respectivamente}
+\PYG{c}{\PYGZsh{} La función devuelve una cadena de texto con el día de la semana}
+  \PYG{c}{\PYGZsh{} Enero y febrero (m=1, m=2) se tratan como el año anterior}
+  \PYG{c}{\PYGZsh{} en torno a los años bisiestos}
+  \PYG{k}{if} \PYG{n}{m} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{3}
+    \PYG{n}{y} \PYG{o}{=} \PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}
+  \PYG{k}{end}
+  \PYG{c}{\PYGZsh{} Dividir el año entre centenas (c) y el resto (g)}
+  \PYG{n}{c} \PYG{o}{=} \PYG{n}{div}\PYG{p}{(}\PYG{n}{y}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{)}
+  \PYG{n}{g} \PYG{o}{=} \PYG{n}{mod}\PYG{p}{(}\PYG{n}{y}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{)}
+  \PYG{c}{\PYGZsh{} Definir e y f en función del mes (de 1 a 12) y el siglo}
+  \PYG{c}{\PYGZsh{} (en ciclos de 400 años \PYGZhy{}\PYGZhy{}\PYGZhy{} 4 siglos)}
+  \PYG{n}{earray} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{l+m+mi}{6}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{]}
+  \PYG{n}{farray} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]}
+  \PYG{n}{e} \PYG{o}{=} \PYG{n}{earray}\PYG{p}{[}\PYG{n}{m}\PYG{p}{]}
+  \PYG{n}{f} \PYG{o}{=} \PYG{n}{farray}\PYG{p}{[}\PYG{n}{mod}\PYG{p}{(}\PYG{n}{c}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]}
+  \PYG{c}{\PYGZsh{} Seleccionar el día de la semana en función del cálculo de Gauss}
+  \PYG{n}{warray} \PYG{o}{=} \PYG{p}{[}\PYG{l+s}{\PYGZdq{}domingo\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}lunes\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}martes\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}miércoles\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}jueves\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}viernes\PYGZdq{}}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}sábado\PYGZdq{}}\PYG{p}{]}
+  \PYG{n}{w} \PYG{o}{=} \PYG{n}{mod}\PYG{p}{(}\PYG{n}{d} \PYG{o}{+} \PYG{n}{e} \PYG{o}{+} \PYG{n}{f} \PYG{o}{+} \PYG{n}{g} \PYG{o}{+} \PYG{n}{div}\PYG{p}{(}\PYG{n}{g}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{),} \PYG{l+m+mi}{7}\PYG{p}{)}
+  \PYG{k}{return}\PYG{p}{(}\PYG{n}{warray}\PYG{p}{[}\PYG{n}{w}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{])}
+\PYG{k}{end}
+\end{Verbatim}

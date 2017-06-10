@@ -16,14 +16,19 @@ for par=0:1
     end
 end
 
+
+
+n = length(arch)
 tmax = zeros(n)
 vmax = zeros(n)
+x = zeros(100)
 tiempo = collect(1:100)
 for i=1:n
-    valores = resp[:,i]
+    datos = readdlm(arch[i])
+    x .= sqrt.(datos[:,1].^2+datos[:,2].^2) .* sign.(datos[:,1])
     # Buscamos el valor absoluto máximo y la fila en la que se encuentra
-    valor_maximo, fila_maximo = findmax(valores)
-    valor_minimo, fila_minimo = findmin(valores)
+    valor_maximo, fila_maximo = findmax(x)
+    valor_minimo, fila_minimo = findmin(x)
     # Y asignamos los datos que corresponden a los vectores tmax, vmax
     tmax[i] = tiempo[fila_maximo]-tiempo[fila_minimo]
     vmax[i] = valor_maximo-valor_minimo

@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{impares} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{2}\PYG{p}{:}\PYG{l+m+mi}{10}
+\PYG{g+go}{1:2:9}
+\end{Verbatim}

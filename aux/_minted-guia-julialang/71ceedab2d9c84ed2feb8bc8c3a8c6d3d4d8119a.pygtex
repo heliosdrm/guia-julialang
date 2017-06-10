@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c}{\PYGZsh{} Tabla de 7 días x 5 semanas}
+\PYG{n}{tabla\PYGZus{}calendario} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(}\PYG{k+kt}{Int64}\PYG{p}{,}\PYG{l+m+mi}{7}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{)}
+\end{Verbatim}

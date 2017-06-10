@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Crear una nueva figura y asignar su identificador a f}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{f} \PYG{o}{=} \PYG{n}{figure}\PYG{p}{()}
+\end{Verbatim}

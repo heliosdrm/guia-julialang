@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+    });
+  </script>
+
+  <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+
+/* Headers in admonitions and docstrings */
+.admonition h1,
+article section.docstring h1 {
+    font-size: 1.25em;
+}
+
+.admonition h2,
+article section.docstring h2 {
+    font-size: 1.10em;
+}
+
+.admonition h3,
+.admonition h4,
+.admonition h5,
+.admonition h6,
+article section.docstring h3,
+article section.docstring h4,
+article section.docstring h5,
+article section.docstring h6 {
+    font-size: 1em;
+}
+
+/*
+ * Admonitions
+ *
+ * Colors (title, body)
+ * warning: #f0b37e #ffedcc (orange)
+ * note:    #6ab0de #e7f2fa (blue)
+ * tip:     #1abc9c #dbfaf4 (green)
+*/
+.admonition {
+    border-radius: 3px;
+    background-color: #eeeeee;
+}
+
+.admonition-title {
+    border-radius: 3px 3px 0 0;
+    background-color: #9b9b9b;
+    padding: 0.15em 0.5em;
+}
+
+.admonition-text {
+    padding: 0.5em;
+}
+
+.admonition-text > :first-child {
+    margin-top: 0;
+}
+
+.admonition-text > :last-child {
+    margin-bottom: 0;
+}
+
+.admonition > .admonition-title:before {
+    font-family: "FontAwesome";
+    margin-right: 5px;
+    content: "\f06a";
+}
+
+.admonition.warning > .admonition-title {
+    background-color: #f0b37e;
+}
+
+.admonition.warning {
+    background-color: #ffedcc;
+}
+
+.admonition.note > .admonition-title {
+    background-color: #6ab0de;
+}
+
+.admonition.note {
+    background-color: #e7f2fa;
+}
+
+.admonition.tip > .admonition-title {
+    background-color: #1abc9c;
+}
+
+.admonition.tip {
+    background-color: #dbfaf4;
+}
+
+
+/* footnotes */
+.footnote {
+    padding-left: 0.8em;
+    border-left: 2px solid #ccc;
+}
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li {
+  margin-bottom: 1rem; }
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 2.5rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.sourceCode.julia {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+code {
+  padding: 2px 4px;
+  font-size: 90%;
+
+  background-color: #ffffff;
+  border-radius: 4px;
+}
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%%}
+div.title {text-align: center;}
+
+  </style>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+</HEAD>
+  <BODY>
+    <div class ="container">
+      <div class = "row">
+        <div class = "col-md-12 twelve columns">
+
+          <div class="title">
+            
+            
+            
+          </div>
+
+          <div><h1>Primeros pasos</h1></div>
+
+<div><h2>Instalación de Julia</h2><p>Obviamente, lo primero que se necesita para trabajar con cualquier lenguaje de programación son las herramientas para crear y ejecutar los programas. El software básico para usar Julia está disponible en su página oficial (https://julialang.org/downloads), en forma de código fuente así como en binarios preparados para instalar en Windows, Mac OS X, y algunas distribuciones de Linux. Desde esa página se pueden encontrar también enlaces con explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son específicas para cada sistema, y por lo tanto no desarrollaremos aquí.</p><p>El paquete básico de Julia presenta un sencillo intérprete de comandos (figura 1), ligero y rápido, útil para realizar pruebas o rutinas sencillas. Sin embargo, para muchos usuarios este tipo de interfaz es poco amigable, y las &quot;ayudas&quot; que proporciona (invocación de instrucciones anteriores usando las flechas de &quot;arriba&quot;/&quot;abajo&quot;, combinaciones de teclas disponibles para acelerar las operaciones de corta-y-pega, etc.) resultan insuficientes. Por otro lado, para ejecutar rutinas más complejas, y siempre que se quiera obtener resultados reproducibles, es recomendable escribir las instrucciones en un archivo de código (<em>script</em>), y luego ejecutarlo en Julia. Con el intérprete básico se puede ejecutar un <em>script</em> (véase un ejemplo en la siguiente sección), pero para escribirlo se necesitaría un programa auxiliar.</p><p>Para combinar ambas tareas de forma eficiente en una sola interfaz lo habitual es usar los llamados &quot;entornos de desarrollo integrados&quot; (conocidos por sus siglas IDE en inglés), que pueden ser programas específicos para el lenguaje en cuestión, o aplicaciones genéricas con módulos particulares para distintos lenguajes. Para el usuario que se inicia en Julia se pueden recomendar dos paquetes de software gratuitos coin IDE incluída, desarrollados por <a href="https://juliacomputing.com">Julia Computing</a>, una compañía fundada por los creadores del lenguaje para ofrecer servicios profesionales.</p><p>El más sencillo de usar es <a href="https://juliabox.com/">Julia Box</a>, una plataforma web para crear &quot;cuadernos de notas&quot; (<em>notebooks</em>) en Julia. En estos cuadernos se puede escribir texto normal (incluyendo formatos de letra, estilos de título y de párrafo, etc.) e intercalarlo con bloques de código que se pueden ejecutar <em>in situ</em> con un click de ratón, de forma que los resultados (incluyendo gráficos) aparecen entre los párrafos de texto (figura 2). Otra ventaja es que se puede utilizar desde un navegador de Internet sin siquiera tener Julia instalado en el ordenador; lo único que hace falta es una cuenta de Github, Linkedin o Google con la que registarse para entrar. Trabajar con esta herramienta online obviamente condiciona lo que se puede programar, pero es un recurso práctico en particular para hacer pruebas o para estudiantes. Julia Box está basado en <a href="http://jupyter.org/">Jupyter</a>, una evolución de la plataforma IPython que se desarrolló originalmente para hacer <em>notebooks</em> de Python, y desde la misma web de Jupyter se pueden también hacer pruebas más elementales con Julia (con una funcionalidad más limitada), sin tan siquiera registrarse, entrando de forma anónima en https://try.jupyter.org/ y abriendo un cuaderno de Julia.</p><p>Otro paquete más completo es <a href="https://juliacomputing.com/products/juliapro.html">Julia Pro</a>, una aplicación de escritorio (esta sí tiene que instalarse), que permite tanto crear <em>notebooks</em> a través de Jupyter –en una instalación local, no remota–, como trabajar en <a href="http://junolab.org/">Juno</a>, otro IDE para Julia basado en el editor de código <a href="https://atom.io/">Atom</a>. La interfaz de Juno está pensada para trabajar con uno o varios archivos de código simultáneos, visualizando a la vez las salidas de los bloques de código que se seleccionen para ejecutar, sea en forma de resultados, gráficos o información dirigida a la consola (figura 3).</p><p>La elección de una de estas dos alternativas (o incluso otras que no se mencionan aquí) depende de las necesidades del usuario, por lo que en este manual no se da ninguna preferencia. Los ejemplos que se presentarán a partir de ahora estarán dirigidos a un uso genérico, que se puede hacer tanto en Jupyter como Juno, o incluso en la consola de comandos básica de Julia.</p><div class="admonition note"><div class="admonition-title">Note</div><div class="admonition-text"><p>Para los usuarios interesados en los términos legales, es conveniente destacar que la licencia de uso de Julia Pro es más restrictiva que la licencia MIT o BSD con la que están publicados sus componentes individuales (Julia, Juno, Jupyter, etc.). Para mantener vigentes los términos más abiertos de las licencias originales es posible (aunque lleva más trabajo) instalarse e integrar los distintos componentes a mano.</p></div></div><h2>Un ejemplo básico</h2><p>Veamos ahora un ejemplo práctico de ambas formas de uso, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.<a href="#footnote-1">[1]</a> Se trata de un algoritmo simple, que podría traducirse a Julia mediante el siguiente código: </p><p>&lt;a name=&quot;gauss_diasemana&quot; /&gt;</p></div>
+
+<pre class='hljl'>
+<span class='hljl-s'>&quot;&quot;&quot;
+Cálculo del día de la semana.
+La función devuelve una cadena de texto con el día de la semana que corresponde
+a los números de día, mes y año introducidos como los argumentos numéricos
+`d`, `m`, `y`, respectivamente.
+&quot;&quot;&quot;</span><span class='hljl-t'>
+</span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>gauss_diasemana</span><span class='hljl-p'>(</span><span class='hljl-n'>d</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>m</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># Enero y febrero (m=1, m=2) se tratan como el año anterior</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># en torno a los años bisiestos</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>m</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'>
+        </span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># Dividir el año entre centenas (c) y el resto (g)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>c</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>div</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>100</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>g</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>mod</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>100</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># Definir e y f en función del mes (de 1 a 12) y el siglo</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># (en ciclos de 400 años --- 4 siglos)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>earray</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-ni'>6</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>4</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>farray</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>e</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>earray</span><span class='hljl-p'>[</span><span class='hljl-n'>m</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>f</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>farray</span><span class='hljl-p'>[</span><span class='hljl-nf'>mod</span><span class='hljl-p'>(</span><span class='hljl-n'>c</span><span class='hljl-p'>,</span><span class='hljl-ni'>4</span><span class='hljl-p'>)</span><span class='hljl-oB'>+</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># Seleccionar el día de la semana en función del cálculo de Gauss</span><span class='hljl-t'>
+    </span><span class='hljl-n'>warray</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-s'>&quot;domingo&quot;</span><span class='hljl-p'>,</span><span class='hljl-s'>&quot;lunes&quot;</span><span class='hljl-p'>,</span><span class='hljl-s'>&quot;martes&quot;</span><span class='hljl-p'>,</span><span class='hljl-s'>&quot;miércoles&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'>
+        </span><span class='hljl-s'>&quot;jueves&quot;</span><span class='hljl-p'>,</span><span class='hljl-s'>&quot;viernes&quot;</span><span class='hljl-p'>,</span><span class='hljl-s'>&quot;sábado&quot;</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>w</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>mod</span><span class='hljl-p'>(</span><span class='hljl-n'>d</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>e</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>f</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>g</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-nf'>div</span><span class='hljl-p'>(</span><span class='hljl-n'>g</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-ni'>7</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-p'>(</span><span class='hljl-n'>warray</span><span class='hljl-p'>[</span><span class='hljl-n'>w</span><span class='hljl-oB'>+</span><span class='hljl-ni'>1</span><span class='hljl-p'>])</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+
+<div><div class="footnote" id="footnote-1"><a href="#footnote-1"><strong>[1]</strong></a><p>http://berndt-schwerdtfeger.de/cal/cal.pdf</p></div><p>Supongamos que el código mostrado arriba está guardado en un archivo llamado <code>calc_diasemana.jl</code> (el nombre del archivo es arbitrario, y puede ser cualquier nombre aceptado por el sistema operativo. El programa consiste en una sola función con 3 argumentos (los números del día, el mes y el año), basada en unas pocas divisiones enteras (definidas en la función <code>div</code>) y el cálculo de &quot;restos&quot; de dichas divisiones (<code>mod</code>),<a href="#footnote-2">[2]</a> más la selección de unos valores a partir de los resultados intermedios y unas listas predefinidas.</p><div class="footnote" id="footnote-2"><a href="#footnote-2"><strong>[2]</strong></a><p>Existen dos funciones para el resto de una división: <code>mod</code> y <code>rem</code>, que funcionan de forma distinta cuando alguno de los dos operandos es negativo. Para el caso que nos ocupa esa diferencia no es relevante.</p></div><p>Este programa se puede cargar usando la función <code>include</code> en el intérprete de Julia. Esto es lo que se debería ver en pantalla (los detalles de la presentación dependerán de la interfaz usada):</p></div>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>include</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;calc_diasemana.jl&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<div><p>El resultado es algo decepcionante, porque lo único que se ha hecho es definir una función, que por sí misma no da ningún resultado. Por otro lado, lo más probable es que al introducir esa línea sin más ni siquiera se obtenga ese resultado, sino un error debido a que no se encuentra el archivo de código.<a href="#footnote-3">[3]</a> Para asegurarse de que Julia encuentra el archivo hay varias alternativas:</p><ul><li><p>Copiar el archivo de código <code>calc_diasemana.jl</code> al directorio de trabajo de Julia. La ruta de ese directorio se puede obtener con la función <code>pwd()</code> – sin ningún argumento–.</p></li><li><p>Cambiar el directorio de trabajo al lugar que contiene el archivo. El cambio de directorio se hace con la función <code>cd</code>, que recibe un solo argumento: el nombre del directorio destino. Este se puede definir literalmente como un texto entre comillas dobles, o ser una variable que contiene dicho texto.</p></li><li><p>Introducir la ruta completa del archivo de código en la llamada a <code>include</code>. Esta se puede escribir literalmente, o si el directorio que contiene el archivo está definido en una variable (supongamos que esta variable se llama <code>dir_include</code>, la ruta se puede componer con la función <code>joinpath</code>. Es decir, la expresión anterior sería <code>include(joinpath(dir_include, &quot;calc_diasemana.jl&quot;))</code>.</p></li></ul><div class="footnote" id="footnote-3"><a href="#footnote-3"><strong>[3]</strong></a><p>Ref. a sección con información sobre LOAD_PATH y require()</p></div><div class="admonition tip"><div class="admonition-title">Copiar nombres de directorios con `clipboard`</div><div class="admonition-text"><p>A veces los nombres de los directorios son largos y resulta tedioso escribirlos. Para hacerlo más fácil, en sistemas operativos se puede copiar el nombre del directorio desde el gestor de archivos al &quot;portapapeles&quot;, y utilizarlo directamente en Julia con la función <code>clipboard</code>; por ejemplo se puede cambiar al directorio seleccionado mediante la expresión <code>cd(clipboard())</code>. Este truco es particularmente recomendable en Windows, donde los directorios de una ruta suelen presentarse divididos por &quot;barras invertidas&quot;. Por ejemplo, el directorio de trabajo podría ser <code>C:\julia</code>. Pero la expresión <code>cd(&quot;C:\julia&quot;</code> no daría el resultado esperado, porque la barra invertida se interpreta como inicio de una &quot;secuencia de escape&quot; para caracteres no imprimibles. Para que funcionase, habría que escribir <code>cd(&quot;C:/julia&quot;)</code> o <code>cd(&quot;C:\\julia&quot;)</code>. La función <code>clipboard</code> ahorra este tipo de problemas.</p></div></div><p>Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó el San Valentín de 2012, la fecha en la que se hizo pública la primera versión de Julia:</p></div>
+<pre class='hljl'>
+<span class='hljl-nB'>julia&gt; </span><span class='hljl-nf'>gauss_diasemana</span><span class='hljl-p'>(</span><span class='hljl-ni'>14</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>2013</span><span class='hljl-p'>)</span><span class='hljl-t'>
+&quot;jueves&quot;</span>
+</pre>
+
+<div><p>Lo que se hace &quot;en un día cualquiera&quot; usando Julia es esencialmente este modelo de rutina, con funciones más complicadas y muchas más operaciones interactivas, explorando resultados, corrigiendo argumentos y repitiendo operaciones, claro está.</p><h2>Sintaxis básica</h2><p>Para escribir un programa en Julia o cualquier otro lenguaje de programación hay que seguir una serie de reglas sintácticas, la mayoría de las cuales en realidad no es necesario explicar, ya que son reglas de escritura lógicas e intuitivas, o se desprenden directamente de la lectura de ejemplos. A continuación se mencionan algunos detalles básicos que se pueden observar en el anterior ejemplo del <a href="#gauss_diasemana">algoritmo de Gauss</a>:</p><ul><li><p>Cada operación se escribe normalmente en una línea distinta, aunque es posible &quot;partir&quot; las expresiones en varias líneas. Si una línea acaba con una expresión incompleta se asume que continúa en la siguiente, como ocurre en la definición de la variable <code>warray</code> con los nombres de los días de la semana.</p></li></ul><ul><li><p>Todo el texto que sigue al símolo <code>#</code> hasta el final de la línea se considera un comentario, y no se ejecuta.</p></li><li><p>Las expresiones más habituales son las del tipo <code>a = f(b)</code>, como <code>c = div(y, 100)</code>, donde <code>a</code> es un nombre de variable, <code>f</code> el nombre de una función, y <code>b</code> el número, cadena de texto u otro tipo de argumento sobre el que opera esa función, o bien el nombre de la variable a la que se le ha asignado el valor de ese argumento. (La función también puede aceptar varios argumentos de entrada, como ocurre con <code>div</code>, o tener varias salidas, que se presentan como variables separadas por comas.)</p></li></ul><ul><li><p>También es habitual encontrarse expresiones del tipo <code>a = f[b]</code>, p.ej. en <code>e = earray[m]</code>, con corchetes en lugar de paréntesis. En esos casos <code>f</code> no es una función sino un vector, matriz u otra estructura de datos, y <code>b</code> es el índice o clave que identifica la parte de su contenido que se asignará a la variable <code>a</code>.</p></li></ul><ul><li><p>Los nombres de variables, funciones, etc. pueden estar formados por cualquier combinación de letras y números, más guiones bajos, exceptuando nombres que comiencen por números y las palabras clave del lenguaje (como <code>for</code>, <code>if</code>, <code>end</code>, etc.). Además, también se admiten nombres con caracteres Unicode más allá del ASCII básico (letras acentuadas, griegas, etc.), así como el signo de exclamación (<code>!</code>) en posición no inicial, aunque conviene usarlos con mesura: emplear caracteres extendidos aumenta el riesgo de problemas de portabilidad de los programas, y la exclamación se suele resevar para el nombre de cierto tipo de funciones (las que modifican sus argumentos de entrada).</p></li><li><p>Los bloques de código (funciones, bloques condicionales, etc.) se delimitan cerrándolos con la palabra clave <code>end</code>. Se recomienda indentar las líneas interiores al código para hacerlo más legible, aunque el programa funcionaría igualmente si no se hace.</p></li></ul><ul><li><p>En general los espacios son irrelevantes: siempre que haya algun símbolo delimitador (operadores matemáticos, signos de puntuación, paréntesis...) pueden usarse uno, varios o ningún espacio entre nombres de variables, funciones, etc., o al principio de la línea, excepto al inicio de las llamadas a &quot;macros&quot; (véase el capítulo XXXXXXXXXXXXXXXXXXXXXXX).</p></li></ul><p>Hay más reglas importantes que conviene tener en cuenta para programar en Julia, aunque para contener el tamaño de esta introducción, se comentan con más detalle en el capítulo XXXXXXXXXXXXXXXXXX.</p><h2>Paquetes complementarios</h2><p>La distribución básica de Julia es realmente &quot;básica&quot;, y carece de bastantes utilidades que son consideradas importantes, incluso fundamentales por la mayoría de los potenciales usuarios de un lenguaje de ese tipo, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (<em>debugging</em>), etc.</p><p>Esta limitación está cubierta por el desarrollo coordinado (aunque independiente) de cientos de &quot;paquetes&quot; que contienen dichas utilidades. Como el propio proyecto Julia, todos los paquetes oficiales están publicados con el sistema de <a href="http://git-scm.com/">Git</a>. Julia mantiene un catálogo online de los paquetes oficiales, cuya lista se puede consultar en el sitio http://pkg.julialang.org/, o desde Julia con la expresión <code>Pkg.available</code>. En los siguientes capítulos se irán señalando algunos paquetes útiles para cubrir los distintos aspectos tratados en cada momento.</p><p>Las soluciones más completas como Julia Box o Julia Pro ya incorporan muchos de los paquetes más importantes, pero incluso en esos casos puede ser necesario gestionarlos, actualizarlos o añadir nuevos paquetes. La instalación y desinstalación de paquetes se controla desde dentro de Julia, mediante las funciones <code>Pkg.add</code> y <code>Pkg.rm</code>, respectivamente, que toman como argumento el nombre del paquete a instalar o desinstalar. Estas operaciones consisten esencialmente en &quot;clonar&quot; el paquete publicado en un lugar determinado del sistema, o borrarlo de ese sitio (el directorio de instalación está definido en la variable <code>JULIA_PKGDIR</code> si existe, o por defecto en el directorio designado por la función <code>Pkg.dir</code>). Por ejemplo, el proceso para instalar el paquete <a href="https://github.com/JuliaPlots/Plots.jl">Plots</a> (usado para crear representaciones gráficas) podría ser como sigue:</p></div>
+
+
+<pre class='hljl'>
+<span class='hljl-cs'># Consultar si está instalado (en cuyo caso no hace falta instalarlo)</span><span class='hljl-t'>
+</span><span class='hljl-n'>Pkg</span><span class='hljl-oB'>.</span><span class='hljl-nf'>installed</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Plots&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-cs'># Si devuelve &quot;nothing&quot; (no está instalado):</span><span class='hljl-t'>
+</span><span class='hljl-n'>Pkg</span><span class='hljl-oB'>.</span><span class='hljl-nf'>add</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Plots&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<div><p>Esta operación solo hay que hacerla una vez (actualizaciones aparte). Sin embargo, tener el paquete instalado no basta para poder usarlo. Para esto último hay que cargarlo explícitamente en cada sesión de trabajo, con la instrucción <code>using</code>:</p></div>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Plots</span>
+</pre>
+
+
+<div><h2>Buscando ayuda</h2><p>Con toda seguridad, al programar en Julia pronto te encontrarás con dificultades que no puedes resolver con la información que se recoge en este manual, y necesitarás ayuda adicional. Lo primero con lo que se ha de contar es el manual de referencia oficial (https://docs.julialang.org/en/stable/), que contiene numerosos detalles de múltiples aspectos del lenguaje, y también explica el uso de todas las funciones que forman parte del paquete &quot;básico&quot; de Julia.</p><p>El documento de referencia para las funciones es clave incluso para los programadores experimentados, ya que uno de los problemas más recurrentes es la dificultad de recordar cómo se usa cierta función (qué argumentos acepta, qué resultados proporciona, etc.). Un atajo práctico cuando se trabaja en modo de línea de comandos consiste en escribir el signo de interrogación (<code>?</code>) al principio de una instrucción. Al hacerlo la interfaz cambia al &quot;modo de ayuda&quot; (la etiqueta que marca el comienzo de la línea cambia de <code>julia&gt;</code> a <code>help?&gt;</code>), y al introducir el nombre de la función (sin paréntesis ni argumentos, solo el nombre) aparece en pantalla el texto de referencia.</p><p>Se puede probar con cualquier función básica (por ejemplo <code>?div</code> para leer la ayuda sobre la división entre enteros), con un operador (p.ej. <code>?+</code> para la suma), o incluso para una variable que se haya definido (en ese caso dará una información básica sobre su contenido).</p><div class="admonition note"><div class="admonition-title">&quot;&quot;Documentación a través de &quot;docstrings&quot; &quot;&quot;</div><div class="admonition-text"><p>Si has realizado el ejercicio de crear la función <a href="#gauss_diasemana"><code>gauss_diasemana</code></a> con el código completo presentado en este capítulo, al escribir <code>?gauss_diasemana</code> podrás leer el texto de las líneas que preceden a la definición de la función. Esta forma de documentar las funciones u otro tipo de objetos es muy útil y recomendable para hacer programas trazables y comprensibles.</p></div></div><p>Para las dudas no resueltas en el  manual, entre otras cuestions, los creadores de Julia han organizado un foro de debate y preguntas, disponible en https://discourse.julialang.org (en inglés). Y además existen múltiples foros y redes sociales (también en español y otros idiomas), tanto promovidas por los desarrolladores como por los propios usuarios, donde se pueden encontrar infinidad de consultas pasadas y hacer nuevas. Una buena recopilación de estas redes se puede encontrar en https://julialang.org/community/</p></div>
+
+
+
+          <HR/>
+          <div class="footer"><p>
+          Published from <a href="primerospasos.jmd">primerospasos.jmd</a> using
+          <a href="http://github.com/mpastell/Weave.jl">Weave.jl</a>
+          0.4.3 on 2017-04-19.
+          <p></div>
+
+
+        </div>
+      </div>
+    </div>
+  </BODY>
+</HTML>

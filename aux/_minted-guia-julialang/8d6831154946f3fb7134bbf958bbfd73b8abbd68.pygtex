@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Consultar si está instalado (en cuyo caso no hace falta instalarlo)}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{Pkg}\PYG{o}{.}\PYG{n}{installed}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Winston\PYGZdq{}}\PYG{p}{)}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Si devuelve \PYGZdq{}nothing\PYGZdq{} (no está instalado):}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{Pkg}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Winston\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}

@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   
-  
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
   <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -651,8 +651,67 @@ pre.hljl > span.hljl-gt { }
           </div>
 
           <div><h1>Representando datos</h1></div>
+<pre class="hljl">
+&quot;/home/meliana/Documentos/Helios/guia-julialang/src/textos&quot;
+</pre>
 
-<div><h2>Números escalares y vectores</h2><p>Cuando se habla de &quot;datos&quot; o &quot;variables&quot;, lo más inmediato es pensar en números, que es también el tipo de datos para el que es más sencillo escribir instrucciones. Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones: los nombres de las funciones y la sintaxis de las operaciones numéricas es común a muchos otros lenguajes de programación, y consisten esencialmente en una transposición a texto simple de las fórmulas matemáticas correspondientes a la operación que se desea realizar. En Julia este principio se lleva incluso más lejos que en otros lenguajes; por ejemplo:</p><ul><li><p>Si <code>a</code> es el nombre de una variable, <code>2a</code> significa &quot;2 veces <code>a</code>&quot; (y lo mismo con cualquier otro número, sea entero, decimal o de otro tipo). Esto es posible gracias a que los nombres de variables no pueden comenzar por números, por lo que no hay ambigüedad posible. En otros lenguajes es obligatorio expresarlo como un producto explícito, es decir <code>2*a</code>.</p></li><li><p>Se pueden utilizar símbolos matemáticos de Unicode para representar algunos operadores matemáticos habituales que no están en el conjunto de caracteres ASCII: <code>≠</code> para &quot;no es igual que&quot; (equivalente a <code>!=</code> cuando se escribe solo con ASCII), o <code>≤</code> y <code>≥</code> para &quot;menor que&quot; y &quot;mayor que&quot;, respectivamente (equivalentes a <code>&lt;=</code>, <code>&gt;=</code>). </p></li><li><p>Es posible escribir comparaciones lógicas concatenadas, como <code>0 ≤ x ≤ 1</code> para comprobar si la variable <code>x</code> se encuentra entre <code>0</code> y <code>1</code>. (En otros lenguajes es necesario expresarlo de forma más compleja, como <code>(0 &lt;= x) &amp;&amp; (x &lt;= 1)</code>.</p></li></ul><p>Por otro lado, con mucha frecuencia las variables con las que interesa trabajar no representan números escalares, sino series organizadas de números o vectores. En Julia los vectores son un caso específico de los <em>arrays</em>, conjuntos de datos ordenados (numéricos o también de otros tipos) entre los que también se incluyen las matrices e hipermatrices. Su manejo es un tema extenso, que se trata de forma más detallada en el capítulo XXXXXXXXXXXX. Por ahora, como introducción solo veremos superficialmente los vectores (<em>arrays</em> unidimensionales). Un vector se puede definir a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:</p></div>
+
+
+<div><h2>Un ejemplo para empezar</h2><p>En un uso productivo de un lenguaje de programación no nos limitamos a introducir datos con el teclado y leer los resultados en pantalla. Usamos series largas de datos, tablas numéricas... normalmente las leemos a partir de archivos de texto u hojas de cálculo. La salida también pueden ser archivos de ese tipo, o también gráficas (que veremos en el siguiente capítulo). Vamos a ver como se leen, escriben y estructuran esos datos.</p><p>Pongamos el siguiente caso. Tenemos un conjunto de datos extraidos de un experimento, consistente en 30 medidas con dos series de datos cada una, semejantes a las mostradas en la figura 1. (Se trata de datos construidos artificialmente, pero podemos suponer que son dos señales simultáneas que proceden de un mismo sistema dinámico, las coordenadas de un punto de un mecanismo con un movimiento plano, etc.) Estos datos se encuentran grabados en los archivos de texto contenidos en XXXXXXXXXXXXX. [Comentar acceso.]. Cada uno de estos archivos tiene 100 líneas con tres columnas de datos separadas por tabuladores: la primera columna es una línea de tiempos equiespaciada que varía entre 0.01 y 1.00, y las otras dos columnas contienen las series de datos.</p></div>
+
+
+<div id="03cb6a7e-ee4e-4fb1-bbb0-2e2f475324f2" class="plotly-graph-div"></div>
+
+<script>
+    window.PLOTLYENV=window.PLOTLYENV || {};
+    window.PLOTLYENV.BASE_URL="https://plot.ly";
+    Plotly.newPlot('03cb6a7e-ee4e-4fb1-bbb0-2e2f475324f2', [{"yaxis":"y","y":[-0.006444965398184479,-0.017350040528764873,-0.023601010791565926,-0.030888327629784974,-0.038422800096907454,-0.041075738641592405,-0.045952405067956684,-0.04804727168340178,-0.055826255161702656,-0.06767464050816223,-0.083757261746091,-0.10611162227409575,-0.1299723260666203,-0.16133299182250796,-0.20007449428290097,-0.2435256730860403,-0.29065425240504345,-0.3362596352554496,-0.38542282669897876,-0.4331501097386057,-0.473841084790611,-0.5010273045031914,-0.5151941652665601,-0.5130853977978183,-0.4893692180349963,-0.4419159039123452,-0.3737842749817284,-0.2858727286583797,-0.18295963312155678,-0.06829549577457004,0.0492866600100953,0.16844114944675093,0.2884062718538974,0.4046195423479322,0.5149158458135105,0.6224777160854116,0.7194599500433981,0.8037043295352859,0.871036135301266,0.9182132609390584,0.9427023272003094,0.938715879764103,0.9051893370033901,0.8522245555829704,0.7744905888794044,0.6818308600459342,0.5799330366561448,0.4740100774240269,0.3729516023123736,0.2784318115187763,0.2000069803256175,0.13552548489233524,0.08573576242287942,0.04943842562316403,0.029805102983156744,0.020819094015714582,0.019105164498267515,0.023388805905736235,0.026425103321458414,0.02798770276040205,0.030367511688371495,0.03135460542216485,0.025519957842522062,0.015620573699062917,0.00888769721623234,0.0065989609686818084,0.0016457981168193924,-0.006252040581336473,-0.007092331089606141,0.0017615801453613146,0.010297209549830889,0.019059547974599998,0.030449614176355874,0.03746389147039615,0.04325323400043832,0.03607227672413824,0.02658193817291533,0.015687346239869768,0.003749847663569739,-0.001480416440235004,-0.0021587614943889832,0.0017511692275506974,0.010686080359390893,0.020732045755937633,0.02895892187197358,0.0332784006460296,0.03503990414783381,0.03514074725612762,0.029520412189455492,0.017779781136071444,0.010449853834233976,0.004687828808967698,3.914800588445288e-5,-0.005817538322061271,-0.0034925667428811025,0.0024933814466066373,0.005417731821293721,0.007265821224472866,0.006261023916063344,0.0011413430847753148],"showlegend":true,"name":"y1","type":"scatter","xaxis":"x","line":{"width":1,"dash":"solid","color":"rgba(0, 154, 250, 1.000)","shape":"linear"},"x":[0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.72,0.73,0.74,0.75,0.76,0.77,0.78,0.79,0.8,0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88,0.89,0.9,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,1.0],"mode":"lines"},{"yaxis":"y","y":[-0.004488879801153125,0.008408791292942901,0.0180535405797493,0.018165106881383064,0.01666034973420226,0.01839164055366333,0.01502848336219553,0.009334460364403014,0.0020318119239718956,-0.007594357564381183,-0.0205050881776862,-0.04098992466497535,-0.06846914290204077,-0.1030833354394137,-0.14332690306804843,-0.1881063317049688,-0.2365859690791191,-0.2964617253505103,-0.3643943539265969,-0.4314154873788041,-0.491011371165785,-0.5364739771938014,-0.5645127939912342,-0.5739243495868714,-0.553305755146869,-0.5071183566159941,-0.4353391428817697,-0.3434876113745557,-0.24160981348163163,-0.12136935612520755,0.006261136924571504,0.13951225462629732,0.27231571982212077,0.40083293326141983,0.5275431605032742,0.6507244440690622,0.7646090310280824,0.862698205923151,0.935892359087665,0.9801681468312268,0.9992848469209378,0.9893591516577266,0.9421666391668319,0.8652210512266578,0.7698611294302348,0.6652331754844124,0.5571253701719073,0.4456942429798989,0.34801068024532117,0.2659056462158159,0.19873881553618902,0.14432728556177352,0.10137933745283054,0.07201900641295446,0.047040469341923984,0.021030624040867175,0.0005752472204489933,-0.015255164290372712,-0.0302008661048189,-0.04867093954501261,-0.06446921524801702,-0.06837762150399236,-0.07059328035565302,-0.06943544101585551,-0.06757834906835519,-0.058346984939070624,-0.048042818020201494,-0.03919238391825637,-0.03154997685584963,-0.02414376396035408,-0.010243445020041745,0.006406215546612453,0.02147710793131818,0.0387261525419018,0.056681930800836396,0.07392437863165079,0.0839672057016331,0.09266457839023999,0.09837231596507665,0.09508484070467631,0.08924554635000025,0.08265190235588683,0.07312721091986188,0.058561501590844785,0.03995720920894733,0.019898134283319813,-0.0017404041739059295,-0.025390861030294476,-0.041895131675602146,-0.057713342002476756,-0.06759280398595799,-0.07091698269052411,-0.06644953942277593,-0.06077191696801081,-0.05777855216204731,-0.0486738567470327,-0.040761840694149,-0.02981018439746512,-0.02583681419158747,-0.016618545969843197],"showlegend":true,"name":"y2","type":"scatter","xaxis":"x","line":{"width":1,"dash":"solid","color":"rgba(227, 111, 71, 1.000)","shape":"linear"},"x":[0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.72,0.73,0.74,0.75,0.76,0.77,0.78,0.79,0.8,0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88,0.89,0.9,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,1.0],"mode":"lines"}],
+               {"margin":{"r":50,"l":50,"b":50,"t":60}}, {showLink: false});
+
+ </script>
+
+
+<div><p>En todos los casos ambas series tienen una forma semejante, con un &quot;valle&quot; negativo seguido de un &quot;pico&quot; positivo. Supongamos que en el estudio que tenemos entre manos las dos series de datos identifican un vector <span>$(x,y)$</span>, y queremos generar una tabla de datos que contenga el intervalo de tiempo transcurrido entre los dos extremos de la señal y la distancia entre esos dos extremos.</p><p>Los extremos los identificaremos por el tamaño o módulo del vector <span>$m=\sqrt{x^2+y^2}$</span>; para facilitar la localización de ambos, teniendo en cuenta que el primero siempre se corresponde con coordenadas negativas y el segundo con positivas, multiplicaremos ese módulo por el signo de una de las dos coordenadas, de tal modo que el valor mínimo de esa variable será el primer extremo (el valle) y el máximo será el segundo (el pico). El código para construir la tabla de datos, que iremos explicando a lo largo del capítulo, es el siguiente:</p></div>
+
+<pre class='hljl'>
+<span class='hljl-cs'># Leemos los nombres de los archivos del directorio datos</span><span class='hljl-t'>
+</span><span class='hljl-n'>directorio</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;series&quot;</span><span class='hljl-t'>
+</span><span class='hljl-n'>archivos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdir</span><span class='hljl-p'>(</span><span class='hljl-n'>directorio</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-cs'># ¿Cuantos archivos tenemos?</span><span class='hljl-t'>
+</span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-n'>archivos</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-cs'># Creamos dos vectores de números con tantos ceros como archivos hay:</span><span class='hljl-t'>
+</span><span class='hljl-cs'># uno para los tiempos y otro para las distancias</span><span class='hljl-t'>
+</span><span class='hljl-n'>intervalos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>distancias</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-cs'># Ahora vamos explorando los archivos uno a uno y rellenando datos</span><span class='hljl-t'>
+</span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-oB'>=</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-n'>n</span><span class='hljl-t'>
+    </span><span class='hljl-n'>rutaarchivo</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>joinpath</span><span class='hljl-p'>(</span><span class='hljl-n'>directorio</span><span class='hljl-p'>,</span><span class='hljl-n'>archivos</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>])</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># Leemos el contenido del archivo completo en la variable `datos`</span><span class='hljl-t'>
+    </span><span class='hljl-n'>datos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdlm</span><span class='hljl-p'>(</span><span class='hljl-n'>rutaarchivo</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># Utilizamos `tiempo`, `x` e `y` para extraer las tres columnas de datos</span><span class='hljl-t'>
+    </span><span class='hljl-n'>tiempo</span><span class='hljl-t'>  </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>datos</span><span class='hljl-p'>[</span><span class='hljl-oB'>:</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>datos</span><span class='hljl-p'>[</span><span class='hljl-oB'>:</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>datos</span><span class='hljl-p'>[</span><span class='hljl-oB'>:</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># Calculamos el &quot;módulo con signo&quot; para localizar los extremos</span><span class='hljl-t'>
+    </span><span class='hljl-n'>modulo</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>sign</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>.*</span><span class='hljl-t'> </span><span class='hljl-n'>sqrt</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>valor_minimo</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>indice_minimo</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>findmin</span><span class='hljl-p'>(</span><span class='hljl-n'>modulo</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>valor_maximo</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>indice_maximo</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'>  </span><span class='hljl-nf'>findmax</span><span class='hljl-p'>(</span><span class='hljl-n'>modulo</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-cs'># Y asignamos los datos que corresponden a los intervalos y distancias</span><span class='hljl-t'>
+    </span><span class='hljl-n'>intervalos</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>tiempo</span><span class='hljl-p'>[</span><span class='hljl-n'>indice_maximo</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>tiempo</span><span class='hljl-p'>[</span><span class='hljl-n'>indice_minimo</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>distancia_x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-p'>[</span><span class='hljl-n'>indice_maximo</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-p'>[</span><span class='hljl-n'>indice_minimo</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>distancia_y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>[</span><span class='hljl-n'>indice_maximo</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>[</span><span class='hljl-n'>indice_minimo</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>distancias</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sqrt</span><span class='hljl-p'>(</span><span class='hljl-n'>distancia_x</span><span class='hljl-oB'>^</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>distancia_y</span><span class='hljl-oB'>^</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+</span><span class='hljl-cs'># Para terminar escribimos los datos en una matriz con tres columnas:</span><span class='hljl-t'>
+</span><span class='hljl-cs'># 1: el nombre del archivo</span><span class='hljl-t'>
+</span><span class='hljl-cs'># 2: el intervalo entre extremos</span><span class='hljl-t'>
+</span><span class='hljl-cs'># 3: la distancia entre extremos</span><span class='hljl-t'>
+</span><span class='hljl-n'>resultados</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>archivos</span><span class='hljl-t'> </span><span class='hljl-n'>intervalos</span><span class='hljl-t'> </span><span class='hljl-n'>distancias</span><span class='hljl-p'>]</span>
+</pre>
+
+
+
+<div><p>Tomando este ejemplo como refencia, vamos a ver ahora algunos tipos y estructuras elementales de datos con las que normalmente trabajaremos en Julia.</p><h2>Números escalares y series de números</h2><p>Cuando se habla de &quot;datos&quot; o &quot;variables&quot;, lo más inmediato es pensar en números, que es también el tipo de datos para el que es más sencillo escribir instrucciones. Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones: los nombres de las funciones y la sintaxis de las operaciones numéricas es común a muchos otros lenguajes de programación, y consisten esencialmente en una transposición a texto simple de las fórmulas matemáticas correspondientes a la operación que se desea realizar. En Julia este principio se lleva incluso más lejos que en otros lenguajes; por ejemplo:</p><ul><li><p>Si <code>a</code> es el nombre de una variable, <code>2a</code> significa &quot;2 veces <code>a</code>&quot; (y lo mismo con cualquier otro número, sea entero, decimal o de otro tipo). Esto es posible gracias a que los nombres de variables no pueden comenzar por números, por lo que no hay ambigüedad posible. En otros lenguajes es obligatorio expresarlo como un producto explícito, es decir <code>2*a</code>.</p></li><li><p>Se pueden utilizar símbolos matemáticos de Unicode para representar algunos operadores matemáticos habituales que no están en el conjunto de caracteres ASCII: <code>≠</code> para &quot;no es igual que&quot; (equivalente a <code>!=</code> cuando se escribe solo con ASCII), o <code>≤</code> y <code>≥</code> para &quot;menor que&quot; y &quot;mayor que&quot;, respectivamente (equivalentes a <code>&lt;=</code>, <code>&gt;=</code>). </p></li><li><p>Es posible escribir comparaciones lógicas concatenadas, como <code>0 ≤ x ≤ 1</code> para comprobar si la variable <code>x</code> se encuentra entre <code>0</code> y <code>1</code>. (En otros lenguajes es necesario expresarlo de forma más compleja, como <code>(0 &lt;= x) &amp;&amp; (x &lt;= 1)</code>.</p></li></ul><p>Por otro lado, con mucha frecuencia las variables con las que interesa trabajar no representan números escalares, sino series organizadas de números o vectores. Esto ocurre con las siguientes variables del ejemplo anterior:</p><ul><li><p><code>datos</code>: matrices de 100×3 que contienen los datos numéricos leídos directamente de los archivos.</p></li><li><p><code>tiempo</code>, <code>x</code>, <code>y</code>: vectores de 100 números con cada una de las tres columnas de <code>datos</code>.</p></li><li><p><code>modulo</code>: vectores de 100 números resultantes de operar con <code>x</code> e <code>y</code>.</p></li><li><p><code>intervalos</code>, <code>distancias</code>: vectores de <code>n</code> elementos (30) que contienen los intervalos y distancias entre extremos para cada uno de los archivos.</p></li></ul><p>En Julia los vectores y matrices (junto con las &quot;hipermatrices&quot; de más de dos dimensiones) son casos específicos de <em>arrays</em>, que se pueden definir en general como conjuntos de datos ordenados (numéricos o también de otros tipos, como veremos después). Su manejo es un tema extenso, que se trata de forma más detallada en el capítulo XXXXXXXXXXXX. Por ahora, como introducción solo veremos superficialmente los vectores (<em>arrays</em> unidimensionales). En el ejemplo hemos leído los datos a partir de archivos grabados en disco, como es habitual, pero un vector también se puede definir &quot;a mano&quot; a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:</p></div>
 
 <pre class='hljl'>
 <span class='hljl-n'>primos</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>7</span><span class='hljl-p'>,</span><span class='hljl-ni'>11</span><span class='hljl-p'>,</span><span class='hljl-ni'>13</span><span class='hljl-p'>,</span><span class='hljl-ni'>17</span><span class='hljl-p'>]</span>
@@ -705,7 +764,25 @@ pre.hljl > span.hljl-gt { }
 </pre>
 
 
-<div><p>Rizando el rizo, se puede utilizar un vector de índices para extraer un subconjunto de valores de otro vector. Para abreviar, un rango de índices correlativos se puede expresar como <code>a:b</code>, que significa &quot;desde <code>a</code> hasta <code>b</code>. Por ejemplo:</p></div>
+<div><p>En el código del ejemplo, las expresiones <code>tiempo[indice_maximo]</code>, <code>tiempo[indice_minimo]</code> (y las equivalentes con los vectores <code>x</code>, <code>y</code> precisamente sirven para extraer el valor del vector correspondiente en los puntos donde se dan los valores extremos de <code>modulo</code>. (Los índices <code>indice_minimo</code>, <code>indice_maximo</code> se obtienen a través de las funciones <code>findmin</code> y <code>findmax</code>, respectivamente, aplicadas al vector <code>modulo</code>.)</p><p>También vemos en el ejemplo que cuando estas expresiones se ponen a la izquierda del símbolo <code>=</code> lo que se hace no es &quot;leer&quot; un valor del vector, sino asignarle el valor calculado en la parte derecha de la ecuación, como ocurre con <code>intervalos[i] = ...</code> y <code>distancias[i] = ...</code>. A la hora de modificar un vector hay que tener en cuenta dos restricciones importantes: solo se pueden incorporar datos del mismo tipo que el vector original, y no se puede &quot;rebasar&quot; el tamaño del vector original. Por ejemplo:</p></div>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>numeros</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>6</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>numeros</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-cs'># Esto no es problema</span><span class='hljl-t'>
+</span><span class='hljl-n'>numeros</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-cs'># Pero esto sí, porque eran números enteros</span>
+</pre>
+
+
+<div><pre><code class="language-none">ERROR: InexactError()</code></pre></div>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>numeros</span><span class='hljl-p'>[</span><span class='hljl-ni'>7</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-t'>  </span><span class='hljl-cs'># Esto también, porque el vector solo tenía 6 elementos</span>
+</pre>
+
+
+<div><pre><code class="language-none">ERROR: BoundsError: attempt to access 6-element Array{Int64,1} at index [7]</code></pre><p>La lectura y asignación de valores se puede hacer elemento a elemento, o también sobre varios elementos a la vez, utilizando un &quot;vector de índices&quot; para referirse a los elementos de interés. Para abreviar, un rango de índices correlativos se puede expresar como <code>a:b</code>, que significa &quot;desde <code>a</code> hasta <code>b</code>. Por ejemplo:</p></div>
 
 <pre class='hljl'>
 <span class='hljl-cs'># Dos alternativas para tomar los tres primeros números primos</span><span class='hljl-t'>
@@ -735,119 +812,75 @@ pre.hljl > span.hljl-gt { }
 </pre>
 
 
-<div><p>El contenido de los vectores también se puede modificar, teniendo en cuenta dos restricciones importantes: solo se pueden incorporar datos del mismo tipo que el vector original, en posiciones existentes. Por ejemplo:</p></div>
+<div><p>Para referirse a &quot;todos los elementos&quot; puede utilizarse el rango <code>1:end</code> (es decir, &quot;desde el primero hasta el final&quot;), o de forma abreviada los dos puntos sin más (<code>:</code>). Esto se emplea a menudo cuando se trabaja con matrices, para referirse a &quot;todas las filas&quot; o &quot;todas las columnas&quot;. Aunque las operaciones con matrices las veremos con más detalle en XXXXXXX, en el ejemplo anterior ya podemos observar esto, en las líneas donde se extraen las tres columnas de la matriz <code>datos</code>. Por ejemplo, <code>tiempo = datos[:,1]</code> expresa que a la variable <code>tiempo</code> le asignamos &quot;todas las filas de la primera columna&quot; de <code>datos</code>.</p><p>Finalmente, también se puede aplicar una misma operación a todos los elementos de un <em>array</em> a la vez. Podemos ver la diferencia entre las operaciones con escalares y <em>arrays</em> en las dos líneas del ejemplo donde se calcula el módulo de un segmento de dos coordenadas. Empezando por el final, en la línea:</p></div>
 
 
 <pre class='hljl'>
-<span class='hljl-n'>numeros</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>6</span><span class='hljl-p'>]</span><span class='hljl-t'>
-</span><span class='hljl-n'>numeros</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-cs'># Esto no es problema</span><span class='hljl-t'>
-</span><span class='hljl-n'>numeros</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-cs'># Pero esto sí, porque eran números enteros</span>
+<span class='hljl-n'>distancias</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sqrt</span><span class='hljl-p'>(</span><span class='hljl-n'>distancia_x</span><span class='hljl-oB'>^</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>distancia_y</span><span class='hljl-oB'>^</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
 </pre>
 
 
-<div><pre><code class="language-none">ERROR: InexactError()</code></pre></div>
+<div><p>tenemos una operación realizada sobre dos números escalares (<code>distancia_x</code>, <code>distancia_y</code>), cuyo resultado se asigna a un elemento del vector <code>distancias</code>. Pero unas líneas antes tenemos una operación semejante aplicada a todos los elementos de los vectores <code>x</code> e <code>y</code>, dando como resultado otro vector de la misma longitud que se asigna a la variable <code>modulo</code>:</p></div>
 
 
 <pre class='hljl'>
-<span class='hljl-n'>numeros</span><span class='hljl-p'>[</span><span class='hljl-ni'>7</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-t'>  </span><span class='hljl-cs'># Esto también, porque el vector solo tenía 6 elementos</span>
+<span class='hljl-n'>modulo</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>sign</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>.*</span><span class='hljl-t'> </span><span class='hljl-n'>sqrt</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
 </pre>
 
 
-<div><pre><code class="language-none">ERROR: BoundsError: attempt to access 6-element Array{Int64,1} at index [7]</code></pre><p>Finalmente, también se puede aplicar una misma operación a todos los elementos del vector a la vez. Cualquier función <code>f</code> que admite como argumentos números escalares y devuelve otro escalar puede operar &quot;elemento a elemento&quot; sobre vectores, devolviendo otro vector de la misma longitud que sus argumentos. Para evitar ambigüedades hay que añadir un punto tras el nombre de la función, o en el caso de operadores (como <code>+</code> para la suma, etc.), antes del símbolo que lo representa:</p></div>
+<div><p>Para hacer estos cálculos &quot;elemento a elemento&quot; (lo que se conoce como <em>vectorizar el código</em>), se ha añadido un punto tras los nombres de las funciones (<code>sign</code>, <code>sqrt</code>) y antes de los símbolos de los operadores (<code>*</code> para la multiplicación y <code>^</code> para la potencia). También podíamos haber tenido ya un vector <code>modulo</code> predefinido, de la longitud adecuada (100), y asignar los 100 resultados de la operación a cada uno de sus elementos, añadiendo el punto al símbolo de asignación (<code>=</code>):</p></div>
+
 
 <pre class='hljl'>
-<span class='hljl-cs'># Valor absoluto de los elementos de un vector</span><span class='hljl-t'>
-</span><span class='hljl-n'>abs</span><span class='hljl-oB'>.</span><span class='hljl-p'>([</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-oB'>-</span><span class='hljl-ni'>2</span><span class='hljl-p'>])</span>
+<span class='hljl-n'>modulo</span><span class='hljl-t'> </span><span class='hljl-oB'>.=</span><span class='hljl-t'> </span><span class='hljl-n'>sign</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>.*</span><span class='hljl-t'> </span><span class='hljl-n'>sqrt</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<div><p>(Esta alternativa sería de hecho más eficiente, porque no tendría que crearse el vector asignado a <code>modulo</code> las 30 veces que se repite el bucle, sino que se reutilizaría en cada repetición, aunque no funcionaría si cada archivo tuviese una longitud distinta.)</p><p>Como regla general, al vectorizar una operación todas las variables empleadas han de tener el mismo tamaño (como ocurre con <code>x</code> e <code>y</code>), pero estas variables también pueden combinarse con números escalares. En ese caso los números escalares operan por igual sobre todos los elementos de los otros vectores, como si se &quot;expandieran&quot; a vectores de la misma longitud con valores repetidos (lo que se conoce como <em>broadcasting</em>). Esto es lo que ocurre cuando <code>x</code> e <code>y</code> se elevan al cuadrado como <code>x.^2</code>, <code>y.^2</code> (usando un solo <code>2</code> escalar, en lugar de un vector de 100 números).</p><h2>Cadenas de texto y símbolos</h2><p>Julia es un lenguaje pensado especialmente para trabajar con números, pero también tiene herramientas para manejar cadenas de texto (<em>strings</em>). Las cadenas de texto son un tipo de datos más, que al igual que los números pueden organizarse en <em>arrays</em>; así, los nombres de los 30 archivos tratados en el ejemplo anterior se agrupan en el vector de <em>strings</em> llamado <code>archivos</code>, de tal modo que el nombre del primer archivo es <code>archivos[1]</code>, etc.</p><p>Las cadenas de texto son esencialmente secuencias de letras que se presentan delimitadas por comillas dobles (<code>&quot;</code>). En parte se pueden comparar a vectores de letras, ya que es posible extraer letras aisladas o partes del texto con la misma sintaxis que se utiliza con los <em>arrays</em>. Por ejemplo, supongamos que queremos extraer el nombre del archivo sin la extensión <code>.txt</code> del archivo que está en la posición <code>i</code> de la lista. Se trata de una operación que ya está programada en la función <code>splitext</code>; pero como la extensión que queremos eliminar tiene cuatro letras, se podría asignar el nombre sin extensión a la variable <code>sinextension</code> del siguiente modo:</p></div>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>nombrearchivo</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>archivos</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>]</span>
 </pre>
 
 
 <pre class="hljl">
-4-element Array&#123;Int64,1&#125;:
- 1
- 2
- 1
- 2
+&quot;sA01.txt&quot;
 </pre>
 
 
 
 <pre class='hljl'>
-<span class='hljl-cs'># División de enteros</span><span class='hljl-t'>
-</span><span class='hljl-n'>div</span><span class='hljl-oB'>.</span><span class='hljl-p'>([</span><span class='hljl-ni'>10</span><span class='hljl-p'>,</span><span class='hljl-ni'>20</span><span class='hljl-p'>,</span><span class='hljl-ni'>30</span><span class='hljl-p'>],</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>7</span><span class='hljl-p'>])</span>
+<span class='hljl-n'>sinextension</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>nombrearchivo</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>4</span><span class='hljl-p'>]</span>
 </pre>
 
 
 <pre class="hljl">
-3-element Array&#123;Int64,1&#125;:
- 3
- 4
- 4
+&quot;sA01&quot;
 </pre>
 
 
 
 <pre class='hljl'>
-<span class='hljl-cs'># Suma elemento a elemento</span><span class='hljl-t'>
-
-</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>.+</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>10</span><span class='hljl-p'>,</span><span class='hljl-ni'>20</span><span class='hljl-p'>,</span><span class='hljl-ni'>30</span><span class='hljl-p'>]</span>
+<span class='hljl-cs'># O en una sola línea:</span><span class='hljl-t'>
+</span><span class='hljl-n'>sinextension</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>archivos</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>][</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>4</span><span class='hljl-p'>]</span>
 </pre>
 
 
 <pre class="hljl">
-3-element Array&#123;Int64,1&#125;:
- 11
- 22
- 33
+&quot;sA01&quot;
 </pre>
 
 
-<div><p>En el caso de operadores o funciones con más de un argumento, todos los argumentos han de ser vectores de la misma longitud, aunque también se pueden combinar con números escalares. En ese caso los números escalares operan por igual sobre todos los elementos de los otros vectores, como si se &quot;expandieran&quot; a vectores de la misma longitud con valores repetidos (lo que se conoce como <em>broadcasting</em>):</p></div>
+<div><p>Si extraemos una sola letra, como el código <code>A</code> o <code>B</code> que aparece en segunda posición del nombre archivo, podemos ver cómo las letras individuales se delimitan con comillas simples (<code>&#39;</code>), en lugar de las dobles usadas para las cadenas de texto:</p></div>
 
 <pre class='hljl'>
-<span class='hljl-cs'># Esto es lo mismo que [1,2,3].^[2,2,2]</span><span class='hljl-t'>
-</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-oB'>.^</span><span class='hljl-ni'>2</span>
+<span class='hljl-n'>codigo</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>nombrearchivo</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span>
 </pre>
 
 
 <pre class="hljl">
-3-element Array&#123;Int64,1&#125;:
- 1
- 4
- 9
-</pre>
-
-
-<div><h2>Cadenas de texto y símbolos</h2><p>Julia es un lenguaje pensado especialmente para trabajar con números, pero también tiene herramientas para manejar cadenas de texto (<em>strings</em>), lo cual es esencial, para empezar, a la hora de acceder, leer y escribir archivos de datos. Las cadenas de texto son esencialmente secuencias de letras que se presentan delimitadas por comillas dobles (<code>&quot;</code>). En parte se pueden comparar a vectores de letras, ya que es posible extraer letras aisladas o partes del texto con la misma sintaxis que se utiliza con los <em>arrays</em> (nótese cómo las letras individuales se delimitan con comillas simples (<code>&#39;</code>), en lugar de las dobles usadas para las cadenas de texto):</p></div>
-
-<pre class='hljl'>
-<span class='hljl-n'>txt</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;hola&quot;</span>
-</pre>
-
-
-<pre class="hljl">
-&quot;hola&quot;
-</pre>
-
-
-
-<pre class='hljl'>
-<span class='hljl-n'>txt</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span>
-</pre>
-
-
-<pre class="hljl">
-&#39;h&#39;
-</pre>
-
-
-
-<pre class='hljl'>
-<span class='hljl-n'>txt</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span>
-</pre>
-
-
-<pre class="hljl">
-&quot;ho&quot;
+&#39;A&#39;
 </pre>
 
 
@@ -855,7 +888,7 @@ pre.hljl > span.hljl-gt { }
 
 
 <pre class='hljl'>
-<span class='hljl-n'>txt</span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-sc'>&#39;r&#39;</span>
+<span class='hljl-n'>nombrearchivo</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-sc'>&#39;C&#39;</span>
 </pre>
 
 
@@ -893,24 +926,166 @@ pre.hljl > span.hljl-gt { }
 </pre>
 
 
-<div><p>El uso de <code>$</code> para interpolar datos en una cadena de texto impide que se pueda escribir tal cual, si lo que queremos es incluir ese signo en el texto. Para este y otros casos se utilizan &quot;secuencias de escape&quot;, que generalmente comienzan con una barra invertida (<code>\</code>). Las secuencias de escape más útiles son:</p><ul><li><p><code>\$</code> para el signo del dólar.</p></li><li><p><code>\\</code> para la barra invertida.</p></li><li><p><code>\&quot;</code> para las comillas dobles.</p></li><li><p><code>\t</code> para el tabulador.</p></li><li><p><code>\n</code> para el carácter de nueva línea.</p></li><li><p><code>\r</code> para el carácter de &quot;retorno de carro&quot; (normalmente combinado como <code>\r\n</code> para definir una nueva línea en Windows).</p></li></ul><p>Hay un tipo especial de cadenas de texto, los <em>símbolos</em>: secuencias de caracteres alfanuméricos o signos que pueden representar nombres de variables, funciones u operadores, que se escriben precediéndolas de dos puntos (<code>:</code>) para distinguirlas de cadenas de texto convencionales. Los símbolos pueden referirse a operaciones o variables existentes como <code>:+</code>, <code>:log</code>, <code>:include</code>, o también inexistentes. Están particularmente pensados para procesos de <a href="XXXXXXXXXXXXXXXX">metaprogramación</a>, es decir para manipular y crear código programáticamente, que es una forma de uso particularmente avanzado de Julia, y que en esta guía solo trataremos superficialmente. Pero incluso en el uso cotidiano nos encontraremos de vez en cuando con este tipo de símbolos, como veremos a continuación, y por eso vale la pena introducirlos ahora.</p><h2>Matrices y tablas de datos</h2><p>Una de las formas más comunes de trabajar es con datos tabulados. La forma más sencilla de representar esa estructura de datos es mediante matrices. Una matriz es un <em>arrays</em> de dos dimensiones, y se puede definir y manipular de forma semejante a los vectores. La forma habitual de componer una matriz a mano es escribirla &quot;por filas&quot;, separando las columnas de cada fila por espacios y una fila de la siguiente por un punto y coma:</p></div>
+<div><p>El uso de <code>$</code> para interpolar datos en una cadena de texto impide que se pueda escribir tal cual, si lo que queremos es incluir ese signo en el texto. Para este y otros casos se utilizan &quot;secuencias de escape&quot;, que generalmente comienzan con una barra invertida (<code>\</code>). Las secuencias de escape más útiles son:</p><ul><li><p><code>\$</code> para el signo del dólar.</p></li><li><p><code>\\</code> para la barra invertida.</p></li><li><p><code>\&quot;</code> para las comillas dobles.</p></li><li><p><code>\t</code> para el tabulador.</p></li><li><p><code>\n</code> para el carácter de nueva línea.</p></li><li><p><code>\r</code> para el carácter de &quot;retorno de carro&quot; (normalmente combinado como <code>\r\n</code> para definir una nueva línea en Windows).</p></li></ul><p>Por ejemplo, para escribir la cadena de texto El símbolo del dólar es &quot;<span>$&quot;)` tendría utilizarse el código: `&quot;El símbolo del dólar es \&quot;\$</span>\&quot;&quot;`. </p><p>Finalmente haremos mención a un tipo especial de cadenas de texto, los <em>símbolos</em>: se trata de secuencias de caracteres alfanuméricos o signos que pueden representar nombres de variables, funciones u operadores, que se escriben precediéndolas de dos puntos (<code>:</code>) para distinguirlas de cadenas de texto convencionales. Los símbolos pueden referirse a operaciones o variables existentes como <code>:+</code>, <code>:log</code>, <code>:include</code>, o también inexistentes. Están particularmente pensados para procesos de <a href="XXXXXXXXXXXXXXXX">metaprogramación</a>, es decir para manipular y crear código programáticamente, que es una forma de uso particularmente avanzado de Julia, y que en esta guía solo trataremos superficialmente. Pero incluso en el uso cotidiano nos encontraremos de vez en cuando con este tipo de símbolos, como veremos a continuación, y por eso vale la pena introducirlos ahora.</p><h2>Matrices de datos</h2><p>Además de los vectores (<em>arrays</em> unidimensionales), otra forma habitual de estructurar los datos es en forma de matrices (<em>arrays</em> de dos dimensiones, con filas y columnas), como las matrices numéricas que en el ejemplo se asignan a la variable <code>datos</code>, así como la matriz que se genera al final, <code>resultados</code>, que contiene los siguientes valores:</p></div>
+<pre class="hljl">
+30×3 Array&#123;Any,2&#125;:
+ &quot;sA01.txt&quot;  0.17  2.14343
+ &quot;sA02.txt&quot;  0.22  2.57753
+ &quot;sA03.txt&quot;  0.19  2.26039
+ &quot;sA04.txt&quot;  0.19  2.33245
+ &quot;sA05.txt&quot;  0.17  2.21149
+ &quot;sA06.txt&quot;  0.16  1.43276
+ &quot;sA07.txt&quot;  0.14  1.56056
+ &quot;sA08.txt&quot;  0.17  1.90153
+ &quot;sA09.txt&quot;  0.17  1.66459
+ &quot;sA10.txt&quot;  0.16  1.39989
+ &quot;sA11.txt&quot;  0.16  1.87768
+ &quot;sA12.txt&quot;  0.23  2.66273
+ &quot;sA13.txt&quot;  0.23  2.82494
+ &quot;sA14.txt&quot;  0.19  2.34254
+ &quot;sA15.txt&quot;  0.18  2.24256
+ &quot;sB16.txt&quot;  0.18  2.21198
+ &quot;sB17.txt&quot;  0.18  1.80996
+ &quot;sB18.txt&quot;  0.16  1.54242
+ &quot;sB19.txt&quot;  0.16  1.35781
+ &quot;sB20.txt&quot;  0.22  2.03066
+ &quot;sB21.txt&quot;  0.18  1.83797
+ &quot;sB22.txt&quot;  0.17  1.81768
+ &quot;sB23.txt&quot;  0.2   2.0441 
+ &quot;sB24.txt&quot;  0.22  1.89218
+ &quot;sB25.txt&quot;  0.18  2.13149
+ &quot;sB26.txt&quot;  0.21  1.91002
+ &quot;sB27.txt&quot;  0.16  1.49802
+ &quot;sB28.txt&quot;  0.19  1.92157
+ &quot;sB29.txt&quot;  0.16  1.59097
+ &quot;sB30.txt&quot;  0.16  1.45398
+</pre>
+
+
+<div><p>Esta matriz no es puramente numérica ni de cadenas de texto, sino que combina ambos tipos de datos, usando un &quot;supertipo&quot; llamado <code>Any</code> que engloba todo tipo de objetos definidos en Julia.</p><p>A menudo, como ocurre con los datos de entrada en el ejemplo anterior, estas matrices se crean leyendo archivos de texto. La forma más directa de hacerlo es mediante la función <code>readdlm</code>, que en principio interpreta el archivo como una matriz en la que cada línea de texto representa una fila de datos, con columnas delimitadas por uno o más caracteres de separación (espacios en blanco o tabuladores).</p><p>Esta especificación general puede crear ambigüedades y problemas a la hora de leer ciertas matrices. Podríamos tener una matriz con columnas separadas por comas en lugar de espacios, o bien cadenas de texto con espacios que no habrían de interpretarse como separadores de columnas  (por ejemplo en una columna de nombres de países, que podría incluir algunos como &quot;Estados Unidos&quot;). Para evitar estos problemas se puede añadir un segundo argumento a la función, con el carácter que se utiliza como separador de columnas. Por ejemplo, si queremos especificar que las columnas del archivo <code>ejemplo.txt</code> están separadas específicamente por tabuladores o por comas:</p></div>
+
 
 <pre class='hljl'>
-<span class='hljl-cs'># Escribimos las filas en líneas separadas por claridad, pero no es necesario</span><span class='hljl-t'>
-</span><span class='hljl-n'>mat</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.1</span><span class='hljl-p'>;</span><span class='hljl-t'>
-       </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-ni'>20</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.2</span><span class='hljl-p'>;</span><span class='hljl-t'>
-       </span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-ni'>30</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.3</span><span class='hljl-p'>]</span>
+<span class='hljl-n'>matriz</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdlm</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;ejemplo.txt&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>&#39;\t&#39;</span><span class='hljl-p'>)</span><span class='hljl-t'>   </span><span class='hljl-cs'># Separada por tabuladores</span><span class='hljl-t'>
+</span><span class='hljl-n'>matriz</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdlm</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;ejemplo.txt&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>&#39;,&#39;</span><span class='hljl-p'>)</span><span class='hljl-t'>    </span><span class='hljl-cs'># Separada por comas</span>
+</pre>
+
+
+<div><p>Como la separación por comas es muy habitual, Julia también dispone de la función <code>readcsv</code>, que es igual que <code>readdlm</code> pero asume la coma como separador de columnas por defecto. Por otro lado, los espacios dentro de las cadenas de texto no se interpretan por defecto como separadores si el archivo enmarca dichas cadenas entre comillas dobles.</p><p>En cualquier caso, si se sabe cuál es el separador siempre es buena práctica indicárselo a la función para evitar comportamientos inesperados. También se puede especificar, seguido del carácter de separación, otro argumento que indique el carácter que marca el fin de línea –que puede diferir entre sistemas operativos, aunque esto no suele ser tan problemático–.</p><p>La función <code>readdlm</code> también admite muchos otros argumentos opcionales para controlar cómo se interpreta el texto, que vienen explicados en su documentación. Hay dos de ellos, <code>skipstart</code> y <code>header</code>, que son particularmente útiles cuando el archivo contiene un encabezado, que a menudo incorpora los nombres de las columnas. </p><p>Por ejemplo consideremos una pequeña tabla de datos antropométricos medios como la que sigue (datos obtenidos de Wolfram Alpha), escrita en el archivo <code>&quot;antropometria.txt&quot;</code>:</p><pre><code class="language-none">genero    altura  peso
+hombres      167    74
+mujeres      156    65</code></pre><p>Podríamos ignorar la primera línea o extraerla como un vector de nombres, usando una de estas dos opciones:</p></div>
+
+
+<pre class='hljl'>
+<span class='hljl-cs'># Para ignorar la primera línea especificamos `skipstart=1`</span><span class='hljl-t'>
+</span><span class='hljl-n'>medidas</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdlm</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;antropometria.txt&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'>  </span><span class='hljl-n'>skipstart</span><span class='hljl-oB'>=</span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-cs'># Para guardar la primera línea como un vector de nombres: `header=true`</span><span class='hljl-t'>
+</span><span class='hljl-p'>(</span><span class='hljl-n'>medidas</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>nombres</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdlm</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;antropometria.txt&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'>  </span><span class='hljl-n'>header</span><span class='hljl-oB'>=</span><span class='hljl-kc'>true</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<div><p>Ambos argumentos se pueden combinar, si el encabezado contiene más líneas con otro tipo de información. En este caso <code>skipstart</code> indicaría el número de líneas a ignorar antes de leer los nombres de las columnas. Ambos son &quot;argumentos con palabra clave&quot;, que pueden ponerse en cualquier orden después de los argumentos principales, pero tienen que ser llamados por su nombre para evitar confusiones. Por ejemplo, si hay dos líneas de texto con &quot;metadatos&quot; antes de la fila de nombres:</p></div>
+
+
+<pre class='hljl'>
+<span class='hljl-cs'># Todas estas expresiones son equivalentes</span><span class='hljl-t'>
+</span><span class='hljl-p'>(</span><span class='hljl-n'>medidas</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>nombres</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdlm</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;antropometria.txt&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>skipstart</span><span class='hljl-oB'>=</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>header</span><span class='hljl-oB'>=</span><span class='hljl-kc'>true</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-p'>(</span><span class='hljl-n'>medidas</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>nombres</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdlm</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;antropometria.txt&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>header</span><span class='hljl-oB'>=</span><span class='hljl-kc'>true</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>skipstart</span><span class='hljl-oB'>=</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-p'>(</span><span class='hljl-n'>medidas</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>nombres</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readdlm</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;antropometria.txt&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>&#39;\t&#39;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>skipstart</span><span class='hljl-oB'>=</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>header</span><span class='hljl-oB'>=</span><span class='hljl-kc'>true</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<div><p>Las matrices también pueden construirse &quot;a mano&quot; a partir de un conjunto de datos, de forma semejante a como se hace con los vectores. Si un vector se define escribiendo la serie de valores entre corchetes, separados por comas, las columnas de una matriz se pueden concatenar separándolas entre espacios, como se hace en la última línea del ejemplo al inicio del capítulo:</p></div>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>resultados</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-n'>archivos</span><span class='hljl-t'> </span><span class='hljl-n'>intervalos</span><span class='hljl-t'> </span><span class='hljl-n'>distancias</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<div><p>Asimismo, se pueden concatenar valores por filas separándolas por puntos y comas. Por ejemplo la tabla antropométrica anterior (dejando de lado los nombres de las columnas) se podría escribir del siguiente modo:</p></div>
+
+<pre class='hljl'>
+<span class='hljl-n'>medidas</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-s'>&quot;hombres&quot;</span><span class='hljl-t'> </span><span class='hljl-ni'>167</span><span class='hljl-t'> </span><span class='hljl-ni'>74</span><span class='hljl-p'>;</span><span class='hljl-t'>   </span><span class='hljl-s'>&quot;mujeres&quot;</span><span class='hljl-t'> </span><span class='hljl-ni'>156</span><span class='hljl-t'> </span><span class='hljl-ni'>65</span><span class='hljl-p'>]</span>
+</pre>
+
+
+
+<div><p>Como ya se ha visto antes, la forma de acceder a un elemento o una submatriz para leer o modificar sus valores es una generalización de lo que se hace con los vectores. Los elementos a los que se quiere acceder se indican por su posición en la matriz, que viene dada por las filas y columnas correspondientes (separadas por una coma).</p></div>
+
+<pre class='hljl'>
+<span class='hljl-cs'># El peso de los nombres está en la primera fila, tercera columna</span><span class='hljl-t'>
+</span><span class='hljl-n'>peso_hombre</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>medidas</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span>
 </pre>
 
 
 <pre class="hljl">
-3×3 Array&#123;Float64,2&#125;:
- 1.0  10.0  0.1
- 2.0  20.0  0.2
- 3.0  30.0  0.3
+74
 </pre>
 
 
+
+<pre class='hljl'>
+<span class='hljl-cs'># Calculamos el peso promedio de hombres y mujeres (columna 3 completa):</span><span class='hljl-t'>
+</span><span class='hljl-n'>peso_promedio</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>mean</span><span class='hljl-p'>(</span><span class='hljl-n'>medidas</span><span class='hljl-p'>[</span><span class='hljl-oB'>:</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>])</span>
+</pre>
+
+
+<pre class="hljl">
+69.5
+</pre>
+
+
+<div><h2>&quot;Data frames&quot; (tablas de datos)</h2><p>En términos coloquiales se puede usar indistintamente el término &quot;matriz&quot; y el de &quot;tabla&quot; de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son <em>arrays</em> de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de &quot;tabla de datos&quot; (<em>data frame</em> en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete <a href="https://github.com/JuliaStats/DataFrames.jl/"><code>DataFrames</code></a>.</p><p>Una tabla de datos es parecida a una matriz; también se puede leer a partir de un archivo de texto mediante la función <code>readtable</code>, al igual que hacíamos con <code>readdlm</code> o <code>readcsv</code> para las matrices, con algunas diferencias entre las cuales podemos destacar las siguientes:</p><ul><li><p>El carácter de separación entre columnas considerado por defecto por <code>readtable</code> depende de la extensión del archivo: la coma para los archivos de tipo <code>.csv</code>, el tabulador para los archivos <code>.tsv</code>, y un espacio en blanco para los <code>.wsv</code>. Para especificar un carácter de separación distinto se utiliza el argumento con la palabra clave <code>separator</code>.</p></li><li><p>La primera línea se interpreta por defecto como la lista de nombres de las columnas. Al leer el archivo estos nombres se incorporan a la propia tabla, en lugar de devolverse como una variable aparte.</p></li><li><p>Si el tipo de datos (números decimales, enteros, cadenas de texto...) es consistente en cada columna del archivo de entrada, dichos tipos se mantienen en las distintas columnas de la tabla resultante, mientras que <code>readdlm</code> o <code>readcsv</code> crearían una matriz homogénea de tipo <code>Any</code>. Las celdas vacías o con el texto <code>&quot;NA&quot;</code> se interpretan como &quot;valores perdidos&quot;, y no alteran el tipo de datos de las columnas correspondientes. (Se pueden especificar otros marcadores de valores perdidos con el argumento <code>nastrings</code>.)</p></li></ul><p>Podemos ver como los nombres de las columnas están incorporados en la tabla leyendo el archivo &quot;antropometria.txt&quot; como sigue:</p></div>
+
+<pre class='hljl'>
+<span class='hljl-cs'># Usar Pkg.add(&quot;DataFrames&quot;) si no se ha instalado el paquete antes</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>DataFrames</span><span class='hljl-t'>
+</span><span class='hljl-n'>tabla_medidas</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>readtable</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;antropometria.txt&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>separator</span><span class='hljl-oB'>=</span><span class='hljl-sc'>&#39; &#39;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+
+<table class="data-frame"><thead><tr><th></th><th>genero</th><th>altura</th><th>peso</th></tr></thead><tbody><tr><th>1</th><td>hombres</td><td>167</td><td>74</td></tr><tr><th>2</th><td>mujeres</td><td>156</td><td>65</td></tr></tbody></table>
+
+<div><p>Además, tal como se ha señalado, el género es una serie de cadenas de texto (datos de tipo <code>String</code>) mientras que la altura o el peso son numeros enteros (<code>Int64</code>). Se puede hacer referencia a las distintas columnas por su posición en la tabla al igual que en las matrices, pero también por sus nombres, que se representan en forma de símbolos (véase al final de la sección sobre cadenas de texto sobre este tipo especial de nombres):</p></div>
+
+<pre class='hljl'>
+<span class='hljl-n'>columna_genero</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>tabla_medidas</span><span class='hljl-p'>[</span><span class='hljl-oB'>:</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>:genero</span><span class='hljl-p'>]</span><span class='hljl-t'>  </span><span class='hljl-cs'># Equivale a ... tabla_medidas[:,1]</span>
+</pre>
+
+
+<pre class="hljl">
+2-element DataArrays.DataArray&#123;String,1&#125;:
+ &quot;hombres&quot;
+ &quot;mujeres&quot;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>columna_altura</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>tabla_medidas</span><span class='hljl-p'>[</span><span class='hljl-oB'>:</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>:altura</span><span class='hljl-p'>]</span><span class='hljl-t'>  </span><span class='hljl-cs'># Equivale a ... tabla_medidas[:,2]</span>
+</pre>
+
+
+<pre class="hljl">
+2-element DataArrays.DataArray&#123;Int64,1&#125;:
+ 167
+ 156
+</pre>
+
+
+<div><p>Este tipo de tablas también se pueden crear a mano, con la función &quot;constructora&quot; <code>DataFrame</code>. La forma normal de construir estas tablas es introduciendo los datos por columnas, a cada una de las cuales se le asigna un nombre. Por ejemplo, la última línea del ejemplo inicial de este capítulo podría haberse cambiado para crear una tabla de este tipo:</p></div>
+
+<pre class='hljl'>
+<span class='hljl-n'>tabla_resultados</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>DataFrame</span><span class='hljl-p'>(</span><span class='hljl-n'>archivo</span><span class='hljl-oB'>=</span><span class='hljl-n'>archivos</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>tiempo</span><span class='hljl-oB'>=</span><span class='hljl-n'>intervalos</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>distancia</span><span class='hljl-oB'>=</span><span class='hljl-n'>distancias</span><span class='hljl-p'>)</span>
+</pre>
+
+
+
+<table class="data-frame"><thead><tr><th></th><th>archivo</th><th>tiempo</th><th>distancia</th></tr></thead><tbody><tr><th>1</th><td>sA01.txt</td><td>0.16999999999999998</td><td>2.1434330118368456</td></tr><tr><th>2</th><td>sA02.txt</td><td>0.22</td><td>2.5775292590286263</td></tr><tr><th>3</th><td>sA03.txt</td><td>0.19</td><td>2.2603903928212428</td></tr><tr><th>4</th><td>sA04.txt</td><td>0.19</td><td>2.3324469605965423</td></tr><tr><th>5</th><td>sA05.txt</td><td>0.17</td><td>2.2114949328870237</td></tr><tr><th>6</th><td>sA06.txt</td><td>0.15999999999999998</td><td>1.4327565917202656</td></tr><tr><th>7</th><td>sA07.txt</td><td>0.13999999999999999</td><td>1.5605599213058907</td></tr><tr><th>8</th><td>sA08.txt</td><td>0.17</td><td>1.901533312501706</td></tr><tr><th>9</th><td>sA09.txt</td><td>0.17</td><td>1.6645883152418282</td></tr><tr><th>10</th><td>sA10.txt</td><td>0.16</td><td>1.3998884861888503</td></tr><tr><th>11</th><td>sA11.txt</td><td>0.16</td><td>1.8776808583257096</td></tr><tr><th>12</th><td>sA12.txt</td><td>0.22999999999999998</td><td>2.6627322343325113</td></tr><tr><th>13</th><td>sA13.txt</td><td>0.22999999999999998</td><td>2.8249360415027818</td></tr><tr><th>14</th><td>sA14.txt</td><td>0.19</td><td>2.342540465002284</td></tr><tr><th>15</th><td>sA15.txt</td><td>0.18</td><td>2.242555577627574</td></tr><tr><th>16</th><td>sB16.txt</td><td>0.17999999999999997</td><td>2.2119760876468946</td></tr><tr><th>17</th><td>sB17.txt</td><td>0.18</td><td>1.8099646729307814</td></tr><tr><th>18</th><td>sB18.txt</td><td>0.16</td><td>1.542417601166443</td></tr><tr><th>19</th><td>sB19.txt</td><td>0.15999999999999998</td><td>1.3578099050153736</td></tr><tr><th>20</th><td>sB20.txt</td><td>0.21999999999999997</td><td>2.0306595656824613</td></tr><tr><th>21</th><td>sB21.txt</td><td>0.17999999999999997</td><td>1.8379684218284122</td></tr><tr><th>22</th><td>sB22.txt</td><td>0.16999999999999998</td><td>1.8176849999271636</td></tr><tr><th>23</th><td>sB23.txt</td><td>0.2</td><td>2.0441037531880917</td></tr><tr><th>24</th><td>sB24.txt</td><td>0.22</td><td>1.892177837382576</td></tr><tr><th>&vellip;</th><td>&vellip;</td><td>&vellip;</td><td>&vellip;</td></tr></tbody></table>
+
+<div><h2>Guardar datos</h2><p>Matrices o vectores con <code>writedlm</code>, <code>writecsv</code>. Tablas con <code>writetable</code></p><p>Variables en general como archivos binarios con <code>save</code> del paquete <a href="https://github.com/JuliaIO/JLD.jl"><code>JLD</code></a></p><pre><code class="language-none">save(&quot;archivo.jld&quot;, &quot;a&quot;, a, &quot;b&quot;, b)</code></pre><p>Sintaxis más sencilla, pero con ciertas limitaciones en su uso, la macro @save (ya veremos luego). También sirve para grabar todas las variables presentes (visibles).</p><pre><code class="language-none">@save &quot;archivo.jld&quot; a b</code></pre><p>Para cargar una variable</p><pre><code class="language-none">a = load(&quot;archivo.jld&quot;, &quot;a&quot;)</code></pre><p>Para cargar todos los datos, usar la función <code>load</code> sin argumentos, y se carga en un &quot;diccionario&quot; (ver luego). Se carga directamente como variables con <code>@load</code></p><pre><code class="language-none">@load &quot;archivo.jld&quot;</code></pre></div>
 
 
 
@@ -918,7 +1093,7 @@ pre.hljl > span.hljl-gt { }
           <div class="footer"><p>
           Published from <a href="datos.jmd">datos.jmd</a> using
           <a href="http://github.com/mpastell/Weave.jl">Weave.jl</a>
-          0.4.3 on 2017-04-21.
+          0.4.3 on 2017-05-24.
           <p></div>
 
 

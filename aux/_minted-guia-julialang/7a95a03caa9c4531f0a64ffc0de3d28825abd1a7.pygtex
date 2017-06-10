@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{writedlm}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}febrero\PYGZus{}2012.txt\PYGZdq{}}\PYG{p}{,} \PYG{n}{tabla\PYGZus{}calendario}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}\PYGZbs{}t\PYGZsq{}}\PYG{p}{)}
+\end{Verbatim}

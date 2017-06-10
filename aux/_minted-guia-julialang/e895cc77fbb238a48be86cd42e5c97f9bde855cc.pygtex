@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{Dict}\PYG{p}{(}\PYG{n}{paises}\PYG{p}{,} \PYG{n}{desempleo\PYGZus{}2014}\PYG{p}{)}
+\PYG{g+go}{Dict\PYGZob{}ASCIIString,Float64\PYGZcb{} with 5 entries:}
+\PYG{g+go}{  \PYGZdq{}Germany\PYGZdq{}        =\PYGZgt{} 5.0}
+\PYG{g+go}{  \PYGZdq{}United Kingdom\PYGZdq{} =\PYGZgt{} 6.3}
+\PYG{g+go}{  \PYGZdq{}Spain\PYGZdq{}          =\PYGZgt{} 24.5}
+\PYG{g+go}{  \PYGZdq{}Greece\PYGZdq{}         =\PYGZgt{} 26.5}
+\PYG{g+go}{  \PYGZdq{}France\PYGZdq{}         =\PYGZgt{} 10.2}
+\end{Verbatim}

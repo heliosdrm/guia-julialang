@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} f identifica a la figura que contiene el gráfico p}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{p} \PYG{o}{=} \PYG{n}{plot}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{f} \PYG{o}{=} \PYG{n}{gcf}\PYG{p}{()}
+\end{Verbatim}

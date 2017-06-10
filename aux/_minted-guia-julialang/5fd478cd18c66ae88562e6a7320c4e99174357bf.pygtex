@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{dic\PYGZus{}desempleo\PYGZus{}2014} \PYG{o}{=} \PYG{n}{Dict}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Germany\PYGZdq{}} \PYG{o}{=\PYGZgt{}} \PYG{l+m+mi}{5}\PYG{p}{,}
+
+\PYG{g+gt}{          \PYGZdq{}Greece\PYGZdq{} =\PYGZgt{} 26.5,}
+
+\PYG{g+gt}{          \PYGZdq{}Spain\PYGZdq{} =\PYGZgt{} 24.5,}
+
+\PYG{g+gt}{          \PYGZdq{}France\PYGZdq{} =\PYGZgt{} 10.2,}
+
+\PYG{g+gt}{          \PYGZdq{}United Kingdom\PYGZdq{} =\PYGZgt{} 6.3)}
+
+\PYG{g+go}{Dict\PYGZob{}ASCIIString,Any\PYGZcb{} with 5 entries:}
+\PYG{g+go}{  \PYGZdq{}Germany\PYGZdq{}        =\PYGZgt{} 5}
+\PYG{g+go}{  \PYGZdq{}United Kingdom\PYGZdq{} =\PYGZgt{} 6.3}
+\PYG{g+go}{  \PYGZdq{}Spain\PYGZdq{}          =\PYGZgt{} 24.5}
+\PYG{g+go}{  \PYGZdq{}Greece\PYGZdq{}         =\PYGZgt{} 26.5}
+\PYG{g+go}{  \PYGZdq{}France\PYGZdq{}         =\PYGZgt{} 10.2}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{dic\PYGZus{}desempleo\PYGZus{}2014}\PYG{p}{[}\PYG{l+s}{\PYGZdq{}Spain\PYGZdq{}}\PYG{p}{]}
+\PYG{g+go}{24.5}
+\end{Verbatim}

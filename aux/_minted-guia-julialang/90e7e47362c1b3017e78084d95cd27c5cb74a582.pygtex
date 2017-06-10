@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{comp} \PYG{o}{=} \PYG{n}{getcomponents}\PYG{p}{(}\PYG{n}{plottable}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])}
+\PYG{g+go}{4\PYGZhy{}element Array\PYGZob{}Any,1\PYGZcb{}:}
+\PYG{g+go}{ Points(...)}
+\PYG{g+go}{ Curve(...)}
+\PYG{g+go}{ Curve(...)}
+\PYG{g+go}{ Legend(...)}
+\end{Verbatim}

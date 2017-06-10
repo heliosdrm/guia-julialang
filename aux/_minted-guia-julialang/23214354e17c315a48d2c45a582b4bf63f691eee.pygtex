@@ -1,0 +1,33 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c}{\PYGZsh{} Convertir la tabla en texto}
+\PYG{n}{tabla\PYGZus{}texto} \PYG{o}{=} \PYG{n}{string}\PYG{p}{(}\PYG{n}{tabla\PYGZus{}calendario}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} Añadir tags de HTML con la función \PYGZdq{}replace\PYGZdq{}}
+\PYG{c}{\PYGZsh{} Los espacios delimitan celdas de la misma fila}
+\PYG{n}{tabla\PYGZus{}texto} \PYG{o}{=} \PYG{n}{replace}\PYG{p}{(}\PYG{n}{tabla\PYGZus{}texto}\PYG{p}{,} \PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZlt{}/td\PYGZgt{}\PYGZlt{}td\PYGZgt{}\PYGZdq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} Los retornos de carro delimitan filas}
+\PYG{n}{tabla\PYGZus{}texto} \PYG{o}{=} \PYG{n}{replace}\PYG{p}{(}\PYG{n}{tabla\PYGZus{}texto}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZlt{}/td\PYGZgt{}\PYGZlt{}/tr\PYGZgt{} }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{ \PYGZlt{}tr\PYGZgt{}\PYGZlt{}td\PYGZgt{}\PYGZdq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} Los corchetes [] delimitan el principio y el final}
+\PYG{n}{tabla\PYGZus{}texto} \PYG{o}{=} \PYG{n}{replace}\PYG{p}{(}\PYG{n}{tabla\PYGZus{}texto}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}[\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZlt{}tr\PYGZgt{}\PYGZlt{}td\PYGZgt{}\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{tabla\PYGZus{}texto} \PYG{o}{=} \PYG{n}{replace}\PYG{p}{(}\PYG{n}{tabla\PYGZus{}texto}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}]\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZlt{}/td\PYGZgt{}\PYGZlt{}/tr\PYGZgt{}\PYGZdq{}}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} Eliminar las celdas con 0}
+\PYG{n}{tabla\PYGZus{}texto} \PYG{o}{=} \PYG{n}{replace}\PYG{p}{(}\PYG{n}{tabla\PYGZus{}texto}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZlt{}td\PYGZgt{}0\PYGZlt{}/td\PYGZgt{}\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZlt{}td\PYGZgt{}\PYGZlt{}/td\PYGZgt{}\PYGZdq{}}\PYG{p}{)}
+
+\PYG{c}{\PYGZsh{} Añadir la cabecera con los días de la semana}
+\PYG{c}{\PYGZsh{} Los strings con los nombres los unimos con \PYGZdq{}join\PYGZdq{}}
+\PYG{n}{cabecera} \PYG{o}{=} \PYG{n}{join}\PYG{p}{(}\PYG{n}{dias}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZlt{}/td\PYGZgt{}\PYGZlt{}td\PYGZgt{}\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{cabecera} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}\PYGZlt{}th\PYGZgt{}\PYGZlt{}td\PYGZgt{}}\PYG{l+s+si}{\PYGZdl{}}\PYG{l+s}{cabecera\PYGZlt{}/td\PYGZgt{}\PYGZlt{}/th\PYGZgt{}\PYGZdq{}}
+\PYG{n}{tabla\PYGZus{}texto} \PYG{o}{=} \PYG{n}{cabecera} \PYG{o}{*} \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}} \PYG{o}{*} \PYG{n}{tabla\PYGZus{}texto}
+\PYG{c}{\PYGZsh{} Escribir el HTML completo}
+\PYG{n}{html\PYGZus{}completo} \PYG{o}{=}
+\PYG{l+s}{\PYGZdq{}\PYGZlt{}html\PYGZgt{}}
+\PYG{l+s}{\PYGZlt{}head\PYGZgt{}}
+\PYG{l+s}{\PYGZlt{}meta charset=}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{utf\PYGZhy{}8}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{\PYGZgt{}}
+\PYG{l+s}{\PYGZlt{}title\PYGZgt{}Febrero de 2012\PYGZlt{}/title\PYGZgt{}}
+\PYG{l+s}{\PYGZlt{}/head\PYGZgt{}}
+\PYG{l+s}{\PYGZlt{}body\PYGZgt{}}
+\PYG{l+s}{\PYGZlt{}table\PYGZgt{}}
+\PYG{l+s+si}{\PYGZdl{}}\PYG{l+s}{tabla\PYGZus{}texto}
+\PYG{l+s}{\PYGZlt{}/table\PYGZgt{}}
+\PYG{l+s}{\PYGZlt{}/body\PYGZgt{}}
+\PYG{l+s}{\PYGZlt{}/html\PYGZgt{}\PYGZdq{}}
+\end{Verbatim}

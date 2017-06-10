@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{p} \PYG{o}{=} \PYG{l+m+mf}{0.5}\PYG{p}{;}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{p} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}
+\PYG{g+go}{true}
+\end{Verbatim}

@@ -1,0 +1,3 @@
+genero    altura  peso
+hombres      167    74
+mujeres      156    65

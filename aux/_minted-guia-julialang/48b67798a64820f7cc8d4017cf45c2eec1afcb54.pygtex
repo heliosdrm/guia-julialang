@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Dibujar el coseno de x entre 0 y 3pi con 100 puntos}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{x} \PYG{o}{=} \PYG{n}{linspace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{n+nb}{pi}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{)}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{plot}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{cos}\PYG{p}{(}\PYG{n}{y}\PYG{p}{),} \PYG{l+s}{\PYGZdq{}\PYGZhy{}or\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}

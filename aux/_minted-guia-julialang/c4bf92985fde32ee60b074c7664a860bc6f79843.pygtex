@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{function}\PYG{n+nf}{ fechaentexto}\PYG{p}{(}\PYG{n}{d}\PYG{p}{,} \PYG{n}{m}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+  \PYG{n}{diasemana} \PYG{o}{=} \PYG{n}{gauss\PYGZus{}diasemana}\PYG{p}{(}\PYG{n}{d}\PYG{p}{,} \PYG{n}{m}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)}
+  \PYG{n}{meses} \PYG{o}{=} \PYG{p}{[}\PYG{l+s}{\PYGZdq{}enero\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}febrero\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}marzo\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}abril\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}mayo\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}junio\PYGZdq{}}\PYG{p}{,}
+    \PYG{l+s}{\PYGZdq{}agosto\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}septiembre\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}octubre\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}noviembre\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}diciembre\PYGZdq{}}\PYG{p}{]}
+  \PYG{n}{texto} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}Hoy es \PYGZdq{}} \PYG{o}{*} \PYG{n}{diasemana} \PYG{o}{*} \PYG{l+s}{\PYGZdq{},\PYGZdq{}} \PYG{o}{*}
+    \PYG{n}{string}\PYG{p}{(}\PYG{n}{d}\PYG{p}{)} \PYG{o}{*} \PYG{l+s}{\PYGZdq{} de \PYGZdq{}} \PYG{o}{*} \PYG{n}{meses}\PYG{p}{[}\PYG{n}{m}\PYG{p}{]} \PYG{o}{*} \PYG{l+s}{\PYGZdq{} de \PYGZdq{}} \PYG{o}{*} \PYG{n}{string}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+  \PYG{n}{println}\PYG{p}{(}\PYG{n}{texto}\PYG{p}{)}
+\PYG{k}{end}
+\end{Verbatim}

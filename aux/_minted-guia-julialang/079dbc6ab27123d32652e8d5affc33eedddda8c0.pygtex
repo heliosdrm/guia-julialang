@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Esto también vale:}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{p}{@}\PYG{n}{printf} \PYG{l+s}{\PYGZdq{}El numero pi es \PYGZpc{}.4f\PYGZdq{}} \PYG{n+nb}{pi}
+\PYG{g+go}{El numero pi es 3.1416}
+\end{Verbatim}

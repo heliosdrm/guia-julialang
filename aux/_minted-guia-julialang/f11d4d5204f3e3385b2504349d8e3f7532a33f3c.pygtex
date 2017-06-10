@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Comparar definición con puntos y comas}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{primos} \PYG{o}{==} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{2}\PYG{p}{;}\PYG{l+m+mi}{3}\PYG{p}{;}\PYG{l+m+mi}{5}\PYG{p}{;}\PYG{l+m+mi}{7}\PYG{p}{;}\PYG{l+m+mi}{11}\PYG{p}{]}
+\PYG{g+go}{true}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Sintaxis errónea}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{;}\PYG{l+m+mi}{3}\PYG{p}{]}
+\PYG{g+go}{ERROR: syntax: unexpected semicolon in array expression}
+\end{Verbatim}

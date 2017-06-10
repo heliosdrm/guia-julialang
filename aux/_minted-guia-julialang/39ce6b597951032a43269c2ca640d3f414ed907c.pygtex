@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{colormap}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}blues\PYGZdq{}}\PYG{p}{)}   \PYG{c}{\PYGZsh{} Escala de azules}
+\PYG{n}{colormap}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}greens\PYGZdq{}}\PYG{p}{)}  \PYG{c}{\PYGZsh{} Escala de verdes}
+\PYG{n}{colormap}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}grays\PYGZdq{}}\PYG{p}{)}   \PYG{c}{\PYGZsh{} Escala de grises}
+\PYG{n}{colormap}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}oranges\PYGZdq{}}\PYG{p}{)} \PYG{c}{\PYGZsh{} Escala de naranjas}
+\PYG{n}{colormap}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}purples\PYGZdq{}}\PYG{p}{)} \PYG{c}{\PYGZsh{} Escala de púrpuras}
+\PYG{n}{colormap}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}reds\PYGZdq{}}\PYG{p}{)}    \PYG{c}{\PYGZsh{} Escala de rojos}
+\end{Verbatim}

@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Dibujar sobre el gráfico \PYGZdq{}p\PYGZdq{}}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{plot}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{cos}\PYG{p}{(}\PYG{n}{x}\PYG{p}{))}
+\end{Verbatim}

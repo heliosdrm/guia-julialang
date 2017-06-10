@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{n}{condici}\PYG{err}{ó}\PYG{n}{n1}
+  \PYG{c}{\PYGZsh{} Ejecutar este bloque si se cumple \PYGZdq{}condicion1\PYGZdq{}}
+\PYG{k}{elseif} \PYG{n}{condici}\PYG{err}{ó}\PYG{n}{n2}
+  \PYG{c}{\PYGZsh{} Ejecutar este bloque si no se cumple la condición anterior,}
+  \PYG{c}{\PYGZsh{} pero sí se cumple \PYGZdq{}condicion2\PYGZdq{}}
+  \PYG{c}{\PYGZsh{} Se pueden poner tantas condiciones alternativas como se quiera...}
+  \PYG{c}{\PYGZsh{} ...}
+\PYG{k}{else}
+  \PYG{c}{\PYGZsh{} Bloque que se ejecuta si no se cumple *ninguna*}
+  \PYG{c}{\PYGZsh{} de las condiciones enunciadas}
+\PYG{k}{end}
+\end{Verbatim}

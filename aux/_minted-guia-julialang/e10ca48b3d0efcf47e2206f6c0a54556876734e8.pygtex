@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{multiplos\PYGZus{}m} \PYG{o}{=} \PYG{p}{(}\PYG{n}{mod}\PYG{p}{([}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{n}\PYG{p}{],} \PYG{n}{m}\PYG{p}{)} \PYG{o}{.==} \PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{n}{igual\PYGZus{}a\PYGZus{}m} \PYG{o}{=} \PYG{p}{([}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{n}\PYG{p}{]} \PYG{o}{\PYGZti{}=} \PYG{n}{m}\PYG{p}{)}
+\PYG{n}{eliminados}\PYG{p}{[}\PYG{n}{multiplos\PYGZus{}m} \PYG{o}{\PYGZam{}} \PYG{n}{igual\PYGZus{}a\PYGZus{}m}\PYG{p}{]} \PYG{o}{=} \PYG{n}{true}
+\end{Verbatim}

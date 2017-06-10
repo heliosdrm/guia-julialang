@@ -1,0 +1,59 @@
+standard
+```julia
+a=2+2
+b=3+3
+b
+```
+
+display=true
+```julia; display=true
+a=2+2
+b=3+3
+```
+
+echo=false
+```julia; echo=false
+a=2+2
+b=3+3
+b
+```
+
+
+results="hidden"
+```julia; results=hidden
+a=2+2
+b=3+3
+b
+```
+
+display=true; results="hidden"
+```julia; display=true; results=hidden
+a=2+2
+b=3+3
+b
+```
+
+
+term=true
+```julia; term=true
+a=2+2
+b=3+3
+```
+
+term=true; results="hidden"
+```julia; term=true; results=hidden
+a=2+2
+b=3+3
+```
+
+term=true; display=false
+```julia; term=true; display=false
+a=2+2
+b=3+3
+```
+
+term=true; eval=false
+```julia; term=true; eval=false
+a=2+2
+b=3+3
+```

@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{texto} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Curiosidades matemáticas:}
+
+\PYG{g+gt}{       El resultado de \PYGZdq{}56\PYGZca{}2\PYGZhy{}45\PYGZca{}2\PYGZdq{} es \PYGZdl{}(56\PYGZca{}2\PYGZhy{}45\PYGZca{}2),}
+
+\PYG{g+gt}{       El resultado de \PYGZdq{}556\PYGZca{}2\PYGZhy{}445\PYGZca{}2\PYGZdq{} es \PYGZdl{}(556\PYGZca{}2\PYGZhy{}445\PYGZca{}2),}
+
+\PYG{g+gt}{       etc.\PYGZdq{}\PYGZdq{}\PYGZdq{};}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{print}\PYG{p}{(}\PYG{n}{texto}\PYG{p}{)}
+\PYG{g+go}{Curiosidades matemáticas:}
+\PYG{g+go}{El resultado de \PYGZdq{}56\PYGZca{}2\PYGZhy{}45\PYGZca{}2\PYGZdq{} es 1111,}
+\PYG{g+go}{El resultado de \PYGZdq{}556\PYGZca{}2\PYGZhy{}445\PYGZca{}2\PYGZdq{} es 111111,}
+\PYG{g+go}{etc.}
+\end{Verbatim}

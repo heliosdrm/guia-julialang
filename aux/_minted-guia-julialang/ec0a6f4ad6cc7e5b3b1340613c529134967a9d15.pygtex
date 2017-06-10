@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} 1. Declarar el tipo de datos del vector en su creación}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sf} \PYG{o}{=} \PYG{k+kt}{Float64}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{];}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n+nb}{typeof}\PYG{p}{(}\PYG{n}{sf}\PYG{p}{)}
+\PYG{g+go}{Array\PYGZob{}Float64,1\PYGZcb{}}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} 2. Crear primero el vector declarando el tipo de datos y el tamaño}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sf} \PYG{o}{=} \PYG{n}{Array}\PYG{p}{(}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{);}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sf}\PYG{p}{[:]} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{];}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n+nb}{typeof}\PYG{p}{(}\PYG{n}{sf}\PYG{p}{)}
+\PYG{g+go}{Array\PYGZob{}Float64,1\PYGZcb{}}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} 3. Convertir la secuencia de enteros explícitamente a tipo float}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sf} \PYG{o}{=} \PYG{n}{float}\PYG{p}{([}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{]);}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n+nb}{typeof}\PYG{p}{(}\PYG{n}{sf}\PYG{p}{)}
+\PYG{g+go}{Array\PYGZob{}Float64,1\PYGZcb{}}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} 4. Introducir números explícitamente decimales al definir la secuencia}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} (vale con que un solo valor sea decimal)}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sf} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{];}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n+nb}{typeof}\PYG{p}{(}\PYG{n}{sf}\PYG{p}{)}
+\PYG{g+go}{Array\PYGZob{}Float64,1\PYGZcb{}}
+\end{Verbatim}

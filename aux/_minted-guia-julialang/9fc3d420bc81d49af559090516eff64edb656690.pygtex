@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Véase que los índices de las filas se invierten al reasignarlos:}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{mat}\PYG{p}{[[}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{],[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{]]} \PYG{o}{=} \PYG{n}{mat}\PYG{p}{[[}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{],[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{]];}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{mat}
+\PYG{g+go}{3x3 Array\PYGZob{}Float64,2\PYGZcb{}:}
+\PYG{g+go}{ 1 10 0.1}
+\PYG{g+go}{ 3 30 0.3}
+\PYG{g+go}{ 2 20 0.2}
+\end{Verbatim}

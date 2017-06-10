@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} sa se redefine como un array que contiene \PYGZdq{}todos los valores de sb\PYGZdq{}}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sa} \PYG{o}{=} \PYG{n}{sb}\PYG{p}{[:]}
+\PYG{g+go}{3\PYGZhy{}element Array\PYGZob{}Int64,1\PYGZcb{}:}
+\PYG{g+go}{ 0}
+\PYG{g+go}{ 2}
+\PYG{g+go}{ 3}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Si redefinimos el primer elemento de sa, el cambio ya no se aplica a sb}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sa}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sa}
+\PYG{g+go}{3\PYGZhy{}element Array\PYGZob{}Int64,1\PYGZcb{}:}
+\PYG{g+go}{ 1}
+\PYG{g+go}{ 2}
+\PYG{g+go}{ 3}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{sb}
+\PYG{g+go}{3\PYGZhy{}element Array\PYGZob{}Int64,1\PYGZcb{}:}
+\PYG{g+go}{ 0}
+\PYG{g+go}{ 2}
+\PYG{g+go}{ 3}
+\end{Verbatim}

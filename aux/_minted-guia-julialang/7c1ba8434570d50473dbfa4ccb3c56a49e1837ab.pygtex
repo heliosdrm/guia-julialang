@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{for} \PYG{p}{(}\PYG{n}{k}\PYG{p}{,} \PYG{n}{v}\PYG{p}{)} \PYG{k}{in} \PYG{n}{dic\PYGZus{}desempleo\PYGZus{}2014}
+  \PYG{n}{print}\PYG{p}{(}\PYG{n}{k}\PYG{p}{)}
+  \PYG{n}{print}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}: \PYGZdq{}}\PYG{p}{)}
+  \PYG{n}{print}\PYG{p}{(}\PYG{n}{v}\PYG{p}{)}
+  \PYG{n}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZpc{}\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{end}
+\end{Verbatim}

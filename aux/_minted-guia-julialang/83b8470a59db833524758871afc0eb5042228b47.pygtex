@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{joinpath}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}directorio\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}fichero.txt\PYGZdq{}}\PYG{p}{)}
+\PYG{g+go}{\PYGZdq{}directorio/fichero.txt\PYGZdq{}}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{p}{(}\PYG{n}{directorio}\PYG{p}{,} \PYG{n}{archivo}\PYG{p}{)} \PYG{o}{=} \PYG{n}{splitdir}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}ruta/de/un/archivo.txt\PYGZdq{}}\PYG{p}{)}
+\PYG{g+go}{(\PYGZdq{}ruta/de/un\PYGZdq{},\PYGZdq{}archivo.txt\PYGZdq{})}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{p}{(}\PYG{n}{nombre\PYGZus{}base}\PYG{p}{,} \PYG{n}{extension}\PYG{p}{)} \PYG{o}{=} \PYG{n}{splitext}\PYG{p}{(}\PYG{n}{archivo}\PYG{p}{)}
+\PYG{g+go}{(\PYGZdq{}archivo\PYGZdq{},\PYGZdq{}.txt\PYGZdq{})}
+\end{Verbatim}

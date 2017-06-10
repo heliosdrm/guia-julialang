@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Mal: \PYGZdq{}\PYGZdl{}\PYGZdq{} se interpreta como símbolo para interpolar}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{print}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Precio: }\PYG{l+s+si}{\PYGZdl{}10}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+go}{ERROR: syntax: invalid interpolation syntax: \PYGZdq{}\PYGZdl{}1\PYGZdq{}}
+
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Correcto:}
+\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{print}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Precio \PYGZbs{}}\PYG{l+s+si}{\PYGZdl{}10}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+go}{Precio \PYGZdl{}10}
+\end{Verbatim}

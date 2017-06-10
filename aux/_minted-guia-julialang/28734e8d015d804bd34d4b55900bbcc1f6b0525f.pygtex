@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c}{\PYGZsh{} Opcion 1: con if/else}
+\PYG{k}{if} \PYG{n}{isdefined}\PYG{p}{(}\PYG{n}{numero}\PYG{p}{)}
+  \PYG{n}{doble} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{n}{numero}
+\PYG{k}{else}
+  \PYG{n}{doble} \PYG{o}{=} \PYG{n}{nothing}
+\PYG{k}{end}
+
+\PYG{c}{\PYGZsh{} Opción 2: con ifelse, puede dar error si no existe el número}
+\PYG{n}{doble} \PYG{o}{=} \PYG{n}{ifelse}\PYG{p}{(}\PYG{n}{isdefined}\PYG{p}{(}\PYG{n}{numero}\PYG{p}{),} \PYG{l+m+mi}{2}\PYG{n}{numero}\PYG{p}{,} \PYG{n}{nothing}\PYG{p}{)}
+
+\PYG{c}{\PYGZsh{} Opción 3: con el operador ternario, que sí cortocircuita}
+\PYG{n}{doble} \PYG{o}{=} \PYG{n}{isdefined}\PYG{p}{(}\PYG{n}{numero}\PYG{p}{)} \PYG{o}{?} \PYG{l+m+mi}{2}\PYG{n}{numero} \PYG{p}{:} \PYG{n}{nothing}
+\end{Verbatim}

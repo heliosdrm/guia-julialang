@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{cd}\PYG{p}{(}\PYG{n}{clipboard}\PYG{p}{())}
+\end{Verbatim}

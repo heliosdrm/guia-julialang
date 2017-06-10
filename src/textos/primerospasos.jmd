@@ -1,15 +1,12 @@
 # Primeros pasos
 
-```julia; echo=false
-import Weave
-Weave.set_chunk_defaults(Dict{Symbol,Any}(:term=>true))
-```
-
 ## Instalación de Julia
 
 Obviamente, lo primero que se necesita para trabajar con cualquier lenguaje de programación son las herramientas para crear y ejecutar los programas. El software básico para usar Julia está disponible en su página oficial (https://julialang.org/downloads), en forma de código fuente así como en binarios preparados para instalar en Windows, Mac OS X, y algunas distribuciones de Linux. Desde esa página se pueden encontrar también enlaces con explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son específicas para cada sistema, y por lo tanto no desarrollaremos aquí.
 
 El paquete básico de Julia presenta un sencillo intérprete de comandos (figura 1), ligero y rápido, útil para realizar pruebas o rutinas sencillas. Sin embargo, para muchos usuarios este tipo de interfaz es poco amigable, y las "ayudas" que proporciona (invocación de instrucciones anteriores usando las flechas de "arriba"/"abajo", combinaciones de teclas disponibles para acelerar las operaciones de corta-y-pega, etc.) resultan insuficientes. Por otro lado, para ejecutar rutinas más complejas, y siempre que se quiera obtener resultados reproducibles, es recomendable escribir las instrucciones en un archivo de código (*script*), y luego ejecutarlo en Julia. Con el intérprete básico se puede ejecutar un *script* (véase un ejemplo en la siguiente sección), pero para escribirlo se necesitaría un programa auxiliar.
+
+![](../imgs/repl.png)
 
 Para combinar ambas tareas de forma eficiente en una sola interfaz lo habitual es usar los llamados "entornos de desarrollo integrados" (conocidos por sus siglas IDE en inglés), que pueden ser programas específicos para el lenguaje en cuestión, o aplicaciones genéricas con módulos particulares para distintos lenguajes. Para el usuario que se inicia en Julia se pueden recomendar dos paquetes de software gratuitos coin IDE incluída, desarrollados por [Julia Computing](https://juliacomputing.com), una compañía fundada por los creadores del lenguaje para ofrecer servicios profesionales.
 
@@ -27,8 +24,7 @@ La elección de una de estas dos alternativas (o incluso otras que no se mencion
 
 Veamos ahora un ejemplo práctico de ambas formas de uso, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.[^1] Se trata de un algoritmo simple, que podría traducirse a Julia mediante el siguiente código: 
 
-<a name="gauss_diasemana" />
-```julia; term=false
+```julia
 """
 Cálculo del día de la semana.
 La función devuelve una cadena de texto con el día de la semana que corresponde
@@ -64,13 +60,13 @@ Supongamos que el código mostrado arriba está guardado en un archivo llamado `
 
 [^2]: Existen dos funciones para el resto de una división: `mod` y `rem`, que funcionan de forma distinta cuando alguno de los dos operandos es negativo. Para el caso que nos ocupa esa diferencia no es relevante.
 
-Este programa se puede cargar usando la función `include` en el intérprete de Julia. Esto es lo que se debería ver en pantalla (los detalles de la presentación dependen de la interfaz usada):
+Este programa se puede cargar usando la función `include` en el intérprete de Julia, como sigue:
 
 ```julia; eval=false
 include("calc_diasemana.jl")
 ```
 
-El resultado es algo decepcionante, porque lo único que se ha hecho es definir una función, que por sí misma no da ningún resultado. Por otro lado, lo más probable es que al introducir esa línea sin más ni siquiera se obtenga ese resultado, sino un error debido a que no se encuentra el archivo de código.[^3] Para asegurarse de que Julia encuentra el archivo hay varias alternativas:
+El resultado posiblemente sea algo decepcionante, porque lo único que se ha hecho es definir una función, que por sí misma no da ningún resultado. Por otro lado, lo más probable es que al introducir esa línea sin más ni siquiera se obtenga ningún resultado, sino un error debido a que no se encuentra el archivo de código.[^3] Para asegurarse de que Julia encuentra el archivo hay varias alternativas:
 
   * Copiar el archivo de código `calc_diasemana.jl` al directorio de trabajo de Julia. La ruta de ese directorio se puede obtener con la función `pwd()` -- sin ningún argumento--.
   * Cambiar el directorio de trabajo al lugar que contiene el archivo. El cambio de directorio se hace con la función `cd`, que recibe un solo argumento: el nombre del directorio destino. Este se puede definir literalmente como un texto entre comillas dobles, o ser una variable que contiene dicho texto.
@@ -78,8 +74,14 @@ El resultado es algo decepcionante, porque lo único que se ha hecho es definir 
 
 [^3]: Ref. a sección con información sobre LOAD_PATH y require()
 
-!!! tip "Copiar nombres de directorios con `clipboard`"
-     A veces los nombres de los directorios son largos y resulta tedioso escribirlos. Para hacerlo más fácil, en sistemas operativos se puede copiar el nombre del directorio desde el gestor de archivos al "portapapeles", y utilizarlo directamente en Julia con la función `clipboard`; por ejemplo se puede cambiar al directorio seleccionado mediante la expresión `cd(clipboard())`. Este truco es particularmente recomendable en Windows, donde los directorios de una ruta suelen presentarse divididos por "barras invertidas". Por ejemplo, el directorio de trabajo podría ser `C:\julia`. Pero la expresión `cd("C:\julia"` no daría el resultado esperado, porque la barra invertida se interpreta como inicio de una "secuencia de escape" para caracteres no imprimibles. Para que funcionase, habría que escribir `cd("C:/julia")` o `cd("C:\\julia")`. La función `clipboard` ahorra este tipo de problemas.
+Una dificultad añadida es que a veces los nombres de los directorios son largos y resulta tedioso escribirlos. De hecho, lo más natural para la mayoría de la gente es utilizar entornos gráficos para seleccionar y definir rutas y nombres de archivos. En Julia podemos hacer esto de dos maneras:
+
+* Usando solo las herramientas más básicas de Julia: copiar el nombre del directorio desde el gestor de archivos al "portapapeles", y convertirlo en una variable de texto mediante la función `clipboard`. Por ejemplo, con la expresión `directorio = clipboard()`.
+
+* Mediante diálogos gráficos aportados por paquetes externos, como (entre otros) [Tk](https://github.com/JuliaGraphics/Tk.jl), basado en la libería Tcl/Tk, que dispone de las siguientes funciones para seleccionar archivos o directorios (véase más abajo sobre el uso de paquetes en Julia):
+    - `GetOpenFile()` para seleccionar la ruta completa a un archivo existente.
+    - `GetSaveFile()` para seleccionar la ruta de un archivo (tanto existente como uno nuevo).
+    - `ChooseDirectory()` para seleccionar la ruta de un directorio nuevo o existente.
 
 Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó el San Valentín de 2012, la fecha en la que se hizo pública la primera versión de Julia:
 
@@ -115,19 +117,23 @@ La distribución básica de Julia es realmente "básica", y carece de bastantes 
 
 Esta limitación está cubierta por el desarrollo coordinado (aunque independiente) de cientos de "paquetes" que contienen dichas utilidades. Como el propio proyecto Julia, todos los paquetes oficiales están publicados con el sistema de [Git](http://git-scm.com/). Julia mantiene un catálogo online de los paquetes oficiales, cuya lista se puede consultar en el sitio http://pkg.julialang.org/, o desde Julia con la expresión `Pkg.available`. En los siguientes capítulos se irán señalando algunos paquetes útiles para cubrir los distintos aspectos tratados en cada momento.
 
-Las soluciones más completas como Julia Box o Julia Pro ya incorporan muchos de los paquetes más importantes, pero incluso en esos casos puede ser necesario gestionarlos, actualizarlos o añadir nuevos paquetes. La instalación y desinstalación de paquetes se controla desde dentro de Julia, mediante las funciones `Pkg.add` y `Pkg.rm`, respectivamente, que toman como argumento el nombre del paquete a instalar o desinstalar. Estas operaciones consisten esencialmente en "clonar" el paquete publicado en un lugar determinado del sistema, o borrarlo de ese sitio (el directorio de instalación está definido en la variable `JULIA_PKGDIR` si existe, o por defecto en el directorio designado por la función `Pkg.dir`). Por ejemplo, el proceso para instalar el paquete [Plots](https://github.com/JuliaPlots/Plots.jl) (usado para crear representaciones gráficas) podría ser como sigue:
+Las soluciones más completas como Julia Box o Julia Pro ya incorporan muchos de los paquetes más importantes, pero incluso en esos casos puede ser necesario gestionarlos, actualizarlos o añadir nuevos paquetes. La instalación y desinstalación de paquetes se controla desde dentro de Julia, mediante las funciones `Pkg.add` y `Pkg.rm`, respectivamente, que toman como argumento el nombre del paquete a instalar o desinstalar. Estas operaciones consisten esencialmente en "clonar" el paquete publicado en un lugar determinado del sistema, o borrarlo de ese sitio (el directorio de instalación está definido en la variable `JULIA_PKGDIR` si existe, o por defecto en el directorio designado por la función `Pkg.dir`).
+
+Por ejemplo, supongamos que queremos usar las funciones del paquete [Tk](https://github.com/JuliaGraphics/Tk.jl) mencionado antes para seleccionar nombres y rutas de archivos. El proceso podría ser como sigue:
 
 ```julia; eval=false
-# Consultar si está instalado (en cuyo caso no hace falta instalarlo)
-Pkg.installed("Plots")
+# Consultar si el paquete está instalado (en cuyo caso no hace falta instalarlo)
+Pkg.installed("Tk")
 # Si devuelve "nothing" (no está instalado):
-Pkg.add("Plots")
+Pkg.add("Tk")
 ```
 
-Esta operación solo hay que hacerla una vez (actualizaciones aparte). Sin embargo, tener el paquete instalado no basta para poder usarlo. Para esto último hay que cargarlo explícitamente en cada sesión de trabajo, con la instrucción `using`:
+Esta operación solo hay que hacerla una vez (actualizaciones aparte). Sin embargo, tener el paquete instalado no basta para poder usarlo. Si quisiéramos usar la función `GetOpenFile` para seleccionar un archivo de código y luego incluirlo, primero tendríamos que cargar el paquete explícitamente con la instrucción `using`, y luego ya podríamos usar `GetOpenFile` (y cualesquiera otras funciones exportadas por el paquete):
 
 ```julia; eval=false
 using Plots
+archivo = GetOpenFile()
+include(archivo)
 ```
 
 
@@ -144,8 +150,4 @@ Se puede probar con cualquier función básica (por ejemplo `?div` para leer la 
     Si has realizado el ejercicio de crear la función [`gauss_diasemana`](#gauss_diasemana) con el código completo presentado en este capítulo, al escribir `?gauss_diasemana` podrás leer el texto de las líneas que preceden a la definición de la función. Esta forma de documentar las funciones u otro tipo de objetos es muy útil y recomendable para hacer programas trazables y comprensibles.
 
 Para las dudas no resueltas en el  manual, entre otras cuestions, los creadores de Julia han organizado un foro de debate y preguntas, disponible en https://discourse.julialang.org (en inglés). Y además existen múltiples foros y redes sociales (también en español y otros idiomas), tanto promovidas por los desarrolladores como por los propios usuarios, donde se pueden encontrar infinidad de consultas pasadas y hacer nuevas. Una buena recopilación de estas redes se puede encontrar en https://julialang.org/community/
-
-```julia; echo=false
-Weave.restore_chunk_defaults()
-```
 
