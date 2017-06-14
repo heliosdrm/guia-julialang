@@ -9,32 +9,145 @@ cd("../../datos")
 
 En los capítulos anteriores de esta guía hemos hecho un tratamiento superficial, incluso podría decirse que apresurado, de unos pocos aspectos básicos en los que muchos otros manuales, sean de Julia o cualquier otro lenguaje de programación, suelen ser más detallados en sus capítulos introductorios. En este capítulo dedicado a los gráficos, sin embargo, vamos a detenernos más a pesar de que es una funcionalidad bastante avanzada, y requiere instalar unos cuantos paquetes auxiliares y librerías externas para empezar.
 
-Hay una buena razón para hacerlo así. El usuario de una herramienta informática normalmente no juzga si una tarea es "básica" o "avanzada" según las complejidades que supone para esa herramienta, sino por cuestiones más prácticas. Y uno de los primeros pasos, si no el primero, que se hace tras recoger los datos de un estudio es explorarlos visualmente. Desde ese punto de vista, pues, la representación gráfica es realmente una de las funciones más básicas. Tanto es así que si un entorno de programación no lo pone fácil para leer las
+Hay una buena razón para hacerlo así. El usuario de una herramienta informática normalmente no juzga si una tarea es "básica" o "avanzada" según las complejidades que supone para esa herramienta, sino por cuestiones más prácticas. Y explorar visualmente los datos es una de las primeras cosas que se suele hace después de recogerlos, como mínimo para valorar si parecen correctos o hay algún tipo de anomalía. En este sentido los gráficos podrían considerarse como una de las tareas más básicas. De hecho no es raro que el ansia por ver qué pinta tienen los datos conduzca a atajos "sucios y rápidos", como abrir los ficheros con una hoja de cálculo e improvisar gráficas con un par de *clicks* de ratón, antes de empezar los preparativos para un análisis más formal.
 
+Parece lógico, por tanto, que las instrucciones para crear gráficos también se introduzcan lo más pronto posible a la hora de presentar una herramienta para el análisis de datos. Además, parafraseando el refrán popular, se puede decir que un gráfico vale más que mil números. Julia tiene es un lenguaje de programación con una potencia extaordinaria para hacer cálculos complejos y costosos de forma rápida y eficaz; pero la representación en un bonito gráfico interactivo de un análisis de datos sencillo a veces da una mayor sensación de productividad, y aprender a crear esos gráficos es una buena manera de aumentar la motivación para introducirse en un lenguaje de programación.
 
+## Cómo empezar
 
+Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías necesarias y proporcionan funciones para manejarlas desde Julia. Además, el paquete [`Plots`](https://github.com/JuliaPlots/Plots.jl) proporciona una interfaz común para manejar muchos de esos otros paquetes, de tal manera que solo hace falta aprender una forma de crear y editar gráficos.
 
+### Ejemplo de `Plots` con GR
 
-La representación de gráficos es una de las primeras cosas que se hace...
+Por ejemplo, el gráfico con el ejemplo de las series de datos analizadas en el capítulo anterior está creado con [GR](http://gr-framework.org), una librería gráfica *open source* que se integra en Julia a través del paquete [`GR`](https://github.com/jheinen/GR.jl). Las instrucciones seguidas para obtener este gráfico son las siguientes:
+
 
 ```julia
-using Plots
+# Primero leemos el archivo con las series de datos datos a representar
+# (la primera columna tiene los tiempos, y las otras dos las coordenadas)
 datos = readdlm("series/sA01.txt")
-plot(datos[:,1],datos[:,2:3])
+# Cargamos el paquete `Plots` y seleccionamos `gr` como herramienta gráfica
+using Plots
+gr()
+# Dibujamos la línea de las `x` (segunda columna)
+plot(datos[:,1], datos[:,2], label="x")
+# Añadimos la línea de las `y`
+plot!(datos[:,2], datos[:,3], label="y")
 ```
 
+Estas instrucciones, que luego comentaremos con más detalle, son las mismas que se utilizarían para crear ese gráfico con cualquier otra librería soportada por `Plots`, excepto la línea en la que se selecciona la librería en cuestión. (En este caso `gr()`; la forma de seleccionar la librería siempre es mediante una función con el nombre en minúsculas del paquete asociado de Julia, que naturalmente ha de estar instalado con anterioridad.)
+
+A continuación se muestran ejemplos de esta misma gráfica creada con algunas de las principales librerías soportadas por `Plots`, junto con algunas indicaciones específicas relacionadas con las maneras en las que se pueden presentar los gráficos. Hay que tener en cuenta que su visualización puede depender de las herramientas gráficas empleadas, así como del entorno en el que se trabaja. Según el caso, las gráficas pueden presentarse intercaladas con el código, en una ventana gráfica especial, o como una página web en un navegador.
+
+### Plotly/PlotlyJS
+
+```julia; echo=false
+plotlyjs()
+plot(datos[:,1], datos[:,2:3], label=["x" "y"])
+```
+
+[Plotly](https://plot.ly/) es una plataforma web para crear gráficos interactivos y publicarlos online. Estos gráficos son muy prácticos para inspeccionar los datos representados, con herramientas hacer zoom, salvarlos en otro formato, etc. y se integran muy bien en documentos HTML, como se puede ver en el ejemplo. Sus desarrolladores también han creado una librería *open source* basada en Javascript llamada [Plotly.js](https://plot.ly/javascript/), que permite crear estos gráficos de forma local, y sin tener una cuenta de usuario en su plataforma.
+
+Para interactuar con la plataforma online Julia dispone del paquete [`Plotly`](https://github.com/plotly/Plotly.jl), aunque si no se requieren los servicios online es más práctico trabajar con la librería de Javascript, usando el paquete [`PlotlyJS`](https://github.com/sglyon/PlotlyJS.jl). Ambos están soportados por `Plots`.
+
+Cuando se trabaja en la línea de comandos o en Juno, los gráficos de PlotlyJS se abren por defecto como una página web en un navegador. Alternativamente se puede configurar para que se presenten en una ventana gráfica propia, ejecutando las siguientes instrucciones (solo la primera vez):
 
 
+```julia; eval=false
+using Blink
+Blink.AtomShell.install()
+```
 
-Controlar los atributos de las series de datos. Ejemplo, todo en negro y línea punteada para el segundo:
-Ponerlos en columnas.
+### Matplotlib (PyPlot)
 
+```julia; echo=false
+pyplot()
+plot(datos[:,1], datos[:,2:3], label=["x" "y"])
+```
+
+[Matplotlib](http://matplotlib.org) es la librería que suele utilizarse para crear gráficos científicos en Python. Se maneja a través del paquete [PyPlot](https://github.com/JuliaPy/PyPlot.jl), que también instala automáticamente una distribución mínima de Python con Matplotlib incluido. En un entorno de Python estos gráficos son interactivos, pero al crearlos en Julia (en un *notebook*, en el panel de gráficos de Juno...) pasan a ser directamente imágenes estáticas. Como alternativa se puede forzar su presentación en una ventana propia como las empleadas por Python para manipularlos, con las siguientes instrucciones:
+
+```julia; eval=false
+using PyCall
+pygui(true)
+```
+
+### UnicodePlots
+
+```julia; echo=false
+unicodeplots()
+plot(datos[:,1], datos[:,2:3], label=["x" "y"])
+```
+
+No hay mucha gente que suela interesarse por hacer gráficos basados en elementos de texto, por lo que esta opción se presenta principalmente como una curiosidad, aunque tiene una ventaja sobre todos los anteriores: no hace falta instalar ninguna librería gráfica externa; lo único que se requiere es el paquete [UnicodePlots](https://github.com/Evizero/UnicodePlots.jl), que contiene solo un módulo de Julia "puro y duro" con unas dependencias mínimas.
+
+## Uso básico de `plot`
+
+La función `plot` con la que hemos creado el gráfico del ejemplo anterior (y `plot!` para modificarlo) es la utilidad principal del paquete `Plots`, y con ella se pueden hacer la mayoría de operaciones relacionadas con la elaboración de gráficos.
+
+La forma habitual de utilizar esta función (la sintaxis es la misma para `plot` y `plot!`) es:
+
+```julia; eval=false
+plot(x, y, atributos...)
+```
+
+Donde `x`, `y` son vectores con las series de datos a presentar en los respectivos ejes de la gráfica, y `atributos` es un conjunto de argumentos con nombre clave (opcionales) que se emplean para retocar los diversos elementos que la componen. En el ejemplo hemos definido solo el atributo `label`, que determina la etiqueta que identifica cada serie de datos en la leyenda. También es posible omitir la variable `x`, en cuyo caso se asume una serie de números naturales empezando por el 1, tan larga como `y`.
+
+Como en el ejemplo las dos series de datos tienen la misma longitud, también podríamos haber creado la gráfica en una sola línea, juntando las dos columnas en una misma matriz. En ese caso, en el atributo `label` deberían agruparse las dos etiquetas de la leyenda, también organizadas por columnas:
+
+```julia; eval=false
+plot(datos[:,1], datos[:,2:3], label=["x" "y"])
+```
+
+(Véase como el elemento asignado a `label` no es un vector unidimensional sino una matriz con dos columnas --y una fila--, ya que las dos etiquetas están separadas por un espacio, no por comas o punto y coma.)
+
+Siguiendo la misma lógica podríamos modificar otros atributos de la gráfica. Por ejemplo podríamos generar una gráfica apta para publicar en blanco y negro, forzando el color de ambas series al negro, y especificando dos tipos de línea distintos para cada serie (continua y discontinua, respectivamente):
+
+```julia
 plot(datos[:,1], datos[:,2:3], color=:black, style=[:solid :dash])
+```
+
+La cantidad de atributos que se pueden especificar es inmensa, y da lugar a una gran variedad de gráficos posbiles. El nombre de los atributos disponibles (como `color` y `style`), y los valores que se les pueden pasar (en este caso símbolos con los nombres de los colores y tipos de línea en inglés) se pueden buscar en la documentación del paquete `Plots`, concretamente en la página https://juliaplots.github.io/attributes/. También se pueden consultar desde Julia, con la función `plotattr`:
+
+* `plotattr()` recuerda los cuatro componentes de un gráfico cuyos atributos se pueden especificar. Ordenados de forma jerárquica, estos componentes son:
+
+	+ `Series`: elementos gráficos asociados a una serie de datos, normalmente determinados por sus coordenadas más unos atributos estéticos, como el tipo de elemento geométrico dibujado (puntos, líneas, figuras poligonales...), colores, tamaños, decoraciones...
+	
+	+ `Axis`: cuadro en el que se representan las `Series`, que determina cómo están dispuestos los ejes de coordenadas, su escala, anotaciones, decoraciones, y la estética del "lienzo" de fondo.
+	
+	+ `Subplot`: marco en el que se coloca el `Axis`, que determina su forma y tamaño relativo, y en el que puede haber otros componentes como un título y una leyenda.
+	
+	+ `Plot`: marco global de toda la figura. Se distingue del `Subplot` principalmente cuando una figura contiene varios paneles, de tal manera que cada panel es un `Subplot` y el conjunto de paneles con su marco es el `Plot`. En él se especifican algunos atributos generales como el tamaño absoluto, propiedades de la ventana gráfica, o el formato de presentación.
+
+* `plotattr(:Series)` proporciona una lista en orden alfabético de los atributos asociados al componente `Series`. Lo mismo ocure con los otros componentes, cambiando `:Series` por el símbolo del nombre que corresponda (`:Axis`, `:Subplot` o `:Plot`).
+
+* `plotattr(a)`, donde la variable `a` es una cadena de texto con el nombre de un atributo, describe el atributo en cuestión y explica cómo especificarlo.
+
+Cuando se especifica un atributo concreto, `plotattr` informa de varias cosas. Por ejemplo, veamos la explicación del atributo `"label"` (la etiqueta de la serie de datos para la leyenda):
+
+```julia
+plotattr("label")
+```
+
+* La primera línea da el nombre "oficial" del atributo e indica el tipo de variable que se le puede asignar (en este caso un `String`, es decir una cadena de texto).
+
+* La segunda línea proporciona unos "alias" aceptados para referirse al atributo. Este sistema de alias está pensado para facilitar el uso a personas que ya han usado otros lenguajes de programación, ya que muchos de ellos siguen una sintaxis muy semejante entre ellos (y también semejante a la de `Plots`), pero con nombres de atributos muy variados. Los `alias` recogen algunos de los nombres de atributos usados en los lenguajes de programación más populares, de tal modo que se reduce la necesidad de aprender una nomenclatura nueva.
+
+* A continuación viene la explicación de cómo se especifica el atributo. Cuando hay una lista de valores posibles se da una referencia completa de la misma.
+
+* En la última línea se señala a qué tipo de componente corresponde el atributo (`label` corresponde a `Series`), y el valor por defecto.
 
 
 
-Tienen varios alias. Lista completa:
-https://juliaplots.github.io/attributes/
+
+ la lista de valores aceptados para el mismo. Por ejemplo, `plotattr("label")` explica
+	
+	la figura completa, con todos los contenidos del gráfico.
+	
+	+ `Subplot`: panel dentro de la figura con
+	
+	
+	(la figura completa), `Subplot` (el panel dentro de la figura que contiene el gráfico --puede haber varios en una misma figura--), `Axis` (el cuadro donde aparecen los elementos gráficos determinados por sus coordenadas)
 
 Ver en REPL:
 En jerarquía
