@@ -11,3 +11,17 @@ mutables, inmutables
 map
 secuencias de escape, triples comillas
 tuplas: poner el número adecuado de argumentos de salida
+
+Meta gráficos:
+
+Paquete Plots, con GR, Plotly, PlotlyJS, PyPlot y UnicodePlots
+Función plot y variantes: plot! scatter, sticks
+Partes del gráfico: `Plot`, `Subplot`, `Axis`, `Series`.
+Atributos, plotattr
+Colores, colorant""
+
+
+
+repeat(, inner...)
+
+

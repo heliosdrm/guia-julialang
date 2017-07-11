@@ -12,9 +12,13 @@ Para combinar ambas tareas de forma eficiente en una sola interfaz lo habitual e
 
 El más sencillo de usar es [Julia Box](https://juliabox.com/), una plataforma web para crear "cuadernos de notas" (*notebooks*) en Julia. En estos cuadernos se puede escribir texto normal (incluyendo formatos de letra, estilos de título y de párrafo, etc.) e intercalarlo con bloques de código que se pueden ejecutar *in situ* con un click de ratón, de forma que los resultados (incluyendo gráficos) aparecen entre los párrafos de texto a continuación del código (figura 2). Una diferencia esencial respecto a la consola de comandos, además de poder alternar texto normal con código, es que se pueden retocar los bloques de código ya ejecutados (y volver a ejecutarlos para actualizar los resultados). 
 
+[FIGURA JULIABOX]
+
 Otra ventaja de Julia Box es que se puede utilizar desde un navegador de Internet sin siquiera tener Julia instalado en el ordenador; lo único que hace falta es una cuenta de Github, Linkedin o Google con la que registarse para entrar. Trabajar con esta herramienta online tiene algunas limitaciones, pero es un recurso práctico en particular para hacer pruebas o para estudiantes. Julia Box está basado en [Jupyter](http://jupyter.org/), una evolución de la plataforma IPython que se desarrolló originalmente para hacer *notebooks* de Python, y desde la misma web de Jupyter se pueden también hacer pruebas más elementales con Julia (con una funcionalidad más limitada), sin tan siquiera registrarse, entrando de forma anónima en https://try.jupyter.org/ y abriendo un cuaderno de Julia.
 
 Otro paquete más completo es [Julia Pro](https://juliacomputing.com/products/juliapro.html), una aplicación de escritorio (esta sí tiene que instalarse), que permite tanto crear *notebooks* a través de Jupyter --en una instalación local, no remota--, como trabajar en [Juno](http://junolab.org/), otro IDE para Julia basado en el editor de código [Atom](https://atom.io/). La interfaz de Juno tiene varios paneles, incluyendo una consola de comandos, visores de variables y gráficas, y un editor de código para trabajar con uno o varios archivos a la vez. Además de para escribir el código, este editor sirve para ejecutarlo, bien todo completo o por línas o bloques seleccionados; los resultados se pueden visualizar directamente en el archivo de código (parecido a como funciona en los *notebooks*) o en los otros paneles (figura 3).
+
+[FIGURA JUNO]
 
 La elección de una de estas dos alternativas (o incluso otras que no se mencionan aquí) depende de las necesidades del usuario, por lo que en este manual no se da ninguna preferencia. Los ejemplos que se presentarán a partir de ahora estarán dirigidos a un uso genérico, que se puede hacer tanto en Jupyter como Juno, o incluso en la consola de comandos básica de Julia.
 
@@ -133,7 +137,7 @@ Pkg.add("Tk")
 Esta operación solo hay que hacerla una vez (actualizaciones aparte). Sin embargo, tener el paquete instalado no basta para poder usarlo. Si quisiéramos usar la función `GetOpenFile` para seleccionar un archivo de código y luego incluirlo, primero tendríamos que cargar el paquete explícitamente con la instrucción `using`, y luego ya podríamos usar `GetOpenFile` (y cualesquiera otras funciones exportadas por el paquete):
 
 ```julia; eval=false
-using Plots
+using Tk
 archivo = GetOpenFile()
 include(archivo)
 ```
@@ -152,4 +156,21 @@ Se puede probar con cualquier función básica (por ejemplo `?div` para leer la 
     Si has realizado el ejercicio de crear la función [`gauss_diasemana`](#gauss_diasemana) con el código completo presentado en este capítulo, al escribir `?gauss_diasemana` podrás leer el texto de las líneas que preceden a la definición de la función. Esta forma de documentar las funciones u otro tipo de objetos es muy útil y recomendable para hacer programas trazables y comprensibles.
 
 Para las dudas no resueltas en el  manual, entre otras cuestions, los creadores de Julia han organizado un foro de debate y preguntas, disponible en https://discourse.julialang.org (en inglés). Y además existen múltiples foros y redes sociales (también en español y otros idiomas), tanto promovidas por los desarrolladores como por los propios usuarios, donde se pueden encontrar infinidad de consultas pasadas y hacer nuevas. Una buena recopilación de estas redes se puede encontrar en https://julialang.org/community/
+
+## Repaso de lo aprendido
+
+En este primer y breve capítulo hemos aprendido los siguientes puntos fundamentales para trabajar en Julia:
+
+* Los distintos entornos disponibles: la interfaz de comandos, *notebooks* de Jupyter y el IDE de Juno.
+* Algunas reglas básicas de sintaxis del lenguaje.
+* Cómo instalar y cargar paquetes.
+* Algunas utilidades del paquete `Tk` para definir nombres de directorios y archivos a través de ventanas gráficas.
+* Cómo buscar ayuda.
+
+Además, a lo largo de las explicaciones hemos empleado las siguientes funciones particulares (además de las propias de la gestión de paquetes y las de `Tk`):
+
+* `cd` y `pwd` para definir y consultar el directorio de trabajo, respectivamente.
+* `div` para divisiones enteras y `mod` para el resto de una división.
+* `include` para ejecutar *scripts*.
+* `joinpath` para componer nombres de directorios y archivos.
 

@@ -18,12 +18,12 @@ using Plots
 datos = readdlm("series/sA01.txt")
 ```
 ```julia; echo=false
-plot(datos[:,1],datos[:,2:3])
+plot(datos[:,1],datos[:,2:3],label=["x" "y"])
 ```
 
-En todos los casos ambas series tienen una forma semejante, con un "valle" negativo seguido de un "pico" positivo. Supongamos que en el estudio que tenemos entre manos las dos series de datos identifican un vector $(x,y)$, y queremos generar una tabla de datos que contenga el intervalo de tiempo transcurrido entre los dos extremos de la señal y la distancia entre esos dos extremos.
+En todos los casos ambas series tienen una forma semejante, con un "valle" negativo seguido de un "pico" positivo. Supongamos que en el estudio que tenemos entre manos las dos series de datos identifican un vector $(x,y)$, y queremos generar una tabla de datos que contenga el intervalo de tiempo transcurrido entre los dos extremos de la señal, la distancia global entre esos dos puntos extremos y la proporción entre la distancia recorrida en $x$ y en $y$.
 
-Los extremos los identificaremos por el tamaño o módulo del vector $m=\sqrt{x^2+y^2}$; para facilitar la localización de ambos, teniendo en cuenta que el primero siempre se corresponde con coordenadas negativas y el segundo con positivas, multiplicaremos ese módulo por el signo de una de las dos coordenadas, de tal modo que el valor mínimo de esa variable será el primer extremo (el valle) y el máximo será el segundo (el pico). El código para construir la tabla de datos, que iremos explicando a lo largo del capítulo, es el siguiente:
+Los extremos los identificaremos por el tamaño o módulo del vector $m=\sqrt{x^2+y^2}$; para facilitar la localización de ambos, teniendo en cuenta que el primero siempre se corresponde con coordenadas negativas y el segundo con positivas, multiplicaremos ese módulo por el signo de una de las dos coordenadas. De este modo, el valor mínimo del "módulo con signo" (el extremo negativo) será el valle, y el máximo (positivo) será el pico. El código para construir la tabla de datos, que iremos explicando a lo largo del capítulo, es el siguiente:
 
 ```julia; display=false
 # Leemos los nombres de los archivos del directorio "series"
@@ -35,6 +35,7 @@ n = length(archivos)
 # uno para los tiempos y otro para las distancias
 intervalos = zeros(n)
 distancias = zeros(n)
+proporcionxy = zeros(n)
 # Ahora vamos explorando los archivos uno a uno y rellenando datos
 for i=1:n
     rutaarchivo = joinpath(directorio,archivos[i])
@@ -53,12 +54,14 @@ for i=1:n
     distancia_x = x[indice_maximo] - x[indice_minimo]
     distancia_y = y[indice_maximo] - y[indice_minimo]
     distancias[i] = sqrt(distancia_x^2 + distancia_y^2)
+    proporcionxy[i] = distancia_y/distancia_x
 end
-# Para terminar escribimos los datos en una matriz con tres columnas:
+# Para terminar escribimos los datos en una matriz con cuatro columnas:
 # 1: el nombre del archivo
 # 2: el intervalo entre extremos
 # 3: la distancia entre extremos
-resultados = [archivos intervalos distancias]
+# 4: la proporción entre la distancia en x e y
+resultados = [archivos intervalos distancias proporcionxy]
 ```
 
 Tomando este ejemplo como refencia, vamos a ver ahora algunos tipos y estructuras elementales de datos con las que normalmente trabajaremos en Julia.
@@ -76,7 +79,7 @@ Por otro lado, con mucha frecuencia las variables con las que interesa trabajar 
 * `datos`: matrices de 100×3 que contienen los datos numéricos leídos directamente de los archivos.
 * `tiempo`, `x`, `y`: vectores de 100 números con cada una de las tres columnas de `datos`.
 * `modulo`: vectores de 100 números resultantes de operar con `x` e `y`.
-* `intervalos`, `distancias`: vectores de `n` elementos (30) que contienen los intervalos y distancias entre extremos para cada uno de los archivos.
+* `intervalos`, `distancias` y `proporcionxy`: vectores de `n` elementos (30) que contienen los resultados que buscamos para cada uno de los archivos.
 
 En Julia los vectores y matrices (junto con las "hipermatrices" de más de dos dimensiones) son casos específicos de *arrays*, que se pueden definir en general como conjuntos de datos ordenados (numéricos o también de otros tipos, como veremos después). Su manejo es un tema extenso, que se trata de forma más detallada en el capítulo XXXXXXXXXXXX. Por ahora, como introducción solo veremos superficialmente los vectores (*arrays* unidimensionales). En el ejemplo hemos leído los datos a partir de archivos grabados en disco, como es habitual, pero un vector también se puede definir "a mano" a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:
 
@@ -226,30 +229,46 @@ En cualquier caso, si se sabe cuál es el separador siempre es buena práctica i
 
 La función `readdlm` también admite muchos otros argumentos opcionales para controlar cómo se interpreta el texto, que vienen explicados en su documentación. Hay dos de ellos, `skipstart` y `header`, que son particularmente útiles cuando el archivo contiene un encabezado, que a menudo incorpora los nombres de las columnas. 
 
-Por ejemplo consideremos una pequeña tabla de datos antropométricos medios como la que sigue (datos obtenidos de Wolfram Alpha), escrita en el archivo `"antropometria.txt"`:
+Por ejemplo consideremos una pequeña tabla con los datos de esperanza de vida en los países del mundo clasificados por continente y género, que tenemos en el archivo `"esperanzadevida.txt"` (valores calculados a partir de los datos de las Naciones Unidas en 2017):
 
 ```
-genero    altura  peso
-hombres      167    74
-mujeres      156    65
+continente     género   media  desv_tip
+África         Todos    60.23  7.25
+África         Hombres  58.58  6.91
+África         Mujeres  61.90  7.71
+Asia           Todos    71.82  5.34
+Asia           Hombres  69.95  5.41
+Asia           Mujeres  73.79  5.54
+Europa         Todos    77.22  3.61
+Europa         Hombres  73.66  4.55
+Europa         Mujeres  80.70  2.81
+Latinoamérica  Todos    74.65  3.70
+Latinoamérica  Hombres  71.38  3.85
+Latinoamérica  Mujeres  77.96  4.11
+Norteamérica   Todos    79.17  2.05
+Norteamérica   Hombres  76.79  2.28
+Norteamérica   Mujeres  81.50  1.79
+Oceanía        Todos    77.92  6.33
+Oceanía        Hombres  75.70  5.66
+Oceanía        Mujeres  80.20  5.55
 ```
 
 Podríamos ignorar la primera línea o extraerla como un vector de nombres, usando una de estas dos opciones:
 
 ```julia; eval=false
 # Para ignorar la primera línea especificamos `skipstart=1`
-medidas = readdlm("antropometria.txt",  skipstart=1)
+datos_un = readdlm("esperanzadevida.txt",  skipstart=1)
 # Para guardar la primera línea como un vector de nombres: `header=true`
-(medidas, nombres) = readdlm("antropometria.txt",  header=true)
+(datos_un, nombres) = readdlm("esperanzadevida.txt",  header=true)
 ```
 
 Ambos argumentos se pueden combinar, si el encabezado contiene más líneas con otro tipo de información. En este caso `skipstart` indicaría el número de líneas a ignorar antes de leer los nombres de las columnas. Ambos son "argumentos con palabra clave", que pueden ponerse en cualquier orden después de los argumentos principales, pero tienen que ser llamados por su nombre para evitar confusiones. Por ejemplo, si hay dos líneas de texto con "metadatos" antes de la fila de nombres:
 
 ```julia; eval=false
 # Todas estas expresiones son equivalentes
-(medidas, nombres) = readdlm("antropometria.txt", skipstart=2, header=true)
-(medidas, nombres) = readdlm("antropometria.txt", header=true, skipstart=2)
-(medidas, nombres) = readdlm("antropometria.txt", '\t', skipstart=2, header=true)
+(datos_un, nombres) = readdlm("esperanzadevida.txt", skipstart=2, header=true)
+(datos_un, nombres) = readdlm("esperanzadevida.txt", header=true, skipstart=2)
+(datos_un, nombres) = readdlm("esperanzadevida.txt", '\t', skipstart=2, header=true)
 ```
 
 Las matrices también pueden construirse "a mano" a partir de un conjunto de datos, de forma semejante a como se hace con los vectores. Si un vector se define escribiendo la serie de valores entre corchetes, separados por comas, las columnas de una matriz se pueden concatenar separándolas entre espacios, como se hace en la última línea del ejemplo al inicio del capítulo:
@@ -258,19 +277,20 @@ Las matrices también pueden construirse "a mano" a partir de un conjunto de dat
 resultados = [archivos intervalos distancias]
 ```
 
-Asimismo, se pueden concatenar valores por filas separándolas por puntos y comas. Por ejemplo la tabla antropométrica anterior (dejando de lado los nombres de las columnas) se podría escribir del siguiente modo:
+Asimismo, se pueden concatenar valores por filas separándolas por puntos y comas. Por ejemplo los datos de África de la tabla de esperanzas de vida anterior (dejando de lado los nombres de las variables y la columna con el nombre del continente) se podría escribir del siguiente modo:
 
 ```julia; display=false
-medidas = ["hombres" 167 74;   "mujeres" 156 65]
+datos_africa =["Todos" 60.23 7.25; "Hombres" 58.58 6.91; "Mujeres" 61.9 7.71]
 ```
 
 Como ya se ha visto antes, la forma de acceder a un elemento o una submatriz para leer o modificar sus valores es una generalización de lo que se hace con los vectores. Los elementos a los que se quiere acceder se indican por su posición en la matriz, que viene dada por las filas y columnas correspondientes (separadas por una coma).
 
 ```julia
-# El peso de los nombres está en la primera fila, tercera columna
-peso_hombre = medidas[1,3]
-# Calculamos el peso promedio de hombres y mujeres (columna 3 completa):
-peso_promedio = mean(medidas[:,3])
+# La esperanza de vida media del ciudadano europeo está en la séptima fila, tercera columna
+vida_europeo_medio = datos_un[7,3]
+# Calculamos la esperanza de vida promedio (columna 3 completa)
+# [En realidad el valor medio es distinto, por los distintos tamaños de población.]
+vida_media = mean(datos_un[:,3])
 ```
 
 ## "Data frames" (tablas de datos)
@@ -285,25 +305,25 @@ Una tabla de datos es parecida a una matriz; también se puede leer a partir de 
 
 * Si el tipo de datos (números decimales, enteros, cadenas de texto...) es consistente en cada columna del archivo de entrada, dichos tipos se mantienen en las distintas columnas de la tabla resultante, mientras que `readdlm` o `readcsv` crearían una matriz homogénea de tipo `Any`. Las celdas vacías o con el texto `"NA"` se interpretan como "valores perdidos", y no alteran el tipo de datos de las columnas correspondientes. (Se pueden especificar otros marcadores de valores perdidos con el argumento `nastrings`.)
 
-Podemos ver como los nombres de las columnas están incorporados en la tabla leyendo el archivo "antropometria.txt" como sigue:
+Podemos ver como los nombres de las columnas están incorporados en la tabla leyendo el archivo "esperanzadevida.txt" como sigue:
 
 ```julia; results="raw"
 # Usar Pkg.add("DataFrames") si no se ha instalado el paquete antes
 using DataFrames
-tabla_medidas = readtable("antropometria.txt", separator=' ')
+tabla_un = readtable("esperanzadevida.txt", separator=' ')
 ```
 
 Además, tal como se ha señalado, el género es una serie de cadenas de texto (datos de tipo ``j typeof("a")``) mientras que la altura o el peso son numeros enteros (``j typeof(0)``). Se puede hacer referencia a las distintas columnas por su posición en la tabla al igual que en las matrices, pero también por sus nombres, que se representan en forma de símbolos (véase al final de la sección sobre cadenas de texto sobre este tipo especial de nombres):
 
 ```julia
-columna_genero = tabla_medidas[:, :genero]  # Equivale a ... tabla_medidas[:,1]
-columna_altura = tabla_medidas[:, :altura]  # Equivale a ... tabla_medidas[:,2]
+columna_continente = tabla_un[:, :continente]  # Equivale a ... tabla_un[:,1]
+columna_media = tabla_un[:, :media]            # Equivale a ... tabla_un[:,3]
 ```
 
 Este tipo de tablas también se pueden crear a mano, con la función "constructora" `DataFrame`. La forma normal de construir estas tablas es introduciendo los datos por columnas, a cada una de las cuales se le asigna un nombre. Por ejemplo, la última línea del ejemplo inicial de este capítulo podría haberse cambiado para crear una tabla de este tipo:
 
 ```julia; results="raw"
-tabla_resultados = DataFrame(archivo=archivos, tiempo=intervalos, distancia=distancias)
+tabla_resultados = DataFrame(archivo=archivos, tiempo=intervalos, distancia=distancias, proporcionxy = proporcionxy)
 ```
 
 ## Guardar datos
@@ -347,6 +367,34 @@ Para abreviar se puede omitir la variable a extraer, por ejemplo escribiendo `lo
 # Cargar todas las variables guardadas en "archivo.jld"
 @load("datos.jld")
 ```
+
+# Repaso de lo aprendido
+
+En este capítulo hemos hecho una introducción a los siguientes aspectos de Julia, en los que se profundizará más en próximos capítulos:
+
+* La forma de expresar operaciones algebraicas y comparaciones básicas en la sintaxis de Julia.
+* El uso de *arrays*, en particular los vectores (*arrays* unidimensionales) y matrices (*arrays* bidimensionales), incluyendo:
+    + Métodos para componer *arrays* a partir de datos numéricos.
+    + Expresiones para identificar un rango de elementos, filas o columnas de un *array*.
+    + Cómo extraer una sección de un *array* y modificar sus valores.
+    + Las expresiones "con punto" para aplicar una operación a cada uno de los elementos de un *
+* El uso de los paquetes `DataFrames` para trabajar con datos tabulados.
+* Aspectos esenciales de las cadenas de texto (*strings*), letras aisladas (caracteres) y variables de tipo "símbolo".
+* La interpolación en la definición de cadenas de texto.
+* El paquete `JLD` para salvar y recuperar las variables de una sesión de trabajo.
+* El uso de funciones con argumentos identificados por una paalbra clave.
+
+Además podemos destacar el uso de las siguientes funciones:
+
+* `findmax`, `findmin` para localizar respectivamente el valor máximo y el mínimo de una variable.
+* `length` para obtener la longitud de un *array* u otra estructura con múltiples datos.
+* `readdir` para obener una lista de cadenas de texto con los nombres de los archivos de un directorio.
+* `readdlm`, `readcsv` y `readtable` (esta última del paquete `DataFrames`) para leer datos tabulados, más las correspondientes `writedlm`, `writecsv` y `writetable` para escribirlos en un archivo de texto.
+* `sign` para obtener el signo de una variable numérica.
+* `sqrt` para calcular la raíz cuadrada de un número.
+* `save` y su opuesta, `load`, para salvar en disco y recuperar después los contenidos de uno o varios archivos, más sus correspondientes "macros" `@save` y `@load` para salvar y cargar todo el espacio de trabajo actual.
+* `zeros` para crear un array lleno de ceros al inicio.
+
 
 ```julia; echo=false
 cd(dirbase)
