@@ -189,7 +189,9 @@ plotattr("label")
 
 Es conveniente destacar que no todos los atributos documentados se pueden usar con todas las librerías. La documentación de `Plots` incluye una serie de tablas prácticas que sirven para consultar qué opciones están disponibles según las librerías seleccionadas, en https://juliaplots.github.io/supported
 
-Además, el valor de algunos atributos también condiciona el comportamiento de otros. El más condicionante es `seriestype`, que esencialmente define la tipología de gráfico a representar. A continuación repasaremos algunos de los tipos de gráficos principales y su relación con este atributo. Como se podrá observar más adelante, en función del tipo de gráfico seleccionado tendremos más o menos libertad para escoger los elementos geométricos dibujados, así como para establecer la relación de su posición, tamaño, etc. con los datos proporcionados.
+Además, el valor de algunos atributos también condiciona el comportamiento de otros. El más condicionante es `seriestype`, que esencialmente define la tipología de gráfico a representar. Por defecto su valor es `:path`, que define un gráfico de líneas, pero permite muchas otras posibilidades, algunas de las cuales vamos a ver a continuación. Como se podrá observar, en función del tipo de gráfico seleccionado tendremos más o menos libertad para escoger los elementos geométricos dibujados, así como para establecer la relación de su posición, tamaño, etc. con los datos proporcionados.
+
+Al margen de esto, jugando con los atributos y sus posibles valores podemos generar infinidad de gráficos distintos. En las siguientes secciones vamos a explorar con más detalle los distintos tipos de gráficos que podemos generar, manipulando adecuadamente los múltiples atributos disponibles, pero también a través de funciones que recogen ciertas "recetas" gráficas. 
 
 ## Gráficos de líneas y puntos
 
@@ -198,17 +200,17 @@ En esta categoría agrupamos un conjunto relativamente amplio de gráficos, que 
 Ya hemos visto que la función `plot`, sin ningún atributo particular, crea un gráfico de este tipo en el que los puntos aparecen unidos por líneas. Pero el atributo `seriestype` nos permite crear distintas variantes: por ejemplo en la figura XXX vemos los resultados de representar los diez primeros números primos (que tenemos en la variable `diezprimos`) con las siguientes órdenes:
 
 ```julia; eval=false
-plot(diezprimos, seriestype=:path)     # Gráfico de líneas (por defecto)
-plot(diezprimos, seriestype=:scatter)  # Gráfico de dispersión
 plot(diezprimos, seriestype=:step)     # Gráfico escalonado
 plot(diezprimos, seriestype=:steppre)  # Gráfico escalonado "adelantado"
+plot(diezprimos, seriestype=:sticks)   # Gráfico de líneas verticales
+plot(diezprimos, seriestype=:scatter)  # Gráfico de dispersión
 ```
 
 ```julia; echo=false
-p1=plot(diezprimos, seriestype=:path)
-p2=plot(diezprimos, seriestype=:scatter)
-p3=plot(diezprimos, seriestype=:step)
-p4=plot(diezprimos, seriestype=:steppre)
+p1=plot(diezprimos, seriestype=:step)
+p2=plot(diezprimos, seriestype=:steppre)
+p3=plot(diezprimos, seriestype=:sticks)
+p4=plot(diezprimos, seriestype=:scatter)
 plot(p1,p2,p3,p4, layout=(2,2), legend=:none, xticks=2:2:10, xlim=(0.5,10.5), ylim=(0,24))
 ```
 
@@ -216,70 +218,14 @@ plot(p1,p2,p3,p4, layout=(2,2), legend=:none, xticks=2:2:10, xlim=(0.5,10.5), yl
 
 Se puede destacar en primer lugar que todos los valores admitidos por el atributo `seriestype` son "símbolos" (por eso van precedidos por los dos puntos). También cabe señalar los dos tipos de gráficos escalonados recogidos: el habitual (tipo `step`) en el que de cada punto surge una línea horizontal hasta la abscisa del siguiente, y el "adelantado" (`steppre`) en el que las líneas horizontales van desde cada punto hacia el *anterior*. Por simetría, el de tipo `step` también se puede invocar con `seriestype=:steppost`. 
 
-Para los gráficos de dispersión también tenemos una función con nombre propio, que se puede utilizar para conseguir el mismo resultado sin especificar el atributo `seriestype`, a saber:
+Para los gráficos de líneas verticales y los de dispersión también tenemos funciones con nombre propio, que se pueden utilizar para conseguir el mismo resultado sin especificar el atributo `seriestype`, a saber:
 
 ```julia; eval=false
+sticks(diezprimos)
 scatter(diezprimos)
 ```
 
-La función `scatter` (y su contrapartida `scatter!` para modificar un gráfico existente) funciona igual que `plot` (y `plot!, respectivamente) en todo salvo el tipo de elementos geométricos representados por defecto. Otras funciones parcialmente redundantes son `plot3d` y `scatter3d`, que son iguales que sus análogas sin el `3d`, salvo que requieren los tres vectores de datos para las respectivas coordenadas.
-
-### Gráficos de barras y líneas verticales
-
-Los clásicos gŕaficos de barras que se extienden desde cero hasta los valores indicados por `y` se pueden crear usando `seriestype=:bar`. También existe la variante de gráficos de líneas verticales, asociada a `seriestype=:
-
-
-Con `seriestype=:barbins`, pero mejor la función `bar`, que specifica mejor las posiciones en X. Es un caso en el que tiene sentido utilizar un eje X con cadenas de texto. [Ejemplo]
-
-
-tabla_un = readtable("esperanzadevida.txt", separator=' ')
-
-todos = tabla_un[:género] .== "Todos"
-hombres = tabla_un[:género] .== "Hombres"
-mujeres = tabla_un[:género] .== "Mujeres"
-bar(tabla_un[todos, :continente], tabla_un[todos, :media])
-
-bar(tabla_un[:continente], tabla_un[:media], group=tabla_un[:género])
-
-bar(tabla_un[hombres,:continente], tabla_un[hombres,:media], label="Hombres")
-bar!(tabla_un[mujeres,:continente], tabla_un[mujeres,:media], label="Mujeres")
-
-
-
-bar(tabla_un[todos,:continente], tabla_un[todos,:media], yerror=tabla_un[todos,:desv_tip])
-
-bar(tabla_un[hombres,:continente], tabla_un[hombres,:media], yerror=tabla_un[hombres,:desv_tip])
-bar!(tabla_un[mujeres,:continente], tabla_un[mujeres,:media], yerror=tabla_un[mujeres,:desv_tip])
-
-
-
-
-
-### Gráficos de áreas y rangos
-
-En los gráficos que hemos visto hasta ahora, los elementos geométricos indican series de datos aislados (con marcadores) o conectados entre sí (con líneas). Pero en algunos casos interesa representar rangos de valores. Pensemos por ejemplo en un gráfico que represente...
-
-
-
-### Gráfico de tarta
-
-No gusta en ciertos entornos, pero se usa mucho en algunas áreas. `seriestype=:pie` o con la función `pie`. No da mucho de sí.
-
-## Gráficos de área
-
-
-# Gráficos bidimensionales
-
-Varios, el nombre es el mismo en el atributo y en la función:
-
-heatmap, surface (proy. 3D); contour, wireframe
-
-
-## Estética
-
-
-
-
+Las funciones `sticks` y `scatter` (y sus contrapartidas para modificar gráficos: `sticks!` y `scatter!`) funcionan igual que `plot` (y `plot!, respectivamente) en todo salvo el tipo de elementos geométricos representados por defecto. Otras funciones parcialmente redundantes son `plot3d` y `scatter3d`, que son iguales que sus análogas sin el `3d`, salvo que requieren los tres vectores de datos para las respectivas coordenadas.
 
 ### Colores de las series de datos
 
@@ -392,12 +338,73 @@ El atributo `markersize` también puede ser un vector de la misma longitud que l
 scatter(tabla[:tiempo], tabla[:distancia], marker_z=10tabla[:proporcionxy])
 ```
 
+### Gráficos de áreas y rangos
+
+En los gráficos que hemos visto hasta ahora, los elementos geométricos indican series de datos aislados (con marcadores) o conectados entre sí (con líneas). Pero en algunos casos interesa representar rangos de valores. Pensemos por ejemplo en un gráfico que represente...
+
+
+tabla_un = readtable("esperanzadevida.txt", separator=' ')
+
+todos = tabla_un[:género] .== "Todos"
+hombres = tabla_un[:género] .== "Hombres"
+mujeres = tabla_un[:género] .== "Mujeres"
+bar(tabla_un[todos, :continente], tabla_un[todos, :media])
+
+bar(tabla_un[:continente], tabla_un[:media], group=tabla_un[:género])
+
+bar(tabla_un[hombres,:continente], tabla_un[hombres,:media], label="Hombres")
+bar!(tabla_un[mujeres,:continente], tabla_un[mujeres,:media], label="Mujeres")
+
+
+
+bar(tabla_un[todos,:continente], tabla_un[todos,:media], yerror=tabla_un[todos,:desv_tip])
+
+bar(tabla_un[hombres,:continente], tabla_un[hombres,:media], yerror=tabla_un[hombres,:desv_tip])
+bar!(tabla_un[mujeres,:continente], tabla_un[mujeres,:media], yerror=tabla_un[mujeres,:desv_tip])
+
+
+poblacion = readtable("poblacion.txt", separator=' ')
+
+
+
+```julia; echo=false
+include("../scripts/amanecer_anochecer.jl")
+lat = 43.2603479
+long = -2.9334110
+dias = [31,29,31,30,31,30,31,31,30,31,30,31]
+amanecer_UT = Float64[]
+anochecer_UT = Float64[]
+for mes=1:12
+    ndias = dias[mes]
+    for d=1:ndias
+        hamanecer = amanecer_anochecer(d,mes,2012,long,lat,"amanecer")
+        push!(amanecer_UT, hamanecer)
+        hanochecer = amanecer_anochecer(d,mes,2012,long,lat,"anochecer")
+        push!(anochecer_UT, hanochecer)
+    end
+end
+
+### Gráficos de barras
+
+Con `seriestype=:barbins`, pero mejor la función `bar`, que specifica mejor las posiciones en X. Es un caso en el que tiene sentido utilizar un eje X con cadenas de texto. [Ejemplo]
+
+### Gráfico de tarta
+
+No gusta en ciertos entornos, pero se usa mucho en algunas áreas. `seriestype=:pie` o con la función `pie`. No da mucho de sí.
+
+## Gráficos de área
 
 fillrange: línea base, puede ser `nothing`
 fillcolor, fillalpha
 
+# Gráficos bidimensionales
 
-nlevels para contour
+Varios, el nombre es el mismo en el atributo y en la función:
+
+heatmap, surface (proy. 3D); contour, wireframe
+
+
+## Estética
 
 
 Es útil especialmente para graficos de barras. Aunque no funciona bien en todos, Plotly(JS) para agrupados, solo PyPlot para apilado.ñ
@@ -413,8 +420,6 @@ Otras 1D: bar, pie
 
 
 Uso de `plot!` para modificar atributos. También puede hacerse en la primera llamada, pero a menudo el primer plot se hace sencillo, y luego se va ajustando la estética.
-
-
 
 
 
