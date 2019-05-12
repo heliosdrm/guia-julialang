@@ -1,4 +1,4 @@
-Ref. a sección con información sobre LOAD\_PATH y require()
+Ref. a sección con información sobre LOAD_PATH y require()
 Reglas de sintaxis
 whos
 macros
@@ -11,6 +11,8 @@ mutables, inmutables
 map
 secuencias de escape, triples comillas
 tuplas: poner el número adecuado de argumentos de salida
+Shape
+
 
 Meta gráficos:
 
@@ -19,7 +21,10 @@ Función plot y variantes: plot! scatter, sticks
 Partes del gráfico: `Plot`, `Subplot`, `Axis`, `Series`.
 Atributos, plotattr
 Colores, colorant""
+gradientes
+group para crear series diferenciadas por colores
 
+Gráficos de líneas y puntos, bandas, barras, 
 
 
 repeat(, inner...)

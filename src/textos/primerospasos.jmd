@@ -16,7 +16,7 @@ El más sencillo de usar es [Julia Box](https://juliabox.com/), una plataforma w
 
 Otra ventaja de Julia Box es que se puede utilizar desde un navegador de Internet sin siquiera tener Julia instalado en el ordenador; lo único que hace falta es una cuenta de Github, Linkedin o Google con la que registarse para entrar. Trabajar con esta herramienta online tiene algunas limitaciones, pero es un recurso práctico en particular para hacer pruebas o para estudiantes. Julia Box está basado en [Jupyter](http://jupyter.org/), una evolución de la plataforma IPython que se desarrolló originalmente para hacer *notebooks* de Python, y desde la misma web de Jupyter se pueden también hacer pruebas más elementales con Julia (con una funcionalidad más limitada), sin tan siquiera registrarse, entrando de forma anónima en https://try.jupyter.org/ y abriendo un cuaderno de Julia.
 
-Otro paquete más completo es [Julia Pro](https://juliacomputing.com/products/juliapro.html), una aplicación de escritorio (esta sí tiene que instalarse), que permite tanto crear *notebooks* a través de Jupyter --en una instalación local, no remota--, como trabajar en [Juno](http://junolab.org/), otro IDE para Julia basado en el editor de código [Atom](https://atom.io/). La interfaz de Juno tiene varios paneles, incluyendo una consola de comandos, visores de variables y gráficas, y un editor de código para trabajar con uno o varios archivos a la vez. Además de para escribir el código, este editor sirve para ejecutarlo, bien todo completo o por línas o bloques seleccionados; los resultados se pueden visualizar directamente en el archivo de código (parecido a como funciona en los *notebooks*) o en los otros paneles (figura 3).
+Otro paquete más completo es [Julia Pro](https://juliacomputing.com/products/juliapro.html), una aplicación de escritorio (esta sí tiene que instalarse), que permite trabajar con la interfaz de [Juno](http://junolab.org/), otro IDE para Julia basado en el editor de código [Atom](https://atom.io/). La interfaz de Juno tiene varios paneles, incluyendo una consola de comandos, visores de variables y gráficas, y un editor de código para trabajar con uno o varios archivos a la vez. Además de para escribir el código, este editor sirve para ejecutarlo, bien todo completo o por línas o bloques seleccionados; los resultados se pueden visualizar directamente en el archivo de código (parecido a como funciona en los *notebooks*) o en los otros paneles (figura 3).
 
 [FIGURA JUNO]
 
@@ -80,19 +80,19 @@ El resultado posiblemente sea algo decepcionante, porque lo único que se ha hec
 
 [^3]: Ref. a sección con información sobre LOAD_PATH y require()
 
-Una dificultad añadida es que a veces los nombres de los directorios son largos y resulta tedioso escribirlos. De hecho, lo más natural para la mayoría de la gente es utilizar entornos gráficos para seleccionar y definir rutas y nombres de archivos. En Julia podemos hacer esto de dos maneras:
+Una dificultad añadida es que a veces los nombres de los directorios son largos y resulta tedioso escribirlos. De hecho, lo más natural para la mayoría de la gente es utilizar entornos gráficos para seleccionar y definir rutas y nombres de archivos. La interfaz de Juno permite definir el directorio de trabajo a través de los menús. Como alternativa si se está trabajando con la consola de comandos, se puede copiar el nombre del directorio desde el gestor de archivos al "portapapeles", y convertirlo en una variable de texto mediante la función `clipboard`. Por ejemplo, con la expresión `directorio = clipboard()`.
 
-* Usando solo las herramientas más básicas de Julia: copiar el nombre del directorio desde el gestor de archivos al "portapapeles", y convertirlo en una variable de texto mediante la función `clipboard`. Por ejemplo, con la expresión `directorio = clipboard()`.
+Otra alternativa útil es usar diálogos gráficos aportados por paquetes externos, como (entre otros) [Gtk](https://github.com/JuliaGraphics/Gtk.jl), basado en la libería Gtk, que dispone de las siguientes funciones para seleccionar archivos o directorios (véase más abajo sobre el uso de paquetes en Julia):
 
-* Mediante diálogos gráficos aportados por paquetes externos, como (entre otros) [Tk](https://github.com/JuliaGraphics/Tk.jl), basado en la libería Tcl/Tk, que dispone de las siguientes funciones para seleccionar archivos o directorios (véase más abajo sobre el uso de paquetes en Julia):
-    - `GetOpenFile()` para seleccionar la ruta completa a un archivo existente.
-    - `GetSaveFile()` para seleccionar la ruta de un archivo (tanto existente como uno nuevo).
-    - `ChooseDirectory()` para seleccionar la ruta de un directorio nuevo o existente.
+* `open_dialog()` para seleccionar la ruta completa a un archivo existente.
+* `save_dialog()` para seleccionar la ruta de un archivo (tanto existente como uno nuevo).
 
-Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó el San Valentín de 2012, la fecha en la que se hizo pública la primera versión de Julia:
+Pueden verse los detalles sobre cómo usar estas funciones en http://juliagraphics.github.io/Gtk.jl/latest/manual/filedialogs.html
+
+Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó 11 de agosto de 2018, la fecha en la que se publicó la version 1.0.0 de Julia:
 
 ```julia
-gauss_diasemana(14, 2, 2013)
+gauss_diasemana(11, 8, 2018)
 ```
 
 Lo que se hace "en un día cualquiera" usando Julia es esencialmente este modelo de rutina, con funciones más complicadas y muchas más operaciones interactivas, explorando resultados, corrigiendo argumentos y repitiendo operaciones, claro está.
@@ -117,31 +117,37 @@ Para escribir un programa en Julia o cualquier otro lenguaje de programación ha
 
 Hay más reglas importantes que conviene tener en cuenta para programar en Julia, aunque para contener el tamaño de esta introducción, se comentan con más detalle en el capítulo XXXXXXXXXXXXXXXXXX.
 
-## Paquetes complementarios
+## Módulos y paquetes
 
-La distribución básica de Julia es realmente "básica", y carece de bastantes utilidades que son consideradas importantes, incluso fundamentales por la mayoría de los potenciales usuarios de un lenguaje de ese tipo, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (*debugging*), etc.
+Cuando se inicia una sesión de Julia, por defecto solo están disponibles una serie de utilidades elementales, y para la mayoría de proyectos hace falta usar "módulos" que contienen funciones y otras utilidades complementarias. Por ejemplo, en un proyecto en el que se quieran hacer cálculos estadísticos (incluso al nivel básico de medias, varianzas, etc.), hace falta usar el módulo `Statistics`. Para ello hay que ejecutar el siguiente comando:
 
-Esta limitación está cubierta por el desarrollo coordinado (aunque independiente) de cientos de "paquetes" que contienen dichas utilidades. Como el propio proyecto Julia, todos los paquetes oficiales están publicados con el sistema de [Git](http://git-scm.com/). Julia mantiene un catálogo online de los paquetes oficiales, cuya lista se puede consultar en el sitio http://pkg.julialang.org/, o desde Julia con la expresión `Pkg.available`. En los siguientes capítulos se irán señalando algunos paquetes útiles para cubrir los distintos aspectos tratados en cada momento.
-
-Las soluciones más completas como Julia Box o Julia Pro ya incorporan muchos de los paquetes más importantes, pero incluso en esos casos puede ser necesario gestionarlos, actualizarlos o añadir nuevos paquetes. La instalación y desinstalación de paquetes se controla desde dentro de Julia, mediante las funciones `Pkg.add` y `Pkg.rm`, respectivamente, que toman como argumento el nombre del paquete a instalar o desinstalar. Estas operaciones consisten esencialmente en "clonar" el paquete publicado en un lugar determinado del sistema, o borrarlo de ese sitio (el directorio de instalación está definido en la variable `JULIA_PKGDIR` si existe, o por defecto en el directorio designado por la función `Pkg.dir`).
-
-Por ejemplo, supongamos que queremos usar las funciones del paquete [Tk](https://github.com/JuliaGraphics/Tk.jl) mencionado antes para seleccionar nombres y rutas de archivos. El proceso podría ser como sigue:
-
-```julia; eval=false
-# Consultar si el paquete está instalado (en cuyo caso no hace falta instalarlo)
-Pkg.installed("Tk")
-# Si devuelve "nothing" (no está instalado):
-Pkg.add("Tk")
+```julia
+using Statistics
 ```
 
-Esta operación solo hay que hacerla una vez (actualizaciones aparte). Sin embargo, tener el paquete instalado no basta para poder usarlo. Si quisiéramos usar la función `GetOpenFile` para seleccionar un archivo de código y luego incluirlo, primero tendríamos que cargar el paquete explícitamente con la instrucción `using`, y luego ya podríamos usar `GetOpenFile` (y cualesquiera otras funciones exportadas por el paquete):
+La distribución básica de Julia viene con una biblioteca estándar que incluye diversos módulos. Estos módulos no están activados por defecto para que la sesión de trabajo no se cargue innecesariamente con tipos de variables y funciones que no se vayan a usar &mdash; o cuyo nombre el usuario quiera emplear para otros propósitos. (Normalmente habrá una serie de módulos que se usen de forma habitual, pero el conjunto de estos módulos "esenciales" varía según el campo en el que se trabaje.) La lista de módulos de la bilbioteca estándar se puede consultar en la [documentación oficial](https://docs.julialang.org/en/stable/). Algunos de los que es más probable que se usen en proyectos de muchos ámbitos son:
+
+* `Dates` para trabajar con fechas y unidades de tiempo.
+* `DelimitedFiles` para leer y escribir tablas de datos en ficheros de texto.
+* `LinearAlgebra` para análisis y operaciones avanzadas con matrices.
+* `Statistics` para cálculos estadísticos (a menudo junto con `Random` para trabajar con números aleatorios y distribuciones de probabilidad).
+* `Sockets` para trabajar con conexiones a redes informáticas.
+
+Hay muchas otras utilidades que pueden considerse importantes, incluso fundamentales por la mayoría de los potenciales usuarios, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (*debugging*), etc., pero no están incluidas en la biblioteca estándar, sino en un "ecosistema" de paquetes que se han desarrollo de forma coordinada (aunque independiente) por la comunidad de usuarios y desarrolladores de Julia. Puede consultarse la sección *Ecosystem* en la web oficial (https://julialang.org) para ver algunos de los dominios principales, o la web [Julia Observer](https://juliaobserver.com/) para explorar todos los paquetes publicados.
+
+Las soluciones más completas como Julia Box o Julia Pro ya incorporan muchos de los paquetes más importantes, pero incluso en esos casos puede ser necesario gestionarlos, actualizarlos o añadir nuevos paquetes. En el caso de paquetes "registrados" oficialmente (que es el caso de los más populares, y todos los que se comentan en esta guía), la forma más sencilla de instalarlos es desde el modo de gestión de paquetes de la línea de comandos, mediante los siguientes pasos:
+
+1. Cambiar del modo "normal" al de gestión de paquetes ("pkg"), pulsando la tecla `]` (se verá un cambio en la etiqueta al comienzo de cada línea, como en la figura XXXXXXXXXXX).
+2. Escribir el comando `add` seguido del nombre del paquete. Por ejemplo, para añadir el paquete Gtk comentado antes: `add Gtk`
+3. Cambiar de nuevo al modo normal, pulsando la tecla de borrar al comienzo de la línea.
+
+A continuación ya se podrá usar el paquete como un módulo más. Por ejemplo, si se quiere usar la función `open_dialog` de Gtk para seleccionar un archivo de código y luego incluirlo, después de instalar el paquete se haría:
 
 ```julia; eval=false
-using Tk
-archivo = GetOpenFile()
+using Gtk
+archivo = open_dialot("Selecciona el archivo")
 include(archivo)
 ```
-
 
 ## Buscando ayuda
 
@@ -164,10 +170,10 @@ En este primer y breve capítulo hemos aprendido los siguientes puntos fundament
 * Los distintos entornos disponibles: la interfaz de comandos, *notebooks* de Jupyter y el IDE de Juno.
 * Algunas reglas básicas de sintaxis del lenguaje.
 * Cómo instalar y cargar paquetes.
-* Algunas utilidades del paquete `Tk` para definir nombres de directorios y archivos a través de ventanas gráficas.
+* Algunas utilidades del paquete `Gtk` para definir nombres de directorios y archivos a través de ventanas gráficas.
 * Cómo buscar ayuda.
 
-Además, a lo largo de las explicaciones hemos empleado las siguientes funciones particulares (además de las propias de la gestión de paquetes y las de `Tk`):
+Además, a lo largo de las explicaciones hemos empleado las siguientes funciones particulares (además de las propias de la gestión de paquetes y las de `Gtk`):
 
 * `cd` y `pwd` para definir y consultar el directorio de trabajo, respectivamente.
 * `div` para divisiones enteras y `mod` para el resto de una división.

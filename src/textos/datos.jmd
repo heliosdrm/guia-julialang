@@ -11,19 +11,21 @@ cd("../datos")
 
 En un uso productivo de un lenguaje de programación no nos limitamos a introducir datos con el teclado y leer los resultados en pantalla. Usamos series largas de datos, tablas numéricas... normalmente las leemos a partir de archivos de texto u hojas de cálculo. La salida también pueden ser archivos de ese tipo, o también gráficas (que veremos en el siguiente capítulo). Vamos a ver como se leen, escriben y estructuran esos datos.
 
-Pongamos el siguiente caso. Tenemos un conjunto de datos extraidos de un experimento, consistente en 30 medidas con dos series de datos cada una, semejantes a las mostradas en la figura 1. (Se trata de datos construidos artificialmente, pero podemos suponer que son dos señales simultáneas que proceden de un mismo sistema dinámico, las coordenadas de un punto de un mecanismo con un movimiento plano, etc.) Estos datos se encuentran grabados en los archivos de texto contenidos en XXXXXXXXXXXXX. [Comentar acceso.]. Cada uno de estos archivos tiene 100 líneas con tres columnas de datos separadas por tabuladores: la primera columna es una línea de tiempos equiespaciada que varía entre 0.01 y 1.00, y las otras dos columnas contienen las series de datos.
+Pongamos el siguiente caso. Tenemos un conjunto de datos extraidos de un experimento, consistente en 30 medidas con dos series de datos cada una, semejantes a las mostradas en la figura 1. Estos datos se encuentran grabados en los archivos de texto contenidos en XXXXXXXXXXXXX. [Comentar acceso.].
+
+Cada uno de estos archivos tiene 100 líneas con tres columnas de datos separadas por tabuladores: la primera columna es una línea de tiempos equiespaciada que varía entre 0.01 y 1.00, y las otras dos columnas contienen las series de datos.
 
 ```julia; echo=false; results="hidden"
-using Plots
-datos = readdlm("series/sA01.txt")
+using DelimitedFiles, Plots
+datos = readdlm("series/sA12.txt")
 ```
 ```julia; echo=false
 plot(datos[:,1],datos[:,2:3],label=["x" "y"])
 ```
 
-En todos los casos ambas series tienen una forma semejante, con un "valle" negativo seguido de un "pico" positivo. Supongamos que en el estudio que tenemos entre manos las dos series de datos identifican un vector $(x,y)$, y queremos generar una tabla de datos que contenga el intervalo de tiempo transcurrido entre los dos extremos de la señal, la distancia global entre esos dos puntos extremos y la proporción entre la distancia recorrida en $x$ y en $y$.
+En todos los casos ambas series tienen una forma semejante, con un "valle" negativo seguido de un "pico" positivo. Supongamos que en el estudio que tenemos entre manos las dos series de datos identifican las coordenadas $(x,y)$ de un punto móvil, que se desplaza en torno a dos extremos (el "valle" y el "pico"); los dos puntos más alejados son los que corresponden con los máximos locales del módulo $m=\sqrt{x^2+y^2}$ (el primero para valores negativos de $x$, $y$, y el segundo para valores positivos. Nuestro propósito es generar una tabla de datos que contenga el intervalo de tiempo transcurrido entre esos dos extremos de la señal, la distancia entre esos dos puntos extremos y la proporción entre la distancia recorrida en $x$ y en $y$.
 
-Los extremos los identificaremos por el tamaño o módulo del vector $m=\sqrt{x^2+y^2}$; para facilitar la localización de ambos, teniendo en cuenta que el primero siempre se corresponde con coordenadas negativas y el segundo con positivas, multiplicaremos ese módulo por el signo de una de las dos coordenadas. De este modo, el valor mínimo del "módulo con signo" (el extremo negativo) será el valle, y el máximo (positivo) será el pico. El código para construir la tabla de datos, que iremos explicando a lo largo del capítulo, es el siguiente:
+Para localizar los extremos calculamos un "módulo con signo" multiplicando el resultado de $m=\sqrt{x^2+y^2}$ por el signo de una de las dos coordenadas. De este modo, el valor mínimo (negativo) será el primer extremo, y el máximo (positivo) será el segundo extremo. El código para construir la tabla de datos, que iremos explicando a lo largo del capítulo, es el siguiente:
 
 ```julia; display=false
 # Leemos los nombres de los archivos del directorio "series"
@@ -37,6 +39,8 @@ intervalos = zeros(n)
 distancias = zeros(n)
 proporcionxy = zeros(n)
 # Ahora vamos explorando los archivos uno a uno y rellenando datos
+# Necesitaremos el módulo DelimitedFiles para poder leer los archivos
+using DelimitedFiles
 for i=1:n
     rutaarchivo = joinpath(directorio,archivos[i])
     # Leemos el contenido del archivo completo en la variable `datos`
@@ -105,7 +109,7 @@ numeros[1] = 0   # Esto no es problema
 numeros[1] = 0.5 # Pero esto sí, porque eran números enteros
 ```
 ```
-ERROR: InexactError()
+ERROR: InexactError: Int64(Int64, 0.5)
 ```
 ```julia; eval=false
 numeros[7] = 10  # Esto también, porque el vector solo tenía 6 elementos
@@ -214,7 +218,7 @@ resultados
 
 Esta matriz no es puramente numérica ni de cadenas de texto, sino que combina ambos tipos de datos, usando un "supertipo" llamado `Any` que engloba todo tipo de objetos definidos en Julia.
 
-A menudo, como ocurre con los datos de entrada en el ejemplo anterior, estas matrices se crean leyendo archivos de texto. La forma más directa de hacerlo es mediante la función `readdlm`, que en principio interpreta el archivo como una matriz en la que cada línea de texto representa una fila de datos, con columnas delimitadas por uno o más caracteres de separación (espacios en blanco o tabuladores).
+A menudo, como ocurre con los datos de entrada en el ejemplo anterior, estas matrices se crean leyendo archivos de texto. La forma más directa de hacerlo es mediante la función `readdlm` del módulo estándar `DelimitedFiles`, que en principio interpreta el archivo como una matriz en la que cada línea de texto representa una fila de datos, con columnas delimitadas por uno o más caracteres de separación (espacios en blanco o tabuladores). Los espacios dentro de las cadenas de texto no se interpretan por defecto como separadores si el archivo enmarca dichas cadenas entre comillas dobles.
 
 Esta especificación general puede crear ambigüedades y problemas a la hora de leer ciertas matrices. Podríamos tener una matriz con columnas separadas por comas en lugar de espacios, o bien cadenas de texto con espacios que no habrían de interpretarse como separadores de columnas  (por ejemplo en una columna de nombres de países, que podría incluir algunos como "Estados Unidos"). Para evitar estos problemas se puede añadir un segundo argumento a la función, con el carácter que se utiliza como separador de columnas. Por ejemplo, si queremos especificar que las columnas del archivo `ejemplo.txt` están separadas específicamente por tabuladores o por comas:
 
@@ -223,9 +227,7 @@ matriz = readdlm("ejemplo.txt", '\t')   # Separada por tabuladores
 matriz = readdlm("ejemplo.txt", ',')    # Separada por comas
 ```
 
-Como la separación por comas es muy habitual, Julia también dispone de la función `readcsv`, que es igual que `readdlm` pero asume la coma como separador de columnas por defecto. Por otro lado, los espacios dentro de las cadenas de texto no se interpretan por defecto como separadores si el archivo enmarca dichas cadenas entre comillas dobles.
-
-En cualquier caso, si se sabe cuál es el separador siempre es buena práctica indicárselo a la función para evitar comportamientos inesperados. También se puede especificar, seguido del carácter de separación, otro argumento que indique el carácter que marca el fin de línea --que puede diferir entre sistemas operativos, aunque esto no suele ser tan problemático--.
+También se puede especificar, seguido del carácter de separación, otro argumento que indique el carácter que marca el fin de línea --que puede diferir entre sistemas operativos, aunque esto no suele ser tan problemático--.
 
 La función `readdlm` también admite muchos otros argumentos opcionales para controlar cómo se interpreta el texto, que vienen explicados en su documentación. Hay dos de ellos, `skipstart` y `header`, que son particularmente útiles cuando el archivo contiene un encabezado, que a menudo incorpora los nombres de las columnas. 
 
@@ -255,11 +257,11 @@ Oceanía        Mujeres  80.20  5.55
 
 Podríamos ignorar la primera línea o extraerla como un vector de nombres, usando una de estas dos opciones:
 
-```julia; eval=false
+```julia; results=hidden
 # Para ignorar la primera línea especificamos `skipstart=1`
-datos_un = readdlm("esperanzadevida.txt",  skipstart=1)
+datos_un = readdlm("esperanzadevida.txt", skipstart=1)
 # Para guardar la primera línea como un vector de nombres: `header=true`
-(datos_un, nombres) = readdlm("esperanzadevida.txt",  header=true)
+(datos_un, nombres) = readdlm("esperanzadevida.txt", header=true)
 ```
 
 Ambos argumentos se pueden combinar, si el encabezado contiene más líneas con otro tipo de información. En este caso `skipstart` indicaría el número de líneas a ignorar antes de leer los nombres de las columnas. Ambos son "argumentos con palabra clave", que pueden ponerse en cualquier orden después de los argumentos principales, pero tienen que ser llamados por su nombre para evitar confusiones. Por ejemplo, si hay dos líneas de texto con "metadatos" antes de la fila de nombres:
@@ -286,6 +288,7 @@ datos_africa =["Todos" 60.23 7.25; "Hombres" 58.58 6.91; "Mujeres" 61.9 7.71]
 Como ya se ha visto antes, la forma de acceder a un elemento o una submatriz para leer o modificar sus valores es una generalización de lo que se hace con los vectores. Los elementos a los que se quiere acceder se indican por su posición en la matriz, que viene dada por las filas y columnas correspondientes (separadas por una coma).
 
 ```julia
+using Statistics
 # La esperanza de vida media del ciudadano europeo está en la séptima fila, tercera columna
 vida_europeo_medio = datos_un[7,3]
 # Calculamos la esperanza de vida promedio (columna 3 completa)
@@ -295,59 +298,62 @@ vida_media = mean(datos_un[:,3])
 
 ## "Data frames" (tablas de datos)
 
-En términos coloquiales se puede usar indistintamente el término "matriz" y el de "tabla" de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son *arrays* de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de "tabla de datos" (*data frame* en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete [DataFrames](https://github.com/JuliaStats/DataFrames.jl/).
+En términos coloquiales se puede usar indistintamente el término "matriz" y el de "tabla" de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son *arrays* de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de "tabla de datos" (*data frame* en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete [DataFrames](https://github.com/JuliaData/DataFrames.jl/), y que se pueden leer y guardar en archivos de texto a través del paquete [CSV](https://github.com/JuliaData/CSV.jl).
 
-Una tabla de datos es parecida a una matriz; también se puede leer a partir de un archivo de texto mediante la función `readtable`, al igual que hacíamos con `readdlm` o `readcsv` para las matrices, con algunas diferencias entre las cuales podemos destacar las siguientes:
-
-* El carácter de separación entre columnas considerado por defecto por `readtable` depende de la extensión del archivo: la coma para los archivos de tipo `.csv`, el tabulador para los archivos `.tsv`, y un espacio en blanco para los `.wsv`. Para especificar un carácter de separación distinto se utiliza el argumento con la palabra clave `separator`.
+Una tabla de datos es parecida a una matriz; también se puede leer a partir de un archivo de texto mediante la función `CSV.read`, al igual que hacíamos con `readdlm` para las matrices, con algunas diferencias entre las cuales podemos destacar las siguientes:
 
 * La primera línea se interpreta por defecto como la lista de nombres de las columnas. Al leer el archivo estos nombres se incorporan a la propia tabla, en lugar de devolverse como una variable aparte.
 
-* Si el tipo de datos (números decimales, enteros, cadenas de texto...) es consistente en cada columna del archivo de entrada, dichos tipos se mantienen en las distintas columnas de la tabla resultante, mientras que `readdlm` o `readcsv` crearían una matriz homogénea de tipo `Any`. Las celdas vacías o con el texto `"NA"` se interpretan como "valores perdidos", y no alteran el tipo de datos de las columnas correspondientes. (Se pueden especificar otros marcadores de valores perdidos con el argumento `nastrings`.)
+* El carácter de separación entre columnas considerado por defecto por `CSV.read` es una coma; para especificar un carácter de separación distinto se utiliza el argumento con la palabra clave `delim`. Si las columnas están separadas por más de un espacio en blanco, hay que añadir también el argumento `ignorerepeated=true`.
 
-Podemos ver como los nombres de las columnas están incorporados en la tabla leyendo el archivo "esperanzadevida.txt" como sigue:
+* Si el tipo de datos (números decimales, enteros, cadenas de texto...) es consistente en cada columna del archivo de entrada, dichos tipos se mantienen en las distintas columnas de la tabla resultante, mientras que `readdlm` crearía una matriz homogénea de tipo `Any`.
+
+* Las columnas pueden contener valores perdidos (`missing`), que por defecto se representan mediante posiciones "vacías" (dos delimitadores seguidos). Los argumentos `missingstrings` y `allowmissing` se pueden usar para personalizar cómo se interpretan y gestionan dichos valores perdidos.
+
+Podemos ver cómo los nombres de las columnas están incorporados en la tabla leyendo el archivo "esperanzadevida.txt" como sigue:
 
 ```julia; results="raw"
-# Usar Pkg.add("DataFrames") si no se ha instalado el paquete antes
-using DataFrames
-tabla_un = readtable("esperanzadevida.txt", separator=' ')
+# Instalar el paquete CSV si no se ha instalado el paquete antes
+using CSV
+tabla_un = CSV.read("esperanzadevida.txt", delim=' ', ignorerepeated=true)
 ```
 
 Además, tal como se ha señalado, el género es una serie de cadenas de texto (datos de tipo ``j typeof("a")``) mientras que la altura o el peso son numeros enteros (``j typeof(0)``). Se puede hacer referencia a las distintas columnas por su posición en la tabla al igual que en las matrices, pero también por sus nombres, que se representan en forma de símbolos (véase al final de la sección sobre cadenas de texto sobre este tipo especial de nombres):
 
 ```julia
-columna_continente = tabla_un[:, :continente]  # Equivale a ... tabla_un[:,1]
-columna_media = tabla_un[:, :media]            # Equivale a ... tabla_un[:,3]
+columna_continente = tabla_un[:continente]  # Equivale a ... tabla_un[:,1]
+columna_media = tabla_un[:media]            # Equivale a ... tabla_un[:,3]
 ```
 
-Este tipo de tablas también se pueden crear a mano, con la función "constructora" `DataFrame`. La forma normal de construir estas tablas es introduciendo los datos por columnas, a cada una de las cuales se le asigna un nombre. Por ejemplo, la última línea del ejemplo inicial de este capítulo podría haberse cambiado para crear una tabla de este tipo:
+Este tipo de tablas también se pueden crear a mano, con la función "constructora" `DataFrame` del paquete DataFrames. La forma normal de construir estas tablas es introduciendo los datos por columnas, a cada una de las cuales se le asigna un nombre. Por ejemplo, la última línea del ejemplo inicial de este capítulo podría haberse cambiado para crear una tabla de este tipo:
 
 ```julia; results="raw"
+using DataFrames
 tabla_resultados = DataFrame(archivo=archivos, tiempo=intervalos, distancia=distancias, proporcionxy = proporcionxy)
 ```
 
 ## Guardar datos
 
-Naturalmente, además de leer datos a partir de archivos de texto, normalmente también interesa *escribir* archivos con los resultados generados. Si estos resultados están en forma de matrices o vectores, se pueden guardar a través de la función `writedlm`, que funciona de forma simétrica a `readdlm`. Por ejemplo, para guarda la matriz `resultados` creada en el primer ejemplo de este capítulo en el archivo "tabla.txt", usando el punto y coma como separador entre columnas:
+Naturalmente, además de leer datos a partir de archivos de texto, normalmente también interesa *escribir* archivos con los resultados generados. Si estos resultados están en forma de matrices o vectores, se pueden guardar a través de la función `writedlm` de DelimitedFiles, que funciona de forma simétrica a `readdlm`. Por ejemplo, para guarda la matriz `resultados` creada en el primer ejemplo de este capítulo en el archivo "tabla.txt", usando el punto y coma como separador entre columnas:
 
 ```julia; eval=false
 writedlm("tabla.txt", resultados, ';')
 ```
 
-Si solo se introduce el nombre del archivo y la matriz o vector de datos, por defecto `writedlm` separa las columnas con un carácter de tabulación. También existe la función `writecsv` que separa las columnas por comas. Y en el caso de tener una tabla del tipo `DataFrame`, se puede utilizar `writetable` para volcarla en un archivo de texto, empleando los mismos argumentos con palabra clave que emplea `readtable` para la lectura; por ejemplo:
+Si solo se introduce el nombre del archivo y la matriz o vector de datos, por defecto `writedlm` separa las columnas con un carácter de tabulación. En el caso de tener una tabla del tipo `DataFrame`, se puede utilizar `CSV.write` para volcarla en un archivo de texto, empleando los mismos argumentos con palabra clave que emplea `readtable` para la lectura; por ejemplo:
 
 ```julia; eval=false
-writetable("tabla.txt", tabla_resultados; separator=';')
+CSV.write("tabla.txt", tabla_resultados; delim=';')
 ```
 
-La diferencia más notable entre `writedlm` (o `writecsv`) y `writedlm`, además del tipo de tabla de entrada, es que `writedlm` también escribe una primera línea con los nombres de las columnas. (Se puede omitir usando el argumento opcional `header=false`).
+La diferencia más notable entre `writedlm` y `CSV.write`, además del tipo de tabla de entrada, es que `writedlm` también escribe una primera línea con los nombres de las columnas. (Se puede omitir usando el argumento opcional `header=false`).
 
-Guardar conjuntos de datos en archivos de texto es especialmente útil para emplearlos posteriormente, copiando la tabla en un informe, abriéndola con una hoja de cálculo, o importándola en cualquier otro programa. Pero para reutilizar los datos en una sesión de Julia posterior, otra opción práctica es guardarlos en un archivo binario que conserve todas las propiedades de las variables originales. El paquete [JLD](https://github.com/JuliaIO/JLD.jl) contiene las utilidades necesarias para salvar y cargar datos de este tipo.
+Guardar conjuntos de datos en archivos de texto es especialmente útil para emplearlos posteriormente, copiando la tabla en un informe, abriéndola con una hoja de cálculo, o importándola en cualquier otro programa. Pero para reutilizar los datos en una sesión de Julia posterior, otra opción práctica es guardarlos en un archivo binario que conserve todas las propiedades de las variables originales. Los paquetes [JLD2](https://github.com/JuliaIO/JLD2.jl) contiene las utilidades necesarias para salvar y cargar datos de este tipo.
 
 Así, con la función `save` podemos seleccionar un conjunto de variables en una sesión de Julia, y guardarlas en un archivo asignándoles nombres arbitrarios (no necesariamente iguales a los de las variables originales). Siguiendo con el mismo ejemplo del inicio del capítulo, puede interesarnos guardar la lista de los archivos de entrada (`archivos`), la ruta en la que se encuentran (`directorio`) y la matriz `resultados`. Imaginemos que queremos guardar estos datos en un archivo dándole a cada variable su correspondiente nombre en inglés. La sintaxis sería:
 
 ```julia; eval=false
-using JLD
+using JLD2
 save("datos.jld", "filenames", archivos, "path", directorio, "result_matrix", resultados)
 ```
 
@@ -378,10 +384,10 @@ En este capítulo hemos hecho una introducción a los siguientes aspectos de Jul
     + Expresiones para identificar un rango de elementos, filas o columnas de un *array*.
     + Cómo extraer una sección de un *array* y modificar sus valores.
     + Las expresiones "con punto" para aplicar una operación a cada uno de los elementos de un *
-* El uso de los paquetes `DataFrames` para trabajar con datos tabulados.
+* El uso del módulo `DelimitedFiles` y los paquetes `DataFrames` y `CSV` para trabajar con datos tabulados.
 * Aspectos esenciales de las cadenas de texto (*strings*), letras aisladas (caracteres) y variables de tipo "símbolo".
 * La interpolación en la definición de cadenas de texto.
-* El paquete `JLD` para salvar y recuperar las variables de una sesión de trabajo.
+* El paquete `JLD2` para salvar y recuperar las variables de una sesión de trabajo.
 * El uso de funciones con argumentos identificados por una paalbra clave.
 
 Además podemos destacar el uso de las siguientes funciones:
@@ -389,7 +395,7 @@ Además podemos destacar el uso de las siguientes funciones:
 * `findmax`, `findmin` para localizar respectivamente el valor máximo y el mínimo de una variable.
 * `length` para obtener la longitud de un *array* u otra estructura con múltiples datos.
 * `readdir` para obener una lista de cadenas de texto con los nombres de los archivos de un directorio.
-* `readdlm`, `readcsv` y `readtable` (esta última del paquete `DataFrames`) para leer datos tabulados, más las correspondientes `writedlm`, `writecsv` y `writetable` para escribirlos en un archivo de texto.
+* `readdlm` y `CSV.read` (esta última del paquete `CSV`) para leer datos tabulados, más las correspondientes `writedlm`, `CSV.read` para escribirlos en un archivo de texto.
 * `sign` para obtener el signo de una variable numérica.
 * `sqrt` para calcular la raíz cuadrada de un número.
 * `save` y su opuesta, `load`, para salvar en disco y recuperar después los contenidos de uno o varios archivos, más sus correspondientes "macros" `@save` y `@load` para salvar y cargar todo el espacio de trabajo actual.
