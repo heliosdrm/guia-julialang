@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} f vuelve a ser la figura activa}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{figure}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
-\end{Verbatim}

@@ -5,3 +5,4 @@
 *.pdf
 src/_minted-*
 .~lock.*#
+build

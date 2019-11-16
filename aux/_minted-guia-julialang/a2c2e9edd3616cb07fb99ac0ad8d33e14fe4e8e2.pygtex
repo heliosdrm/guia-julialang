@@ -1,8 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Correcto:}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{p}{@}\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}El numero pi es \PYGZpc{}.4f\PYGZdq{}}\PYG{p}{,} \PYG{n+nb}{pi}\PYG{p}{)}
-\PYG{g+go}{El numero pi es 3.1416}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} ¡Mal!}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{p}{@}\PYG{n}{printf} \PYG{p}{(}\PYG{l+s}{\PYGZdq{}El numero pi es \PYGZpc{}.4f\PYGZdq{}}\PYG{p}{,} \PYG{n+nb}{pi}\PYG{p}{)}
-\PYG{g+go}{ERROR: first or second argument must be a format string}
-\end{Verbatim}

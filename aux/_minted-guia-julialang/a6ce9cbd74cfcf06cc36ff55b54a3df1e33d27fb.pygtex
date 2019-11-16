@@ -1,9 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Letra individual (tipo Char)}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{cadena}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
-\PYG{g+go}{\PYGZsq{}p\PYGZsq{}}
-
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Cadena con solo una letra (tipo ASCIIString)}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{cadena}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{1}\PYG{p}{]}
-\PYG{g+go}{\PYGZdq{}p\PYGZdq{}}
-\end{Verbatim}

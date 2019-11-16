@@ -1,5 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{cadena}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+s+sc}{\PYGZsq{}P\PYGZsq{}}
-\PYG{g+go}{ERROR: MethodError: `setindex!` has no method matching setindex!(::ASCIIString,}
-\PYG{g+go}{::Char, ::Int64)}
-\end{Verbatim}

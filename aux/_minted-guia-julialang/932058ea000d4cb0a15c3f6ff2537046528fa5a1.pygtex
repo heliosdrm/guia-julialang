@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{l+s}{\PYGZdq{}Este es un texto}
-
-\PYG{g+gt}{       que ocupa dos líneas\PYGZdq{}}
-\PYG{g+go}{\PYGZdq{}Este es un texto\PYGZbs{}nque ocupa dos líneas\PYGZdq{}}
-\end{Verbatim}

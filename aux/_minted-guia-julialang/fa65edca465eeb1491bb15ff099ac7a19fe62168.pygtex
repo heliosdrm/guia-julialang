@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c}{\PYGZsh{} Ejemplo con solo dos países para abreviar}
-\PYG{n}{Dict}\PYG{p}{\PYGZob{}}\PYG{n}{AbstractString}\PYG{p}{,}\PYG{n}{Real}\PYG{p}{\PYGZcb{}(}\PYG{n}{paises}\PYG{p}{,} \PYG{n}{desempleo\PYGZus{}2014}\PYG{p}{)}
-\end{Verbatim}

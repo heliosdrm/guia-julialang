@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{k}{while} \PYG{n}{condici}\PYG{err}{ó}\PYG{n}{n}
-  \PYG{c}{\PYGZsh{} Código que se ejecuta de forma repetida}
-  \PYG{c}{\PYGZsh{} mientras se siga cumpliendo \PYGZdq{}condición\PYGZdq{}}
-\PYG{k}{end}
-\end{Verbatim}

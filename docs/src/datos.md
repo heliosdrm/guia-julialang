@@ -1,10 +1,7 @@
 # Representando datos
 
-```julia; echo=false; results="hidden"
-import Weave
-Weave.set_chunk_defaults(Dict{Symbol,Any}(:display=>true))
-dirbase = pwd()
-cd("../datos")
+```@setup c2
+cp("../datos/", "./datos")
 ```
 
 ## Un ejemplo para empezar
@@ -15,20 +12,17 @@ Pongamos el siguiente caso. Tenemos un conjunto de datos extraidos de un experim
 
 Cada uno de estos archivos tiene 100 líneas con dos columnas de datos separadas por tabuladores: la primera columna es una línea de tiempos equiespaciada que varía entre 0.01 y 1.00, y la segunda contiene las series de datos.
 
-```julia; echo=false; results="hidden"
-using DelimitedFiles, GRUtils
-datos = readdlm("series/sA12.txt")
-```
-```julia; echo=false
-plot(datos[:,1],datos[:,2:3])
-legend("x","y")
+```@example c2
+using DelimitedFiles, GRUtils # hide
+datos = readdlm("datos/series/sA12.txt") # hide
+plot(datos[:,1],datos[:,2]) # hide
 ```
 
 En todos los casos las series tienen una forma semejante: comienzan fluctuando ligeramente en torno a cero, hasta que en un momento la curva asciende (o desciende) hasta un valor máximo (positivo o negativo) y luego vuelve a un esado de reposo cercano a cero. Supongamos que en nuestro estudio el hecho de que el extremo sea positivo o negativo es irrelevante (podría ser causado por haber invertido el sistema de medida), y que queremos crear una tabla con el valor extremo de cada serie y el instante en el que se alcanza. El código para construir la tabla de datos, que iremos explicando a lo largo del capítulo, es el siguiente:
 
-```julia; display=false
+```@example c2
 # Leemos los nombres de los archivos del directorio "series"
-directorio = "series"
+directorio = "datos/series"
 archivos = readdir(directorio)
 # ¿Cuantos archivos tenemos?
 n = length(archivos)
@@ -52,12 +46,13 @@ for i=1:n
     tiempos[i] = x[indice_maximo]
     extremos[i] = valor_maximo
 end
-# Para terminar escribimos los datos en una matriz con tres columnas:
-# 1: el nombre del archivo
-# 2: el instante del extremo
-# 3: el valor del extremos
+#=
+Para terminar escribimos los datos en una matriz con tres columnas:
+1: el nombre del archivo
+2: el instante del extremo
+3: el valor del extremos
+=#
 resultados = [archivos tiempos extremos]
-
 ```
 
 Tomando este ejemplo como refencia, vamos a ver ahora algunos tipos y estructuras elementales de datos con las que normalmente trabajaremos en Julia.
@@ -78,50 +73,63 @@ Por otro lado, con mucha frecuencia las variables con las que interesa trabajar 
 
 En Julia los vectores y matrices (junto con las "hipermatrices" de más de dos dimensiones) son casos específicos de *arrays*, que se pueden definir en general como conjuntos de datos ordenados (numéricos o también de otros tipos, como veremos después). Su manejo es un tema extenso, que se trata de forma más detallada en el capítulo XXXXXXXXXXXX. Por ahora, como introducción solo veremos superficialmente los vectores (*arrays* unidimensionales). En el ejemplo hemos leído los datos a partir de archivos grabados en disco, como es habitual, pero un vector también se puede definir "a mano" a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:
 
-```julia; display=false
-primos = [1,3,5,7,11,13,17]
+```jldoctest c2
+julia> primos = [1,3,5,7,11,13,17];
 ```
 
 Es posible extraer un valor concreto del vector, utilizando también los corchetes para señalar el "índice" que se quiere tomar. Estos índices pueden ser números enteros, o la palabra clave `end` para referirse al último elemento:
 
-```julia
-primos[3]
-primos[end]
-primos[end-1]
+```jldoctest c2
+julia> primos[3]
+5
+
+julia> primos[end]
+17
+
+julia> primos[end-1]
+13
 ```
 
 En el código del ejemplo, la expresión `x[indice_maximo]` precisamente sirve para extraer el valor del vector de tiempos en el punto donde se da el valor extremo de la señal (`indice_maximo` se obtiene a través de la función `findmax`, aplicada al vector con los valores absolutos de `y`).
 
 También vemos en el ejemplo que cuando estas expresiones se ponen a la izquierda del símbolo `=` lo que se hace no es "leer" un valor del vector, sino asignarle el valor calculado en la parte derecha de la ecuación, como ocurre con `tiempos[i] = ...` y `extremos[i] = ...`. A la hora de modificar un vector hay que tener en cuenta dos restricciones importantes: solo se pueden incorporar datos del mismo tipo que el vector original, y no se puede "rebasar" el tamaño del vector original. Por ejemplo:
 
-```julia; eval=false
-numeros = [1,2,3,4,5,6]
-numeros[1] = 0   # Esto no es problema
-numeros[1] = 0.5 # Pero esto sí, porque eran números enteros
-```
-```
-ERROR: InexactError: Int64(Int64, 0.5)
-```
-```julia; eval=false
-numeros[7] = 10  # Esto también, porque el vector solo tenía 6 elementos
-```
-```
+```jldoctest c2
+julia> numeros = [1,2,3,4,5,6];
+
+julia> numeros[1] = 0   # Esto no es problema
+0
+
+julia> numeros[1] = 0.5 # Pero esto sí, porque eran números enteros
+ERROR: InexactError: Int64(0.5)
+[...]
+
+julia> numeros[7] = 10  # Esto también, porque el vector solo tenía 6 elementos
 ERROR: BoundsError: attempt to access 6-element Array{Int64,1} at index [7]
 ```
 
 La lectura y asignación de valores se puede hacer elemento a elemento, o también sobre varios elementos a la vez, utilizando un "vector de índices" para referirse a los elementos de interés. Para abreviar, un rango de índices correlativos se puede expresar como `a:b`, que significa "desde `a` hasta `b`. Por ejemplo:
 
-```julia
+```jldoctest c2
 # Dos alternativas para tomar los tres primeros números primos
-primos[ [1,2,3] ]
-primos[1:3]
+julia> primos[ [1,2,3] ]
+3-element Array{Int64,1}:
+ 1
+ 3
+ 5
+ 
+julia> primos[1:3]
+3-element Array{Int64,1}:
+ 1
+ 3
+ 5
 ```
 
 Para referirse a "todos los elementos" puede utilizarse el rango `1:end` (es decir, "desde el primero hasta el final"), o de forma abreviada los dos puntos sin más (`:`). Esto se emplea a menudo cuando se trabaja con matrices, para referirse a "todas las filas" o "todas las columnas". Aunque las operaciones con matrices las veremos con más detalle en XXXXXXX, en el ejemplo anterior ya podemos observar esto, en las líneas donde se extraen las dos columnas de la matriz `datos`. Por ejemplo, `x = datos[:,1]` expresa que a la variable `x` le asignamos "todas las filas de la primera columna" de `datos`.
 
 Finalmente, también se puede aplicar una misma operación a todos los elementos de un *array* a la vez. Podemos ver un ejemplo de esto en la línea donde se busca el valor extremo de la señal:
 
-```julia; eval=false
+```julia
 (valor_maximo, indice_maximo) =  findmax(abs.(y))
 ```
 
@@ -129,7 +137,7 @@ La función `abs` calcula el valor absoluto de un número. Pero en este caso que
 
 Esta sintaxis no vale solo para las funciones, sino también para los operadores como la suma (`+`), multiplicación (`*`), etc., e incluso para la asignación (`=`), aunque en estos casos el punto se añade antes del símbolo. Por ejemplo, si `x` e `y` fuesen las coordenadas de un vector, el módulo de ese vector se podría calcular con la expresión `sqrt.(x.^2 + y.^2)`; y si tuviéramos otro vector `m` de la longitud adecuada, este resultado podría asignarse a ese vector -- sin tener que crear otro nuevo, del siguiente modo:
 
-```julia; eval=false
+```julia
 m .= sqrt.(x.^2 + y.^2)
 ```
 
@@ -141,38 +149,45 @@ Julia es un lenguaje pensado especialmente para trabajar con números, pero tamb
 
 Las cadenas de texto son esencialmente secuencias de letras que se presentan delimitadas por comillas dobles (`"`). En parte se pueden comparar a vectores de letras, ya que es posible extraer letras aisladas o partes del texto con la misma sintaxis que se utiliza con los *arrays*. Por ejemplo, supongamos que queremos extraer el nombre del archivo sin la extensión `.txt` del archivo que está en la posición `i` de la lista. Se trata de una operación que ya está programada en la función `splitext`; pero como la extensión que queremos eliminar tiene cuatro letras, se podría asignar el nombre sin extensión a la variable `sinextension` del siguiente modo:
 
-```julia; echo=false; display=false
-i = 1
+```jldoctest c2; setup = :(archivos = ["sA01.txt"])
+julia> i = 1;
+
+julia> nombrearchivo = archivos[i]
+"sA01.txt"
+
+julia> sinextension = nombrearchivo[1:end-4]
+"sA01"
+
+julia> # O en una sola línea:
+
+julia> sinextension = archivos[i][1:end-4]
+"sA01"
 ```
 
-```julia
-nombrearchivo = archivos[i]
-sinextension = nombrearchivo[1:end-4]
-# O en una sola línea:
-sinextension = archivos[i][1:end-4]
-```
+Si extraemos una sola letra, como el carácter `A` o `B` que aparece en segunda posición del nombre archivo, podemos ver cómo las letras individuales se delimitan con comillas simples (`'`), en lugar de las dobles usadas para las cadenas de texto:
 
-Si extraemos una sola letra, como el código `A` o `B` que aparece en segunda posición del nombre archivo, podemos ver cómo las letras individuales se delimitan con comillas simples (`'`), en lugar de las dobles usadas para las cadenas de texto:
-
-```julia
-codigo = nombrearchivo[2]
+```jldoctest c2
+julia> letra = nombrearchivo[2]
+'A': ASCII/Unicode U+0041 (category Lu: Letter, uppercase)
 ```
 
 Sin embargo, al contrario que los *arrays* convencionales, las cadenas de texto son objetos "inmutables", y no es posible modificar sus letras de la misma manera que haríamos con los contenidos de un vector:
 
-```julia; eval=false
-nombrearchivo[2] = 'C'
-```
-```
+```jldoctest c2
+julia> nombrearchivo[2] = 'C'
 ERROR: MethodError: no method matching setindex!(::String, ::Char, ::Int64)
 ```
 
 Como alternativa hay múltipes funciones para manipular cadenas de texto, las más importantes de las cuales se comentan en el capítulo XXXXXXXXXXXXX dedicado a este tema. Pero hay una forma de componer cadenas de texto que es especialmente práctica y vale la pena adelantar: la "interpolación". Dada una variable `x`, sea numérica o literal, su contenido puede insertarse dentro de un texto utilizando el signo del dólar (`$`) para marcarla. También se puede interpolar una expresión más compleja encerrándola entre paréntesis:
 
-```julia
-x = 2
-txt1 = "uno más uno es igual a $x"
-txt2 = "y $x al cuadrado es $(x^2)"
+```jldoctest c2
+julia> x = 2;
+
+julia> txt1 = "uno más uno es igual a $x"
+"uno más uno es igual a 2"
+
+julia> txt2 = "y $x al cuadrado es $(x^2)"
+"y 2 al cuadrado es 4"
 ```
 
 El uso de `$` para interpolar datos en una cadena de texto impide que se pueda escribir tal cual, si lo que queremos es incluir ese signo en el texto. Para este y otros casos se utilizan "secuencias de escape", que generalmente comienzan con una barra invertida (`\`). Las secuencias de escape más útiles son:
@@ -197,8 +212,8 @@ Finalmente haremos mención a un tipo especial de cadenas de texto, los *símbol
 
 Además de los vectores (*arrays* unidimensionales), otra forma habitual de estructurar los datos es en forma de matrices (*arrays* de dos dimensiones, con filas y columnas), como las matrices numéricas que en el ejemplo se asignan a la variable `datos`, así como la matriz que se genera al final, `resultados`, que contiene los siguientes valores:
 
-```julia; echo=false
-resultados
+```@example c2
+resultados # hide
 ```
 
 Esta matriz no es puramente numérica ni de cadenas de texto, sino que combina ambos tipos de datos, usando un "supertipo" llamado `Any` que engloba todo tipo de objetos definidos en Julia.
@@ -207,7 +222,7 @@ A menudo, como ocurre con los datos de entrada en el ejemplo anterior, estas mat
 
 Esta especificación general puede crear ambigüedades y problemas a la hora de leer ciertas matrices. Podríamos tener una matriz con columnas separadas por comas en lugar de espacios, o bien cadenas de texto con espacios que no habrían de interpretarse como separadores de columnas  (por ejemplo en una columna de nombres de países, que podría incluir algunos como "Estados Unidos"). Para evitar estos problemas se puede añadir un segundo argumento a la función, con el carácter que se utiliza como separador de columnas. Por ejemplo, si queremos especificar que las columnas del archivo `ejemplo.txt` están separadas específicamente por tabuladores o por comas:
 
-```julia; eval=false
+```julia
 matriz = readdlm("ejemplo.txt", '\t')   # Separada por tabuladores
 matriz = readdlm("ejemplo.txt", ',')    # Separada por comas
 ```
@@ -242,45 +257,57 @@ Oceanía        Mujeres  80.20  5.55
 
 Podríamos ignorar la primera línea o extraerla como un vector de nombres, usando una de estas dos opciones:
 
-```julia; results=hidden
+```julia
 # Para ignorar la primera línea especificamos `skipstart=1`
-datos_un = readdlm("esperanzadevida.txt", skipstart=1)
+datos_un = readdlm("datos/esperanzadevida.txt", skipstart=1)
 # Para guardar la primera línea como un vector de nombres: `header=true`
-(datos_un, nombres) = readdlm("esperanzadevida.txt", header=true)
+(datos_un, nombres) = readdlm("datos/esperanzadevida.txt", header=true)
 ```
 
 Ambos argumentos se pueden combinar, si el encabezado contiene más líneas con otro tipo de información. En este caso `skipstart` indicaría el número de líneas a ignorar antes de leer los nombres de las columnas. Ambos son "argumentos con palabra clave", que pueden ponerse en cualquier orden después de los argumentos principales, pero tienen que ser llamados por su nombre para evitar confusiones. Por ejemplo, si hay dos líneas de texto con "metadatos" antes de la fila de nombres:
 
-```julia; eval=false
+```julia
 # Todas estas expresiones son equivalentes
-(datos_un, nombres) = readdlm("esperanzadevida.txt", skipstart=2, header=true)
-(datos_un, nombres) = readdlm("esperanzadevida.txt", header=true, skipstart=2)
-(datos_un, nombres) = readdlm("esperanzadevida.txt", '\t', skipstart=2, header=true)
+(datos_un, nombres) = readdlm("datos/esperanzadevida.txt", skipstart=2, header=true)
+(datos_un, nombres) = readdlm("datos/esperanzadevida.txt", header=true, skipstart=2)
+(datos_un, nombres) = readdlm("datos/esperanzadevida.txt", '\t', skipstart=2, header=true)
 ```
 
 Las matrices también pueden construirse "a mano" a partir de un conjunto de datos, de forma semejante a como se hace con los vectores. Si un vector se define escribiendo la serie de valores entre corchetes, separados por comas, las columnas de una matriz se pueden concatenar separándolas entre espacios, como se hace en la última línea del ejemplo al inicio del capítulo:
 
-```julia; eval=false
+```julia
 resultados = [archivos tiempos extremos]
 ```
 
 Asimismo, se pueden concatenar valores por filas separándolas por puntos y comas. Por ejemplo los datos de África de la tabla de esperanzas de vida anterior (dejando de lado los nombres de las variables y la columna con el nombre del continente) se podría escribir del siguiente modo:
 
-```julia; display=false
-datos_africa =["Todos" 60.23 7.25; "Hombres" 58.58 6.91; "Mujeres" 61.9 7.71]
+```jldoctest c2
+julia> datos_africa =["Todos" 60.23 7.25; "Hombres" 58.58 6.91; "Mujeres" 61.9 7.71]
+3×3 Array{Any,2}:
+ "Todos"    60.23  7.25
+ "Hombres"  58.58  6.91
+ "Mujeres"  61.9   7.71
 ```
 
 Como ya se ha visto antes, la forma de acceder a un elemento o una submatriz para leer o modificar sus valores es una generalización de lo que se hace con los vectores. Los elementos a los que se quiere acceder se indican por su posición en la matriz, que viene dada por las filas y columnas correspondientes (separadas por una coma).
 
-```julia
-using Statistics
-# La esperanza de vida media del ciudadano europeo
-# está en la séptima fila, tercera columna
-vida_europeo_medio = datos_un[7,3]
-# Calculamos la esperanza de vida promedio (columna 3 completa)
-# [En realidad el valor medio es distinto,
-# por los distintos tamaños de población.]
-vida_media = mean(datos_un[:,3])
+```jldoctest c2; setup = :(using DelimitedFiles; datos_un = readdlm("datos/esperanzadevida.txt", skipstart=1))
+julia> using Statistics
+
+julia> #= La esperanza de vida media del ciudadano europeo
+       está en la séptima fila, tercera columna =#
+
+julia> vida_europeo_medio = datos_un[7,3]
+77.22
+
+julia> #=
+       Calculamos la esperanza de vida promedio (columna 3 completa)
+       (En realidad el valor medio es distinto,
+       por los distintos tamaños de población.)
+       =#
+
+julia> vida_media = mean(datos_un[:,3])
+73.50666666666667
 ```
 
 ## "Data frames" (tablas de datos)
@@ -299,37 +326,96 @@ Una tabla de datos es parecida a una matriz; también se puede leer a partir de 
 
 Podemos ver cómo los nombres de las columnas están incorporados en la tabla leyendo el archivo "esperanzadevida.txt" como sigue:
 
-```julia; results="raw"
-# Instalar el paquete CSV si no se ha instalado el paquete antes
-using CSV
-tabla_un = CSV.read("esperanzadevida.txt", delim=' ', ignorerepeated=true)
+```jldoctest c2
+julia> using CSV
+
+julia> tabla_un = CSV.read("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true)
+18×4 DataFrames.DataFrame
+│ Row │ continente    │ género  │ media   │ desv_tip │
+│     │ String        │ String  │ Float64 │ Float64  │
+├─────┼───────────────┼─────────┼─────────┼──────────┤
+│ 1   │ África        │ Todos   │ 60.23   │ 7.25     │
+│ 2   │ África        │ Hombres │ 58.58   │ 6.91     │
+│ 3   │ África        │ Mujeres │ 61.9    │ 7.71     │
+│ 4   │ Asia          │ Todos   │ 71.82   │ 5.34     │
+│ 5   │ Asia          │ Hombres │ 69.95   │ 5.41     │
+│ 6   │ Asia          │ Mujeres │ 73.79   │ 5.54     │
+│ 7   │ Europa        │ Todos   │ 77.22   │ 3.61     │
+⋮
+│ 11  │ Latinoamérica │ Hombres │ 71.38   │ 3.85     │
+│ 12  │ Latinoamérica │ Mujeres │ 77.96   │ 4.11     │
+│ 13  │ Norteamérica  │ Todos   │ 79.17   │ 2.05     │
+│ 14  │ Norteamérica  │ Hombres │ 76.79   │ 2.28     │
+│ 15  │ Norteamérica  │ Mujeres │ 81.5    │ 1.79     │
+│ 16  │ Oceanía       │ Todos   │ 77.92   │ 6.33     │
+│ 17  │ Oceanía       │ Hombres │ 75.7    │ 5.66     │
+│ 18  │ Oceanía       │ Mujeres │ 80.2    │ 5.55     │
 ```
 
-Además, tal como se ha señalado, el género es una serie de cadenas de texto (datos de tipo ``j typeof("a")``) mientras que la altura o el peso son numeros enteros (``j typeof(0)``). Se puede hacer referencia a las distintas columnas por su posición en la tabla al igual que en las matrices, pero también por sus nombres, que se representan en forma de símbolos (véase al final de la sección sobre cadenas de texto sobre este tipo especial de nombres):
+Además, tal como se ha señalado, el género es una serie de cadenas de texto (datos de tipo `String`) mientras que la altura o el peso son numeros enteros (`Int64` o `Int32`, según la arquitectura del ordenador que se esté usando). Se puede hacer referencia a las distintas columnas por su posición en la tabla al igual que en las matrices, pero también por sus nombres, que se representan en forma de símbolos (véase al final de la sección sobre cadenas de texto sobre este tipo especial de nombres):
 
-```julia
-columna_continente = tabla_un[:continente]  # Equivale a ... tabla_un[:,1]
-columna_media = tabla_un[:media]            # Equivale a ... tabla_un[:,3]
+```jldoctest c2
+julia> tabla_un[:,:continente]   # Equivale a ... tabla_un[:,1]
+18-element WeakRefStrings.StringArray{String,1}:
+ "África"       
+ "África"       
+ "África"       
+ "Asia"         
+ "Asia"         
+ "Asia"         
+ "Europa"       
+ "Europa"       
+ "Europa"       
+ "Latinoamérica"
+ "Latinoamérica"
+ "Latinoamérica"
+ "Norteamérica" 
+ "Norteamérica" 
+ "Norteamérica" 
+ "Oceanía"      
+ "Oceanía"      
+ "Oceanía"      
+
+julia> tabla_un[:, :media]   # Equivale a ... tabla_un[:,3]
+18-element Array{Float64,1}:
+ 60.23
+ 58.58
+ 61.9 
+ 71.82
+ 69.95
+ 73.79
+ 77.22
+ 73.66
+ 80.7 
+ 74.65
+ 71.38
+ 77.96
+ 79.17
+ 76.79
+ 81.5 
+ 77.92
+ 75.7 
+ 80.2 
 ```
 
 Este tipo de tablas también se pueden crear a mano, con la función "constructora" `DataFrame` del paquete DataFrames. La forma normal de construir estas tablas es introduciendo los datos por columnas, a cada una de las cuales se le asigna un nombre. Por ejemplo, la última línea del ejemplo inicial de este capítulo podría haberse cambiado para crear una tabla de este tipo:
 
-```julia; results="raw"
+```julia
 using DataFrames
-tabla_resultados = DataFrame(archivo=archivos, tiempo=intervalos, distancia=distancias, proporcionxy = proporcionxy)
+tabla_resultados = DataFrame(archivo=archivos, tiempo=tiempos, extremo=extremos)
 ```
 
 ## Guardar datos
 
 Naturalmente, además de leer datos a partir de archivos de texto, normalmente también interesa *escribir* archivos con los resultados generados. Si estos resultados están en forma de matrices o vectores, se pueden guardar a través de la función `writedlm` de DelimitedFiles, que funciona de forma simétrica a `readdlm`. Por ejemplo, para guarda la matriz `resultados` creada en el primer ejemplo de este capítulo en el archivo "tabla.txt", usando el punto y coma como separador entre columnas:
 
-```julia; eval=false
+```julia
 writedlm("tabla.txt", resultados, ';')
 ```
 
 Si solo se introduce el nombre del archivo y la matriz o vector de datos, por defecto `writedlm` separa las columnas con un carácter de tabulación. En el caso de tener una tabla del tipo `DataFrame`, se puede utilizar `CSV.write` para volcarla en un archivo de texto, empleando los mismos argumentos con palabra clave que emplea `readtable` para la lectura; por ejemplo:
 
-```julia; eval=false
+```julia
 CSV.write("tabla.txt", tabla_resultados; delim=';')
 ```
 
@@ -339,7 +425,7 @@ Guardar conjuntos de datos en archivos de texto es especialmente útil para empl
 
 Ambos paquetes proporcionan métodos semejantes para salvar y guardar datos. Por ejemplo, para salvar las variables `archivos` y `resultados`, en un archivo llamado "datos" -- y para cargarlas después a partir del archivo--, en ambos casos se podría escribir:
 
-```julia; eval=false
+```julia
 @save("datos", archivos, resultados) # para salvar
 @load("datos", archivos, resultados) # para cargar
 ```
@@ -373,11 +459,7 @@ Además podemos destacar el uso de las siguientes funciones:
 * `sqrt` para calcular la raíz cuadrada de un número.
 * La "macro" `@save` para salvar variables del espacio de trabajo actual en un fichero `bson` o `jld2`, y `@load` para la operación inversa.
 
-
-```julia; echo=false
-cd(dirbase)
-Weave.restore_chunk_defaults()
+```@example c2
+rm("datos", recursive=true) # hide
 ```
-
-
 

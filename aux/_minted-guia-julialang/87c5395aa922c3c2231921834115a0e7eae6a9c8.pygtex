@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{style}\PYG{p}{(}\PYG{n}{comp}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{color}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}grey\PYGZdq{}}\PYG{p}{)}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{style}\PYG{p}{(}\PYG{n}{comp}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{],} \PYG{n}{linekind}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}dashed\PYGZdq{}}\PYG{p}{,} \PYG{n}{linecolor}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}red\PYGZdq{}}\PYG{p}{,} \PYG{n}{linewidth}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{)}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{style}\PYG{p}{(}\PYG{n}{comp}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{],} \PYG{n}{linewidth}\PYG{o}{=}\PYG{l+m+mf}{1.5}\PYG{p}{,} \PYG{n}{linecolor}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}blue\PYGZdq{}}\PYG{p}{)}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{plottable}
-\end{Verbatim}

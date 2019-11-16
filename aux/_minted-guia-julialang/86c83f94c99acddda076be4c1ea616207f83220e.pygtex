@@ -1,9 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{collect}\PYG{p}{(}\PYG{n}{impares}\PYG{p}{)}
-\PYG{g+go}{5\PYGZhy{}element Array\PYGZob{}Int64,1\PYGZcb{}:}
-\PYG{g+go}{ 1}
-\PYG{g+go}{ 3}
-\PYG{g+go}{ 5}
-\PYG{g+go}{ 7}
-\PYG{g+go}{ 9}
-\end{Verbatim}

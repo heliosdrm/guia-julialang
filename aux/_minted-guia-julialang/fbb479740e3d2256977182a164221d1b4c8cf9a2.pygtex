@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n+nb}{typeof}\PYG{p}{(}\PYG{n}{unos}\PYG{p}{)}
-\PYG{g+go}{(Int64,Float64,Complex\PYGZob{}Int64\PYGZcb{},Bool)}
-\end{Verbatim}

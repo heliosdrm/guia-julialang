@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{cadena} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}palabra\PYGZdq{}}\PYG{p}{;}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Porción de la cadena (tres primeras letras)}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{cadena}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{3}\PYG{p}{]}
-\PYG{g+go}{\PYGZdq{}pal\PYGZdq{}}
-\end{Verbatim}

@@ -1,8 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Con getattr se obtiene el valor actual del atributo}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{titulo} \PYG{o}{=} \PYG{n}{getattr}\PYG{p}{(}\PYG{n}{plottable}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{l+s}{\PYGZdq{}title\PYGZdq{}}\PYG{p}{)}
-\PYG{g+go}{\PYGZdq{}Ejemplo de media móvil\PYGZdq{}}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} Lo convertimos en mayúscula, y lo reasignamos con setattr}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{c}{\PYGZsh{} usando el argumento con el nombre correspondiente}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{setattr}\PYG{p}{(}\PYG{n}{plottable}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{title}\PYG{o}{=}\PYG{n}{uppercase}\PYG{p}{(}\PYG{n}{titulo}\PYG{p}{))}
-\end{Verbatim}

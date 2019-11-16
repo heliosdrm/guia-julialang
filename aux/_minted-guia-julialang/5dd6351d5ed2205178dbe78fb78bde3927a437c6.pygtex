@@ -1,5 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{desempleo\PYGZus{}2014}\PYG{p}{[}\PYG{n}{paises} \PYG{o}{.==} \PYG{l+s}{\PYGZdq{}Spain\PYGZdq{}}\PYG{p}{]}
-\PYG{g+go}{1\PYGZhy{}element Array\PYGZob{}Float64,1\PYGZcb{}:}
-\PYG{g+go}{ 24.5}
-\end{Verbatim}

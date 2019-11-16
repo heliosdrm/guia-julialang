@@ -1,9 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{claves} \PYG{o}{=} \PYG{n}{keys}\PYG{p}{(}\PYG{n}{dic\PYGZus{}desempleo\PYGZus{}2014}\PYG{p}{)}
-\PYG{k}{for} \PYG{n}{k} \PYG{k}{in} \PYG{n}{claves}
-  \PYG{n}{print}\PYG{p}{(}\PYG{n}{k}\PYG{p}{)}
-  \PYG{n}{print}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}: \PYGZdq{}}\PYG{p}{)}
-  \PYG{n}{print}\PYG{p}{(}\PYG{n}{dic\PYGZus{}desempleo\PYGZus{}2014}\PYG{p}{[}\PYG{n}{k}\PYG{p}{])}
-  \PYG{n}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZpc{}\PYGZdq{}}\PYG{p}{)}
-\PYG{k}{end}
-\end{Verbatim}

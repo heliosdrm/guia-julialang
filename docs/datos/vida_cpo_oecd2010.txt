@@ -1,0 +1,14 @@
+País	Esperanza	CPO	Población
+Australia	81.8	1.3	22032000
+Bélgica	80.3	0.9	10920270
+Dinamarca	79.3	0.6	5547683
+Grecia	80.7	2.1	11153000
+Japón	82.9	1.3	128057000
+Corea del Sur	80.2	2.1	49410370
+Letonia	73.0	3.1	2098000
+Luxemburgo	80.7	0.7	506953
+México	74.1	2.4	114255600
+Nueva Zelanda	80.8	1.2	4350700
+Noruega	81.2	1.3	4889252
+República Eslovaca	75.6	1.9	5391428
+Suecia	81.6	0.8	9378126

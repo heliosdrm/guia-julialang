@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{paises} \PYG{o}{=} \PYG{p}{[}\PYG{l+s}{\PYGZdq{}Germany\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}Greece\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}Spain\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}France\PYGZdq{}}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}United Kingdom\PYGZdq{}}\PYG{p}{]}
-\PYG{n}{desempleo\PYGZus{}2014} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mf}{26.5}\PYG{p}{,} \PYG{l+m+mf}{24.5}\PYG{p}{,} \PYG{l+m+mf}{10.2}\PYG{p}{,} \PYG{l+m+mf}{6.3}\PYG{p}{]}
-\end{Verbatim}

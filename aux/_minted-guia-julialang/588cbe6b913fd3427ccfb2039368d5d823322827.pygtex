@@ -1,5 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{hold}\PYG{p}{(}\PYG{n}{false}\PYG{p}{)} \PYG{c}{\PYGZsh{} comportamiento por defecto de \PYGZdq{}plot\PYGZdq{}}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{hold}\PYG{p}{(}\PYG{n}{true}\PYG{p}{)}  \PYG{c}{\PYGZsh{} cambia \PYGZdq{}plot\PYGZdq{} para hacer lo mismo que \PYGZdq{}oplot\PYGZdq{}}
-\PYG{g+gp}{julia\PYGZgt{}} \PYG{n}{hold}\PYG{p}{()}      \PYG{c}{\PYGZsh{} alterna ambos comportamientos de \PYGZdq{}plot\PYGZdq{}}
-\end{Verbatim}

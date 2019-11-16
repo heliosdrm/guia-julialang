@@ -1,5 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{f} \PYG{o}{=} \PYG{n}{open}\PYG{p}{(}\PYG{n}{nombre}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}w\PYGZdq{}}\PYG{p}{)}
-\PYG{n}{write}\PYG{p}{(}\PYG{n}{f}\PYG{p}{,} \PYG{n}{html\PYGZus{}completo}\PYG{p}{)}
-\PYG{n}{close}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
-\end{Verbatim}
