@@ -27,7 +27,7 @@ Uno de los IDEs más completos es [Juno](http://junolab.org/), el IDE basado en 
 
 Veamos ahora un primer ejemplo práctico de Julia, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.[^1] Se trata de un algoritmo simple, que podría traducirse a Julia mediante el siguiente código: 
 
-```jldoctest c1; output = false
+```@example c1
 """
 Cálculo del día de la semana.
 La función devuelve una cadena de texto con el día de la semana que corresponde
@@ -57,9 +57,7 @@ function gauss_diasemana(d, m, y)
     w = mod(d + e + f + g + div(g, 4), 7)
     return(warray[w+1])
 end
-
-# output
-gauss_diasemana
+nothing #hide
 ```
 
 [^1]: [http://berndt-schwerdtfeger.de/cal/cal.pdf](http://berndt-schwerdtfeger.de/cal/cal.pdf)
@@ -88,9 +86,8 @@ Una dificultad añadida es que a veces los nombres de los directorios son largos
 
 Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó 11 de agosto de 2018, la fecha en la que se publicó la version 1 de Julia:
 
-```jldoctest c1
-julia> gauss_diasemana(11, 8, 2018)
-"sábado"
+```@repl c1
+gauss_diasemana(11, 8, 2018)
 ```
 
 !!! note

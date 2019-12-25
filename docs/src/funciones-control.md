@@ -188,28 +188,20 @@ Puede ocurrir que los datos a pasar a la función estén recogidos en una misma 
 
 Supongamos, por ejemplo, que el mes a evaluar está en la cadena de texto `08/2018`. Con la función `split` podemos extraer las partes correspondientes al mes y el año:
 
-```jldoctest c3
-julia> fecha = "08/2018"
-"08/2018"
-
-julia> numeros = split(fecha, "/")
-2-element Array{SubString{String},1}:
- "08"  
- "2018"
+```@repl c3
+fecha = "08/2018"
+numeros = split(fecha, "/")
 ```
 
 Luego usamos la función `parse` para interpretar los textos como números enteros (`Int`); se llama a la función mediante la sintaxis "con punto" para aplicarla a los dos elementos del vector a la vez, como vimos en el capítulo anterior:
 
-```jldoctest c3
-julia> numeros = parse.(Int, numeros)
-2-element Array{Int64,1}:
-    8
- 2018
+```@repl c3
+numeros = parse.(Int, numeros)
 ```
 
 Este vector de dos números se puede pasar a la función `calendario_html` como si fueran dos números separados, añadiéndole unos puntos suspensivos que hacen de operador de "descomposición" (lo que en inglés llaman *splatting of variables*):
 
-```julia
+```julia-repl
 julia> calendario_html(numeros...)
 ```
 
@@ -227,21 +219,16 @@ Esta declaración significa que se puede introducir cualquier número de argumen
 
 Es posible hacer que algunos argumentos tengan valores por defecto, haciendo que sea opcional introducirlos. El valor por defecto se define en la declaración de la función escribiéndolo junto al nombre del argumento separado por el signo `=`. Por ejemplo, esta sencilla función sirve para incrementar el valor de `x` con un valor arbitrario, que por defecto es `1`.
 
-```jldoctest c3; output = false
+```@example c3
 incrementar(x, inc=1) = x + inc
-
-# output
-incrementar (generic function with 2 methods)
+nothing # hide
 ```
 
 A esta función se le puede llamar con uno o dos argumentos:
 
-```jldoctest c3
-julia> incrementar(5)
-6
-
-julia> incrementar(5, 3)
-8
+```@repl c3
+incrementar(5)
+incrementar(5, 3)
 ```
 
 Los argumentos con valores por defecto han de estar necesariamente después de los argumentos obligatorios, para que no exista ambigüedad a la hora de llamar a la función con un conjunto reducido de argumentos. Por la misma razón, no es posible combinar argumentos con valores por defecto y agrupaciones variables de argumentos (con los puntos suspensivos).
@@ -296,34 +283,24 @@ Las funciones también pueden actuar como su devolviesen más de un resultado. E
 
 Para que una función devuelva dos o más variables basta con poner la lista de resultados seapradas por comas, como en la siguiente función que devuelve la media y la diferencia de dos números:
 
-```jldoctest c3; output=false
+```@example c3
 function mediaydiferencia(a, b)
     media = (a + b) / 2
     diferencia = b - a
     return (media, diferencia)
 end
-
-# output
-mediaydiferencia (generic function with 1 method)
+nothing # hide
 ```
 
 En realidad lo que ocurre al hacer esto es que la función devuelve una "tupla" de valores. Una tupla es una colección de datos, parecida a un vector, pero que no es mutable (sus valores on se pueden modificar). Al poner dos variables de salida en la llamada a la función, lo que se hace es descomponer esta tupla, de forma parecida a cuando se utilizan los puntos suspensivos en los argumentos de entrada. Así pues, las siguientes formas de usar la función `mediaydiferencia` serían equivalentes:
 
-```jldoctest c3
-julia> # Opción 1: llamar a la función con dos salidas
-
-julia> m, d = mediaydiferencia(1, 5)
-(3.0, 4)
-
-julia> # Opción 2: una salida y descomposición posterior
-
-julia> resultado = mediaydiferencia(1, 5);
-
-julia> m = resultado[1]
-3.0
-
-julia> d = resultado[2]
-4
+```@repl c3
+# Opción 1: llamar a la función con dos salidas
+m, d = mediaydiferencia(1, 5)
+# Opción 2: una salida y descomposición posterior
+resultado = mediaydiferencia(1, 5);
+m = resultado[1]
+d = resultado[2]
 ```
 
 !!! note
@@ -344,7 +321,7 @@ La diferencia más importante entre una variable global y una local, es que dent
 
 Pongamos un ejemplo más sencillo, con una variable global `x` que también es mutable (otro vector) y cuatro funciones distintas:
 
-```jldoctest c3; output=false
+```@example c3
 x = [1, 2, 3]
 
 # f1 usa la variable global x
@@ -372,58 +349,28 @@ function f4(k)
     y = k*x
     x = y
 end
-
-# output
-f4 (generic function with 1 method)
+nothing # hide
 ```
 
 La función `f1` opera con la variable global `x`, de tal manera que si esta se modifica (por ejemplo por acción de la función `f2`), su comportamiento también cambia.
 
-```jldoctest c3
-julia> f1(5)
-3-element Array{Int64,1}:
-  5
- 10
- 15
-
-julia> f2(5) # hace lo mismo que f1 pero cambia `x`
-3-element Array{Int64,1}:
-  5
- 10
- 15
-
-julia> x
-3-element Array{Int64,1}:
- 0
- 2
- 3
-
-julia> f1(5)
-3-element Array{Int64,1}:
-  0
- 10
- 15
+```@repl c3
+f1(5)
+f2(5) # hace lo mismo que f1 pero cambia `x`
+x
+f1(5)
 ```
 
 La función `f3`, sin embargo, define una variable `x` en su contexto local, que por lo tanto independiente de la variable global del mismo nombre:
 
-```jldoctest c3
-julia> f3(5)
-3-element Array{Int64,1}:
- 20
- 25
- 30
-
-julia> x # no ha cambiado por usar `f3`
-3-element Array{Int64,1}:
- 0
- 2
- 3
+```@repl c3
+f3(5)
+x # no ha cambiado por usar `f3`
 ```
 
 Finalmente, la función `f4` da un error, ya que la asignación de valores a una variable (con el operador `=`, como en la segunda línea de la función) solo está permitida a variables locales, y esto entra en conflicto con la primera línea, donde `x` se utiliza sin haberla definido, como si fuera una variable global. (Véase la diferencia con `f2`, que no redefine la variable referida como `x`, sino que modifica los valores contenidos en la misma.)
 
-```jldoctest c3
+```jldoctest c3; setup = :(f4 = (k)->(y = k*x; x = y))
 julia> f4(5)
 ERROR: UndefVarError: x not defined
 ```
@@ -534,30 +481,13 @@ Cuando se trabaja con conjuntos de datos (*arrays*, etc.), se pueden hacer compr
 
 Las funciones `all` y `any` solo funcionan sobre conjuntos de elementos de tipo `Bool`. A menudo estos conjuntos proceden de operaciones lógicas (p.ej. comparaciones) realizadas sobre todos los elementos de otro conjunto de datos. Esto se puede hacer, como cualquier otra operación, utilizando la "notación con punto" sobre funciones y operadores como los que se han visto antes. Por ejemplo, para verificar que ningún número del vector `x` es negativo:
 
-```jldoctest
-julia> x = [1, 2, 3, 4];
-
-julia> b = x .> 0
-4-element BitArray{1}:
- true
- true
- true
- true
-
-julia> all(b)
-true
-
-julia> x[1] = -1;
-
-julia> b = x .> 0
-4-element BitArray{1}:
- false
-  true
-  true
-  true
-
-julia> all(b)
-false
+```@repl
+x = [1, 2, 3, 4];
+b = x .> 0
+all(b)
+x[1] = -1;
+b = x .> 0
+all(b)
 ```
 
 ### Composición de expresiones lógicas
