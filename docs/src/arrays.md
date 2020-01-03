@@ -119,7 +119,6 @@ Otro caso de uso práctico de `hvcat` es para crear una matriz con una sola colu
 
 ```@repl
 vector = ["a", "b", "c"]
-3-element Array{String,1}:
 matriz_columna = hvcat(1, "a", "b", "c")
 ```
 
@@ -662,6 +661,7 @@ m .= sqrt.(x.^2 .+ y.^2)
 @. m = sqrt(x^2 + y^2)
 ```
 
+
 ## Operaciones matriciales
 
 Las matrices numéricas son solo un tipo particular de *arrays*, pero especialmente relevante, ya que son un elemento fundamental del álgebra lineal. La relevancia de las matrices implica que hay una cantidad muy importante de operaciones matemáticas dirigidas a este tipo de variables, y que no son válidas para *arrays* no numéricos o de más dimensiones. Sí se pueden usar, sin embargo, con vectores, con los que a estos efectos se opera como si fueran matrices de una sola columna.
@@ -784,7 +784,6 @@ Además, se han explorado otros aspectos de Julia no estrictamente asociados a l
 * Cómo funciona la asignación de objetos a variables en Julia, las implicaciones que esto tiene sobre los objetos mutables (como los *arrays*), y el uso de las funciones `copy` y `deepcopy` para evitar mutaciones no deseadas al reasignar objetos a distintas variables.
 
 Finalmente, también se han explicado algunas funciones del módulo `Random` para la generación de números aleatorios (p.ej. `rand`, `rand!`, `randn` y `randn!`), y la configuración de la "semilla" (`Random.seed!`) para asegurar la reproducibilidad de los resultados cuando se usan esas funciones.
-
 
 ```@setup c5
 rm("datos", recursive=true) # hide
