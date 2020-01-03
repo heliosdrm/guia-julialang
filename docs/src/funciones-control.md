@@ -315,7 +315,7 @@ Las funciones introducen un contexto propio para variables (lo que en inglés se
 
 Por otro lado, si el código de una función utiliza alguna variable que no esté definida dentro de la función, su valor se busca fuera de la misma, en otras partes del código que contenga la función. Esto es lo que ocurre, por ejemplo, con la variable `listadias`, que hemos definido como una variable "global", externa a las funciones, pero es usada tanto por `numero_primer_dia` como por `calendario_html`.
 
-Esta capacidad de las funciones para reconocer objetos globales, definidos fuera de su contexto local, no solo es útil para poder reutilizar variables, sino que es crucial para que las funciones puedan llamarse entre ellas --ya que las funciones son objetos al igual que otras variables.
+Esta capacidad de las funciones para reconocer objetos globales, definidos fuera de su contexto local, no solo es útil para poder reutilizar variables, sino que es crucial para que las funciones puedan llamarse entre ellas --ya que las funciones son objetos al igual que otras variables--.
 
 La diferencia más importante entre una variable global y una local, es que dentro del contexto local de la función no se pueden redefinir las variables globales. Ninguna de las funciones podría utilizar la variable `listadias` y luego asignarle otro valor. Lo que sí podría ocurrir en este caso, en el que `listadias` es una variable "mutable" (un vector), es que su contenido se modifique sin redefinir la variable.
 
@@ -681,6 +681,30 @@ end
 
 En este ejemplo, el bucle se interrumpe con `continue` si el número `m` ya ha sido eliminado en alguna de las iteraciones anteriores, y se finaliza con `break` antes de que `m` llegue a `n`, si el cuadrado de un número identificado como primo supera el valor de `n`.
 
+## try ... catch ... finally
+
+Para finalizar vamos a comentar brevemente una estructura de control que resulta de utilidad para gestionar posibles errores en la ejecución de un programa. Esta estructura tiene la siguiente forma:
+
+```julia
+try
+    # Código que puede dar error
+catch
+    # Código a ejecutar si ha habido un error
+finally
+    # Operaciones de "limpieza"
+end
+```
+
+En general, si alguna de las operaciones del bloque `try` da lugar a un error, este error no terminará la ejecución del programa ni se mostrará en pantalla, como suele ocurrir. En lugar de eso, se interrumpirá solo ese bloque y continuará ejecutándose el resto del programa. Los sub-bloques `catch` y `finally` son opcionales. El `catch` se ejecuta solo si ha habido algún error dentro del `try`, mientras que el `finally` se ejecuta siempre después de los dos bloques anteriores, tanto si ha habido un error como si no. El bloque `finally` se suele utilizar para operaciones de "limpieza" necesarias debido a posibles interrupciones del código anterior, como cerrar archivos que hayan quedado abiertos, etc.
+
+Sin embargo, es importante tener en cuenta que el código del `finally` debe ser ejecutable independientemente de si el `try` ha fallado --y de *en qué punto* ha fallado--, por lo que no puede depender de las variables definidas dentro del `try` (ni del `catch`, si este existe). Para que esto sea así, cada uno de los sub-bloques `try`, `catch` y `finally` introduce su propio contexto local para variables, que se olvidan al finalizar el sub-bloque y no están disponibles en el resto del programa.
+
+Así pues, no es conveniente abusar de los bloques `try-catch` como una herramienta para hacer programas "tolerantes a fallos". Esta estructura está pensada más bien para circunstancias en las que la terminación del programa debida a un error pueda suponer un problema más o menos grave, y el código incluido en estos bloques debería limitarse al necesario para prevenir esos problemas.
+
+Cuando los errores sean previsibles, es mejor comprobar las condiciones que pueden dar lugar a esos errores con bloques condicionales (`if-else`, etc.). Por ejemplo, la función `isfile` sirve para comprobar si una cadena de texto corresponde a la ruta de un archivo existente, `isa` puede servir para comprobar que una variable es de tipo compatible con las operaciones a realizar (p.ej. `x isa Int` para comprobar que `x` es un número entero), etc.
+
+Por otro lado, en el caso de los errores imprevisibles a menudo es mejor dejar que ocurran, porque suelen venir acompañados de información útil para mejorar el programa. Esto se verá más detalladamente en el capítulo dedicado al *debugging*.
+
 ## Sumario del capítulo
 
 En este capítulo hemos visto el uso de funciones y estructuras de control (bloques condicionales y bucles), centrándonos en:
@@ -694,6 +718,7 @@ En este capítulo hemos visto el uso de funciones y estructuras de control (bloq
 * Bucles de tipo `for` y de tipo `while`.
 * El uso de `enumerate` para crear un contador de iteraciones en los bucles `for`.
 * La interrupción de bucles con `break` y `while`.
+* Las estructuras `try-catch-finally` para gestionar errores fortuitos.
 
 También hemos visto algunas operaciones y funciones que son de utilidad para trabajar con funciones, condiciones y bucles, aunque tienen un uso más general:
 
@@ -710,3 +735,5 @@ Finalmente, en los distintos ejemplos también hemos visto otras operaciones y f
 * La función `split` para descomponer cadenas de texto separadas por un delimitador.
 * La función `parse` para convertir texto en números.
 * La función `HTML` para convertir un texto en código HTML.
+* La función `isfile` para comprobar si existe un archivo con una ruta determinada.
+* La función `isa` para comprobar que una variable es de un tipo determinado.
