@@ -97,6 +97,19 @@ Por otro lado, para eliminar una entrada a partir de su clave se utiliza la func
 delete!(dic_poblacion, "Antártida")
 ```
 
+El conjunto de claves presentes en un diccionario no es algo tan sencillo de delimitar como las posiciones válidas de un *array*. Por esta razón existe la función `haskey`, que permite averiguar si un diccionario tiene alguna clave en particular:
+
+```@repl
+haskey(dic_poblacion, "Asia")
+haskey(dic_poblacion, "Norteamérica")
+```
+
+Además, con la función `get` se puede "preguntar" de forma segura a un diccionario por el valor asociado a una clave, definiendo un valor por defecto para los casos en los que dicha clave no exista:
+
+```@repl
+get(dic_poblacion, "Norteamérica", -1)
+```
+
 ### Iterar con diccionarios
 
 La forma de iterar con diccionarios en un bucle `for` también es distinta a como se haría con un rango o un vector, ya que los contenidos de los diccionarios no siguen un orden determinado. Sin embargo, en cada iteración tenemos dos variables en lugar de una (la clave y el valor), que asignamos como sigue::
@@ -246,7 +259,7 @@ unos_nom[:decimal] # Indexando con el nombre escrito en forma de símbolo
 unos_nom[2]        # Indexando con la posición del elemento
 ```
 
-Hasta cierto punto las tuplas con nombres se pueden ver como diccionarios inmutables, cuyas claves han de ser siempre símbolos. De hecho, funciones como `keys` y `values` también sirven para extraer tuplas con los nombres y los valores de la tupla, como ocurre con los diccionarios. Sin embargo, hay otras otras diferencias importantes entre tuplas con nombre y diccionarios:
+Hasta cierto punto las tuplas con nombres se pueden ver como diccionarios inmutables, cuyas claves han de ser siempre símbolos. De hecho, funciones como `get`, `haskey`, `keys` y `values` se pueden usar con las tuplas con nombre del mismo modo que en los diccionarios. Sin embargo, hay otras otras diferencias importantes entre tuplas con nombre y diccionarios:
 
 * Los elementos de una tupla con nombre mantienen el orden en el que se definieron, y se pueden indexar por su posición.
 * Cuando se itera sobre una tupla con nombres, el elemento resultante de cada iteración no es la pareja nombre + valor, sino solo el valor.
@@ -347,7 +360,10 @@ En este capítulo hemos visto cómo se crean y cómo se trabaja con diversos tip
 Además, se ha explicado cómo utilizar *comprehensions* para generar distintos tipos de colecciones, y se han presentado algunas funciones nuevas que son útiles para trabajar con estos tipos de variables:
 
 * `collect` para agrupar cualquier tipo de colección finita en un vector.
+* `haskey` para determinar si un diccionario o tupla con nombre tiene una clave o nombre en particular.
+* `get` para extraer un elemento de un diccionario o una tupla con nombre, con un valor por defecto para claves/nombres inexistentes.
 * `keys` y `values` para extraer las claves y valores de los diccionarios, respectivamente --o los nombres y valores de tuplas con nombre--.
 * `delete!` para eliminar un elemento de una colección mutable identificado por su clave (p.ej. en diccionarios).
 * `sort` y  `sort!` para ordenar los elementos de una colección.
 * `zip` para convertir dos o más colecciones de datos en un solo iterador que agrupa los elementos individuales de cada colección, uno a uno.
+
