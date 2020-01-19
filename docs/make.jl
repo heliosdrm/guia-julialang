@@ -8,7 +8,8 @@ makedocs(sitename="Guía de Julia",
         "funciones-control.md",
         "graficos.md",
         "arrays.md",
-        "iterables.md"
+        "iterables.md",
+        "strings.md"
     ],
     expandfirst = ["introduccion.md"]
 )

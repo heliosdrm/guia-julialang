@@ -75,7 +75,7 @@ Por otro lado, con mucha frecuencia las variables con las que interesa trabajar 
 * `x`, `y`: vectores de 100 números con cada una de las dos columnas de `datos`.
 * `tiempos` y `extremos`: vectores de `n` elementos (30) que contienen los resultados que buscamos para cada uno de los archivos.
 
-En Julia los vectores y matrices (junto con las "hipermatrices" de más de dos dimensiones) son casos específicos de *arrays*, que se pueden definir en general como conjuntos de datos ordenados (numéricos o también de otros tipos, como veremos después). Su manejo es un tema extenso, que se trata de forma más detallada en el [capítulo 5 (*Arrays*)](arrays.md). Por ahora, como introducción solo veremos superficialmente los vectores (*arrays* unidimensionales). En el ejemplo hemos leído los datos a partir de archivos grabados en disco, como es habitual, pero un vector también se puede definir "a mano" a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:
+En Julia los vectores y matrices (junto con las "hipermatrices" de más de dos dimensiones) son casos específicos de *arrays*, que se pueden definir en general como conjuntos de datos ordenados (numéricos o también de otros tipos, como veremos después). Su manejo es un tema extenso, que se trata de forma más detallada en el [capítulo 5](arrays.md). Por ahora, como introducción solo veremos superficialmente los vectores (*arrays* unidimensionales). En el ejemplo hemos leído los datos a partir de archivos grabados en disco, como es habitual, pero un vector también se puede definir "a mano" a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:
 
 ```@repl c2
 primos = [1,3,5,7,11,13,17];
@@ -157,6 +157,10 @@ Si extraemos una sola letra, como el carácter `A` o `B` que aparece en segunda 
 letra = nombrearchivo[2]
 ```
 
+!!! note
+
+    Esta forma de extraer partes de una cadena de texto solo funciona de forma general con textos compuestos exclusivamente de caracteres ASCII. En el capítulo dedicado a [Cadenas y archivos de texto](@ref) se explica cómo operar con cadenas que incluyen otro tipo de caracteres.
+
 Sin embargo, al contrario que los *arrays* convencionales, las cadenas de texto son objetos "inmutables", y no es posible modificar sus letras de la misma manera que haríamos con los contenidos de un vector:
 
 ```jldoctest c2; setup = :(nombrearchivo = "sA01.txt")
@@ -181,7 +185,7 @@ El uso de `$` para interpolar datos en una cadena de texto impide que se pueda e
   * `\n` para el carácter de nueva línea.
   * `\r` para el carácter de "retorno de carro" (normalmente combinado como `\r\n` para definir una nueva línea en Windows).
 
-Por ejemplo, para escribir la cadena de texto `j print("El símbolo del dólar es \"\$\"")` tendría utilizarse el código: `"El símbolo del dólar es \"\$\""`.
+Por ejemplo, para escribir la cadena de texto `"El símbolo del dólar es "$""` tendría utilizarse el código: `"El símbolo del dólar es \"\$\""`.
 
 !!! note
 
@@ -389,6 +393,7 @@ Además podemos destacar el uso de las siguientes funciones:
 * `findmax` para localizar el valor máximo de una variable.
 * `length` para obtener la longitud de un *array* u otra estructura con múltiples datos.
 * `readdir` para obener una lista de cadenas de texto con los nombres de los archivos de un directorio.
+* `splitext` para separar la extensión de un nombre de archivo.
 * `readdlm` y `CSV.read` (esta última del paquete `CSV`) para leer datos tabulados, más las correspondientes `writedlm`, `CSV.read` para escribirlos en un archivo de texto.
 * `zeros` para crear un array lleno de ceros al inicio.
 * `abs` para obtener el valor absoluto de un número.

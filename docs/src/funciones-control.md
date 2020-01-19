@@ -163,7 +163,7 @@ suma_aritmetica(n) = n * (n + 1) / 2
 
 A continuación se presentan brevemente cada uno de los elementos empleados en la definición de una función.
 
-### "Docstring"
+### Docstring
 
 El llamado "docstring" es un texto para documentar la función, de tal manera que si se consulta en la ayuda, se presentará ese texto en pantalla. Se trata de un elemento opcional (si no se proporciona ningún "docstring", al consultar la ayuda de la función se presentará un texto estándar declarando que se trata de una función no documentada).
 
