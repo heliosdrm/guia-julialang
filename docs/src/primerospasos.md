@@ -50,7 +50,7 @@ function gauss_diasemana(d, m, y)
     earray = [0,3,2,5,0,3,5,1,4,6,2,4]
     farray = [0,5,3,1]
     e = earray[m]
-    f = farray[mod(c,4)+1]
+    f = farray[mod(c,4) + 1]
     # Seleccionar el día de la semana en función del cálculo de Gauss
     warray = ["domingo","lunes","martes","miércoles",
         "jueves","viernes","sábado"]
@@ -110,8 +110,10 @@ Para escribir un programa en Julia o cualquier otro lenguaje de programación ha
   * También es habitual encontrarse expresiones del tipo `a = f[b]`, p.ej. en `e = earray[m]`, con corchetes en lugar de paréntesis. En esos casos `f` no es una función sino un vector, matriz u otra estructura de datos, y `b` es el índice o clave que identifica la parte de su contenido que se asignará a la variable `a`.
   
   * Los nombres de variables, funciones, etc. pueden estar formados por cualquier combinación de letras y números, más guiones bajos, exceptuando nombres que comiencen por números y las palabras clave del lenguaje (como `for`, `if`, `end`, etc.). Además, también se admiten nombres con caracteres Unicode más allá del ASCII básico (letras acentuadas, griegas, etc.), así como el signo de exclamación (`!`) en posición no inicial, aunque conviene usarlos con mesura: emplear caracteres extendidos aumenta el riesgo de problemas de portabilidad de los programas, y la exclamación se suele resevar para el nombre de cierto tipo de funciones (las que modifican sus argumentos de entrada).
-
-  * Los bloques de código (funciones, bloques condicionales, etc.) se delimitan cerrándolos con la palabra clave `end`. Se recomienda indentar las líneas interiores al código para hacerlo más legible, aunque el programa funcionaría igualmente si no se hace.
+  
+  * Se puede trabajar con muchos tipos de variables. En este ejemplo se manejan números enteros (`0`, `1`, etc.) y también cadenas de texto, que se escriben entrecomilladas (`"lunes"`, `"martes"`, etc.). Más adelante se verán muchos otros tipos. Las distintas variables empleadas en un programa pueden hacer referencia a cualquier tipo de variable, e incluso pueden cambiar de tipo a lo largo del programa (aunque es mejor ser consistente en la nomenclatura).
+  
+  * Los programas suelen tener diversos bloques de código anidados. La función `gauss_diasemana` en en sí un bloque, dentro del cual hay un bloque condicional (el que comienza por `if m < 3`). Los bloques de código se delimitan cerrándolos con la palabra clave `end`, y se recomienda indentar las líneas interiores al código para hacerlo más legible, aunque el programa funcionaría igualmente si no se hace. Otros bloques de código habituales son los bucles `for` y `while`. Para más detalles sobre los distintos tipos de bloques, véase el [Capítulo 3. Funciones y estructuras de control](@ref).
   
   * En general los espacios son irrelevantes: siempre que haya algun símbolo delimitador (operadores matemáticos, signos de puntuación, paréntesis...) pueden usarse uno, varios o ningún espacio entre nombres de variables, funciones, etc., o al principio de la línea, excepto al inicio de las llamadas a "macros" (ver capítulo de macros).
 .

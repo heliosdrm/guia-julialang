@@ -59,7 +59,17 @@ Para terminar escribimos los datos en una matriz con tres columnas:
 resultados = [archivos tiempos extremos]
 ```
 
-Tomando este ejemplo como refencia, vamos a ver ahora algunos tipos y estructuras elementales de datos con las que normalmente trabajaremos en Julia.
+Si se tiene experiencia previa en programación, este código probablemente sea lo bastante intuitivo como para seguirlo sin más explicaciones. En caso contrario, lo mejor para entenderlo es ejecutarlo línea a línea y ver los resultados en una sesión interactiva de Julia.
+
+La única parte en la que esto servirá de poca ayuda es en el fragmento indentado entre `for i=1:n` y `end`. Se trata de un "bucle `for`", que sirve para repetir ese fragmento de código múltiples veces (una por cada uno de los archivos de datos). Todo ese código se trata en bloque, como si fuera una gran instrucción, y no se pueden examinar los valores intermedios.
+
+Una forma de ver lo que pasa es sustituir la línea `for i=1:n` por `i = 1`, y eliminar la línea con `end`. Esto será como ejecutar únicamente la primera iteración del bucle (la correspondiente al primer archivo), pudiéndolo hacer paso a paso, como el resto del código.
+
+
+!!! note
+
+    Los bucles `for` se explican, junto con otras estructuras básicas, en el [capítulo 3](funciones-control.md) a continuación de este.
+
 
 ## Números escalares y series de números
 

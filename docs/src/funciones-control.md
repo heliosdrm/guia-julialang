@@ -17,7 +17,7 @@ Vamos a crear un programa que toma como entrada los números de un mes y un año
 2. Calcular el número de días incluidos en el mes.
 3. Escribir el código del calendario como una tabla HTML de 7 columnas, con los siguientes contenidos:
     * Una primera fila con los nombres de los días de la semana.
-    * Celdas en blanco en la segunda, fila hasta llegar al primer día del mes.
+    * Celdas en blanco en la segunda fila hasta llegar al primer día del mes.
     * Celdas numeradas secuencialmente en varias filas, hasta llegar al último día del mes.
     * Celdas en blanco tras el último día hasta completar la última semana.
 
@@ -37,11 +37,7 @@ La función `primerdia` que se presenta a continuación utiliza esta lista y la 
 ```@example c3
 function numero_primer_dia(m, y)
     primerdia = gauss_diasemana(1, m, y)
-    for d = 1:7
-        if listadias[d] == primerdia
-            return d
-        end
-    end
+    return searchsortedfirst(listadias, primerdia)
 end
 nothing # hide
 ```
@@ -70,7 +66,7 @@ nothing # hide
 
 La composición del calendario la hace la función `calendario_html` que se presenta a continuación. Esta función comienza llamando a las dos que hemos definido antes, y continúa escribiendo el código HTML en la variable `tablahtml`, una cadena de texto que se va ampliando paso a paso. Esta cadena de texto comienza siendo la etiqueta `<table>` que marca el inicio de una tabla, y finaliza con la etiqueta de cierre `</table>`. Cada fila se enmarca entre las etiquetas `<tr>`, `</tr>`, y cada celda dentro de una fila entre `<td>` y `</td>`.
 
-Para ampliar la cadena de texto `tablahtml` con un texto determinado se utiliza la operación de "concatenar texto", que se representa con un asterisco. `texto1 = texto1 * texto2"` significa "concatenar la cadena de texto contenida en la variable `texto1` con `texto2`, y guardar el resultado de nuevo en `texto1`". Esta operación se escribe de forma abreviada como `texto1 *= texto2`. También utilizamos la operación de "interpolación" descrita en el capítulo anterior. Por ejemplo, la cadena de texto "<td>$nd</td>" representa el código HTML para una celda con el valor de la variable `nd` interpolado. La cadena de texto completa se convierte al final de la función en un bloque de código HTML, con la función `HTML`.
+Para ampliar la cadena de texto `tablahtml` con un texto determinado se utiliza la operación de "concatenar texto", que se representa como una multiplicación. `texto1 = texto1 * texto2"` significa "concatenar la cadena de texto contenida en la variable `texto1` con `texto2`, y guardar el resultado de nuevo en `texto1`". Esta operación se escribe de forma abreviada como `texto1 *= texto2`. También utilizamos la operación de "interpolación" descrita en el capítulo anterior. Por ejemplo, la cadena de texto "<td>$nd</td>" representa el código HTML para una celda con el valor de la variable `nd` interpolado. La cadena de texto completa se convierte al final de la función en un bloque de código HTML, con la función `HTML`.
 
 
 ```@example c3
@@ -92,10 +88,10 @@ function calendario_html(m, y)
         tablahtml *= "<td>$(uppercase(nombre_dia))</td>"
     end
     tablahtml *= "</tr>\n"
-    # Día que correspondería al primer lunes:
+    # Número del día que correspondería al primer lunes del calendario:
     # (1 si `primerdia == 1`, 0 si `primerdia == 2`, etc.)
     dia_mes = 2 - primerdia
-    # Añadir una nueva fila si quedan días del mes
+    # Añadir filas al calendario, hasta que no queden días del mes
     while dia_mes ≤ ndias
         tablahtml *= "<tr>"
         for _ = 1:7
@@ -186,11 +182,11 @@ function calendario_html(m, y)
 
 Puede ocurrir que los datos a pasar a la función estén recogidos en una misma variable, por ejemplo dentro de un vector. Para esos casos, Julia dispone de una forma especial de introducir series de datos en la llamada a la función, "descomponiéndolas" como si fueran variables individuales.
 
-Supongamos, por ejemplo, que el mes a evaluar está en la cadena de texto `08/2018`. Con la función `split` podemos extraer las partes correspondientes al mes y el año:
+Supongamos, por ejemplo, que el mes a evaluar está en la cadena de texto `08-2018`. Con la función `split` podemos extraer las partes correspondientes al mes y el año:
 
 ```@repl c3
-fecha = "08/2018"
-numeros = split(fecha, "/")
+fecha = "08-2018"
+numeros = split(fecha, "-")
 ```
 
 Luego usamos la función `parse` para interpretar los textos como números enteros (`Int`); se llama a la función mediante la sintaxis "con punto" para aplicarla a los dos elementos del vector a la vez, como vimos en el capítulo anterior:
@@ -307,111 +303,37 @@ d = resultado[2]
 
     Los paréntesis en torno a la tupla de resultados, tanto en el cuerpo de la función como en la llamada a la misma, pueden ayudar a hacer el código más legible, pero como se ha visto en este ejemplo no son obligatorios.
 
-### Cuerpo y contexto: variable locales y globales
+### Cuerpo de la función: variables locales y globales
 
-El cuerpo de una función es el bloque de código que se ejecuta al llamarla. Lo más importante que hay que señalar al respecto es la relación entre las variables definidas *dentro* y *fuera* de la función.
+El cuerpo de una función es el bloque de código que se ejecuta al llamarla. Hay tres grupos de variables que se pueden usar dentro de una función:
 
-Las funciones introducen un contexto propio para variables (lo que en inglés se llama *scope*), de tal modo que las variables definidas dentro de la función son accesibles solo por esa parte del código. Esto también permite que los nombres de estas variables "locales" puedan ser los mismos que los de variables definidas fuera de la función --o en otras funciones--, sin que haya conflicto o confusión entre ellas.
+En primer lugar están las variables introducidas como argumentos. Estas variables reciben valores externos, pero son internas a la función, lo que se conoce como "variables locales". Eso significa que se les puede reasignar otros valores dentro de la función sin que eso afecte al objeto original. Por ejemplo:
 
-Por otro lado, si el código de una función utiliza alguna variable que no esté definida dentro de la función, su valor se busca fuera de la misma, en otras partes del código que contenga la función. Esto es lo que ocurre, por ejemplo, con la variable `listadias`, que hemos definido como una variable "global", externa a las funciones, pero es usada tanto por `numero_primer_dia` como por `calendario_html`.
+```@repl
+function duplicar(x)
+    # Cambiamos el valor del argumento `x`...
+    x = 2x
+    return x
+end
+x = 1
+duplicar(x)
+x # ... pero el valor original permanece inalterado
+```
+
+Luego están las variables que se definen dentro de las funciones, como `primerdia`, `ndias`, `tablahtml`, etc. en el caso de `calendario_html`. Estas también son variables locales, que se destruyen al término de la función, y por lo tanto no se puede acceder a ellas desde fuera (al margen de que sus valores sí se puedan devolver como resultado de la función, como se hace con `tablahtml`). Al igual que ocurre con los argumentos, estas variables locales pueden tomar nombres idénticos a los de variables definidas fuera de la función --o en otras funciones--, sin que haya conflico o confusión entre ellas.
+
+Finalmente, dentro de una función también se pueden usar variables definidas en otra parte del código que contiene la función. Esto es lo que ocurre, por ejemplo, con la variable `listadias`, que hemos definido como una variable "global", externa a las funciones, pero es usada tanto por `numero_primer_dia` como por `calendario_html`. Lo que no puede hacerse con las variables globales es asignarles nuevos valores, ya que entonces se confundirían con variables locales
 
 Esta capacidad de las funciones para reconocer objetos globales, definidos fuera de su contexto local, no solo es útil para poder reutilizar variables, sino que es crucial para que las funciones puedan llamarse entre ellas --ya que las funciones son objetos al igual que otras variables--.
 
-La diferencia más importante entre una variable global y una local, es que dentro del contexto local de la función no se pueden redefinir las variables globales. Ninguna de las funciones podría utilizar la variable `listadias` y luego asignarle otro valor. Lo que sí podría ocurrir en este caso, en el que `listadias` es una variable "mutable" (un vector), es que su contenido se modifique sin redefinir la variable.
+!!! note ¡Cuidado con los objetos mutables! 
 
-Pongamos un ejemplo más sencillo, con una variable global `x` que también es mutable (otro vector) y cuatro funciones distintas:
+    Aunque una variable global normalmente no pueda redefinirse dentro de una función, lo que sí puede ocurrir con un objeto global mutable (como el vector `listadias`), es que su contenido se modifique sin redefinir las variables. Lo mismo ocurre si se pasa un objeto mutable como argumento: aunque se asigne a una variable local, las modificaciones que se hagan a su contenido (sin haber reasignado otro valor a la variable) se reflejarán en la variable externa original.
 
-```@example c3
-x = [1, 2, 3]
-
-# f1 usa la variable global x
-function f1(k)
-    y = k*x
-    return y
-end
-
-# f2 modifica la variable global x
-function f2(k)
-    y = k*x
-    x[1] = 0
-    return y
-end
-
-# f3 usa una variable local x
-function f3(k)
-    x = [4, 5, 6]
-    y = k*x
-    return y
-end
-
-# f4 intenta redefinir la variable global x
-function f4(k)
-    y = k*x
-    x = y
-end
-nothing # hide
-```
-
-La función `f1` opera con la variable global `x`, de tal manera que si esta se modifica (por ejemplo por acción de la función `f2`), su comportamiento también cambia.
-
-```@repl c3
-f1(5)
-f2(5) # hace lo mismo que f1 pero cambia `x`
-x
-f1(5)
-```
-
-La función `f3`, sin embargo, define una variable `x` en su contexto local, que por lo tanto independiente de la variable global del mismo nombre:
-
-```@repl c3
-f3(5)
-x # no ha cambiado por usar `f3`
-```
-
-Finalmente, la función `f4` da un error, ya que la asignación de valores a una variable (con el operador `=`, como en la segunda línea de la función) solo está permitida a variables locales, y esto entra en conflicto con la primera línea, donde `x` se utiliza sin haberla definido, como si fuera una variable global. (Véase la diferencia con `f2`, que no redefine la variable referida como `x`, sino que modifica los valores contenidos en la misma.)
-
-```jldoctest c3; setup = :(f4 = (k)->(y = k*x; x = y))
-julia> f4(5)
-ERROR: UndefVarError: x not defined
-```
-
-Si realmente se desea que una función redefina una variable global, es necesario declararla explícitamente, como en la siguiente forma alternativa de `f4`:
-
-```julia
-function f4b(k)
-    global x
-    y = k*x
-    x = y
-end
-```
 
 ## Bloques condicionales
 
-Como dice su propio nombre, los bloques condicionales son fragmentos de código que solo se ejecutan si se cumple cierta condición. En el ejemplo del calendario tenemos varios ejemplos de estas estructuras, como los siguientes.
-
-El primer ejemplo es una condición simple (`if ... end`):
-
-```julia
-if listadias[d] == primerdia
-    return d
-end
-```
-
-En este ejemplo, si se cumple la condición que hay tras la palabra `if`, se ejecuta todo lo que sigue hasta `end`. Si no se cumple la condición, el programa se "salta" ese bloque de código.
-
-En el segundo ejemplo se añade un bloque de código alternativo (`if ... else ... end`):
-
-```julia
-if 1 ≤ dia_mes ≤ ndias # Celdas con número dentro del mes
-    tablahtml *= "<td>$nd</td>"
-else # Celdas en blanco al principio y al final
-    tablahtml *= "<td></td>"
-end
-```
-
-En este caso, si se cumple la condición (que el número de día `nd` está dentro del rango válido), se ejecuta el código entre `if` y `else`; pero si no se cumple, se ejecuta el código entre `else` y `end`.
-
-También tenemos un ejemplo con una secuencia de condiciones alternativas (`if ... elseif ... else ... end`):
+Como dice su propio nombre, los bloques condicionales son fragmentos de código que solo se ejecutan si se cumple cierta condición. En el ejemplo del calendario tenemos varias de estas estructuras. De hecho, todo el código de la función `numero_dias` se reduce a una estructura de este tipo:
 
 ```julia
 if m in [1, 3, 5, 7, 8, 10, 12] # enero, marzo, etc.
@@ -423,7 +345,9 @@ else # el resto de meses
 end
 ```
 
-En este caso, si se cumple la condición señalada por `if` solo se cumple el primer bloque (`return 31`); en caso contrario, se evalúa la condición selañada por `elseif`, que condiciona la ejecución del siguiente bloque. Se podría añadir un número indefinido de `elseif`s, que se evaluarían secuencialmente hasta que alguno de ellos se cumpliera. Si ninguna de las condiciones señaladas por `if` o `elseif` se cumple, entonces se ejecuta el bloque de código que sigue a la palabra `else`.
+Este código significa que si se cumple la condición que hay tras la palabra `if`, se ejecutará el bloque que sigue (reducido a la línea `return 31`), y se ignorará el resto hasta la palabra `end`. De no cumplirse, se evaluará la condición señalada por `elseif`, que condiciona la ejecución del siguiente bloque. Se podría añadir un número indefinido de `elseif`s, que se evaluarían secuencialmente hasta que alguno de ellos se cumpliera. Si ninguna de las condiciones señaladas por `if` o `elseif` se cumple, entonces se ejecuta el bloque de código que sigue a la palabra `else`.
+
+Los bloques `elseif` y `else` son opcionales. Las estructuras condicionales pueden tener un solo bloque delimitado entre `if` y `end`, de tal manera que no se ejecute ningún código si la condición no se cumple.
 
 Finalmente, se puede señalar una forma abreviada de escribir estructuras condicionales en una sola línea, especialmente adecuada para casos en los que el código a ejecutar es muy breve. Se trata del "operador ternario", que está presente en el segundo bloque del ejemplo anterior (el código que se ejecuta para el mes de febrero):
 
@@ -525,7 +449,13 @@ x == 0 && return
 
 ## Bucles
 
-Los bucles son fragmentos de código que se han de ejecutar repetidamente un número determinado de veces o hasta que se cumpla cierta condición. En el ejemplo del calendario tenemos varios bucles. Algunos son del tipo `for`, como el que se se emplea para rellenar la fila de cabecera del calendario:
+Los bucles son fragmentos de código que se han de ejecutar repetidamente un número determinado de veces o hasta que se cumpla cierta condición. Junto con las funciones, son una de las herramientas principales para simplificar y reducir el código de un programa.
+
+!!! tip
+
+    En algunos lenguajes de programación como Matlab/Octave, Python (con Numpy) y R, se recomienda "vectorizar" las operaciones para evitar los bucles si es posible. Esto significa realizar todas las operaciones con una sola instrucción usando vectores o matrices, en lugar de repetir múltiples veces una misma operación sobre números escalares o vectores pequeños. Esto se debe a que cada línea de código que se ejecuta cuesta un tiempo de "interpretación", además del coste que tiene ejecutar la operación en sí, y en los bucles este coste se multiplica por el número de iteraciones. En Julia este coste extra se concentra en la primera vez que se realiza el cálculo, por lo que no hace falta evitar los bucles. De hecho, repetir operaciones sencillas con variables pequeñas suele ser más eficiente que realizar una operación compleja con grandes matrices de datos. 
+
+En el ejemplo del calendario tenemos varios bucles. Algunos son del tipo `for`, como el que se se emplea para rellenar la fila de cabecera del calendario:
 
 ```julia
 for nombre_dia = listadias
@@ -547,7 +477,7 @@ for i = 1:100
 end
 ```
 
-O si no el número que sirve de contador en estos casos no se va a utilizar en el bucle, se puede utilizar el guión bajo (`_`) para asignar el contador a una "variable de descarte", como se hace al rellenar las otras filas del calendario:
+O si el número que sirve de contador en estos casos no se va a utilizar en el bucle, se puede utilizar el guión bajo (`_`) para asignar el contador a una "variable de descarte", como se hace al rellenar las otras filas del calendario:
 
 ```julia
 for _ = 1:7
@@ -591,15 +521,9 @@ En este bucle (que asimismo contiene el bucle `for` que rellena las columnas de 
 
 En los bucles `while` se necesita utilizar alguna variable definida anteriormente para definir la condición de finalización. En la mayoría de casos el código que se ejecuta en el bucle será, directa o indirectamente, el que modifique esa variable para que se cumpla la condición y el bucle termine.
 
-### Contexto de las variables de los bucles
+### Variables locales de los bucles
 
-Es importante tener en cuenta que, al igual que ocurre con las funciones, tanto los bucles `for` como los `while` introducen su propio contexto local. Por lo tanto, dentro del bloque delimitado por el `for` o `while` se pueden distinguir tres tipos de variables, según el contexto en el que se hayan definido:
-
-* Variables definidas dentro del bucle (incluyendo el iterador de la primera línea de los bucles `for`).
-* Variables definidas en el contexto local externo al bucle (si existe, por ejemplo cuando el bucle está anidado en otro bucle, o en una función).
-* Variables definidas en el contexto global, es decir fuera de todos los bucles y funciones dentro de los que se encuentre el bucle en cuestión.
-
-La diferencia entre los dos tipos de variables locales es que las que están definidas dentro del bucle se "olvidan" al finalizar cada iteración. Es decir, que no pueden ser empleadas fuera del bucle, y ni siquiera en siguientes iteraciones, antes de volver a definirlas. Por ejemplo, el siguiente código daría lugar a un error:
+Es importante tener en cuenta que, tal como ocurre en las funciones, las variables creadas dentro de bucles `for` o `while` son variables locales al bucle, y que estas se "olvidan" al finalizar cada iteración. Es decir, que no pueden ser empleadas fuera del bucle, y ni siquiera en siguientes iteraciones, antes de volver a definirlas. Por ejemplo, el siguiente código daría lugar a un error:
 
 ```julia
 for i = 1:10
@@ -616,29 +540,9 @@ ERROR: UndefVarError: x not defined
 
 En la primera iteración se ejecutaría la línea `x = 1`, y en la segunda intentaría ejecutarse `x = x + i`; pero al tratarse de una iteración nueva, el valor de `x` no estaría definido de antemano y esa línea no se podría ejecutar.
 
-Una problema más frecuente se da al utilizar variables globales dentro de los bucles de forma inadvertida. Es fácil que esto ocurra cuando se ejecuta código fuera de funciones. Supongamos, por ejemplo, que intentamos ejecutar el código de la función `calendario_html` directamente en el entorno global, línea a línea. A la hora de ejecutar las siguientes líneas nos encontraríamos con un error que no esperábamos:
+Para hacer algo así, sería necesario definir primero la variable `x` *antes* del bucle. Esto es lo que se hace, por ejemplo, con la variable `tablahtml`, que se redefine dentro de varios bucles en el ejemplo del calendario.
 
-
-```julia
-listadias = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"] # hide
-tablahtml = "<table>" # hide
-tablahtml *= "<tr>"
-for nombre_dia = listadias
-    tablahtml *= "<td>$(uppercase(nombre_dia))</td>"
-end
-```
-```
-ERROR: UndefVarError: tablahtml not defined
-```
-
-El motivo del error en este caso es que la variable `tablahtml` ahora está definida en el contexto global, y como se ha explicado para las funciones, en contextos locales no se pueden redefinir variables globales. Para evitar este tipo de errores habría que señalar dentro del bucle que `tablahtml` es una variable global, como por ejemplo:
-
-```julia
-for nombre_dia = listadias
-    global tablahtml
-    tablahtml *= "<td>$(uppercase(nombre_dia))</td>"
-end
-```
+Hay algunas excepciones y matices que comentar en relación con el contexto de las variables en funciones, bucles y otras estructuras, que se comentan más detalladamente en el [capítulo 8](funciones-avanzado.md).
 
 ### Interrupción de bucles
 
