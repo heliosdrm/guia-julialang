@@ -16,49 +16,41 @@ Un motivo por el que mucha gente demora el paso de pasar el código a funciones 
 
 Por otro lado, hay diferentes técnicas de *debugging* que permiten detenerse en puntos intermedios de las funciones, explorar las variables locales e incluso manipularlas. Estas técnicas, así como otras como el *unit testing*, que se comentarán en un capítulo dedicado a este tema son muy útiles, y resultan especialmente eficaces cuando se trabaja con funciones sencillas. 
 
-## Formas de definir una función
+## Funciones anónimas
 
-En el capítulo introductorio a las funciones se han mostrado dos formas habituales de definir una función. Utilizando el mismo ejemplo de la suma aritmética que se presentó en ese capítulo, estas dos formas son:
-
-```julia
-# 3. Forma "estándar"
-function suma_aritmetica(n)
-    return n * (n + 1) / 2
-end
-
-# 2. Forma "abreviada"
-suma_aritmetica(n) = n * (n + 1) / 2
-```
-
-Hay una tercera forma de definir esta función, que es como una función "anónima". Se parece mucho a la forma abreviada, pero se omite el nombre de la función, y el signo `=` se cambia por `->`.
-
-```julia
-(n) -> n * (n+1) / 2
-```
-
-### Uso de las funciones anónimas
-
-Las funciones anónimas se usan a menudo de forma auxiliar, dentro de otras funciones. Por ejemplo, la función `findfirst` da el primer índice de una colección de valores que cumplen una condición, y esta condición puede venir dada por una función que devuelve un valor lógico (`true` o `false`). Así, para encontrar el primer valor par podría pasársele la función `iseven` (o `isodd` para los impares):
+A menudo hay funciones que se usan dentro de otras. Por ejemplo, `findfirst` es una función que da el primer índice de una colección de valores que cumplen una condición (también existen `findlast` y `findall`, para encontrar el último o todos los que la cumplen). Esta condición puede venir dada por otra función que devuelve un valor lógico (`true` o `false`). Así, para encontrar el primer valor par podría pasársele la función `iseven` (o `isodd` para los impares):
 
 ```@repl
 findfirst(iseven, [15, 7, 12, 4, 9])
 ```
 
-Pero otras condiciones no tienen una función predefinida, y tenemos que crearla *ad hoc*. Si esa función no tiene un uso específico más allá de ese contexto, no vale la pena crearla de la forma habitual, y resulta práctico pasarle una función anónima. Por ejemplo, para encontrar el primer valor menor de 10:
+Pero otras condiciones no tienen una función predefinida, y tenemos que crearla *ad hoc*. Si esa función no tiene un uso específico más allá de ese contexto, no vale la pena crearla de la forma habitual. En este tipo de situaciones se usa a menudo lo que se llaman "funciones anónimas", ya que pueden definir sin darles ningún nombre. La expresión que define una función anónima es `(args) -> cuerpo`, donde `args` representa el conjunto de argumentos de entrada, y `cuerpo` es el código que expresa el cálculo a realizar.
+
+Volviendo al ejemplo, si en lugar del primer número par buscásemos el primero que es menor de 10, podríamos escribir:
 
 ```@repl
 findfirst(x -> (x < 10), [15, 7, 12, 4, 9])
 ```
 
-Cuando se definen funciones que utilizan otra función como argumento de entrada, es práctica habitual en Julia hacer como en este ejemplo, que la función auxiliar ocupe el lugar del primer argumento. En esos casos, Julia facilita una forma cómoda de pasar funciones anónimas más complejas, incluso con varias líneas; consiste en escribir el código de la función anónima *después* de la función que la utiliza, tras la palabra `do` y el nombre de los argumentos de entrada. El ejemplo anterior tomaría esta forma:
+Es habitual que el código de las funciones anónimas sea suficientemente sencillo como para condensarlo en una expresión corta, como es este caso. Pero también podría tratarse de un código algo más largo, que incluso ocupe varias líneas. Pongamos, por ejemplo, que quisiéramos el encontrar el primer número de la lista que esté a menos de dos unidades de un múltiplo de 10. Para poner varias líneas de código en una sola expresión, estas se pueden delimitar con las palabras claves `begin` y `end`, de modo que la función anónima para nuestra caprichosa condición podría ser:
 
 ```julia
-findfirst([15, 7, 12, 4, 9]) do x
-    x < 10
+x -> begin
+    m = mod(x, 10)
+    return m < 2 || m > 8
 end
 ```
 
-Para una operación tan sencilla, esta forma de utilizar funciones anónimas no aporta una gran ventaja, pero esto cambia cuando se trabaja con rutinas más complejas. Un caso de uso habitual es el de las operaciones de escritura sobre un archivo que se abre con la función `open`, el cual se ha visto en el capítulo anterior:
+Sin embargo, escribir ese código como argumento de entrada a `findfirst` no resultaría muy práctico. Por esta razón, Julia facilita una forma cómoda de pasar funciones anónimas complejas, cuando estas ocupan el primer argumento de otra función, como es el caso. Consiste en escribir el código de la función anónima *después* de la función que la utiliza, tras la palabra `do` y el nombre de los argumentos de entrada. El ejemplo anterior tomaría esta forma:
+
+```@repl
+findfirst([15, 7, 12, 4, 9]) do x
+    m = mod(x, 10)
+    return m < 2 || m > 8
+end
+```
+
+Un caso en el que resulta muy habitual usar la sintaxis `do`-`end` es el de las operaciones de escritura sobre un archivo que se abre con la función `open`, el cual se ha visto en el capítulo anterior:
 
 ```julia
 open("archivo.txt", "w") do io
@@ -72,9 +64,28 @@ Finalmente, cabe señalar que las funciones anónimas también se pueden asignar
 
 
 ```julia
-suma_aritmetica = (n) -> n*(n+1)/2
-suma_aritmetica(3) # == 6, igual que con una función "normal"
+menordediez = x -> (x < 10)
+menordediez(3) #`true`, igual que con una función "normal"
 ```
+
+## Expresiones `let`
+
+Aunque no se trata realmente de funciones, las expresiones `let` son estructuras de código que se comportan de forma semejante a funciones anónimas "de usar y tirar". Por ejemplo, para saber si un número dado cumple la condición que hemos señalado antes (estar a menos de dos unidades de un múltiplo de diez), podríamos escribir:
+
+
+```@repl
+condicion = let (x = 7)
+    m = mod(x, 10)
+    m < 2 || m > 8
+end
+```
+
+Este bloque de código es equivalente a declarar: "define la variable `condicion` del siguiente modo: tomando una variable `x = 7`, calcula `m = mod(x, 10)`, y evalúa si `m` es menor que 2 o mayor que 8".
+
+Una diferencia entre las expresiones `let` y las funciones es que su código se ejecuta en el mismo punto en el que se define --y por lo tanto siempre es necesario proporcionarle un valor a los "argumentos" (las variables que se declaran justo después de la palabra `let`)--. Por otro lado, al no ser realmente una función, no se debe usar `return` para devolver el resultado de la expresión; el valor devuelto es siempre el que se calcula en la última línea del bloque.
+
+En este sentido, los bloques `let` también se parecen a las expresiones compuestas entre `begin` y `end`. La principal diferencia entre unas y otras es que las expresiones `let` introducen su propio contexto de variables, que se destruyen al finalizar el bloque (véase la sección sobre variables locales y globales más abajo.
+
 
 ## Métodos
 
@@ -83,14 +94,21 @@ Una misma función puede hacer cosas distintas, según los argumentos que se le 
 De hecho, cuando se define una función con argumentos opcionales, se están definiendo distintos métodos de la misma (uno que requiere que se le pasen todos los argumentos, otro que no requiere ninguno, etc.). Así, retomando el ejemplo del capítulo introductorio que se usó para explicar los argumentos con valores por defecto:
 
 ```@repl
-incrementar(x, inc=1) = x + inc
+function incrementar(x, inc=1)
+    x + inc
+end
 ```
 
 La descripción de esta función `incrementar` señala que tiene dos métodos, porque hubiera sido lo mismo (aunque no tan compacto) definir explícitamente dos métodos de la función con el nombre `incrementar`:
 
 ```julia
-incrementar(x, inc) = x + inc
-incrementar(x) = x + 1
+function incrementar(x, inc)
+    x + inc
+end
+
+function incrementar(x)
+    x + 1
+end
 ```
 
 Los métodos de una función también pueden tratar de forma completamente diferente los distintos argumentos que se le pasan. Por ejemplo, en el primer capítulo presentamos la función [`gauss_diasemana`](primerospasos.md#gauss_diasemana) para determinar el día de la semana que corresponde a una fecha determinada, dada por los números del día, el mes y el año:
@@ -123,7 +141,9 @@ gauss_diasemana(fecha)
 Supongamos ahora que también quisiéramos un método para procesar una fecha escrita en una cadena de texto. Podríamos definir un método con dos argumentos (la fecha en forma de texto y el patrón de formato):
 
 ```julia
-gauss_diasemana(fecha, formato) = gauss_diasemana(Date(fecha, formato))
+function gauss_diasemana(fecha, formato)
+    gauss_diasemana(Date(fecha, formato))
+end
 ```
 
 ¿Pero y si quisiéramos tener un formato por defecto, por ejemplo el de `"dd-mm-yyyy"` que hemos usado antes? Ya tenemos un método de `gauss_diasemana` con un solo argumento, por lo que no podríamos distinguir los dos métodos según el número de argumentos. Sin embargo, Julia permite definir métodos teniendo en cuenta no solo el número de argumentos, sino también su *tipo*.
@@ -256,8 +276,13 @@ mismotipo(1, 2.0)
 A modo de curiosidad, se muestra una definición alternativa de la misma función, a través de dos métodos distintos: uno en el que se especifica que los dos argumentos sean del mismo tipo `T`, y otro genérico para todos los demás casos. Nótese que como no se procesan los valores de los argumentos, sino solo sus tipos, ni siquiera hace falta señalar nombres de variables para asignarlos.
 
 ```julia
-mismotipo(::T, ::T) where {T} = true
-mismotipo(_, _) = false
+function mismotipo(::T, ::T) where {T}
+    return true
+end
+
+function mismotipo(_, _)
+    return false
+end
 ```
 
 ## Variables globales y locales
@@ -272,11 +297,11 @@ Aunque esta nomenclatura puede hacer pensar que el contexto global es único, en
 
     Los contextos globales siempre tienen un nombre, como es el caso de `Main`, que puede usarse para designar a los objetos contenidos en él. A esta variable `x` que pertenece a `Main` podría hacérsele referencia como `Main.x`.
     
-Los contextos locales vienen definidos por los límites de distintas estructuras, entre las que se cuentan las funciones, los bucles y los bloques `try-catch` (véase la sección del manual de Julia sobre el [contexto de las variables](https://docs.julialang.org/en/v1/manual/variables-and-scoping/) para más detalles). En un contexto local, las variables globales del contexto circundante conviven con variables locales, más efímeras, que no perviven más allá de la ejecución de la función o de cada iteración del bucle en cuestión, ni se puede acceder a ellas "desde fuera".
+Los contextos locales vienen definidos por los límites de distintas estructuras, entre las que se cuentan las funciones, los bucles, los bloques `try-catch` y las expresiones `let` (véase la sección del manual de Julia sobre el [contexto de las variables](https://docs.julialang.org/en/v1/manual/variables-and-scoping/) para más detalles). En un contexto local, las variables globales del contexto circundante conviven con variables locales, más efímeras, que no perviven más allá de la ejecución de la función o de cada iteración del bucle en cuestión, ni se puede acceder a ellas "desde fuera".
 
 Las variables que tienen carácter local son:
 
-* En el caso de las funciones, los argumentos de entrada.
+* En el caso de las funciones y las expresiones `let`, los argumentos de entrada.
 * En los bucles `for`, las variables usadas como iteradores.
 * En todos los contextos locales, las variables a las que se les asigna algún valor. (Por ejemplo con una instrucción como `x = 1` escrita dentro de la función o bucle en cuestión).
 
@@ -361,115 +386,14 @@ Según las reglas presentadas arriba, esto haría que `fib` y `fib1` se consider
 Concretamente, en un caso como este se asume que `fib` y `fib1` dentro del bucle hacen referencia a las variables globales del mismo nombre, aunque se redefinan en el código del contexto local --mostrando un *warning* para avisar de la posible inconsistencia--. Esta excepcional inversión de las reglas facilita que se pueda "copiar y pegar" código de la REPL al interior de las funciones, a pesar de que los contextos sean distintos.
 
 
- 
-
-
-
-
-
-
-```@example c3
-x = [1, 2, 3]
-
-# f1 usa la variable global x
-function f1(k)
-    y = k*x
-    return y
-end
-
-# f2 modifica la variable global x
-function f2(k)
-    y = k*x
-    x[1] = 0
-    return y
-end
-
-# f3 usa una variable local x
-function f3(k)
-    x = [4, 5, 6]
-    y = k*x
-    return y
-end
-
-# f4 intenta redefinir la variable global x
-function f4(k)
-    y = k*x
-    x = y
-end
-nothing # hide
-```
-
-La función `f1` opera con la variable global `x`, de tal manera que si esta se modifica (por ejemplo por acción de la función `f2`), su comportamiento también cambia.
-
-```@repl c3
-f1(5)
-f2(5) # hace lo mismo que f1 pero cambia `x`
-x
-f1(5)
-```
-
-La función `f3`, sin embargo, define una variable `x` en su contexto local, que por lo tanto independiente de la variable global del mismo nombre:
-
-```@repl c3
-f3(5)
-x # no ha cambiado por usar `f3`
-```
-
-Finalmente, la función `f4` da un error, ya que la asignación de valores a una variable (con el operador `=`, como en la segunda línea de la función) solo está permitida a variables locales, y esto entra en conflicto con la primera línea, donde `x` se utiliza sin haberla definido, como si fuera una variable global. (Véase la diferencia con `f2`, que no redefine la variable referida como `x`, sino que modifica los valores contenidos en la misma.)
-
-```jldoctest c3; setup = :(f4 = (k)->(y = k*x; x = y))
-julia> f4(5)
-ERROR: UndefVarError: x not defined
-```
-
-Si realmente se desea que una función redefina una variable global, es necesario declararla explícitamente, como en la siguiente forma alternativa de `f4`:
-
-```julia
-function f4b(k)
-    global x
-    y = k*x
-    x = y
-end
-```
-
-
-
-
 ## Sumario del capítulo
 
-findfirst
-findlast
-findall
-isodd
-iseven
+En este capítulo se han explicado cómo se definen y usan las funciones anónimas, y cómo se puede hacer que una misma función tenga múltiples métodos, dependiendo de tipos de variables que se pasen como argumentos. También se ha explicado el concepto de "estabilidad de tipos", y el funcionamiento de los contextos de variables globales y los locales, introducidos por funciones y otras estructuras.
 
+Por otro lado, se han visto algunas herramientas nuevas como:
 
-En este capítulo hemos explorado las principales herramientas de utilidad para trabajar con textos, registrándolos en variables como cadenas de texto (*strings*), e interactuando con el sistema de archivos para leer y escribir dichas cadenas en archivos de texto.
-
-En particular, hemos visto diversas maneras de crear cadenas de texto:
-
-* A partir de otras variables mediante la función `string`, `repr` o la macro `@sprintf` del módulo `Printf`.
-* A partir de archivos de texto con las funciones `read`, `readline` o `readlines`, así como con el iterador obtenido por `eachline`.
-
-Y por otro lado hemos visto distintas formas de volcar las cadenas de texto:
-
-* En variables de otro tipo con la función `parse`.
-* En pantalla o en archivos de texto con las funciones `write`, `print`, `println` o la macro `@printf` del módulo `Printf`.
-
-También se han tratado las dificultades derivadas de los caracteres que por distintos motivos suelen expresarse como "secuencias de escape", y del uso de caracteres Unicode que ocupan más de un "bloque de código", así como las herramientas que ayudan a solventar esas dificultades:
-
-* Las funciones `escape_string` y `unescape_string`.
-* Las distintas formas de delimitar las cadenas de texto, mediante comillas o "triples" comillas.
-* Las sintaxis `raw`.
-* Las funciones para calcular las posiciones y longitudes de de una cadena y sus caracteres (`nextindex`, `previndex`, `lastindex`, `isvalid`, en combinación con `length` y `ncodeunits`). 
-
-Además, se han presentado numerosas funciones y procedimientos para manipular las cadenas de texto:
-
-* Métodos de concatenación de cadenas e "interpolación" de valores.
-* Funciones para unir conjuntos de cadenas y separarlas (`join`, `joinpath`, `split`, `splitdir`, `splitext` y `splitdrive`).
-* Funciones para alternar entre mayúsculas y minúsculas (`lowercase`, `uppercase` y `titlecase`).
-* Funciones para manipular los caracteres de espacio (`chomp`, `chop`, `strip`, `lstrip`, `rstrip`, `lpad` y `rpad`).
-* Métodos para buscar y reemplazar, utilizando patrones de caracteres y expresiones regulares (`findfirst`, `findlast`, `findprev`, `findnext`, `occursin`, `replace` y `match`).
-
-Por último, aunque no están directamente relacionadas con las cadenas de texto, también se han presentado las funciones `round` y `truncate` como métodos para reducir el número de decimales de un número.
+* La librería `Dates` para trabajar con variables que representan fechas.
+* Los bloques `begin`-`end` y las expresiones `let`.
+* Algunas funciones para buscar elementos de una colección que cumplen una condición determinada (`findfirst`, `findlast`, `findall`).
+* Las funciones `isodd` e `iseven` para determinar si un número es par o impar.
 
