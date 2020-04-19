@@ -338,7 +338,7 @@ Este código significa que si se cumple la condición que hay tras la palabra `i
 
 Los bloques `elseif` y `else` son opcionales. Las estructuras condicionales pueden tener un solo bloque delimitado entre `if` y `end`, de tal manera que no se ejecute ningún código si la condición no se cumple.
 
-Finalmente, se puede señalar una forma abreviada de escribir estructuras condicionales en una sola línea, especialmente adecuada para casos en los que el código a ejecutar es muy breve. Se trata del "operador ternario", que está presente en el segundo bloque del ejemplo anterior (el código que se ejecuta para el mes de febrero):
+También se puede señalar una forma abreviada de escribir estructuras condicionales en una sola línea, especialmente adecuada para casos en los que el código a ejecutar es muy breve. Se trata del "operador ternario", que está presente en el segundo bloque del ejemplo anterior (el código que se ejecuta para el mes de febrero):
 
 ```julia
 return (es_bisiesto(y) ? 29 : 28)
@@ -422,12 +422,6 @@ Este comportamiento es útil cuando una de las condiciones a comprobar solo tien
 ```
 
 Si no se cumpliese la primera condición (`!isempty(x)`, es decir que `x` no esté vacío), evaluar la segunda (`x[1] > 0`) generaría un error, ya que no se podría acceder al elemento `x[1]`. Pero el "cortocircuito" del operador `&&` evitaría llegar a ese punto.
-
-Este comportamiento es equivalente al de un bloque `if` simple, del mismo modo que el operador ternario es equivalente a un `if`-`else`. Por este motivo, a veces se pueden encontrar programas que utilizan `&&` para abreviar bloques condicionales con expresiones muy sencillas, por ejemplo, si una función hubiera de interrumpirse si la variable `x` adopta el valor `0`, esto podría escribirse como:
-
-```julia
-x == 0 && return
-```
 
 ## Bucles
 
