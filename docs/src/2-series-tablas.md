@@ -6,7 +6,7 @@ cp("../../datos/", "./datos")
 
 ## Un ejemplo para empezar
 
-En un uso productivo de un lenguaje de programación no nos limitamos a introducir datos con el teclado y leer los resultados en pantalla. Usamos series largas de datos, tablas numéricas... que normalmente se leen a partir de archivos de texto u hojas de cálculo. La salida también pueden ser archivos de ese tipo, o bien gráficas (que veremos en el [capítulo 4](graficos.md)). Vamos a ver como se leen, escriben y estructuran esos datos.
+En un uso productivo de un lenguaje de programación no nos limitamos a introducir datos con el teclado y leer los resultados en pantalla. Usamos series largas de datos, tablas numéricas... que normalmente se leen a partir de archivos de texto u hojas de cálculo. La salida también pueden ser archivos de ese tipo, o bien gráficas (que veremos en el [capítulo 4](4-graficos.md)). Vamos a ver como se leen, escriben y estructuran esos datos.
 
 ```@raw html
 <div id="ejemplo_series" />
@@ -18,6 +18,7 @@ Cada uno de estos archivos tiene 100 líneas con dos columnas de datos separadas
 
 ```@example c2
 using DelimitedFiles, GRUtils # hide
+GRUtils.GR.inline("svg") # hide
 datos = readdlm("datos/series/sA12.txt") # hide
 plot(datos[:,1],datos[:,2]) # hide
 ```
@@ -68,12 +69,16 @@ Una forma de ver lo que pasa es sustituir la línea `for i=1:n` por `i = 1`, y e
 
 !!! note
 
-    Los bucles `for` se explican, junto con otras estructuras básicas, en el [capítulo 3](funciones-control.md) a continuación de este.
+    Los bucles `for` se explican, junto con otras estructuras básicas, en el [capítulo 3](3-funciones-control.md) a continuación de este.
 
 
 ## Números escalares y series de números
 
-Cuando se habla de "datos" o "variables", lo más inmediato es pensar en números, que es también el tipo de datos para el que es más sencillo escribir instrucciones. Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones: los nombres de las funciones y la sintaxis de las operaciones numéricas es común a muchos otros lenguajes de programación, y consisten esencialmente en una transposición a texto simple de las fórmulas matemáticas correspondientes a la operación que se desea realizar.
+Cuando se habla de "datos" o "variables", lo más inmediato es pensar en números, que es también el tipo de datos para el que es más sencillo escribir instrucciones. Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones: los nombres de las funciones y la sintaxis de las operaciones numéricas es común a muchos otros lenguajes de programación, y consisten esencialmente en una transposición a texto simple de las fórmulas matemáticas correspondientes a la operación que se desea realizar. En Julia este principio se lleva incluso más lejos que en otros lenguajes; por ejemplo:
+
+* Si `a` es el nombre de una variable, `2a` significa "2 veces `a`" (y lo mismo con cualquier otro número, sea entero, decimal o de otro tipo). Esto es posible gracias a que los nombres de variables no pueden comenzar por números, por lo que no hay ambigüedad posible. En otros lenguajes es obligatorio expresarlo como un producto explícito, es decir `2*a`.
+* Se pueden utilizar símbolos matemáticos de Unicode para representar algunos operadores matemáticos habituales que no están en el conjunto de caracteres ASCII: `≠` para "no es igual que" (equivalente a `!=` cuando se escribe solo con ASCII), o `≤` y `≥` para "menor que" y "mayor que", respectivamente (equivalentes a `<=`, `>=`).
+* Es posible escribir comparaciones lógicas concatenadas, como `0 ≤ x ≤ 1` para comprobar si la variable `x` se encuentra entre `0` y `1`. (En otros lenguajes es necesario expresarlo de forma más compleja, como `(0 <= x) && (x <= 1)`.
 
 Por otro lado, con mucha frecuencia las variables con las que interesa trabajar no representan números escalares, sino series organizadas de números o vectores. Esto ocurre con las siguientes variables del ejemplo anterior:
 
@@ -81,7 +86,7 @@ Por otro lado, con mucha frecuencia las variables con las que interesa trabajar 
 * `x`, `y`: vectores de 100 números con cada una de las dos columnas de `datos`.
 * `tiempos` y `extremos`: vectores de `n` elementos (30) que contienen los resultados que buscamos para cada uno de los archivos.
 
-En Julia los vectores y matrices (junto con las "hipermatrices" de más de dos dimensiones) son casos específicos de *arrays*, que se pueden definir en general como conjuntos de datos ordenados (numéricos o también de otros tipos, como veremos después). Su manejo es un tema extenso, que se trata de forma más detallada en el [capítulo 5](arrays.md). Por ahora, como introducción solo veremos superficialmente los vectores (*arrays* unidimensionales). En el ejemplo hemos leído los datos a partir de archivos grabados en disco, como es habitual, pero un vector también se puede definir "a mano" a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:
+En Julia los vectores y matrices (junto con las "hipermatrices" de más de dos dimensiones) son casos específicos de *arrays*, que se pueden definir en general como conjuntos de datos ordenados (numéricos o también de otros tipos, como veremos después). Su manejo es un tema extenso, que se trata de forma más detallada en el [capítulo 5](5-arrays.md). Por ahora, como introducción solo veremos superficialmente los vectores (*arrays* unidimensionales). En el ejemplo hemos leído los datos a partir de archivos grabados en disco, como es habitual, pero un vector también se puede definir "a mano" a partir del conjunto de datos que contiene, encerrados entre corchetes y separados por comas:
 
 ```@repl c2
 primos = [1,3,5,7,11,13,17];
@@ -165,7 +170,7 @@ letra = nombrearchivo[2]
 
 !!! note
 
-    Esta forma de extraer partes de una cadena de texto solo funciona de forma general con textos compuestos exclusivamente de caracteres ASCII. En el capítulo dedicado a [Cadenas y archivos de texto](@ref) se explica cómo operar con cadenas que incluyen otro tipo de caracteres.
+    Esta forma de extraer partes de una cadena de texto solo funciona de forma general con textos compuestos exclusivamente de caracteres ASCII. En el capítulo dedicado a [Cadenas y archivos de texto](7-strings.md) se explica cómo operar con cadenas que incluyen otro tipo de caracteres.
 
 Sin embargo, al contrario que los *arrays* convencionales, las cadenas de texto son objetos "inmutables", y no es posible modificar sus letras de la misma manera que haríamos con los contenidos de un vector:
 

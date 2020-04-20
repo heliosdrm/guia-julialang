@@ -21,7 +21,7 @@ Vamos a crear un programa que toma como entrada los números de un mes y un año
     * Celdas numeradas secuencialmente en varias filas, hasta llegar al último día del mes.
     * Celdas en blanco tras el último día hasta completar la última semana.
 
-El primer paso lo podemos resolver con la función [`gauss_diasemana`](primerospasos.md#gauss_diasemana) que se presentó en el capítulo 1. Pero como esa función devuelve el día de la semana en forma de texto, necesitamos la lista de días para convertirlo en número. Si consideramos que la semana comienza el lunes, esta lista es:
+El primer paso lo podemos resolver con la función [`gauss_diasemana`](1-primerospasos.md#gauss_diasemana) que se presentó en el capítulo 1. Pero como esa función devuelve el día de la semana en forma de texto, necesitamos la lista de días para convertirlo en número. Si consideramos que la semana comienza el lunes, esta lista es:
 
 ```@setup c3
 include("../../scripts/calc_diasemana.jl")
@@ -45,9 +45,7 @@ nothing # hide
 El segundo paso (contar el número de días) es trivial para todos los meses excepto para febrero, que depende de que el año sea bisiesto o no. Para resolver este problema definimos la función `es_bisiesto`, que compara si un supuesto 29 de febrero caería en el mismo día de la semana que el 1 de marzo, y devuelve el valor "verdadero" (`true`) si los días no coinciden (el año es bisiesto), o "falso" (`false`) en caso contrario:
 
 ```@example c3
-function es_bisiesto(y)
-    return (gauss_diasemana(29,2,y) != gauss_diasemana(1,3,y))
-end
+es_bisiesto(y) = (gauss_diasemana(29,2,y) != gauss_diasemana(1,3,y))
 nothing # hide
 ```
 
@@ -94,10 +92,10 @@ function calendario_html(m, y)
     # (1 si `primerdia == 1`, 0 si `primerdia == 2`, etc.)
     dia_mes = 2 - primerdia
     # Añadir filas al calendario, hasta que no queden días del mes
-    while dia_mes <= ndias
+    while dia_mes ≤ ndias
         tablahtml *= "<tr>"
         for _ = 1:7
-            if 1 <= dia_mes <= ndias # Celdas con número dentro del mes
+            if 1 ≤ dia_mes ≤ ndias # Celdas con número dentro del mes
                 tablahtml *= "<td>$dia_mes</td>"
             else # Celdas en blanco al principio y al final
                 tablahtml *= "<td></td>"
@@ -145,6 +143,19 @@ Las palabras en mayúsculas representan los elementos que son propios de cada fu
 * `CODIGO` es el cuerpo con el código que se ha de ejecutar en la función, utilizando los argumentos de `ENTRADA` y cualesquiera otras variables que se definan dentro de la función. El código se suele escribir indentado respecto al encabezado de la función
 * `SALIDAS` es la lista de variables de salida de la función (véanse los detalles más abajo). La función finaliza inmediatamente cuando se ejecuta la línea que contiene la palabra `return`, aunque haya más código escrito después. Si no se pone ninguna línea con la palabra `return`, se devuelve por defecto el valor de la última línea de código de la función, como `HTML(tablahtml)` en la función `calendario_html`.
 
+Cuando el cuerpo de la función es tan sencillo que se puede reducir a una sola línea, también se puede simplificar la forma de definirla, eliminando la clave `function` y el finalizador `end`. Este es el caso, por ejemplo, de la función `es_bisiesto`. Por poner otro ejemplo, las siguientes declaraciones definen la misma función para calcular la suma aritmética `1+2+ ... + n`
+
+```julia
+function suma_aritmetica(n)
+    return n * (n + 1) / 2
+end
+
+function suma_aritmetica(n)
+    n * (n + 1) / 2
+end
+
+suma_aritmetica(n) = n * (n + 1) / 2
+```
 
 A continuación se presentan brevemente cada uno de los elementos empleados en la definición de una función.
 
@@ -338,7 +349,7 @@ Este código significa que si se cumple la condición que hay tras la palabra `i
 
 Los bloques `elseif` y `else` son opcionales. Las estructuras condicionales pueden tener un solo bloque delimitado entre `if` y `end`, de tal manera que no se ejecute ningún código si la condición no se cumple.
 
-También se puede señalar una forma abreviada de escribir estructuras condicionales en una sola línea, especialmente adecuada para casos en los que el código a ejecutar es muy breve. Se trata del "operador ternario", que está presente en el segundo bloque del ejemplo anterior (el código que se ejecuta para el mes de febrero):
+Finalmente, se puede señalar una forma abreviada de escribir estructuras condicionales en una sola línea, especialmente adecuada para casos en los que el código a ejecutar es muy breve. Se trata del "operador ternario", que está presente en el segundo bloque del ejemplo anterior (el código que se ejecuta para el mes de febrero):
 
 ```julia
 return (es_bisiesto(y) ? 29 : 28)
@@ -366,10 +377,19 @@ La condición asociada a los bloques `if` o `elseif`, así como al operador tern
 * `a <= b` (`true` si `a` es menor o igual que `b`)
 * `a >= b` (`true` si `a` es mayor o igual que `b`)
 
+Algunos de estos operadores de comparación pueden escribirse de forma más "elegante", usando los símbolos matemáticos correspondientes. Como dichos símbolos no suelen estar disponibles en los teclados, los principales interfaces para Julia permiten escribirlos a partir de "secuencias de escapes". Por ejemplo, el símbolo de "menor o igual que" (`≤`) se escribiría con la secuencia de escape `\le` (del inglés *less or equal*), pulsando el tabulador a continuación para convertirla en el símbolo deseado. Los símbolos matemáticos correspondientes a los operadores anteriores son:
+
+|operador | símbolo | sec. de escape |
+|:-------:|:-------:|:--------------:|
+| `!=`    | `≠`     | `\neq`         |
+| `<=`    | `≤`     | `\le`          |
+| `>=`    | `≥`     | `\ge`          |
+
+En la documentación oficial de Julia se puede encontrar una lista completa de las secuencias de escape disponibles para [caracteres Unicode](https://docs.julialang.org/en/v1/manual/unicode-input).
 
 !!! tip
 
-    Los cálculos realizados pueden introducen imprecisiones numéricas, por lo que comparaciones como `sqrt(5)^2 == 5` dan como resultado `false`, cuando teóricamente debería ser `true`. Para evitar estos problemas se puede usar la función `isapprox`; por ejemplo en `isapprox(sqrt(5)^2, 5)`, que da el resultado esperado.
+    Los cálculos realizados pueden introducen imprecisiones numéricas, por lo que comparaciones como `sqrt(5)^2 == 5` dan como resultado `false`, cuando teóricamente debería ser `true`. Para evitar estos problemas se puede usar la función `isapprox` o el operador de comparación `≈` (con la secuencia de escape `\approx`), así como su variante negativa `≉` (`\napprox`). Por ejemplo en `sqrt(5)^2 ≈ 5`, que da el resultado esperado.
 
 También es habitual hacer comprobaciones relativas a valores singulares, perdidos, etc.:
 
@@ -401,7 +421,7 @@ all(b)
 A menudo se generan expresiones lógicas complejas, que son el resultado de combinar varias expresiones más sencillas. Para algunas operaciones de comparación esta combinación se reduce a concatenarlas, como cuando comprobamos si el número de un día está dentro del rango válido para un mes:
 
 ```julia
-1 <= dia_mes <= ndias
+1 ≤ dia_mes ≤ ndias
 ```
 
 Sin embargo lo más frecuente es usar conectores lógicos, como los siguientes:
@@ -422,6 +442,12 @@ Este comportamiento es útil cuando una de las condiciones a comprobar solo tien
 ```
 
 Si no se cumpliese la primera condición (`!isempty(x)`, es decir que `x` no esté vacío), evaluar la segunda (`x[1] > 0`) generaría un error, ya que no se podría acceder al elemento `x[1]`. Pero el "cortocircuito" del operador `&&` evitaría llegar a ese punto.
+
+Este comportamiento es equivalente al de un bloque `if` simple, del mismo modo que el operador ternario es equivalente a un `if`-`else`. Por este motivo, a veces se pueden encontrar programas que utilizan `&&` para abreviar bloques condicionales con expresiones muy sencillas, por ejemplo, si una función hubiera de interrumpirse si la variable `x` adopta el valor `0`, esto podría escribirse como:
+
+```julia
+x == 0 && return
+```
 
 ## Bucles
 
@@ -457,7 +483,7 @@ O si el número que sirve de contador en estos casos no se va a utilizar en el b
 
 ```julia
 for _ = 1:7
-    if 1 <= dia_mes <= ndias # Celdas con número dentro del mes
+    if 1 ≤ dia_mes ≤ ndias # Celdas con número dentro del mes
         tablahtml *= "<td>$dia_mes</td>"
     else # Celdas en blanco al principio y al final
         tablahtml *= "<td></td>"
@@ -479,10 +505,10 @@ end
 Si el número de veces que se tiene que repetir el bucle no está predeterminado por un número o la longitud de una variable, se pueden utilizar los bucles de tipo `while`, como el utilizado para rellenar las filas con números del calendario:
 
 ```julia
-while dia_mes <= ndias
+while dia_mes ≤ ndias
     tablahtml *= "<tr>"
     for _ = 1:7
-        if 1 <= dia_mes <= ndias # Celdas con número dentro del mes
+        if 1 ≤ dia_mes ≤ ndias # Celdas con número dentro del mes
             tablahtml *= "<td>$dia_mes</td>"
         else # Celdas en blanco al principio y al final
             tablahtml *= "<td></td>"
@@ -518,7 +544,7 @@ En la primera iteración se ejecutaría la línea `x = 1`, y en la segunda inten
 
 Para hacer algo así, sería necesario definir primero la variable `x` *antes* del bucle. Esto es lo que se hace, por ejemplo, con la variable `tablahtml`, que se redefine dentro de varios bucles en el ejemplo del calendario.
 
-Hay algunas excepciones y matices que comentar en relación con el contexto de las variables en funciones, bucles y otras estructuras, que se comentan más detalladamente en el [capítulo 8](funciones-avanzado.md).
+Hay algunas excepciones y matices que comentar en relación con el contexto de las variables en funciones, bucles y otras estructuras, que se comentan más detalladamente en el [capítulo 8](8-funciones-avanzado.md).
 
 ### Interrupción de bucles
 
@@ -545,7 +571,7 @@ function primos_eratostenes(n)
       end
       # Eliminar los múltiplos 2m, 3m ... menores que n
       k = 2
-      while (mxk = m*k) <= n
+      while (mxk = m*k) ≤ n
         eliminados[mxk] = true
         k += 1
       end

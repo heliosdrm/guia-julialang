@@ -23,7 +23,7 @@ Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl),
 
 Como cualquier otro paquete de Julia, GRUtils necesita instalarse antes de poder usarlo. La principal diferencia con los paquetes vistos hasta ahora es que, indirectamente, la instalación de GRUtils en Julia intenta instalar en el sistema la librería gráfica [GR](http://gr-framework.org). GR se suele instalar sin problemas en los sistemas operativos habituales (Linux, Windows y OSX), pero puede haber casos en los que este paso falle, bien por alguna limitación del sistema o por algún error de conexión durante el proceso. Si esto ocurre se pueden probar las siguientes soluciones:
 
-1. Reconstruir el paquete GR, que es el que lleva a cabo la compilación e instalación de la librería gráfica. Esto se hace en con dos instrucciones en la consola de comandos de Julia. La segunda instrucción se ha de ejecutar en el modo de gestión de paquetes (como viene indicado por la etiqueta `pkg>` al comienzo de la línea), en la que se entra pulsando la tecla `]`, como se indicó en el capítulo de [primeros pasos](primerospasos.md):
+1. Reconstruir el paquete GR, que es el que lleva a cabo la compilación e instalación de la librería gráfica. Esto se hace en con dos instrucciones en la consola de comandos de Julia. La segunda instrucción se ha de ejecutar en el modo de gestión de paquetes (como viene indicado por la etiqueta `pkg>` al comienzo de la línea), en la que se entra pulsando la tecla `]`, como se indicó en el capítulo de [primeros pasos](1-primerospasos.md):
 
 ```julia-repl
 julia> ENV["GRDIR"] = ""
@@ -44,6 +44,7 @@ using DelimitedFiles
 datos = readdlm("datos/series/sA01.txt")
 # Cargamos el paquete GRUtils y utilizamos la función `plot`
 using GRUtils
+GRUtils.GR.inline("svg") # hide
 Figure(); # hide
 x = datos[:,1]
 y = datos[:,2]
@@ -139,7 +140,7 @@ plot(x, y, ".k")
 
 ## Ajustar y etiquetar gráficos
 
-Normalmente interesa complementar los gráficos con etiquetas en los ejes, títulos, leyendas y otros elementos que ayuden a interpetarlos. Por ejemplo, veamos un gráfico con los resultados del análisis de las señales realizado en el [capítulo 2](series-tablas.md#ejemplo_series). La tabla de resultados era:
+Normalmente interesa complementar los gráficos con etiquetas en los ejes, títulos, leyendas y otros elementos que ayuden a interpetarlos. Por ejemplo, veamos un gráfico con los resultados del análisis de las señales realizado en el [capítulo 2](2-series-tablas.md#ejemplo_series). La tabla de resultados era:
 
 ```@example c4
 using CSV # hide

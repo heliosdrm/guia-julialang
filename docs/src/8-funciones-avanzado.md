@@ -1,10 +1,10 @@
 # Capítulo 8. Uso avanzado de funciones
 
-La forma en la que Julia maneja las funciones es probablemente uno de sus aspectos más destacables. En este capítulo vamos a ver las distintas formas de funciones en Julia y de trabajar con ellas eficientemente, para sacarles el máximo provecho. En lo que sigue se asume que ya se conocen algunos conceptos, como la forma habitual de definir una función y sus argumentos de entrada y salida, así como los distintos contextos de variables (global vs. local), que se explican en el [capítulo 3](funciones-control.md).
+La forma en la que Julia maneja las funciones es probablemente uno de sus aspectos más destacables. En este capítulo vamos a ver las distintas formas de funciones en Julia y de trabajar con ellas eficientemente, para sacarles el máximo provecho. En lo que sigue se asume que ya se conocen algunos conceptos, como la forma habitual de definir una función y sus argumentos de entrada y salida, así como los distintos contextos de variables (global vs. local), que se explican en el [capítulo 3](3-funciones-control.md).
 
 ## No dejes las funciones para el final
 
-Cuando se comienza a trabajar en un proyecto con datos que se han de procesar o analizar, lo primero que se suele hacer es explorar los datos, ver algunos de muestra,  [representarlos en gráficos](graficos.md), etc. Esto suele hacerse en un entorno interactivo, que da mucha flexibilidad al usuario para crear nuevas variables, modificarlas de forma arbitraria, y hacer operaciones paso a paso, viendo lo que pasa después de cada operación antes de proceder a la siguiente.
+Cuando se comienza a trabajar en un proyecto con datos que se han de procesar o analizar, lo primero que se suele hacer es explorar los datos, ver algunos de muestra,  [representarlos en gráficos](4-graficos.md), etc. Esto suele hacerse en un entorno interactivo, que da mucha flexibilidad al usuario para crear nuevas variables, modificarlas de forma arbitraria, y hacer operaciones paso a paso, viendo lo que pasa después de cada operación antes de proceder a la siguiente.
 
 Las funciones, por otro lado, están pensadas para un flujo de trabajo mucho más sistemático, con una secuencia de operaciones concreta aplicadas a un conjunto cerrado de variables, que se van generando y modificando conforme a un guión predefinido. Esto podría hacer pensar que no vale la pena crear funciones hasta que los algoritmos a emplear en el proyecto estén suficientemente claros, o al menos hasta que se hayan definido rutinas lo suficientemente largas y repetitivas como para que guardar el código de la función suponga un ahorro de trabajo significativo.
 
@@ -16,17 +16,37 @@ Un motivo por el que mucha gente demora el paso de pasar el código a funciones 
 
 Por otro lado, hay diferentes técnicas de *debugging* que permiten detenerse en puntos intermedios de las funciones, explorar las variables locales e incluso manipularlas. Estas técnicas, así como otras como el *unit testing*, que se comentarán en un capítulo dedicado a este tema son muy útiles, y resultan especialmente eficaces cuando se trabaja con funciones sencillas. 
 
-## Funciones anónimas
+## Formas de definir una función
 
-A menudo hay funciones que se usan dentro de otras. Por ejemplo, `findfirst` es una función que da el primer índice de una colección de valores que cumplen una condición (también existen `findlast` y `findall`, para encontrar el último o todos los que la cumplen). Esta condición puede venir dada por otra función que devuelve un valor lógico (`true` o `false`). Así, para encontrar el primer valor par podría pasársele la función `iseven` (o `isodd` para los impares):
+En el capítulo introductorio a las funciones se han mostrado dos formas habituales de definir una función. Utilizando el mismo ejemplo de la suma aritmética que se presentó en ese capítulo, estas dos formas son:
+
+```julia
+# 3. Forma "estándar"
+function suma_aritmetica(n)
+    return n * (n + 1) / 2
+end
+
+# 2. Forma "abreviada"
+suma_aritmetica(n) = n * (n + 1) / 2
+```
+
+Hay una tercera forma de definir esta función, que es como una función "anónima". Se parece mucho a la forma abreviada, pero se omite el nombre de la función, y el signo `=` se cambia por `->`.
+
+```julia
+(n) -> n * (n+1) / 2
+```
+
+### Uso de las funciones anónimas
+
+Las funciones anónimas se usan a menudo de forma auxiliar, dentro de otras funciones. Por ejemplo, la función `findfirst` da el primer índice de una colección de valores que cumplen una condición (también existen `findlast` y `findall`, para encontrar el último o todos los que la cumplen). Esta condición puede venir dada por una función que devuelve un valor lógico (`true` o `false`). Así, para encontrar el primer valor par podría pasársele la función `iseven` (o `isodd` para los impares):
+
 
 ```@repl
 findfirst(iseven, [15, 7, 12, 4, 9])
 ```
 
-Pero otras condiciones no tienen una función predefinida, y tenemos que crearla *ad hoc*. Si esa función no tiene un uso específico más allá de ese contexto, no vale la pena crearla de la forma habitual. En este tipo de situaciones se usa a menudo lo que se llaman "funciones anónimas", ya que pueden definir sin darles ningún nombre. La expresión que define una función anónima es `(args) -> cuerpo`, donde `args` representa el conjunto de argumentos de entrada, y `cuerpo` es el código que expresa el cálculo a realizar.
+Pero otras condiciones no tienen una función predefinida, y tenemos que crearla *ad hoc*. Si esa función no tiene un uso específico más allá de ese contexto, no vale la pena crearla de la forma habitual, y resulta práctico pasarle una función anónima. Por ejemplo, para encontrar el primer valor menor de 10:
 
-Volviendo al ejemplo, si en lugar del primer número par buscásemos el primero que es menor de 10, podríamos escribir:
 
 ```@repl
 findfirst(x -> (x < 10), [15, 7, 12, 4, 9])
@@ -94,24 +114,17 @@ Una misma función puede hacer cosas distintas, según los argumentos que se le 
 De hecho, cuando se define una función con argumentos opcionales, se están definiendo distintos métodos de la misma (uno que requiere que se le pasen todos los argumentos, otro que no requiere ninguno, etc.). Así, retomando el ejemplo del capítulo introductorio que se usó para explicar los argumentos con valores por defecto:
 
 ```@repl
-function incrementar(x, inc=1)
-    x + inc
-end
+incrementar(x, inc=1) = x + inc
 ```
 
 La descripción de esta función `incrementar` señala que tiene dos métodos, porque hubiera sido lo mismo (aunque no tan compacto) definir explícitamente dos métodos de la función con el nombre `incrementar`:
 
 ```julia
-function incrementar(x, inc)
-    x + inc
-end
-
-function incrementar(x)
-    x + 1
-end
+incrementar(x, inc) = x + inc
+incrementar(x) = x + 1function incrementar(x, inc)
 ```
 
-Los métodos de una función también pueden tratar de forma completamente diferente los distintos argumentos que se le pasan. Por ejemplo, en el primer capítulo presentamos la función [`gauss_diasemana`](primerospasos.md#gauss_diasemana) para determinar el día de la semana que corresponde a una fecha determinada, dada por los números del día, el mes y el año:
+Los métodos de una función también pueden tratar de forma completamente diferente los distintos argumentos que se le pasan. Por ejemplo, en el primer capítulo presentamos la función [`gauss_diasemana`](1-primerospasos.md#gauss_diasemana) para determinar el día de la semana que corresponde a una fecha determinada, dada por los números del día, el mes y el año:
 
 ```@setup c8
 include("../../scripts/calc_diasemana.jl")
@@ -126,10 +139,11 @@ Podríamos crear un método que tome un solo argumento, asumiendo que es un obje
 function gauss_diasemana(fecha)
     dia = day(fecha)
     mes = month(fecha)
-    año = month(fecha)
+    año = year(fecha)
     return gauss_diasemana(dia, mes, año)
 end
 
+using Dates
 fecha = Date("11-8-2018", "dd-mm-yyyy")
 gauss_diasemana(fecha)
 ```
@@ -141,9 +155,7 @@ gauss_diasemana(fecha)
 Supongamos ahora que también quisiéramos un método para procesar una fecha escrita en una cadena de texto. Podríamos definir un método con dos argumentos (la fecha en forma de texto y el patrón de formato):
 
 ```julia
-function gauss_diasemana(fecha, formato)
-    gauss_diasemana(Date(fecha, formato))
-end
+gauss_diasemana(fecha, formato) = gauss_diasemana(Date(fecha, formato))
 ```
 
 ¿Pero y si quisiéramos tener un formato por defecto, por ejemplo el de `"dd-mm-yyyy"` que hemos usado antes? Ya tenemos un método de `gauss_diasemana` con un solo argumento, por lo que no podríamos distinguir los dos métodos según el número de argumentos. Sin embargo, Julia permite definir métodos teniendo en cuenta no solo el número de argumentos, sino también su *tipo*.
@@ -242,7 +254,7 @@ function fun(x::T) where {T <: Real}
 end
 ```
 
-La expresión `T <: Real` significa "`T` es el tipo `Real`" --o como `Real` es un tipo abstracto, "`T` es un subtipo de `Real`"-- (véase la sección sobre [tipos de elementos](arrays.md#Tipos-de-elementos) en el capítulo 5). Obviamente, en este caso no parece muy práctica esta forma alternativa de señalar el tipo del argumento. Pero hay otras situaciones en las que sí resulta útil. Por ejemplo, hay casos en los que el tipo o conjunto de tipos a especificar tienen una definición muy larga, y esta es una forma de evitar que la declaración de los argumentos se alargue en exceso (sobre todo si hay varios argumentos).
+La expresión `T <: Real` significa "`T` es el tipo `Real`" --o como `Real` es un tipo abstracto, "`T` es un subtipo de `Real`"-- (véase la sección sobre [tipos de elementos](5-arrays.md#Tipos-de-elementos) en el capítulo 5). Obviamente, en este caso no parece muy práctica esta forma alternativa de señalar el tipo del argumento. Pero hay otras situaciones en las que sí resulta útil. Por ejemplo, hay casos en los que el tipo o conjunto de tipos a especificar tienen una definición muy larga, y esta es una forma de evitar que la declaración de los argumentos se alargue en exceso (sobre todo si hay varios argumentos).
 
 Pongamos el caso de una función llamada `siguiente`, de la que queremos definir un método específico para números enteros o un caracteres de texto. Los distintos tipos de números enteros se encuentran englobados por el tipo abstracto `Integer`, y también existe un tipo `AbstractChar` para referirse a todos los tipos de caracteres. Sin embargo no existe un tipo abstracto para la unión de estos dos, así que tenemos que recurrir a una declaración explícita de esa unión, como `Union{<:Integer, <:AbstractChar}`. De este modo, la función `siguiente` podría definirse como sigue:
 
@@ -276,18 +288,13 @@ mismotipo(1, 2.0)
 A modo de curiosidad, se muestra una definición alternativa de la misma función, a través de dos métodos distintos: uno en el que se especifica que los dos argumentos sean del mismo tipo `T`, y otro genérico para todos los demás casos. Nótese que como no se procesan los valores de los argumentos, sino solo sus tipos, ni siquiera hace falta señalar nombres de variables para asignarlos.
 
 ```julia
-function mismotipo(::T, ::T) where {T}
-    return true
-end
-
-function mismotipo(_, _)
-    return false
-end
+mismotipo(::T, ::T) where {T} = true
+mismotipo(_, _) = false
 ```
 
 ## Variables globales y locales
 
-Dentro de las funciones se puede distinguir entre variables "locales" y las "globales". Normalmente el tratamiento de estas variables y objetos no reviste grandes complicaciones, y basta con tener en cuenta los conceptos básicos mencionados en la [sección correspondiente del capítulo 5](funciones-controlmd#Cuerpo-de-la-función-variables-locales-y-globales-1). Sin embargo hay algunas situaciones particulares que pueden dar lugar a confusión, por lo que a continuación se explica esta cuestión en detalle.
+Dentro de las funciones se puede distinguir entre variables "locales" y las "globales". Normalmente el tratamiento de estas variables y objetos no reviste grandes complicaciones, y basta con tener en cuenta los conceptos básicos mencionados en la [sección correspondiente del capítulo 3](3-funciones-control.md#Cuerpo-de-la-función-variables-locales-y-globales-1). Sin embargo hay algunas situaciones particulares que pueden dar lugar a confusión, por lo que a continuación se explica esta cuestión en detalle.
 
 Los contextos (*scopes* en ingles) son los fragmentos de código en los que "viven" las distintas variables de un programa, es decir, donde se reconocen sus nombres y se puede operar con ellas. (Utilizamos aquí el término "variables" para referirnos a cualquier variable, constante, función u otro tipo de objeto de datos.) Una variable dada puede pertenecer a un contexto global o a uno local.
 

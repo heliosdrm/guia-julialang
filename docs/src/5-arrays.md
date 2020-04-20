@@ -5,7 +5,7 @@ cp("../../datos/", "./datos")
 ```
 
 
-En el capítulo sobre el [manejo de conjuntos de datos](series-tablas.md) ya se han visto por encima algunos aspectos elementales de la creación y manejo de vectores y matrices de datos, que son casos particulares de lo que se conoce como *arrays*: series organizadas de datos que pueden tener una, dos o más dimensiones. En el presente capítulo veremos más detalles sobre este tipo de variables, que son un elemento fundamental en la mayoría de cálculos numéricos, y por lo tanto conviene dominar desde un principio. Además, estos detalles servirán como introducción práctica a otros asuntos importantes para la programación en Julia.
+En el capítulo sobre el [manejo de conjuntos de datos](2-series-tablas.md) ya se han visto por encima algunos aspectos elementales de la creación y manejo de vectores y matrices de datos, que son casos particulares de lo que se conoce como *arrays*: series organizadas de datos que pueden tener una, dos o más dimensiones. En el presente capítulo veremos más detalles sobre este tipo de variables, que son un elemento fundamental en la mayoría de cálculos numéricos, y por lo tanto conviene dominar desde un principio. Además, estos detalles servirán como introducción práctica a otros asuntos importantes para la programación en Julia.
 
 
 ## Sintaxis para la creación de *arrays*
@@ -200,7 +200,7 @@ matriz
 
 ### Valores aleatorios
 
-Hay situaciones en las que se desea crear *arrays* con valores aleatorios, por ejemplo para probar programas que se están desarrollando, poner ejemplos de uso, etc. En el capítulo de [gráficos](graficos.md) ya vimos el uso de la función `randn` para generar números aleatorios distribuidos según una normal. Por otro lado, la función `rand` permite generar números distribuidos uniformemente entre 0 y 1, con la misma sintaxis que `randn`, `zeros` y `ones`:
+Hay situaciones en las que se desea crear *arrays* con valores aleatorios, por ejemplo para probar programas que se están desarrollando, poner ejemplos de uso, etc. En el capítulo de [gráficos](4-graficos.md) ya vimos el uso de la función `randn` para generar números aleatorios distribuidos según una normal. Por otro lado, la función `rand` permite generar números distribuidos uniformemente entre 0 y 1, con la misma sintaxis que `randn`, `zeros` y `ones`:
 
 ```@setup c5
 using Random;
@@ -612,7 +612,7 @@ permutedims(numeros, (3, 2, 1))
 
 ## Broadcasting
 
-Cuando se quiere aplicar una misma operación a todos los elementos de un *array*, o de varios *arrays* del mismo tamaño, una forma compacta y eficiente de hacerlo es escribiendo la operación como si se hiciese con variables escalares, pero añadiendo un punto tras el nombre de las funciones que se aplican a los *arrays*, o antes de los símbolos de las operaciones. En el capítulo sobre [manejo de conjuntos de datos](series-tablas.md) anterior ya se vio un ejemplo de cómo hacer esto, que repetimos aquí con unos vectores pequeños:
+Cuando se quiere aplicar una misma operación a todos los elementos de un *array*, o de varios *arrays* del mismo tamaño, una forma compacta y eficiente de hacerlo es escribiendo la operación como si se hiciese con variables escalares, pero añadiendo un punto tras el nombre de las funciones que se aplican a los *arrays*, o antes de los símbolos de las operaciones. En el capítulo sobre [manejo de conjuntos de datos](2-series-tablas.md) anterior ya se vio un ejemplo de cómo hacer esto, que repetimos aquí con unos vectores pequeños:
 
 ```@repl
 # Primero vemos los resultados con escalares:

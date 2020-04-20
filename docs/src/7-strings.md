@@ -457,7 +457,7 @@ Naturalmente, en un caso como este dar nombre al grupo capturado no añade mucho
 
 ## Lectura y escritura en ficheros de texto
 
-Los ficheros de texto son una forma habitual y muy práctica (aunque no la más eficiente) de guardar datos. Como se ha visto en el capítulo sobre [tablas de datos](series-tablas.md), cuando el texto está estructurado en forma de tabla la información puede leerse y guardarse con las funciones `readdlm` y `writedlm` del módulo `DelimitedFiles`, respectivamente, o con funciones equivalentes de otros paquetes como `CSV`, etc. A continuación se presentan otras funciones y rutinas para leer y escribir datos en ficheros de texto con estructuras artibrarias.
+Los ficheros de texto son una forma habitual y muy práctica (aunque no la más eficiente) de guardar datos. Como se ha visto en el capítulo sobre [tablas de datos](2-series-tablas.md), cuando el texto está estructurado en forma de tabla la información puede leerse y guardarse con las funciones `readdlm` y `writedlm` del módulo `DelimitedFiles`, respectivamente, o con funciones equivalentes de otros paquetes como `CSV`, etc. A continuación se presentan otras funciones y rutinas para leer y escribir datos en ficheros de texto con estructuras artibrarias.
 
 ### Funciones de de lectura
 

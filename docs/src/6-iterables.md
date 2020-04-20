@@ -10,7 +10,7 @@ Por ejemplo, `1:1.5:6` representa los números 1.0, 2.5, 4.0 y 5.5 (el 6 es el l
 
 !!! note
 
-    El operador `:` usado en estas expresiones tiene menos precedencia que los operadores aritméticos como la suma (`+`), la multiplicación (`*`), etc. Esto significa que por ejemplo `4 + 1:10` es lo mismo que `5:10`. Para sumar 4 a todos los valores del rango `1:10` se habría de escribir `4 .+ (1:10)`. (Nótese también que es necesario hacer el [*broadcasting*](arrays.md#Broadcasting-1) al operador de la suma.)
+    El operador `:` usado en estas expresiones tiene menos precedencia que los operadores aritméticos como la suma (`+`), la multiplicación (`*`), etc. Esto significa que por ejemplo `4 + 1:10` es lo mismo que `5:10`. Para sumar 4 a todos los valores del rango `1:10` se habría de escribir `4 .+ (1:10)`. (Nótese también que es necesario hacer el [*broadcasting*](5-arrays.md#Broadcasting-1) al operador de la suma.)
 
 Para mayor flexibilidad también se puede usar la función `range`, cuyo primer argumento es el valor en el que comienza el rango, y el resto de valores se define mediante una combinación de los argumentos con nombre `stop`, `length` y `step`, como en los siguientes ejemplos:
 
@@ -38,7 +38,7 @@ r = 1:4
 collect(r)
 ```
 
-### Diccionarios
+## Diccionarios
 
 Los diccionarios (objetos de tipo `Dict`) son colecciones de datos que, al contrario que los *arrays* y los rangos, no identifican sus elementos por su posición en el conjunto, sino a través de una tabla de "claves" (*keys*). Hay muchas circunstancias en las que es interesante emplear estas series asociativas, aunque los diccionarios son particularmente útiles cuando el conjunto de claves no está predeterminado ni sigue un orden específico. Un buen ejemplo puede ser un conjunto de datos como la siguiente tabla de población por continente (datos de 2010, en millones de personas, según [bases de datos de la ONU](https://population.un.org/wpp/Download/Standard/Population/)).
 
@@ -99,14 +99,14 @@ delete!(dic_poblacion, "Antártida")
 
 El conjunto de claves presentes en un diccionario no es algo tan sencillo de delimitar como las posiciones válidas de un *array*. Por esta razón existe la función `haskey`, que permite averiguar si un diccionario tiene alguna clave en particular:
 
-```@repl
+```@repl c6
 haskey(dic_poblacion, "Asia")
 haskey(dic_poblacion, "Norteamérica")
 ```
 
 Además, con la función `get` se puede "preguntar" de forma segura a un diccionario por el valor asociado a una clave, definiendo un valor por defecto para los casos en los que dicha clave no exista:
 
-```@repl
+```@repl c6
 get(dic_poblacion, "Norteamérica", -1)
 ```
 
@@ -293,6 +293,10 @@ end
 cuadrados
 ```
 
+!!! tip
+    
+    El superíndice numérico que se ha utilizado para expresar los exponentes es un carácter especial, que se pueden escribir en la REPL de Julia con la secuencia de escape `\^2`, seguidas del tabulador.
+
 Una forma más compacta de hacer esto esto es mediante lo que en inglés se llama *comprehension*. Este recurso se suele utilizar cuando contenido de un bucle `for` es una línea cuya única finalidad es "rellenar" una colección. En este caso, el código equivalente a todo lo anterior sería:
 
 ```julia
@@ -321,18 +325,14 @@ Supongamos que queremos ampliar la tabla de potencias, para que además de los c
 ```@example c6
 exponentes = [2,3]
 superindices = ["²", "³"]
-potencias = Array{String}(undef, 5, 2)
-for i = 1:5
+potencias = Array{String}(undef, 10, 2)
+for i = 1:10
     for j = 1:2
         potencias[i, j] = "$(i)$(superindices[j]) = $(i^exponentes[j])"
     end
 end
 potencias
 ```
-
-!!! tip
-    
-    Los superíndices numéricos que se han utilizado para expresar los exponentes son caracteres especiales, que se pueden escribir en la REPL de Julia con las secuencias de escape `\^2`, `\^3`, etc., seguidas del tabulador.
 
 Pero en casos como estos, en los que las operaciones del bucle interno no dependen de lo que se ha hecho en el externo, podemos hacer el conjunto de bucles más compacto con un solo `for` combinado:
 
