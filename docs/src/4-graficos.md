@@ -4,7 +4,7 @@
 cp("../../datos/", "./datos")
 ```
 
-En los capítulos anteriores de esta guía hemos hecho un tratamiento superficial, incluso podría decirse que apresurado, de unos pocos aspectos básicos en los que muchos otros manuales, sean de Julia o cualquier otro lenguaje de programación, suelen ser más detallados en sus capítulos introductorios. En este capítulo dedicado a los gráficos, sin embargo, vamos a detenernos más a pesar de que es una funcionalidad bastante avanzada, y requiere instalar algunos paquetes auxiliares y librerías externas para empezar.
+En los capítulos anteriores de esta guía hemos hecho un tratamiento superficial, incluso podría decirse que apresurado, de unos pocos aspectos básicos en los que muchos otros manuales, sean de Julia o cualquier otro lenguaje de programación, suelen ser más detallados en sus capítulos introductorios. En este capítulo dedicado a los gráficos, sin embargo, vamos a detenernos más a pesar de que es una funcionalidad bastante avanzada, y requiere instalar algunos paquetes auxiliares y herramientas externas para empezar.
 
 Hay una buena razón para hacerlo así. El usuario de una herramienta informática normalmente no juzga si una tarea es "básica" o "avanzada" según las complejidades que supone para esa herramienta, sino por cuestiones más prácticas. Y explorar visualmente los datos es una de las primeras cosas que se suele hace después de recogerlos, como mínimo para valorar si parecen correctos o hay algún tipo de anomalía. En este sentido los gráficos podrían considerarse como una de las tareas más básicas. De hecho no es raro que el ansia por ver qué pinta tienen los datos conduzca a atajos "sucios y rápidos", como abrir los ficheros con una hoja de cálculo e improvisar gráficas con un par de *clicks* de ratón, antes de empezar los preparativos para un análisis más formal.
 
@@ -12,11 +12,13 @@ Parece lógico, por tanto, que las instrucciones para crear gráficos también s
 
 ## Paquetes de gráficos para Julia
 
-Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías necesarias y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [GRUtils](https://github.com/heliosdrm/GRUtils.jl), que proporciona una buena experiencia como primera contacto con los gráficos en Julia, por la forma en que combina rapidez y facilidad de uso con potencia y versatilidad de los gráficos generados.
+Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías gráficas[^1] necesarias y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [GRUtils](https://github.com/heliosdrm/GRUtils.jl), que proporciona una buena experiencia como primera contacto con los gráficos en Julia, por la forma en que combina rapidez y facilidad de uso con potencia y versatilidad de los gráficos generados.
 
 Hay muchos otros paquetes recomendables para hacer gráficos en Julia. El más conocido es [Plots](https://github.com/JuliaPlots/Plots.jl), que proporciona una interfaz común para manejar muchas librerías gráficas, lo que le confiere una mayor versatilidad y potencia. Para gráficos más sofisiticados o que requieran mayor nivel de personalización que el que proporciona GRUtils, Plots es una magnífica opción, aunque más pesada en términos de instalación y velocidad.
 
 Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl), basado en la librería gráfica que se suele usar con Python, [VegaLite](https://github.com/queryverse/VegaLite.jl) para hacer sofisticados gráficos interactivos, o [UnicodePlots](https://github.com/Evizero/UnicodePlots.jl) en el otro extremo, para crear gráficos basados en caracteres de texto sobre la consola de comandos. Una vez se ha "roto mano" con el lenguaje, y si se dispone de tiempo para ello, lo mejor es explorar distintos paquetes para escoger el que mejor se adapta a las necesidades y limitaciones de cada uno.
+
+[^1]: "Librería gráfica" es una traducción macarrónica del inglés *graphic library*, que designa un conjunto de herramientas de software, utilizadas por el sistema operativo para hacer operaciones gráficas (crear y manipular ventanas en pantalla, generar archivos gráficos, "dibujar" formas geométricas en dichas ventanas y archivos, etc.)
 
 
 ## Instalación de GRUtils
@@ -44,7 +46,7 @@ using DelimitedFiles
 datos = readdlm("datos/series/sA01.txt")
 # Cargamos el paquete GRUtils y utilizamos la función `plot`
 using GRUtils
-GRUtils.GR.inline("svg") # hide
+GRUtils.GR.inline("png") # hide
 Figure(); # hide
 x = datos[:,1]
 y = datos[:,2]
@@ -266,7 +268,7 @@ savefig(f, "ejemplo.png")
 
 Ambas líneas de este ejemplo crean un archivo de imagen llamado `"ejemplo.png"`. En el primer caso la imagen tendrá el contenido de la figura actual; en el segundo el de la figura guardada en la variable `f`.
 
-El tipo de archivo dependerá de la extensión indicada en su nombre. En este ejemplo se crea un mapa de bits en formato PNG. En el caso de querer una imagen vectorial, se podría haber salvado con la extensión SVG (ideal para web) o PDF, según el uso que se le vaya a dar. Según las librerías instaladas en el sistema puede haber más o menos formatos disponibles.
+El tipo de archivo dependerá de la extensión indicada en su nombre. En este ejemplo se crea un mapa de bits en formato PNG. En el caso de querer una imagen vectorial, se podría haber salvado con la extensión SVG (ideal para web) o PDF, según el uso que se le vaya a dar. Según las herramientas instaladas en el sistema puede haber más o menos formatos disponibles.
 
 ## Sumario del capítulo
 

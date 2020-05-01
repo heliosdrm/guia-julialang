@@ -133,7 +133,7 @@ cadena == unescape_string(cadena2)
 Por otro lado, cuando se quiere escribir un texto que contiene varias barras invertidas (por ejemplo rutas de archivos en Windows) o símbolos del dólar, puede resultar engorroso añadir las barras "extra" que se necesitan para crear las secuencias de escape. Esto se puede evitar etiquetando las cadenas con el prefijo `raw`, como en el ejemplo que sigue:
 
 ```@repl
-s = raw"C:\Windows\xxx.$$$"
+s = raw"C:\Windows\xxx.txt"
 print(s)
 ```
 
@@ -241,7 +241,7 @@ cadena[1:1]
 
 ### Cadenas con caracteres Unicode
 
-Julia permite trabajar con el conjunto completo de caracteres [Unicode](https://home.unicode.org/), diseñado para incluir los símbolos de todos los alfabetos del mundo. Distintos diseños de teclado (sobre todo dependiendo de su ámbito regional) proporcionan distintos subconjuntos de caracteres que pueden introducirse directamente. Y según el sistema operativo y el contexto en el que se esté programando (REPL, editor de código, etc.) se puede disponer de herramientas auxiliares para escribir conjuntos más amplios de caracteres. En particular, en el REPL de Julia y en otros entornos que usan sus mismas herramientas, se puede escribir el nombre del carácter como si fuera una secuencia de escape y pulsar el tabulador para convertirlo en el cáracter deseado. La lista de caracteres que se pueden escribir de esta manera y sus secuencias asociadas está publicada en la sección [Unicode Input del manual de Julia](https://docs.julialang.org/en/v1/manual/unicode-input/).
+Julia permite trabajar con el conjunto completo de caracteres [Unicode](https://home.unicode.org/), diseñado para incluir los símbolos de todos los alfabetos del mundo. Distintos diseños de teclado (sobre todo dependiendo de su ámbito regional) proporcionan distintos subconjuntos de caracteres que pueden introducirse directamente. Y según el sistema operativo y el contexto en el que se esté programando (REPL, editor de código, etc.) se puede disponer de herramientas auxiliares para escribir conjuntos más amplios de caracteres. En particular, en el REPL de Julia y en otros entornos que usan sus mismas herramientas, se puede escribir el nombre del carácter como si fuera una secuencia de escape y pulsar el tabulador para convertirlo en el cáracter deseado. La lista de caracteres que se pueden escribir de esta manera y sus secuencias asociadas está publicada en la sección ["Unicode Input" del manual de Julia](https://docs.julialang.org/en/v1/manual/unicode-input/).
 
 Una cuestión a considerar cuando se usan caracteres que no pertenecen al rango US-ASCII o ASCII básico (los primeros 256 caracteres), es que considerar dos formas de medir la longitud de las cadenas de texto:
 

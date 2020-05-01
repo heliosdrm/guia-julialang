@@ -1,6 +1,6 @@
 using Documenter
 
-makedocs(sitename="Guía de Julia",
+makedocs(sitename="Programación básica con Julia",
     pages = [
         "0-introduccion.md",
         "1-primerospasos.md",

@@ -4,15 +4,16 @@
 cp("../../datos/", "./datos")
 ```
 
+En los capítulos anteriores se han explorado las nociones básicas sobre los elementos necesarios para hacer programas en Julia. Llegados a este punto, podemos revisitar y explorar en más profundidad cada uno de los conceptos estudiados, para sacarles el máximo provecho.
 
-En el capítulo sobre el [manejo de conjuntos de datos](2-series-tablas.md) ya se han visto por encima algunos aspectos elementales de la creación y manejo de vectores y matrices de datos, que son casos particulares de lo que se conoce como *arrays*: series organizadas de datos que pueden tener una, dos o más dimensiones. En el presente capítulo veremos más detalles sobre este tipo de variables, que son un elemento fundamental en la mayoría de cálculos numéricos, y por lo tanto conviene dominar desde un principio. Además, estos detalles servirán como introducción práctica a otros asuntos importantes para la programación en Julia.
+Empezaremos por el de las variables conocidas como *arrays*, entre las que se cuentan los vectores y las matrices que se introdujeron en el capítulo sobre [series y tablas de datos](2-series-tablas.md). Los *arrays* son series organizadas de datos que pueden tener una, dos o más dimensiones. En el presente capítulo veremos más detalles sobre este tipo de variables, que son un elemento fundamental en la mayoría de cálculos numéricos, y por lo tanto conviene dominar desde un principio. Además, estos detalles servirán como introducción práctica a otros asuntos importantes para la programación en Julia.
 
 
 ## Sintaxis para la creación de *arrays*
 
 ### Vectores
 
-Hay distintas formas de crear y componer *arrays*, algunas de las cuales ya se han visto en el capítulo sobre manejo de datos. El caso más sencillo es el de los vectores, que recordemos que son *arrays* unidimensionales, que se puede definir escribiendo los valores entre corchetes, separados por comas:
+Hay distintas formas de crear y componer *arrays*, algunas de las cuales ya se han visto en el capítulo 2. El caso más sencillo es el de los vectores, que recordemos que son *arrays* unidimensionales, que se puede definir escribiendo los valores entre corchetes, separados por comas:
 
 ```@repl
 numeros = [1,2,3,4]
@@ -677,7 +678,7 @@ m .+ m2 # suma de elementos
 
 !!! tip
 
-    Aunque los resultados sean iguales, el proceso de cálculo de la suma matricial es distinto. Una diferencia práctica es que la suma matricial no realiza *broadcasting*; pero por otro lado las librerías de cálculo de álgebra lineal están extraordinariamente optimizadas, lo que significa que para matrices grandes la suma matricial es mucho  más rápida.
+    Aunque los resultados sean iguales, el proceso de cálculo de la suma matricial es distinto. Una diferencia práctica es que la suma matricial no realiza *broadcasting*; pero por otro lado las funciones de cálculo de álgebra lineal están extraordinariamente optimizadas, lo que significa que para matrices grandes la suma matricial es mucho  más rápida.
 
 Para cualquier otra operación, no tiene nada que ver hacer el cálculo con la matriz completa o con sus elementos individuales:
 

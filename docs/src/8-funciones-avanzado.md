@@ -300,7 +300,7 @@ Los contextos (*scopes* en ingles) son los fragmentos de código en los que "viv
 
 Aunque esta nomenclatura puede hacer pensar que el contexto global es único, en una sesión de Julia pueden manejarse varios contextos globales simultáneamente, aunque en lo que sigue solo vamos a ocuparnos de uno de ellos, el llamado `Main`. Durante una sesión de trabajo interactiva, cada vez que creamos una variable, por ejemplo mediante una asignación como `x = 1`, la variable toma este contexto, y decimos que es una "variable global".
 
-!!! tip Nombre de los contextos
+!!! tip "Nombre de los contextos"
 
     Los contextos globales siempre tienen un nombre, como es el caso de `Main`, que puede usarse para designar a los objetos contenidos en él. A esta variable `x` que pertenece a `Main` podría hacérsele referencia como `Main.x`.
     
@@ -344,7 +344,7 @@ Cada variable es reconocible por todo el código dentro de los límites de su co
 
 Como las variables de un contexto local solo "viven" dentro del mismo, no es ningún problema definir variables con el mismo nombre en distintos bucles, funciones, etc. Se puede escribir `x = 1` en una función y `x = "abc"` en otra, sin que haya ningún tipo de interferencia entre ellas. Dicho en términos más técnicos, cada contexto local tiene su propio "espacio de nombres".
 
-Pero además, el espacio de nombres de un contexto local también es independiente del de su contexto global. Esto significa que a una variable local se le puede dar el mismo nombre que a otra de su conexto global, sin que se afecten entre ellas. Cuando se escribe `x = 1` dentro de una función, la variable `x` para esa función será una nueva variable local, y se ignorará cualquier otra `x` que pudiera existir en el contexto global. Por verlo con un ejemplo sencillo:
+Pero además, el espacio de nombres de un contexto local también es independiente del de su contexto global. Esto significa que a una variable local se le puede dar el mismo nombre que a otra de su conexto global, sin que una afecte a la otra. Cuando se escribe `x = 1` dentro de una función, la variable `x` para esa función será una nueva variable local, y se ignorará cualquier otra `x` que pudiera existir en el contexto global. Por verlo con un ejemplo sencillo:
 
 ```@repl
 x = 1
@@ -369,7 +369,7 @@ Si por algún motivo particular se desea crear o redefinir una variable global e
 
 También se podría escribir `local x` para declarar explícitamente que `x` es una variable local. Esto no es generalmente necesario dentro de los contextos locales, pero puede ayudar a evitar confusiones cuando hay coincidencia de nombres.
 
-### Conflictos de nombres en el REPL
+### Conflictos de nombres locales y globales en el REPL
 
 Como se ha comentado al comienzo de este capítulo, para programar de foma eficiente es recomendable encapsular la mayor cantidad de operaciones posibles en funciones, minimizando así el uso de variables globales. También se aconseja no redefinir las variables globales dentro de las funciones, lo cual reduce la necesidad de declarar variables globales dentro de los contextos locales.
 
@@ -392,6 +392,9 @@ Según las reglas presentadas arriba, esto haría que `fib` y `fib1` se consider
 
 Concretamente, en un caso como este se asume que `fib` y `fib1` dentro del bucle hacen referencia a las variables globales del mismo nombre, aunque se redefinan en el código del contexto local --mostrando un *warning* para avisar de la posible inconsistencia--. Esta excepcional inversión de las reglas facilita que se pueda "copiar y pegar" código de la REPL al interior de las funciones, a pesar de que los contextos sean distintos.
 
+!!! warning "Diferencias entre versiones de Julia"
+
+    Esta regla especial para facilitar el uso de bucles en el REPL se introdujo en la versión 1.5 de Julia. En versiones anteriores, entre la 1.0 y la 1.4, habría que declarar explícitamente a `fib` y `fib1` como `global` dentro del bucle.
 
 ## Sumario del capítulo
 
@@ -399,7 +402,7 @@ En este capítulo se han explicado cómo se definen y usan las funciones anónim
 
 Por otro lado, se han visto algunas herramientas nuevas como:
 
-* La librería `Dates` para trabajar con variables que representan fechas.
+* El módulo `Dates` para trabajar con variables que representan fechas.
 * Los bloques `begin`-`end` y las expresiones `let`.
 * Algunas funciones para buscar elementos de una colección que cumplen una condición determinada (`findfirst`, `findlast`, `findall`).
 * Las funciones `isodd` e `iseven` para determinar si un número es par o impar.

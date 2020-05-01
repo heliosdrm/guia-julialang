@@ -5,9 +5,9 @@ La potencia de un lenguaje de programación se encuentra a la hora de implementa
 * Funciones que encapsulen "trozos" de código con el fin de reutilizarlos o simplificar el código fuente.
 * Estructuras de control para definir flujos condicionales e iterativos en la ejecución del código.
 
-En los ejemplos de los capítulos anteriores ya hemos visto ejemplos de funciones y estructuras de control, que se han presentado sin apenas explicaciones. En este capítulo vamos a dar las explicaciones básicas para entenderlas y utilizarlas, ya que son una parte fundamental de cualquier lenguaje de programación, aunque sin entrar en ciertos detalles avanzados que se dejan para capítulos específicos más adelante.
+En los capítulos anteriores ya hemos visto ejemplos de funciones y estructuras de control, que se han presentado sin apenas explicaciones. En este capítulo vamos a dar las explicaciones básicas para entenderlas y utilizarlas, ya que son una parte fundamental de cualquier lenguaje de programación, aunque sin entrar en ciertos detalles avanzados que se dejan para capítulos específicos más adelante.
 
-Pero siguiendo el esquema habitual, vamos a comenzar con un ejemplo más que nos servirá como guía para las explicaciones posteriores
+Siguiendo el esquema habitual, comenzamos con un ejemplo más que nos servirá como guía para las explicaciones posteriores.
 
 ## Ejemplo: "hoja de calendario"
 
@@ -19,9 +19,9 @@ Vamos a crear un programa que toma como entrada los números de un mes y un año
     * Una primera fila con los nombres de los días de la semana.
     * Celdas en blanco en la segunda fila hasta llegar al primer día del mes.
     * Celdas numeradas secuencialmente en varias filas, hasta llegar al último día del mes.
-    * Celdas en blanco tras el último día hasta completar la última semana.
+    * Celdas en blanco tras el último día, hasta completar la última semana.
 
-El primer paso lo podemos resolver con la función [`gauss_diasemana`](1-primerospasos.md#gauss_diasemana) que se presentó en el capítulo 1. Pero como esa función devuelve el día de la semana en forma de texto, necesitamos la lista de días para convertirlo en número. Si consideramos que la semana comienza el lunes, esta lista es:
+El primer paso lo podemos resolver con la función [`gauss_diasemana`](1-primerospasos.md#gauss_diasemana) que se presentó en el capítulo 1. Pero como esa función devuelve el día de la semana en forma de texto, necesitamos la lista de días para convertirlo en un número. Si consideramos que la semana comienza el lunes, esta lista es:
 
 ```@setup c3
 include("../../scripts/calc_diasemana.jl")
@@ -32,15 +32,19 @@ listadias = ["lunes","martes","miércoles","jueves","viernes","sábado", "doming
 nothing # hide
 ```
 
-La función `primerdia` que se presenta a continuación utiliza esta lista y la función `searchsortedfirst`, para encontrar la posición de la lista que coincide con el resultado de `gauss_diasemana`:
+La función `numero_primer_dia` que se presenta a continuación utiliza esta lista y la función `findfirst`, para encontrar la primera (y única) posición de la lista que coincide con el resultado de `gauss_diasemana`:[^1]
 
 ```@example c3
 function numero_primer_dia(m, y)
     primerdia = gauss_diasemana(1, m, y)
-    return searchsortedfirst(listadias, primerdia)
+    return findfirst(primerdia .== listadias)
 end
 nothing # hide
 ```
+
+[^1]: Esta no es una forma muy eficiente de buscar la posición de `primerdia` en `listadias`, aunque es simple y para conjuntos de datos pequeños funciona bien.
+
+devuelve un vector de índices, porque podría darse el caso de que el elemento a buscar estuviese repetido en varias posiciones. Si el elemento buscado no estuviera en la lista, el único elemento del vector sería un `Nothing` --un elemento que representa un resultado nulo--.
 
 El segundo paso (contar el número de días) es trivial para todos los meses excepto para febrero, que depende de que el año sea bisiesto o no. Para resolver este problema definimos la función `es_bisiesto`, que compara si un supuesto 29 de febrero caería en el mismo día de la semana que el 1 de marzo, y devuelve el valor "verdadero" (`true`) si los días no coinciden (el año es bisiesto), o "falso" (`false`) en caso contrario:
 
@@ -64,10 +68,13 @@ end
 nothing # hide
 ```
 
-La composición del calendario la hace la función `calendario_html` que se presenta a continuación. Esta función comienza llamando a las dos que hemos definido antes, y continúa escribiendo el código HTML en la variable `tablahtml`, una cadena de texto que se va ampliando paso a paso. Esta cadena de texto comienza siendo la etiqueta `<table>` que marca el inicio de una tabla, y finaliza con la etiqueta de cierre `</table>`. Cada fila se enmarca entre las etiquetas `<tr>`, `</tr>`, y cada celda dentro de una fila entre `<td>` y `</td>`.
+La composición del calendario la hace la función `calendario_html` que se presenta a continuación. Esta función comienza llamando a las dos que hemos definido antes, y continúa escribiendo el código HTML en la variable `tablahtml`, una cadena de texto que se va ampliando paso a paso. Esta cadena de texto comienza siendo la etiqueta `<table>` que marca el inicio de una tabla, y finaliza con la etiqueta de cierre `</table>`. Cada fila se enmarca entre las etiquetas `<tr>`, `</tr>`, y cada celda dentro de una fila entre `<td>` y `</td>`.[^2]
 
-Para ampliar la cadena de texto `tablahtml` con un texto determinado se utiliza la operación de "concatenar texto", que se representa como una multiplicación. `texto1 = texto1 * texto2"` significa "concatenar la cadena de texto contenida en la variable `texto1` con `texto2`, y guardar el resultado de nuevo en `texto1`". Esta operación se escribe de forma abreviada como `texto1 *= texto2`. También utilizamos la operación de "interpolación" descrita en el capítulo anterior. Por ejemplo, la cadena de texto "<td>$nd</td>" representa el código HTML para una celda con el valor de la variable `nd` interpolado. La cadena de texto completa se convierte al final de la función en un bloque de código HTML, con la función `HTML`.
+[^2]: Véase la estructura de tablas HTML en [https://www.w3schools.com/html/html_tables.asp](https://www.w3schools.com/html/html_tables.asp).
 
+Para ampliar la cadena de texto `tablahtml` con un texto determinado usamos la operación de concatenación de textos, con instrucciones del tipo `tablahtml *= texto`, que es una forma abreviada de escribir `tablahtml = tablahtml * texto"`. También utilizamos la operación de "interpolación" descrita en el capítulo anterior. Por ejemplo, la cadena de texto `"<td>$nd</td>"` representa el código HTML para una celda con el valor de la variable `nd` interpolado. La cadena de texto completa se convierte al final de la función en un bloque de código HTML, con la función `HTML`.
+
+El código de la función es el siguiente. Aunque pueda resultar algo críptico a primera vista, a lo largo de este capítulo iremos desentrañando sus distintas partes:
 
 ```@example c3
 """
@@ -201,7 +208,7 @@ Este vector de dos números se puede pasar a la función `calendario_html` como 
 julia> calendario_html(numeros...)
 ```
 
-Este operador tiene también un uso simétrico. El declarar los argumentos de entrada en una función, el último de ellos puede escribirse con puntos suspensivos. Esto significa que a partir de su posición puede ponerse un número variable de argumentos (incluso ninguno), de tal manera que todos ellos se recogerán en una sola variable.
+Este operador tiene también un uso simétrico. Al declarar los argumentos de entrada en una función, el último de ellos puede escribirse con puntos suspensivos. Esto significa que a partir de su posición puede ponerse un número variable de argumentos (incluso ninguno), de tal manera que todos ellos se recogerán en una sola variable.
 
 Esto ocurre, por ejemplo, con la función `joinpath` que se usa para componer la ruta de un archivo o directorio. Su declaración es:
 
@@ -209,7 +216,7 @@ Esto ocurre, por ejemplo, con la función `joinpath` que se usa para componer la
 function joinpath(parts...)
 ```
 
-Esta declaración significa que se puede introducir cualquier número de argumentos, los cuales se agruparán como elementos de una sola variable, que en el código de la función reconocerá con el nombre `parts`.
+Esta declaración significa que se puede introducir cualquier número de argumentos, los cuales se agruparán como elementos de una sola variable, que el código de la función reconocerá con el nombre `parts`.
 
 #### Argumentos con valores por defecto
 
@@ -326,7 +333,7 @@ Finalmente, dentro de una función también se pueden usar variables definidas e
 
 Esta capacidad de las funciones para reconocer objetos globales, definidos fuera de su contexto local, no solo es útil para poder reutilizar variables, sino que es crucial para que las funciones puedan llamarse entre ellas --ya que las funciones son objetos al igual que otras variables--.
 
-!!! note ¡Cuidado con los objetos mutables! 
+!!! note "¡Cuidado con los objetos mutables!" 
 
     Aunque una variable global normalmente no pueda redefinirse dentro de una función, lo que sí puede ocurrir con un objeto global mutable (como el vector `listadias`), es que su contenido se modifique sin redefinir las variables. Lo mismo ocurre si se pasa un objeto mutable como argumento: aunque se asigne a una variable local, las modificaciones que se hagan a su contenido (sin haber reasignado otro valor a la variable) se reflejarán en la variable externa original.
 
@@ -377,7 +384,7 @@ La condición asociada a los bloques `if` o `elseif`, así como al operador tern
 * `a <= b` (`true` si `a` es menor o igual que `b`)
 * `a >= b` (`true` si `a` es mayor o igual que `b`)
 
-Algunos de estos operadores de comparación pueden escribirse de forma más "elegante", usando los símbolos matemáticos correspondientes. Como dichos símbolos no suelen estar disponibles en los teclados, los principales interfaces para Julia permiten escribirlos a partir de "secuencias de escapes". Por ejemplo, el símbolo de "menor o igual que" (`≤`) se escribiría con la secuencia de escape `\le` (del inglés *less or equal*), pulsando el tabulador a continuación para convertirla en el símbolo deseado. Los símbolos matemáticos correspondientes a los operadores anteriores son:
+Algunos de estos operadores de comparación pueden escribirse de forma más "elegante", usando los símbolos matemáticos correspondientes. Como dichos símbolos no suelen estar disponibles en los teclados, los principales interfaces para Julia permiten escribirlos a partir de "secuencias de escapes". Los símbolos matemáticos correspondientes a los operadores anteriores son:
 
 |operador | símbolo | sec. de escape |
 |:-------:|:-------:|:--------------:|
@@ -544,7 +551,7 @@ En la primera iteración se ejecutaría la línea `x = 1`, y en la segunda inten
 
 Para hacer algo así, sería necesario definir primero la variable `x` *antes* del bucle. Esto es lo que se hace, por ejemplo, con la variable `tablahtml`, que se redefine dentro de varios bucles en el ejemplo del calendario.
 
-Hay algunas excepciones y matices que comentar en relación con el contexto de las variables en funciones, bucles y otras estructuras, que se comentan más detalladamente en el [capítulo 8](8-funciones-avanzado.md).
+Hay algunas excepciones y matices que comentar en relación con el contexto de las variables en funciones, bucles y otras estructuras, que se comentan más detalladamente en la sección sobre [Variables globales y locales](@ref) en el capítulo 8.
 
 ### Interrupción de bucles
 
@@ -635,6 +642,7 @@ También hemos visto algunas operaciones y funciones que son de utilidad para tr
 
 Finalmente, en los distintos ejemplos también hemos visto otras operaciones y funciones nuevas, como:
 
+* La función `findfist` para buscar el primer valor no nulo de una colección.
 * La concatenación de textos con el operador `*`.
 * La función `uppercase` para convertir textos a mayúsculas.
 * La función `joinpath` para crear rutas de archivos.

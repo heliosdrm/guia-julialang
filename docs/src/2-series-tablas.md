@@ -12,18 +12,18 @@ En un uso productivo de un lenguaje de programación no nos limitamos a introduc
 <div id="ejemplo_series" />
 ```
 
-Pongamos el siguiente caso. Tenemos un conjunto de datos extraidos de un experimento, consistente en 30 series de datos semejantes a la mostrada abajo -- aunque en algunos casos la señal aparece invertida--. Estos datos se encuentran grabados en los archivos de texto contenidos en la carpeta `datos/series/` en el repositorio de esta guía [https://github.com/heliosdrm/guia-julialang](https://github.com/heliosdrm/guia-julialang/).
+Pongamos el siguiente caso. Tenemos unas medidas de un experimento, consistente en 30 series de datos semejantes a la mostrada abajo -- aunque en algunos casos la señal aparece invertida--. Estos datos se encuentran grabados en los archivos de texto contenidos en la carpeta `datos/series/` en el repositorio de esta guía [https://github.com/heliosdrm/guia-julialang](https://github.com/heliosdrm/guia-julialang/).
 
-Cada uno de estos archivos tiene 100 líneas con dos columnas de datos separadas por tabuladores: la primera columna es una línea de tiempos equiespaciada que varía entre 0.01 y 1.00, y la segunda contiene las series de datos.
+Cada uno de estos archivos tiene 100 líneas con dos columnas de números separadas por tabuladores: la primera columna es una línea de tiempos equiespaciada que varía entre 0.01 y 1.00, y la segunda contiene los valores de las medidas.
 
 ```@example c2
 using DelimitedFiles, GRUtils # hide
-GRUtils.GR.inline("svg") # hide
+GRUtils.GR.inline("png") # hide
 datos = readdlm("datos/series/sA12.txt") # hide
 plot(datos[:,1],datos[:,2]) # hide
 ```
 
-En todos los casos las series tienen una forma semejante: comienzan fluctuando ligeramente en torno a cero, hasta que en un momento la curva asciende (o desciende) hasta un valor máximo (positivo o negativo) y luego vuelve a un esado de reposo cercano a cero. Supongamos que en nuestro estudio el hecho de que el extremo sea positivo o negativo es irrelevante (podría ser causado por haber invertido el sistema de medida), y que queremos crear una tabla con el valor extremo de cada serie y el instante en el que se alcanza. El código para construir la tabla de datos, que iremos explicando a lo largo del capítulo, es el siguiente:
+En todos los casos las series tienen una forma semejante: comienzan fluctuando ligeramente en torno a cero, hasta que en un momento la curva asciende (o desciende) hasta un valor máximo (positivo o negativo) y luego vuelve a un esado de reposo cercano a cero. Supongamos que en nuestro estudio el hecho de que el extremo sea positivo o negativo es irrelevante (podría ser causado por haber invertido el sistema de medida), y que queremos crear una tabla con el valor extremo de cada serie y el instante en el que se alcanza. El código para construir la tabla de datos, que iremos analizando a lo largo del capítulo, es el siguiente:
 
 ```@example c2
 # Leemos los nombres de los archivos del directorio "series"
@@ -60,27 +60,25 @@ Para terminar escribimos los datos en una matriz con tres columnas:
 resultados = [archivos tiempos extremos]
 ```
 
-Si se tiene experiencia previa en programación, este código probablemente sea lo bastante intuitivo como para seguirlo sin más explicaciones. En caso contrario, lo mejor para entenderlo es ejecutarlo línea a línea y ver los resultados en una sesión interactiva de Julia.
+Si tienes experiencia previa en programación, este código probablemente sea lo bastante intuitivo como para seguirlo sin más explicaciones que los comentarios incorporados. En caso contrario, lo mejor para entenderlo es ejecutarlo línea a línea y ver los resultados en una sesión interactiva de Julia.
 
-La única parte en la que esto servirá de poca ayuda es en el fragmento indentado entre `for i=1:n` y `end`. Se trata de un "bucle `for`", que sirve para repetir ese fragmento de código múltiples veces (una por cada uno de los archivos de datos). Todo ese código se trata en bloque, como si fuera una gran instrucción, y no se pueden examinar los valores intermedios.
+La única parte en la que esto servirá de poca ayuda es en el fragmento indentado entre `for i=1:n` y `end`. Se trata de un "bucle `for`", que sirve para repetir ese fragmento de código múltiples veces (una por cada uno de los archivos de datos). Todo ese código se trata en bloque, como si fuera una gran instrucción, y no se pueden examinar los valores intermedios. (Véase la sección del siguiente capítulo sobre [bucles](3-funciones-control.md#Bucles-1) para más detalles.)
 
 Una forma de ver lo que pasa es sustituir la línea `for i=1:n` por `i = 1`, y eliminar la línea con `end`. Esto será como ejecutar únicamente la primera iteración del bucle (la correspondiente al primer archivo), pudiéndolo hacer paso a paso, como el resto del código.
 
-
-!!! note
-
-    Los bucles `for` se explican, junto con otras estructuras básicas, en el [capítulo 3](3-funciones-control.md) a continuación de este.
-
-
 ## Números escalares y series de números
 
-Cuando se habla de "datos" o "variables", lo más inmediato es pensar en números, que es también el tipo de datos para el que es más sencillo escribir instrucciones. Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones: los nombres de las funciones y la sintaxis de las operaciones numéricas es común a muchos otros lenguajes de programación, y consisten esencialmente en una transposición a texto simple de las fórmulas matemáticas correspondientes a la operación que se desea realizar. En Julia este principio se lleva incluso más lejos que en otros lenguajes; por ejemplo:
+Cuando se habla de "datos" o "variables", lo más inmediato es pensar en números, que son también el tipo de datos con los que es más sencillo trabajar en la mayoría de lenguajes de programación, incluyendo Julia.[^1] Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones sobre cómo programar operaciones con variables numéricas: los nombres de las funciones y la sintaxis de las operaciones numéricas son iguales que en muchos otros lenguajes de programación, y en esencia son una transposición a texto simple de las fórmulas matemáticas que se desean implementar. Por ejemplo, para sumar los logartimos de las variables `a` y `b`, y asignar el resultado a la variable `x`, se escribe `x = log(a) + log(b)`, etc.
+
+En Julia, la capacidad de escribir código imitando fórmulas matemáticas se lleva incluso más lejos que en otros lenguajes; por ejemplo:
 
 * Si `a` es el nombre de una variable, `2a` significa "2 veces `a`" (y lo mismo con cualquier otro número, sea entero, decimal o de otro tipo). Esto es posible gracias a que los nombres de variables no pueden comenzar por números, por lo que no hay ambigüedad posible. En otros lenguajes es obligatorio expresarlo como un producto explícito, es decir `2*a`.
-* Se pueden utilizar símbolos matemáticos de Unicode para representar algunos operadores matemáticos habituales que no están en el conjunto de caracteres ASCII: `≠` para "no es igual que" (equivalente a `!=` cuando se escribe solo con ASCII), o `≤` y `≥` para "menor que" y "mayor que", respectivamente (equivalentes a `<=`, `>=`).
+* Se pueden utilizar símbolos matemáticos de Unicode para representar algunos operadores matemáticos habituales que no están en el conjunto de caracteres ASCII: `≠` para "no es igual que" (equivalente a `!=` cuando se escribe solo con ASCII), o `≤` y `≥` para "menor que" y "mayor que", respectivamente (equivalentes a `<=`, `>=`). Como dichos símbolos no suelen estar disponibles en los teclados, los principales interfaces para Julia permiten escribirlos a partir de "secuencias de escapes". Por ejemplo, el símbolo de "no es igual" (`≠`) se escribiría con la secuencia de escape `\neq` (del inglés *not equal*), pulsando el tabulador a continuación para convertirla en el símbolo deseado. En la documentación oficial de Julia se puede encontrar una lista completa de las secuencias de escape disponibles para [caracteres Unicode](https://docs.julialang.org/en/v1/manual/unicode-input).
 * Es posible escribir comparaciones lógicas concatenadas, como `0 ≤ x ≤ 1` para comprobar si la variable `x` se encuentra entre `0` y `1`. (En otros lenguajes es necesario expresarlo de forma más compleja, como `(0 <= x) && (x <= 1)`.
 
-Por otro lado, con mucha frecuencia las variables con las que interesa trabajar no representan números escalares, sino series organizadas de números o vectores. Esto ocurre con las siguientes variables del ejemplo anterior:
+[^1]: Los números son también el "vocabulario natural" de los ordenadores. Toda la información procesada en un programa informático se representa en última instancia mediante números, en particular como números binarios, y se manipula mediante operaciones matemáticas.  
+
+Por otro lado, con mucha frecuencia las variables con las que interesa trabajar no representan números escalares, sino series organizadas de números. Esto ocurre con las siguientes variables del ejemplo anterior:
 
 * `datos`: matrices de 100×2 que contienen los datos numéricos leídos directamente de los archivos.
 * `x`, `y`: vectores de 100 números con cada una de las dos columnas de `datos`.
@@ -92,17 +90,29 @@ En Julia los vectores y matrices (junto con las "hipermatrices" de más de dos d
 primos = [1,3,5,7,11,13,17];
 ```
 
-Es posible extraer un valor concreto del vector, utilizando también los corchetes para señalar el "índice" que se quiere tomar. Estos índices pueden ser números enteros, o la palabra clave `end` para referirse al último elemento:
+Es posible extraer un valor concreto del vector, utilizando también los corchetes para señalar el "índice" que se quiere tomar. Estos índices pueden ser números enteros, o las palabras clave `begin` y `end` para referirse al primer o al último elemento, respectivamente:
 
 ```@repl c2
 primos[3]
+primos[1] # cambiar a begin
 primos[end]
 primos[end-1]
 ```
 
-En el código del ejemplo, la expresión `x[indice_maximo]` precisamente sirve para extraer el valor del vector de tiempos en el punto donde se da el valor extremo de la señal (`indice_maximo` se obtiene a través de la función `findmax`, aplicada al vector con los valores absolutos de `y`).
+!!! note
 
-También vemos en el ejemplo que cuando estas expresiones se ponen a la izquierda del símbolo `=` lo que se hace no es "leer" un valor del vector, sino asignarle el valor calculado en la parte derecha de la ecuación, como ocurre con `tiempos[i] = ...` y `extremos[i] = ...`. A la hora de modificar un vector hay que tener en cuenta dos restricciones importantes: solo se pueden incorporar datos del mismo tipo que el vector original, y no se puede "rebasar" el tamaño del vector original. Por ejemplo:
+    El uso de `begin` como índice para referirse al primer elemento no funciona en versiones anteriores a Julia 1.4.
+
+En el programa para analizar las señales del ejemplo, vemos el uso de los corchetes para referirse a elementos particulares de un vector en líneas como las siguientes:
+
+```julia
+tiempos[i] = x[indice_maximo]
+extremos[i] = valor_maximo
+```
+
+Así, por ejemplo, la expresión `x[indice_maximo]` sirve para extraer el valor del vector de tiempos (`x`) en el punto donde se da el valor extremo de la señal (`indice_maximo` se obtiene a través de la función `findmax`, aplicada al vector con los valores absolutos de `y`).
+
+También vemos que cuando estas expresiones se ponen a la izquierda del símbolo `=` lo que se hace no es "leer" un valor del vector, sino asignarle el valor calculado en la parte derecha de la ecuación, como ocurre con `tiempos[i] = ...` y `extremos[i] = ...`. A la hora de modificar un vector hay que tener en cuenta dos restricciones importantes: solo se pueden incorporar datos del mismo tipo que el vector original, y no se puede "rebasar" el tamaño del vector original. Por ejemplo:
 
 ```jldoctest c2
 julia> numeros = [1,2,3,4,5,6];
@@ -118,15 +128,16 @@ julia> numeros[7] = 10  # Esto también, porque el vector solo tenía 6 elemento
 ERROR: BoundsError: attempt to access 6-element Array{Int64,1} at index [7]
 ```
 
-La lectura y asignación de valores se puede hacer elemento a elemento, o también sobre varios elementos a la vez, utilizando un "vector de índices" para referirse a los elementos de interés. Para abreviar, un rango de índices correlativos se puede expresar como `a:b`, que significa "desde `a` hasta `b`. Por ejemplo:
+La lectura y asignación de valores se puede hacer elemento a elemento, o también sobre varios elementos a la vez, utilizando un "vector de índices" para referirse a los elementos de interés. Para abreviar, un rango de índices correlativos se puede expresar como `a:b`, que significa "desde `a` hasta `b`.
+
+Por ejemplo, estas son dos formas alternativas para extraer los tres primeros números del vector `primos`:
 
 ```@repl c2
-# Dos alternativas para tomar los tres primeros números primos
 primos[ [1,2,3] ]
 primos[1:3]
 ```
 
-Para referirse a "todos los elementos" puede utilizarse el rango `1:end` (es decir, "desde el primero hasta el final"), o de forma abreviada los dos puntos sin más (`:`). Esto se emplea a menudo cuando se trabaja con matrices, para referirse a "todas las filas" o "todas las columnas". Aunque las operaciones con matrices las veremos con más detalle en el capítulo dedicado a ellas, en el ejemplo anterior ya podemos observar esto, en las líneas donde se extraen las dos columnas de la matriz `datos`. Por ejemplo, `x = datos[:,1]` expresa que a la variable `x` le asignamos "todas las filas de la primera columna" de `datos`.
+Para referirse a "todos los elementos" puede utilizarse el rango `begin:end` (es decir, "desde el primero hasta el final"), o de forma abreviada los dos puntos sin más (`:`). Esto se emplea a menudo cuando se trabaja con matrices, para referirse a "todas las filas" o "todas las columnas". Aunque las operaciones con matrices las veremos con más detalle en el capítulo 5, en el ejemplo anterior ya podemos observar esto, en las líneas donde se extraen las dos columnas de la matriz `datos`. Por ejemplo, `x = datos[:,1]` expresa que a la variable `x` le asignamos "todas las filas de la primera columna" de `datos`.
 
 Finalmente, también se puede aplicar una misma operación a todos los elementos de un *array* a la vez. Podemos ver un ejemplo de esto en la línea donde se busca el valor extremo de la señal:
 
@@ -136,7 +147,9 @@ Finalmente, también se puede aplicar una misma operación a todos los elementos
 
 La función `abs` calcula el valor absoluto de un número. Pero en este caso queremos calcular el valor absoluto de *todos* los valores de `y`, que se pasan en forma de otro vector a la función `findmax` para extraer el máximo de ellos. Para hacer este cálculo "elemento a elemento" (lo que se conoce como *vectorizar el código*), se ha añadido un punto tras el nombre de la función `abs`.
 
-Esta sintaxis no vale solo para las funciones, sino también para los operadores como la suma (`+`), multiplicación (`*`), etc., e incluso para la asignación (`=`), aunque en estos casos el punto se añade antes del símbolo. Por ejemplo, si `x` e `y` fuesen las coordenadas de un vector, el módulo de ese vector se podría calcular con la expresión `sqrt.(x.^2 + y.^2)`; y si tuviéramos otro vector `m` de la longitud adecuada, este resultado podría asignarse a ese vector -- sin tener que crear otro nuevo, del siguiente modo:
+Esta sintaxis no vale solo para las funciones, sino también para los operadores como la suma (`+`), multiplicación (`*`), etc., e incluso para la asignación (`=`), aunque en estos casos el punto se añade antes del símbolo.
+
+Por ejemplo, si `x` e `y` fuesen las coordenadas de un vector, el módulo de ese vector se podría calcular con la expresión `sqrt.(x.^2 + y.^2)`; y si tuviéramos otro vector `m` de la longitud adecuada, este resultado podría asignarse a ese vector --sin tener que crear otro nuevo--, del siguiente modo:
 
 ```julia
 m .= sqrt.(x.^2 + y.^2)
@@ -146,9 +159,11 @@ Como regla general, al vectorizar una operación todas las variables empleadas h
 
 ## Cadenas de texto y símbolos
 
-Julia es un lenguaje pensado especialmente para trabajar con números, pero también tiene herramientas para manejar cadenas de texto (*strings*). Las cadenas de texto son un tipo de datos más, que al igual que los números pueden organizarse en *arrays*; así, los nombres de los 30 archivos tratados en el ejemplo anterior se agrupan en el vector de *strings* llamado `archivos`, de tal modo que el nombre del primer archivo es `archivos[1]`, etc.
+Julia es un lenguaje pensado especialmente para trabajar con números, pero también tiene múltiples herramientas para manejar cadenas de texto (*strings*), que son un tipo importante de datos en muchas aplicaciones. De hecho, en casi cualquier programa es necesario hacer algún tratamiento de textos, aunque solo sea para definir las rutas de los archivos de entrada o salida. Así pues, aunque las cadenas de texto se trata con más profundidad en el [capítulo 7](7-strings.md), aquí introduciremos algunos conceptos fundamentales para empezar a trabajar con este tipo de variables. 
 
-Las cadenas de texto son esencialmente secuencias de letras que se presentan delimitadas por comillas dobles (`"`). En parte se pueden comparar a vectores de letras, ya que es posible extraer letras aisladas o partes del texto con la misma sintaxis que se utiliza con los *arrays*. Por ejemplo, supongamos que queremos extraer el nombre del archivo sin la extensión `.txt` del archivo que está en la posición `i` de la lista. Se trata de una operación que ya está programada en la función `splitext`; pero como la extensión que queremos eliminar tiene cuatro letras, se podría asignar el nombre sin extensión a la variable `sinextension` del siguiente modo:
+Las cadenas de texto son un tipo de datos más, que al igual que los números pueden organizarse en *arrays*; así, los nombres de los 30 archivos tratados en el ejemplo anterior se agrupan en el vector de *strings* llamado `archivos`, de tal modo que el nombre del primer archivo es `archivos[1]`, etc.
+
+Las cadenas de texto son secuencias de letras que se presentan delimitadas por comillas dobles (`"`). En parte se pueden comparar a vectores de letras, ya que es posible extraer letras aisladas o partes del texto con la misma sintaxis que se utiliza con los *arrays*. Por ejemplo, supongamos que queremos extraer el nombre del archivo sin la extensión `.txt` del archivo que está en la posición `i` de la lista. Se trata de una operación que ya está programada en la función `splitext`; pero como la extensión que queremos eliminar tiene cuatro letras, se podría asignar el nombre sin extensión a la variable `sinextension` del siguiente modo:
 
 ```@setup c2
 archivos = ["sA01.txt"]
@@ -170,7 +185,7 @@ letra = nombrearchivo[2]
 
 !!! note
 
-    Esta forma de extraer partes de una cadena de texto solo funciona de forma general con textos compuestos exclusivamente de caracteres ASCII. En el capítulo dedicado a [Cadenas y archivos de texto](7-strings.md) se explica cómo operar con cadenas que incluyen otro tipo de caracteres.
+    Esta forma de extraer partes de una cadena de texto solo funciona de forma general con textos compuestos exclusivamente de caracteres ASCII. En el [capítulo 7](7-strings.md) se explica cómo operar con cadenas que incluyen otro tipo de caracteres.
 
 Sin embargo, al contrario que los *arrays* convencionales, las cadenas de texto son objetos "inmutables", y no es posible modificar sus letras de la misma manera que haríamos con los contenidos de un vector:
 
@@ -179,7 +194,13 @@ julia> nombrearchivo[2] = 'C'
 ERROR: MethodError: no method matching setindex!(::String, ::Char, ::Int64)
 ```
 
-Como alternativa hay múltipes funciones para manipular cadenas de texto, las más importantes de las cuales se comentan en el capítulo dedicado a este tema. Pero hay una forma de componer cadenas de texto que es especialmente práctica y vale la pena adelantar: la "interpolación". Dada una variable `x`, sea numérica o literal, su contenido puede insertarse dentro de un texto utilizando el signo del dólar (`$`) para marcarla. También se puede interpolar una expresión más compleja encerrándola entre paréntesis:
+Lo que sí se puede hacer es crear una nueva cadena de texto a partir de trozos de otras, concatenándolas con el símbolo de la multiplicación (`*`). La transformación que se intentaba hacer en el ejemplo anterior, reemplazando la segunda letra de `"sA01"` por una `'C'`, podría conseguirse del siguiente modo:
+
+```@repl c2
+nombrearchivo[1] * 'C' * nombrearchivo[3:end]
+```
+
+Hay muchos otros métodos y funciones para manipular cadenas de texto, las más importantes de las cuales se comentan en el capítulo dedicado a este tema. Pero hay otra forma de componer cadenas de texto que es especialmente práctica y vale la pena adelantar: la "interpolación". Dada una variable `x`, sea numérica, de texto o cualquier otro tipo, su contenido puede insertarse dentro de un texto utilizando el signo del dólar (`$`) para marcarla. También se puede interpolar una expresión más compleja encerrándola entre paréntesis:
 
 ```@repl c2
 x = 2;
@@ -190,7 +211,7 @@ txt2 = "y $x al cuadrado es $(x^2)"
 El uso de `$` para interpolar datos en una cadena de texto impide que se pueda escribir tal cual, si lo que queremos es incluir ese signo en el texto. Para este y otros casos se utilizan "secuencias de escape", que generalmente comienzan con una barra invertida (`\`). Las secuencias de escape más útiles son:
 
   * `\$` para el signo del dólar.
-  * `\\` para la barra invertida.
+  * `\\` para la barra invertida.[^2]
   * `\"` para las comillas dobles.
   * `\t` para el tabulador.
   * `\n` para el carácter de nueva línea.
@@ -198,12 +219,9 @@ El uso de `$` para interpolar datos en una cadena de texto impide que se pueda e
 
 Por ejemplo, para escribir la cadena de texto `"El símbolo del dólar es "$""` tendría utilizarse el código: `"El símbolo del dólar es \"\$\""`.
 
-!!! note
+[^2]: El hecho de que la barra invertida sea el marcador de las secuencias de escape es lo que complica escribir rutas de archivos en Windows, que utiliza precisamente ese símbolo como separador de directorios. Por eso los nombres de rutas de Windows se escriben con barras invertidas dobles (`\\`), que en realidad representan una sola barra invertida.
 
-    El asunto de las secuencias de escape suele crear problemas en Windows, donde los directorios de una ruta suelen presentarse divididos por "barras invertidas". Por ejemplo, si quisiéramos cambiar el directorio de trabajo podría a `C:\julia`, la expresión `cd("C:\julia")` no daría el resultado esperado, porque la barra invertida se interpreta como inicio de una secuencia de escape. Para que funcionase, habría que escribir `cd("C:\\julia")`, o alternativamente `cd("C:/julia")`. La función `clipboard` y los diálogos de selección de archivos y directorios señalados en el capítulo anterior sortean correctamente este problema.
-
-
-Finalmente haremos mención a un tipo especial de cadenas de texto, los *símbolos*: se trata de secuencias de caracteres alfanuméricos o signos que pueden representar nombres de variables, funciones u operadores, que se escriben precediéndolas de dos puntos (`:`) para distinguirlas de cadenas de texto convencionales. Los símbolos pueden referirse a operaciones o variables existentes como `:+`, `:log`, `:include`, o también inexistentes. Están particularmente pensados para procesos de metaprogramación, es decir para manipular y crear código programáticamente, que es una forma de uso particularmente avanzado de Julia, y que en esta guía solo trataremos superficialmente. Pero incluso en el uso cotidiano nos encontraremos de vez en cuando con este tipo de símbolos, como veremos a continuación, y por eso vale la pena introducirlos ahora.
+Finalmente haremos mención a un tipo especial de cadenas de texto, los *símbolos*: se trata de secuencias de caracteres alfanuméricos o signos que pueden representar nombres de variables, funciones u operadores, que se escriben precediéndolas de dos puntos (`:`) para distinguirlas de cadenas de texto convencionales. Los símbolos pueden referirse a operaciones o variables existentes como `:+`, `:log`, `:include`, o también inexistentes. Están particularmente pensados para procesos de metaprogramación, es decir para manipular y crear código programáticamente, que es una forma de uso particularmente avanzado de Julia, que no se trata en esta guía. Pero incluso en el uso cotidiano nos encontraremos de vez en cuando con este tipo de símbolos, como veremos a continuación, y por eso vale la pena introducirlos ahora.
 
 ## Matrices de datos
 
@@ -228,7 +246,7 @@ También se puede especificar, seguido del carácter de separación, otro argume
 
 La función `readdlm` también admite muchos otros argumentos opcionales para controlar cómo se interpreta el texto, que vienen explicados en su documentación. Hay dos de ellos, `skipstart` y `header`, que son particularmente útiles cuando el archivo contiene un encabezado, que a menudo incorpora los nombres de las columnas.
 
-Por ejemplo consideremos una pequeña tabla con los datos de esperanza de vida en los países del mundo clasificados por continente y género, que tenemos en el archivo `"esperanzadevida.txt"` (valores calculados a partir de los datos de las Naciones Unidas en 2017):
+Por ejemplo consideremos una pequeña tabla con los datos de esperanza de vida en los países del mundo clasificados por continente y género, que tenemos en el archivo `"esperanzadevida.txt"` (valores calculados a partir de los datos de las Naciones Unidas en 2017):[^3]
 
 ```
 continente     género   media  desv_tip
@@ -251,6 +269,8 @@ Oceanía        Todos    77.92  6.33
 Oceanía        Hombres  75.70  5.66
 Oceanía        Mujeres  80.20  5.55
 ```
+
+[^3]: Para practicar, este y otros archivos de datos también se encuentran en el repositorio de esta guía ([https://github.com/heliosdrm/guia-julialang/](https://github.com/heliosdrm/guia-julialang/)).
 
 Podríamos ignorar la primera línea o extraerla como un vector de nombres, usando una de estas dos opciones:
 
@@ -284,22 +304,21 @@ datos_africa =["Todos" 60.23 7.25; "Hombres" 58.58 6.91; "Mujeres" 61.9 7.71]
 
 Como ya se ha visto antes, la forma de acceder a un elemento o una submatriz para leer o modificar sus valores es una generalización de lo que se hace con los vectores. Los elementos a los que se quiere acceder se indican por su posición en la matriz, que viene dada por las filas y columnas correspondientes (separadas por una coma).
 
+Por ejemplo, a continuación se indica cómo se podría calcular la esperanza de vida media de los ciudadanos europeos, o la máxima esperanza de vida --teniendo en cuenta que los datos de esperanza de vida están en la columna 3--:
+
 ```@setup c2
 using DelimitedFiles
 datos_un = readdlm("datos/esperanzadevida.txt", skipstart=1)
 ```
 
 ```@repl c2
-using Statistics
-# Esperanza de vida media del ciudadano europeo (fila 7)
-vida_europeo_medio = datos_un[7,3]
-# Mayor esperanza de vida (mujeres norteamericanas)
-vida_media = maximum(datos_un[:,3])
+vida_europeo_medio = datos_un[7,3] # fila 7
+maxima_esperanza = maximum(datos_un[:,3])
 ```
 
-## "Data frames" (tablas de datos)
+## *Data frames* (tablas de datos)
 
-En términos coloquiales se puede usar indistintamente el término "matriz" y el de "tabla" de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son *arrays* de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de "tabla de datos" (*data frame* en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete [DataFrames](https://github.com/JuliaData/DataFrames.jl/), y que se pueden leer y guardar en archivos de texto a través del paquete [CSV](https://github.com/JuliaData/CSV.jl).
+En términos coloquiales se puede usar indistintamente el término "matriz" y el de "tabla" de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son *arrays* de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de "tabla de datos" (*data frame* en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete [DataFrames](http://juliadata.github.io/DataFrames.jl/stable/), y que se pueden leer y guardar en archivos de texto a través del paquete [CSV](https://juliadata.github.io/CSV.jl/stable/), entre otros.
 
 Una tabla de datos es parecida a una matriz; también se puede leer a partir de un archivo de texto mediante la función `CSV.read`, al igual que hacíamos con `readdlm` para las matrices, con algunas diferencias entre las cuales podemos destacar las siguientes:
 
@@ -358,21 +377,21 @@ tabla_resultados = DataFrame(archivo=archivos, tiempo=tiempos, extremo=extremos)
 
 ## Guardar datos
 
-Naturalmente, además de leer datos a partir de archivos de texto, normalmente también interesa *escribir* archivos con los resultados generados. Si estos resultados están en forma de matrices o vectores, se pueden guardar a través de la función `writedlm` de DelimitedFiles, que funciona de forma simétrica a `readdlm`. Por ejemplo, para guarda la matriz `resultados` creada en el primer ejemplo de este capítulo en el archivo "tabla.txt", usando el punto y coma como separador entre columnas:
+Naturalmente, además de leer datos a partir de archivos de texto, normalmente también interesa *escribir* archivos con los resultados generados. Si estos resultados están en forma de matrices o vectores, se pueden guardar a través de la función `writedlm` de `DelimitedFiles`, que funciona de forma simétrica a `readdlm`. Por ejemplo, para guardar la matriz `resultados` creada en el primer ejemplo de este capítulo en el archivo "tabla.txt", usando el punto y coma como separador entre columnas:
 
 ```julia
 writedlm("tabla.txt", resultados, ';')
 ```
 
-Si solo se introduce el nombre del archivo y la matriz o vector de datos, por defecto `writedlm` separa las columnas con un carácter de tabulación. En el caso de tener una tabla del tipo `DataFrame`, se puede utilizar `CSV.write` para volcarla en un archivo de texto, empleando los mismos argumentos con nombre que emplea `readtable` para la lectura; por ejemplo:
+Si solo se introduce el nombre del archivo y la matriz o vector de datos, por defecto `writedlm` separa las columnas con un carácter de tabulación. En el caso de tener una tabla del tipo `DataFrame`, se puede utilizar `CSV.write` para volcarla en un archivo de texto, empleando los mismos argumentos con nombre que emplea `CSV.read` para la lectura; por ejemplo:
 
 ```julia
 CSV.write("tabla.txt", tabla_resultados; delim=';')
 ```
 
-La diferencia más notable entre `writedlm` y `CSV.write`, además del tipo de tabla de entrada, es que `writedlm` también escribe una primera línea con los nombres de las columnas. (Se puede omitir usando el argumento opcional `header=false`).
+La diferencia más notable entre `writedlm` y `CSV.write`, además del tipo de tabla de entrada, es que `CSV.write` también escribe una primera línea con los nombres de las columnas. (Se puede omitir usando el argumento opcional `header=false`).
 
-Guardar conjuntos de datos en archivos de texto es especialmente útil para emplearlos posteriormente, copiando la tabla en un informe, abriéndola con una hoja de cálculo, o importándola en cualquier otro programa. Pero para reutilizar los datos en una sesión de Julia posterior, también es práctico poder guardarlos en un archivo binario que conserve las propiedades de las variables originales. Paquetes como [BSON](https://github.com/JuliaIO/BSON.jl) o [JLD2](https://github.com/JuliaIO/JLD2.jl) contienen las utilidades necesarias para salvar y cargar datos de este tipo.
+Guardar conjuntos de datos en archivos de texto es especialmente útil para emplearlos posteriormente, copiando la tabla en un informe, abriéndola con una hoja de cálculo, o importándola en cualquier otro programa. Pero para reutilizar los datos en una sesión de Julia posterior, también viene bien poder guardarlos en un archivo binario que conserve las propiedades de las variables originales. Paquetes como [BSON](https://github.com/JuliaIO/BSON.jl) o [JLD2](https://github.com/JuliaIO/JLD2.jl) contienen las utilidades necesarias para salvar y cargar datos de este tipo.
 
 Ambos paquetes proporcionan métodos semejantes para salvar y guardar datos. Por ejemplo, para salvar las variables `archivos` y `resultados`, en un archivo llamado "datos" -- y para cargarlas después a partir del archivo--, en ambos casos se podría escribir:
 
@@ -392,11 +411,11 @@ En este capítulo hemos hecho una introducción a los siguientes aspectos de Jul
     + Métodos para componer *arrays* a partir de datos numéricos.
     + Expresiones para identificar un rango de elementos, filas o columnas de un *array*.
     + Cómo extraer una sección de un *array* y modificar sus valores.
-    + Las expresiones "con punto" para aplicar una operación a cada uno de los elementos de un *
-* El uso del módulo `DelimitedFiles` y los paquetes `DataFrames` y `CSV` para trabajar con datos tabulados.
-* Aspectos esenciales de las cadenas de texto (*strings*), letras aisladas (caracteres) y variables de tipo "símbolo".
-* La interpolación en la definición de cadenas de texto.
-* Los paquetes `BSON` y `JLD2` para salvar y recuperar las variables de una sesión de trabajo.
+    + Las expresiones "con punto" para aplicar una operación a cada uno de los elementos de un *array*.
+* El uso del módulo `DelimitedFiles` y los paquetes DataFrames y CSV para trabajar con datos tabulados.
+* Fundamentos sobre las cadenas de texto (*strings*), letras aisladas (caracteres) y variables de tipo "símbolo".
+* La concatenación y la interpolación de variables en cadenas de texto.
+* Los paquetes BSON y JLD2 para salvar y recuperar las variables de una sesión de trabajo.
 * El uso de funciones con argumentos identificados por un nombre o palabra clave.
 
 Además podemos destacar el uso de las siguientes funciones:
@@ -405,7 +424,7 @@ Además podemos destacar el uso de las siguientes funciones:
 * `length` para obtener la longitud de un *array* u otra estructura con múltiples datos.
 * `readdir` para obener una lista de cadenas de texto con los nombres de los archivos de un directorio.
 * `splitext` para separar la extensión de un nombre de archivo.
-* `readdlm` y `CSV.read` (esta última del paquete `CSV`) para leer datos tabulados, más las correspondientes `writedlm`, `CSV.read` para escribirlos en un archivo de texto.
+* `readdlm` y `CSV.read` (esta última del paquete CSV) para leer datos tabulados, más las correspondientes `writedlm` y `CSV.read` para escribirlos en un archivo de texto.
 * `zeros` para crear un array lleno de ceros al inicio.
 * `abs` para obtener el valor absoluto de un número.
 * `sqrt` para calcular la raíz cuadrada de un número.
