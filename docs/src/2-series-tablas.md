@@ -155,7 +155,7 @@ Por ejemplo, si `x` e `y` fuesen las coordenadas de un vector, el módulo de ese
 m .= sqrt.(x.^2 + y.^2)
 ```
 
-Como regla general, al vectorizar una operación todas las variables empleadas han de tener el mismo tamaño, pero estas variables también pueden combinarse con números escalares. En ese caso los números escalares operan por igual sobre todos los elementos de los otros vectores, como si se "expandieran" a vectores de la misma longitud con valores repetidos (lo que se conoce como *broadcasting*). Esto es lo que ocurre cuando `x` e `y` se elevan al cuadrado como `x.^2`, `y.^2` (usando un solo `2` escalar, en lugar de un vector).
+Como regla general, al vectorizar una operación todas las variables empleadas han de tener el mismo tamaño, pero estas variables también pueden combinarse con números escalares. En ese caso los números escalares operan por igual sobre todos los elementos de los otros vectores, como si se "expandieran" a vectores de la misma longitud con valores repetidos (lo que se conoce como *broadcasting*). Esto es lo que ocurre cuando `x` e `y` se elevan al cuadrado como `x.^2`, `y.^2` (usando un solo `2` escalar, en lugar de un vector). Esta forma de operar con vectores y matrices se explica con más detalle en la sección de [Broadcasting](@ref) del capítulo 5.
 
 ## Cadenas de texto y símbolos
 

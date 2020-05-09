@@ -30,7 +30,7 @@ parse(Int, "30")          # número entero
 parse(Int, "30", base=16) # número entero en notación hexadecimal
 ```
 
-Cuando se representan números decimales en forma de texto, a veces se desean mostrar menos cifras decimales, sacrificando parte de la precisión para mejorar la legibilidad. Una manera de hacerlo es redondear o truncar el número con las funciones `round` o `trunc`, respectivamente, fijando la cantidad de cifras significativas con el argumento `sigdigits`:
+Cuando se representan números decimales en forma de texto, a veces se desea mostrar menos cifras decimales, sacrificando parte de la precisión para mejorar la legibilidad. Una manera de hacerlo es redondear o truncar el número con las funciones `round` o `trunc`, respectivamente, fijando la cantidad de cifras significativas con el argumento `sigdigits`:
 
 ```@repl c7
 numero = exp(1)
@@ -40,7 +40,7 @@ string(trunc(numero, sigdigits=5))
 
 Alternativamente, se puede emplear la "notación compacta" que se muestra en el REPL cuando el contexto requiere acortar los números decimales (por ejemplo, los números dentro de un vector):
 
-```@repl
+```@repl c7
 [numero, numero]
 ```
 
@@ -71,7 +71,7 @@ using Printf
 @sprintf("La raíz de 2 es %0.3f", sqrt(2))
 ```
 
-La concatenación de cadenas de texto también se puede llevar a cabo usando el operador de la multiplicación (e.g. `"a" * "b"` para obtener `"ab"`). Y para repetir una cadena de texto varias veces se puede utilizar la función `repeat`, que siguiendo la metáfora matemática también se puede expresar como una potencia por un número entero:
+La concatenación de cadenas de texto también se puede llevar a cabo usando el operador de la multiplicación (e.g. `"a" * "b"` para obtener `"ab"`). Y para repetir una cadena de texto varias veces se puede utilizar la función `repeat`, que siguiendo la analogía matemática también se puede expresar como una potencia por un número entero:
 
 ```@repl
 repeat("Abc", 3)
@@ -93,7 +93,7 @@ split(frase, (',', ' ')) # Por comas y espacios
 
 Se puede observar que en este último caso se ha añadido una cadena vacía, porque después de `"bueno"` había dos caracteres de separación juntos. Para evitar esto se podría añadir el argumento con nombre `keepempty=false` (que está en ese modo por defecto cuando no se indica ningún separador explícito):
 
-```@repl
+```@repl c7
 split(frase, (',', ' '); keepempty=false) 
 ```
 
@@ -116,17 +116,17 @@ s = "A\tB\n\$c\$\t\"d\""
 print(s)
 ```
 
-En ocasiones se tiene una cadena que incluye los caracteres especiales que suelen representarse de esta manera (comillas, tabuladores, etc.), e interesa generar el texto que se tendría que escribir con secuencias de escape incluidas. Esto supondría, por ejemplo, sustituir las tabulaciones por `\t` (una barra invertida seguida de la letra *t*). Esto se puede hacer con la función `escape_string`. La operación inversa se consigue con la función `unescape_string`:
+En ocasiones se tiene un texto con los caracteres especiales que suelen representarse de esta manera (comillas, tabuladores, etc.), e interesa generar la cadena de texto que se utilizaría para escribirla en un fragmento de código, con secuencias de escape incluidas. Esto supondría, por ejemplo, sustituir las tabulaciones por la secuencia `\t` (una barra invertida seguida de la letra *t*). Esto se puede hacer con la función `escape_string`. La operación inversa se consigue con la función `unescape_string`:
 
 ```@repl
-cadena = "texto\tseparado"
+cadena = "texto\tseparado" # Aquí \t representa un tabulador
 println(cadena)
-cadena2 = escape_string(cadena)
+cadena2 = escape_string(cadena) # Cambia el tabulador por la secuencia de escape
 println(cadena2)
 cadena == unescape_string(cadena2)
 ```
 
-!!! note
+!!! note "`escape_string` vs. `repr`"
 
     La función `escape_string` convierte los caracteres especiales en sus secuencias de escape literales, pero lo que no hace es añadir las comillas que delimitan la cadena a la hora de escribirla. Si se quiere generar una cadena con el texto *exacto* que habría que escribir, se puede usar la función `repr` que se ha comentado antes.
     
@@ -146,7 +146,7 @@ En los textos que se extienden a lo largo de varias líneas también se puede ev
 que ocupa dos líneas"
 ```
 
-!!! note
+!!! note "Cambio de línea en Windows"
 
     Esta forma de introducir nuevas líneas solo inserta el carácter `\n`. En ciertos sistemas como Windows es habitual que la nueva línea se preceda del carácter de "retorno de carro" (`\r`). Para reproducir este comportamiento es necesario escribir la secuencia `\r` explícitamente.
 
@@ -241,9 +241,9 @@ cadena[1:1]
 
 ### Cadenas con caracteres Unicode
 
-Julia permite trabajar con el conjunto completo de caracteres [Unicode](https://home.unicode.org/), diseñado para incluir los símbolos de todos los alfabetos del mundo. Distintos diseños de teclado (sobre todo dependiendo de su ámbito regional) proporcionan distintos subconjuntos de caracteres que pueden introducirse directamente. Y según el sistema operativo y el contexto en el que se esté programando (REPL, editor de código, etc.) se puede disponer de herramientas auxiliares para escribir conjuntos más amplios de caracteres. En particular, en el REPL de Julia y en otros entornos que usan sus mismas herramientas, se puede escribir el nombre del carácter como si fuera una secuencia de escape y pulsar el tabulador para convertirlo en el cáracter deseado. La lista de caracteres que se pueden escribir de esta manera y sus secuencias asociadas está publicada en la sección ["Unicode Input" del manual de Julia](https://docs.julialang.org/en/v1/manual/unicode-input/).
+Julia permite trabajar con el conjunto completo de caracteres [Unicode](https://home.unicode.org/), diseñado para incluir los símbolos de todos los alfabetos del mundo. Distintos diseños de teclado (sobre todo dependiendo de su ámbito regional) proporcionan distintos subconjuntos de caracteres que pueden introducirse directamente. Y según el sistema operativo y el contexto en el que se esté programando (REPL, editor de código, etc.) se puede disponer de herramientas auxiliares para escribir conjuntos más amplios de caracteres. En particular, en el REPL de Julia y en otros entornos que usan sus mismas herramientas, se puede escribir el nombre del carácter como si fuera una secuencia de escape y pulsar el tabulador para convertirlo en el cáracter deseado. La lista de caracteres que se pueden escribir de esta manera y sus secuencias asociadas están publicadas en la sección ["Unicode Input" del manual de Julia](https://docs.julialang.org/en/v1/manual/unicode-input/).
 
-Una cuestión a considerar cuando se usan caracteres que no pertenecen al rango US-ASCII o ASCII básico (los primeros 256 caracteres), es que considerar dos formas de medir la longitud de las cadenas de texto:
+Una cuestión a considerar cuando se usan caracteres que no pertenecen al rango US-ASCII o ASCII básico (los primeros 256 caracteres), es que hay dos formas de medir la longitud de las cadenas de texto:
 
 * El número de caracteres, que viene dado por la función `length`.
 * El número de "unidades de código", dado por la función `ncodeunits`.
@@ -271,7 +271,7 @@ Cuando se subindexa una cadena de texto, los índices empleados se refieren a la
 texto[1:6]
 ```
 
-Esto ocurre porque el segundo carácter (`'ó'`) ocupa dos unidades de código: las que ocupan la segunda y tercera posición de la cadena. De hecho, en este caso no está permitido referirse al carácter ubicado en tercera posición, ni directa ni indirectamente:
+Esto ocurre porque el segundo carácter (`'ó'`) abarca dos unidades de código: las que ocupan la segunda y tercera posición de la cadena. De hecho, en este caso no está permitido referirse al carácter ubicado en tercera posición, ni directa ni indirectamente:
 
 ```@repl c7
 texto[3]
@@ -310,7 +310,7 @@ texto[antepenultima:end]
 
 Para asegurarse de que cuando se subindexa una cadena con caracteres no ASCII siempre se utilizan posiciones válidas, se puede usar la función `isvalid(texto, posicion)`. De todos modos, estas precauciones son solo necesarias cuando se quiere localizar una letra según el lugar que ocupa en el texto. Cuando se itera a lo largo del texto, por ejemplo con un bucle `for`, las iteraciones van carácter por carácter, independientemente del número de unidades de código que ocupen. Y las funciones de búsqueda que se verán después siempre devuelven la posición de la unidad de código corecta.
 
-!!! note
+!!! tip
 
     En los ejemplos anteriores nos hemos centrado en fragmentos del comienzo y el final de los textos, por sencillez. En estos casos particulares se podrían usar las funciones `first` y `last`, que cuentan caracteres en lugar de unidades de código. 
 
@@ -337,7 +337,7 @@ findprev("pera", "limón, pera, limones, peras", 20)
 
 !!! tip
 
-    Las funciones `findfirst`, `findlast`, `findnext` y `findprev` también sirven para buscar la posición de valores lógicos positivos (`true`) en colecciones indexables por posición como *arrays* y tuplas formadas por elementos de tipo `Bool`.
+    Las funciones `findfirst`, `findlast`, `findnext` y `findprev` también sirven para buscar la posición de valores lógicos positivos (`true`) en colecciones indexables por posición, como *arrays* y tuplas formadas por elementos de tipo `Bool`.
 
 Si el fragmento a buscar no está presente en la cadena, estas funciones no devuelven ningún valor --técnicamente, devuelven un `nothing`--. Si el resultado se quiere utilizar para subindexar la cadena, esto podría dar lugar a un error. Una forma de evitar este tipo de errores es comprobar la naturaleza valor resultante (p.ej. `x == nothing`). Alternativamente, se puede verificar con anterioridad si el fragmento está presente en la cadena, con la función `occursin`:
 
@@ -373,7 +373,7 @@ replace(s, "pera"=>uppercase)
 
 Los métodos de búsqueda que se han presentado son una forma sencilla de localizar patrones de texto fijos, pero en ocasiones puede interesar buscar patrones más genéricos, como podrían ser secuencias numéricas, direcciones de correo electrónico, textos delimitados por conjuntos variables de caracteres, etc. Para este tipo de búsquedas se pueden usar las [expresiones regulares](https://www.regular-expressions.info/).
 
-Julia permite utilizar expresiones regulares en lugar de cadenas de texto fijas en las funciones `findfirst`, `findlast`, `findnext` y `findprev`, así como en otras funciones que se comentan a continuación. La sintaxis de las series regulares son algo que excede el propósito de este manual, aunque hay libros y numerosos recursos online con explicaciones, tutoriales y ejemplos para diversos patrones. En Julia, las expresiones regulares se escriben como cadenas de texto precedidas con la etiqueta `r`.
+Julia permite utilizar expresiones regulares en lugar de cadenas de texto fijas en las funciones `findfirst`, `findlast`, `findnext` y `findprev`, así como en otras funciones que se comentan a continuación. La sintaxis de las series regulares son algo que excede el propósito de esta guía, aunque hay libros y numerosos recursos online con explicaciones, tutoriales y ejemplos para diversos patrones. En Julia, las expresiones regulares se escriben como cadenas de texto precedidas con la etiqueta `r`.
 
 A modo de ejemplo práctico, se presenta a continuación cómo se escribirían en Julia distintas expresiones regulares para encontrar patrones numéricos de complejidad creciente:
 
@@ -402,7 +402,7 @@ r = Regex(regex_completa)  # Expresión regular resultante
 findfirst(r, "Coordenadas: -1.73, 12.4 cm")
 ```
 
-!!! note
+!!! note "Comillas en las expresiones regulares"
 
     Las comillas dentro de las expresiones regulares son un caso especial. La sintaxis de las expresiones regulares no requiere utilizar secuencias de escape para ellas, pero en Julia sí se necesitan en todos los casos (tanto si la expresión se construye de forma literal con la etiqueta `r` como si se hace a partir de una cadena normal con el constructor `Regex`), para evitar la confusión con los delimitadores de texto. Alternativamente, si las comillas no están al inicio o al final de la expresión regular, se pueden utilizar las triples comillas.
 
@@ -457,11 +457,11 @@ Naturalmente, en un caso como este dar nombre al grupo capturado no añade mucho
 
 ## Lectura y escritura en ficheros de texto
 
-Los ficheros de texto son una forma habitual y muy práctica (aunque no la más eficiente) de guardar datos. Como se ha visto en el capítulo sobre [tablas de datos](2-series-tablas.md), cuando el texto está estructurado en forma de tabla la información puede leerse y guardarse con las funciones `readdlm` y `writedlm` del módulo `DelimitedFiles`, respectivamente, o con funciones equivalentes de otros paquetes como `CSV`, etc. A continuación se presentan otras funciones y rutinas para leer y escribir datos en ficheros de texto con estructuras artibrarias.
+Los ficheros de texto son una forma habitual y muy práctica (aunque no la más eficiente) de guardar datos. Como se ha visto en el [capítulo 2](2-series-tablas.md), cuando el texto está estructurado en forma de tabla la información puede leerse y guardarse con las funciones `readdlm` y `writedlm` del módulo `DelimitedFiles`, respectivamente, o con funciones equivalentes de otros paquetes como CSV, etc. A continuación se presentan otras funciones y rutinas para leer y escribir datos en ficheros de texto con estructuras artibrarias.
 
 ### Funciones de de lectura
 
-La información de un fichero de texto se puede extraer a una o varias cadenas de texto a través de las funciones `read` o `readlines`, de la siguiente manera:
+La información de un fichero de texto se puede extraer en una o varias cadenas de texto a través de las funciones `read` o `readlines`, de la siguiente manera:
 
 ```julia
 textocompleto = read("datos.txt", String)
@@ -481,7 +481,7 @@ close(io)
 
 La función `open` crea un objeto de tipo `IOStream`, que es un acceso de entrada o salida al archivo, que sirve para ir recorriéndolo y trabajar con sus contenidos. Dependiendo del sistema operativo, esta operación puede bloquear el acceso de otros programas al archivo para evitar conflictos. La función `close` consolida los contenidos del archivo si ha habido operaciones de escritura y cierra el acceso al archivo en cuestión, devolviéndolo a su estado "natural".
 
-Hay distintos modos de apertura de archivos, que se pueden indicar como segundo argumento de la función `open`, en forma de cadena de texto. El empleado por defecto (como en el ejemplo anterior) es el modo de lectura, que permite extraer datos del archivo pero no modificarlo. Esto se podría haber señalado explícitamente escribiendo `open("archivo.txt", "r"). Los distintos modos de apertura de archivos son:
+Hay distintos modos de apertura de archivos, que se pueden indicar como segundo argumento de la función `open`, en forma de cadena de texto. El empleado por defecto (como en el ejemplo anterior) es el modo de lectura, que permite extraer datos del archivo pero no modificarlo. Esto se podría haber señalado explícitamente escribiendo `open("archivo.txt", "r")`. Los distintos modos de apertura de archivos son:
 
 * **`"r"`**: modo de lectura (*read*, solo válido para archivos ya existentes).
 * **`"w"`**: modo de escritura (*write*), creando el archivo si no existe, o borrando los contenidos previos.
@@ -495,10 +495,9 @@ Si se quiere recorrer el archivo completo se puede utilizar un bucle `while` que
 
 ```julia
 io = open("archivo.txt")
-    while !eof(io)
-        linea = readline(io)
-        # Operaciones con `linea`
-    end
+while !eof(io)
+    linea = readline(io)
+    # Operaciones con `linea`
 end
 close(io)
 ```
@@ -507,9 +506,8 @@ Una forma más abreviada de hacer lo mismo es mediante la función `eachline`, q
 
 ```julia
 io = open("archivo.txt")
-    for linea = eachline(io)
-        # Operaciones con `linea`
-    end
+for linea = eachline(io)
+    # Operaciones con `linea`
 end
 close(io)
 ```
@@ -539,7 +537,7 @@ write(io, s)
 close(io)
 ```
 
-!!! note
+!!! tip
 
     La función `write` admite que se le pasen múltiples argumentos, de tal manera que `write(io, s1, s2...)` escribe secuencialmente los contenidos de `s1`, `s2` etc. en el archivo referido por `io`.
 
@@ -593,7 +591,7 @@ Sea como sea, es recomendable que las operaciones de lectura o escritura de los 
 1. Mientras más código se escriba mezclado con las operaciones de acceso a los archivos, mayor es el riesgo de que se produzca algún error que interrumpa el programa.
 2. Las medidas de seguridad señaladas arriba implican recoger las operaciones de acceso a los archivos dentro de bloques de código que tienen su propio contexto de variables, por lo que las variables que se creen en ese bloque no estarán disponibles fuera de ellos.
 
-Así pues, en el caso de que haya que acceder a un archivo varias veces, con muchas otras operaciones entre medias, puede ser conveniente cerrar el archivo tras las primeras operaciones de lectura/escritura, para volver a abrilo después de los cálculos intermedios. En qué medida es recomendable hacer esto dependerá de la frecuencia con la que haya que repetir las operaciones de apertura y cierre, que normalmente son rápidas, pero si son demasiado frecuentes pueden ralentizar el programa sensiblemente.
+Así pues, en el caso de que haya que acceder a un archivo varias veces, con muchas otras operaciones entre medias, puede ser conveniente cerrar el archivo tras las primeras operaciones de lectura/escritura, para volver a abrirlo después de los cálculos intermedios. En qué medida es recomendable hacer esto dependerá de la frecuencia con la que haya que repetir las operaciones de apertura y cierre, que normalmente son rápidas, pero si son demasiado frecuentes pueden ralentizar el programa sensiblemente.
 
 Si a pesar de todo se produce un error que deje un archivo a medias de editar, se puede intentar recuperar su estado, creando un `IOStream` de lectura que apunte al mismo archivo, y forzando las operaciones de escritura pendientes con la función `flush`:
 

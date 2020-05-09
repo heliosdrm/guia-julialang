@@ -8,15 +8,15 @@ En los capítulos anteriores de esta guía hemos hecho un tratamiento superficia
 
 Hay una buena razón para hacerlo así. El usuario de una herramienta informática normalmente no juzga si una tarea es "básica" o "avanzada" según las complejidades que supone para esa herramienta, sino por cuestiones más prácticas. Y explorar visualmente los datos es una de las primeras cosas que se suele hace después de recogerlos, como mínimo para valorar si parecen correctos o hay algún tipo de anomalía. En este sentido los gráficos podrían considerarse como una de las tareas más básicas. De hecho no es raro que el ansia por ver qué pinta tienen los datos conduzca a atajos "sucios y rápidos", como abrir los ficheros con una hoja de cálculo e improvisar gráficas con un par de *clicks* de ratón, antes de empezar los preparativos para un análisis más formal.
 
-Parece lógico, por tanto, que las instrucciones para crear gráficos también se introduzcan lo más pronto posible a la hora de presentar una herramienta para el análisis de datos. Además, parafraseando el refrán popular, se puede decir que un gráfico vale más que mil números. Julia tiene una potencia extaordinaria para hacer cálculos complejos y costosos de forma rápida y eficaz; pero la representación en un bonito gráfico interactivo de un análisis de datos sencillo a veces da una mayor sensación de productividad, y aprender a crear esos gráficos es una buena manera de aumentar la motivación para introducirse en un lenguaje de programación.
+Parece lógico, por tanto, que las instrucciones para crear gráficos también se introduzcan lo más pronto posible a la hora de presentar una herramienta para el análisis de datos. Además, parafraseando el refrán popular, se puede decir que un gráfico vale más que mil números. Julia tiene una potencia extaordinaria para hacer cálculos complejos y costosos de forma rápida y eficaz; pero la representación de los resultados en un sencillo gráfico a veces da una mayor sensación de productividad, y aprender a crear esos gráficos es una buena manera de aumentar la motivación para introducirse en un lenguaje de programación.
 
 ## Paquetes de gráficos para Julia
 
-Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías gráficas[^1] necesarias y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [GRUtils](https://github.com/heliosdrm/GRUtils.jl), que proporciona una buena experiencia como primera contacto con los gráficos en Julia, por la forma en que combina rapidez y facilidad de uso con potencia y versatilidad de los gráficos generados.
+Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías gráficas[^1] necesarias, y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [GRUtils](https://heliosdrm.github.io/GRUtils.jl/stable/), que proporciona una buena experiencia como primera contacto con los gráficos en Julia, por la forma en que combina rapidez y facilidad de uso con potencia y versatilidad de los gráficos generados.
 
-Hay muchos otros paquetes recomendables para hacer gráficos en Julia. El más conocido es [Plots](https://github.com/JuliaPlots/Plots.jl), que proporciona una interfaz común para manejar muchas librerías gráficas, lo que le confiere una mayor versatilidad y potencia. Para gráficos más sofisiticados o que requieran mayor nivel de personalización que el que proporciona GRUtils, Plots es una magnífica opción, aunque más pesada en términos de instalación y velocidad.
+Hay muchos otros paquetes recomendables para hacer gráficos en Julia. El más conocido es [Plots](http://docs.juliaplots.org/latest/), que proporciona una interfaz común para manejar muchas librerías gráficas, lo que le confiere una mayor versatilidad y potencia. Para gráficos más sofisiticados o que requieran mayor nivel de personalización que el que proporciona GRUtils, Plots es una magnífica opción, aunque más pesada en términos de instalación y velocidad.
 
-Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl), basado en la librería gráfica que se suele usar con Python, [VegaLite](https://github.com/queryverse/VegaLite.jl) para hacer sofisticados gráficos interactivos, o [UnicodePlots](https://github.com/Evizero/UnicodePlots.jl) en el otro extremo, para crear gráficos basados en caracteres de texto sobre la consola de comandos. Una vez se ha "roto mano" con el lenguaje, y si se dispone de tiempo para ello, lo mejor es explorar distintos paquetes para escoger el que mejor se adapta a las necesidades y limitaciones de cada uno.
+Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl), basado en la librería gráfica que se suele usar con Python, [VegaLite](https://www.queryverse.org/VegaLite.jl/stable/) para hacer sofisticados gráficos interactivos, o [UnicodePlots](https://github.com/Evizero/UnicodePlots.jl) en el otro extremo, para crear gráficos basados en caracteres de texto sobre la consola de comandos. Una vez se ha "roto mano" con el lenguaje, y si se dispone de tiempo para ello, lo mejor es explorar distintos paquetes para escoger el que mejor se adapta a las necesidades y limitaciones de cada uno.
 
 [^1]: "Librería gráfica" es una traducción macarrónica del inglés *graphic library*, que designa un conjunto de herramientas de software, utilizadas por el sistema operativo para hacer operaciones gráficas (crear y manipular ventanas en pantalla, generar archivos gráficos, "dibujar" formas geométricas en dichas ventanas y archivos, etc.)
 
@@ -25,19 +25,19 @@ Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl),
 
 Como cualquier otro paquete de Julia, GRUtils necesita instalarse antes de poder usarlo. La principal diferencia con los paquetes vistos hasta ahora es que, indirectamente, la instalación de GRUtils en Julia intenta instalar en el sistema la librería gráfica [GR](http://gr-framework.org). GR se suele instalar sin problemas en los sistemas operativos habituales (Linux, Windows y OSX), pero puede haber casos en los que este paso falle, bien por alguna limitación del sistema o por algún error de conexión durante el proceso. Si esto ocurre se pueden probar las siguientes soluciones:
 
-1. Reconstruir el paquete GR, que es el que lleva a cabo la compilación e instalación de la librería gráfica. Esto se hace en con dos instrucciones en la consola de comandos de Julia. La segunda instrucción se ha de ejecutar en el modo de gestión de paquetes (como viene indicado por la etiqueta `pkg>` al comienzo de la línea), en la que se entra pulsando la tecla `]`, como se indicó en el capítulo de [primeros pasos](1-primerospasos.md):
+* Reconstruir el paquete GR, que es el que lleva a cabo la compilación e instalación de la librería gráfica. Esto se hace en con dos instrucciones en la consola de comandos de Julia. La segunda instrucción se ha de ejecutar en el modo de gestión de paquetes (como viene indicado por la etiqueta `pkg>` al comienzo de la línea), en la que se entra pulsando la tecla `]`, como se indicó en el capítulo de [primeros pasos](1-primerospasos.md):
 
 ```julia-repl
 julia> ENV["GRDIR"] = ""
 pkg> build GR
 ```
 
-2. Si la anterior solución no da resultados, puede ser que no tengas permiso para instalar la librería gráfica. En Windows puede intentarse saltarse esta limitación ejecutando Julia en modo administrador (al menos en la sesión en la que se quieran instalar los paquetes).
+* Si la anterior solución no da resultados, puede ser que no tengas permiso para instalar la librería gráfica. En Windows puede intentarse saltarse esta limitación ejecutando Julia en modo administrador (al menos en la sesión en la que se quieran instalar los paquetes).
 
 
 ## Un ejemplo básico
 
-Una vez instalado el paquete GRUtils, hacer gráficos es rápido y sencillo. Por ejemplo, el gráfico del capítulo 2 con una muestra de las señales analizadas se realizó con las siguientes instrucciones:
+Una vez instalado el paquete GRUtils, hacer gráficos es rápido y sencillo. Por ejemplo, el [gráfico del capítulo 2](2-series-tablas.md#ejemplo_series) con una muestra de las señales analizadas se realizó con las siguientes instrucciones:
 
 ```@example c4
 # Primero leemos el archivo con la serie de datos datos a representar
@@ -53,7 +53,7 @@ y = datos[:,2]
 plot(x, y)
 ```
 
-Según el entorno en el que se esté trabajando, este código hará que el gráfico se muestre de una manera u otra. Por ejemplo, en el REPL normalmente se abre en una nueva ventana; en Juno se muestra en el panel de gráficos dedicado; y en une notebook de IJulia los gráficos aparecen en celdas como imágenes integradas en las celdas de resultados.
+Según el entorno en el que se esté trabajando, este código hará que el gráfico se muestre de una manera u otra. Por ejemplo, en el REPL normalmente se abre en una nueva ventana; en IDEs como Juno y VSCode se muestra en el panel de gráficos dedicado; y en un notebook de IJulia los gráficos aparecen en celdas como imágenes integradas en las celdas de resultados.
 
 Si nos interesase mostrar varias señales en la misma gráfica, tenemos a nuestra disposición muchas formas de hacerlo. Por ejemplo, vamos a añadir la última señal.
 
@@ -98,7 +98,7 @@ Los tres símbolos del código de formato representan lo siguiente:
 
 Estos tres símbolos podrían haberse puesto en cualquier otro orden, por ejemplo `"r-*"`, `"*r-"`, etc.
 
-Hay seis códigos de colores posibles, identificados por letras características del nombre del color en inglés:
+Hay ocho códigos de colores posibles, identificados por letras características del nombre del color en inglés:
 
 * `"r"` para el rojo (red)
 * `"g"` para el verde (green)
@@ -127,6 +127,7 @@ Finalmente, los códigos habituales para marcadores son los doce que se muestran
 Además se puede indicar que los datos de las series se marquen como puntos (`"."`) --siempre que el punto en el código de formato no vaya después de un guión, en cuyo caso se está indicando un tipo de línea, como se ha señalado antes--. Sin embargo este tipo de marcador solo es visible para nubes de puntos con muchos datos concentrados en áreas semejantes, por ejemplo la siguiente distribución aleatoria:
 
 ```@example c4
+GRUtils.GR.inline("svg") # hide
 # x: diez mil puntos aleatorios
 # que siguen una distribución normal
 x = randn(10_000)
@@ -152,6 +153,7 @@ tabla_resultados = CSV.read("datos/tabla.txt") # hide
 El siguiente gráfico muestra la relación entre tiempos y valores de los picos de las señales, separando los quince primeros casos (los que comienzan como "sA", de los quince segundos ("sB"). El gráfico incluye una leyenda para distinguir estos dos conjuntos, etiquetas para los ejes X e Y, y un título. Además, se han ajustado los límites de los ejes a unos rangos mayores que los que se muestran por defecto:
 
 ```@example c4
+GRUtils.GR.inline("png") # hide
 Figure() #hide
 using DelimitedFiles
 resultados = readdlm("datos/tabla.txt", ';')
@@ -245,6 +247,7 @@ El subgráfico recién creado se convierte en el objetivo de las siguientes oper
 Por ejemplo, el siguiente código crea un conjunto de gráficos con una nube de puntos como la mostrada en uno de los ejemplos anteriores, con dos histogramas a los márgenes:
 
 ```@example c4
+GRUtils.GR.inline("svg") # hide
 # Gráfico principal con la nube de puntos
 subplot(3, 3, (4, 8))
 x = randn(10_000)

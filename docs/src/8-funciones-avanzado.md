@@ -1,6 +1,6 @@
 # Capítulo 8. Uso avanzado de funciones
 
-La forma en la que Julia maneja las funciones es probablemente uno de sus aspectos más destacables. En este capítulo vamos a ver las distintas formas de funciones en Julia y de trabajar con ellas eficientemente, para sacarles el máximo provecho. En lo que sigue se asume que ya se conocen algunos conceptos, como la forma habitual de definir una función y sus argumentos de entrada y salida, así como los distintos contextos de variables (global vs. local), que se explican en el [capítulo 3](3-funciones-control.md).
+La forma en la que Julia maneja las funciones es probablemente uno de sus aspectos más destacables. En este capítulo vamos a ver las distintas formas de definir funciones en Julia y de trabajar con ellas eficientemente, para sacarles el máximo provecho. En lo que sigue se asume que ya se conocen algunos conceptos, como la forma habitual de definir una función y sus argumentos de entrada y salida, así como los distintos contextos de variables (global vs. local), que se explican en el [capítulo 3](3-funciones-control.md).
 
 ## No dejes las funciones para el final
 
@@ -21,7 +21,7 @@ Por otro lado, hay diferentes técnicas de *debugging* que permiten detenerse en
 En el capítulo introductorio a las funciones se han mostrado dos formas habituales de definir una función. Utilizando el mismo ejemplo de la suma aritmética que se presentó en ese capítulo, estas dos formas son:
 
 ```julia
-# 3. Forma "estándar"
+# 1. Forma "estándar"
 function suma_aritmetica(n)
     return n * (n + 1) / 2
 end
@@ -38,39 +38,57 @@ Hay una tercera forma de definir esta función, que es como una función "anóni
 
 ### Uso de las funciones anónimas
 
-Las funciones anónimas se usan a menudo de forma auxiliar, dentro de otras funciones. Por ejemplo, la función `findfirst` da el primer índice de una colección de valores que cumplen una condición (también existen `findlast` y `findall`, para encontrar el último o todos los que la cumplen). Esta condición puede venir dada por una función que devuelve un valor lógico (`true` o `false`). Así, para encontrar el primer valor par podría pasársele la función `iseven` (o `isodd` para los impares):
+Las funciones anónimas se usan a menudo de forma auxiliar, dentro de otras funciones. Por ejemplo en `mapslices`, que sirve para aplicar una función dada a lo largo de las filas o columnas de una matriz.[^1] Así, para calcular la norma de los vectores definidos en las columnas de una matriz --con la función `norm` del módulo `LinearAlgebra`-- podemos escribir:
 
-
-```@repl
-findfirst(iseven, [15, 7, 12, 4, 9])
+```@repl c8
+using LinearAlgebra
+matriz = [1  0.6  -0.5;
+  2 -0.15  0.3;
+  3 -0.4  -0.1;
+  4 -0.15 -0.4;
+  5  0.6   0.1]
+mapslices(norm, matriz, dims=1)
 ```
 
-Pero otras condiciones no tienen una función predefinida, y tenemos que crearla *ad hoc*. Si esa función no tiene un uso específico más allá de ese contexto, no vale la pena crearla de la forma habitual, y resulta práctico pasarle una función anónima. Por ejemplo, para encontrar el primer valor menor de 10:
+[^1]: De forma más general, `mapslices` aplica una función a lo largo de "porciones" de un *array*, que se definen por una o más dimensiones. Las operaciones con vectores más habituales, por ejemplo `sum`, `prod`, `maximum`, `minimum`, etc., pueden hacerse por filas, columnas u otras dimensiones añadiéndoles el argumento con nombre `dims`; `mapslices` generaliza esta forma de aplicarse a cualquier otra función.
+
+Otros cálculos no tienen una función predefinida, y tendríamos que crearla *ad hoc*. Pero si esa función no tiene un uso específico más allá de ese contexto, no vale la pena crearla de la forma habitual, y resulta práctico pasarle una función anónima. Por ejemplo, para calcular las sumas de cuadrados de las columnas de `matriz`:
 
 
-```@repl
-findfirst(x -> (x < 10), [15, 7, 12, 4, 9])
+```@repl c8
+mapslices(x -> sum(x.^2), matriz, dims=1)
 ```
 
-Es habitual que el código de las funciones anónimas sea suficientemente sencillo como para condensarlo en una expresión corta, como es este caso. Pero también podría tratarse de un código algo más largo, que incluso ocupe varias líneas. Pongamos, por ejemplo, que quisiéramos el encontrar el primer número de la lista que esté a menos de dos unidades de un múltiplo de 10. Para poner varias líneas de código en una sola expresión, estas se pueden delimitar con las palabras claves `begin` y `end`, de modo que la función anónima para nuestra caprichosa condición podría ser:
+Es habitual que el código de las funciones anónimas sea suficientemente sencillo como para condensarlo en una expresión corta, como es este caso. Pero también podría tratarse de un código algo más largo, que incluso ocupe varias líneas. Pongamos, por ejemplo, que quisiéramos calcular la suma de cuadrados de las columnas, pero sustrayendo el valor medio cuando este es más pequeño que el menor de los valores individuales.
+
+Para poner varias líneas de código en una sola expresión, estas se pueden delimitar con las palabras claves `begin` y `end`, de modo que la función anónima para el cálculo mencionado podría ser:
 
 ```julia
 x -> begin
-    m = mod(x, 10)
-    return m < 2 || m > 8
+    media = mean(x)
+    if abs(x) < minimum(abs.(s))
+        return sum((x .- media).^2)
+    else
+        return sum(x.^2)
+    end
 end
 ```
 
-Sin embargo, escribir ese código como argumento de entrada a `findfirst` no resultaría muy práctico. Por esta razón, Julia facilita una forma cómoda de pasar funciones anónimas complejas, cuando estas ocupan el primer argumento de otra función, como es el caso. Consiste en escribir el código de la función anónima *después* de la función que la utiliza, tras la palabra `do` y el nombre de los argumentos de entrada. El ejemplo anterior tomaría esta forma:
+Sin embargo, escribir ese código como argumento de entrada a `mapslices` no resultaría muy práctico. Por esta razón, Julia facilita una forma cómoda de pasar funciones anónimas complejas, cuando estas ocupan el primer argumento de otra función, como es el caso. Consiste en escribir el código de la función anónima *después* de la función que la utiliza, tras la palabra `do` y el nombre de los argumentos de entrada. El ejemplo anterior tomaría esta forma:
 
-```@repl
-findfirst([15, 7, 12, 4, 9]) do x
-    m = mod(x, 10)
-    return m < 2 || m > 8
+```@repl c8
+using Statistics
+mapslices(matriz, dims=1) do x
+    media = mean(x)
+    if abs(media) < minimum(abs.(x))
+        return sum((x .- media).^2)
+    else
+        return sum(x.^2)
+    end
 end
 ```
 
-Un caso en el que resulta muy habitual usar la sintaxis `do`-`end` es el de las operaciones de escritura sobre un archivo que se abre con la función `open`, el cual se ha visto en el capítulo anterior:
+Una situación en la que resulta muy habitual usar la sintaxis `do`-`end` es al operar con un archivo que se abre con la función `open`, como se ha visto en el capítulo anterior:
 
 ```julia
 open("archivo.txt", "w") do io
@@ -78,31 +96,34 @@ open("archivo.txt", "w") do io
 end
 ```
 
-Aquí se está aprovechando un método especial de la función `open`, que toma como primer argumento una función con las operaciones de escritura, aunque en la práctica estemos "sacando" el código de esas operaciones fuera de los argumentos de `open`.
+Aquí se está aprovechando un método especial de la función `open`, que toma como primer argumento una función con las operaciones de lectura o escritura, aunque en la práctica estemos "sacando" el código de esas operaciones fuera de los argumentos de `open`.
 
 Finalmente, cabe señalar que las funciones anónimas también se pueden asignar a una variable, y utilizarlas como funciones "con nombre", por ejemplo:
 
 
 ```julia
-menordediez = x -> (x < 10)
-menordediez(3) #`true`, igual que con una función "normal"
+sumadecuadrados = x -> sum(x.^2)
 ```
 
 ## Expresiones `let`
 
-Aunque no se trata realmente de funciones, las expresiones `let` son estructuras de código que se comportan de forma semejante a funciones anónimas "de usar y tirar". Por ejemplo, para saber si un número dado cumple la condición que hemos señalado antes (estar a menos de dos unidades de un múltiplo de diez), podríamos escribir:
+Aunque no se trata realmente de funciones, las expresiones `let` son estructuras de código que se comportan de forma semejante a funciones anónimas "de usar y tirar". Por ejemplo, para calcular la suma de cuadrados con media ajustada que hemos definido antes, aplicándola específicamente al vector `[1,2,3]`, podríamos escribir:
 
 
-```@repl
-condicion = let (x = 7)
-    m = mod(x, 10)
-    m < 2 || m > 8
+```@repl c8
+resultado = let (x = [1,2,3])
+    media = mean(x)
+    if abs(media) < minimum(abs.(x))
+        return sum((x .- media).^2)
+    else
+        return sum(x.^2)
+    end
 end
 ```
 
-Este bloque de código es equivalente a declarar: "define la variable `condicion` del siguiente modo: tomando una variable `x = 7`, calcula `m = mod(x, 10)`, y evalúa si `m` es menor que 2 o mayor que 8".
+Este bloque de código es equivalente a declarar: "define la variable `resultado` del siguiente modo: tomando una variable `x = [1,2,3]`, calcula su media, y en función de su valor calcula la suma de cuadrdos de `x` o la suma de cuadrados de `x` menos la media".
 
-Una diferencia entre las expresiones `let` y las funciones es que su código se ejecuta en el mismo punto en el que se define --y por lo tanto siempre es necesario proporcionarle un valor a los "argumentos" (las variables que se declaran justo después de la palabra `let`)--. Por otro lado, al no ser realmente una función, no se debe usar `return` para devolver el resultado de la expresión; el valor devuelto es siempre el que se calcula en la última línea del bloque.
+Una diferencia entre las expresiones `let` y las funciones es que el código de las primeras se ejecuta en el mismo punto en el que se define --y por lo tanto siempre es necesario proporcionarle un valor a los "argumentos" (las variables que se declaran justo después de la palabra `let`)--. Por otro lado, al no ser realmente una función, no se debe usar `return` para devolver el resultado de la expresión; el valor devuelto es siempre el que se calcula en la última línea del bloque.
 
 En este sentido, los bloques `let` también se parecen a las expresiones compuestas entre `begin` y `end`. La principal diferencia entre unas y otras es que las expresiones `let` introducen su propio contexto de variables, que se destruyen al finalizar el bloque (véase la sección sobre variables locales y globales más abajo.
 
@@ -111,7 +132,7 @@ En este sentido, los bloques `let` también se parecen a las expresiones compues
 
 Una misma función puede hacer cosas distintas, según los argumentos que se le pasen. A cada variante de una función se le llama un "método" de la misma, y en Julia es muy habitual que las funciones tengan más de un método.
 
-De hecho, cuando se define una función con argumentos opcionales, se están definiendo distintos métodos de la misma (uno que requiere que se le pasen todos los argumentos, otro que no requiere ninguno, etc.). Así, retomando el ejemplo del capítulo introductorio que se usó para explicar los argumentos con valores por defecto:
+De hecho, cuando se define una función con argumentos opcionales, se están definiendo distintos métodos de la misma (uno que requiere que se le pasen todos los argumentos, otro que no requiere ninguno, etc.). Así, consideremos por ejemplo la siguiente función para incrementar el valor de un número, usando la unidad como incremento por defecto:
 
 ```@repl
 incrementar(x, inc=1) = x + inc
@@ -169,7 +190,7 @@ function gauss_diasemana(fecha::AbstractString, formato="dd-mm-yyyy")
 end
 ```
 
-!!! note
+!!! tip "Escoge tipos genéricos para definir los argumentos"
 
     `AbstractString` es, como indica su nombre, un tipo abstracto definido para referirse tanto a objetos de tipo `String` como a otros que también puedan interpretarse y manipularse como cadenas de texto. Normalmente es recomendable diseñar funciones con métodos que sean todo lo genéricos que se pueda, es decir que no estén demasiado restringidos a unos tipos de argumentos concretos. Esto ayuda a que las funciones sean útiles en aplicaciones más amplias que las que se hubieran podido pensar en un principio. Si por alguna razón resulta necesario definir métodos condicionados por el tipo de variables, como en el ejemplo, es mejor utilizar tipos abstractos que recojan la mayor cantidad posible de casos de uso. 
 
@@ -185,17 +206,11 @@ Por ese motivo, las personas con experiencia en esos lenguajes de programación 
 
 De hecho, a bajo nivel Julia genera un código distinto y específico para cada combinación concreta de tipos de argumentos, se hayan definido estos de forma genérica o no. Por ejemplo, si una función es declarada como `f(a, b)`, Julia generá un código determinado para el caso en que tanto `a` como `b` sean números de tipo `Int`, otro cuando `a` sea un `Int` y `b` un `Float64`, un distinto cuando `a` sea un `String`... y así para cualquier combinación de dos tipos que pueda ser procesada por las instrucciones escritas en la función.
 
-Como las combinaciones posibles de tipos de argumentos (que potencialmente son infinitas) no pueden determinarse a priori, esta interpretación del código se hace "a demanda", cada vez que se llama a la función `f` con una combinación nueva de tipos para `a` y `b`. Pongamos que en una sesión de Julia ya se ha utilizado `f` con dos argumentos de tipo `Int`. Esto sería como si se hubiera definido un método `f(a::Int, b::Int)`, de tal manera que si se vuelve a llamar a `f` con otros dos argumentos del mismo tipo (aunque sea con otros valores), ese método ya estaría disponible para su uso directo.
+Como las combinaciones posibles de tipos de argumentos (que potencialmente son infinitas) no pueden determinarse a priori, esta interpretación del código se hace "a demanda", cada vez que se llama a la función `f` con una combinación nueva de tipos para `a` y `b`. Pongamos que en una sesión de Julia ya se ha utilizado `f` con dos argumentos de tipo `Int`. Esto sería como si se hubiera definido un método `f(a::Int, b::Int)`, de tal manera que si se vuelve a llamar a `f` con otros dos argumentos del mismo tipo (aunque sea con otros valores), ese método ya estaría disponible para su uso directo.[^2]
 
-!!! note
-
-    Esto ocurre a bajo nivel, de forma transparente para el usuario, aunque no del todo imperceptible. De hecho, esta es una de las razones por las que Julia es eficiente para hacer programas complejos, con numerosísimas operaciones, pero que pueden costar de "arrancar" comparado con otros lenguajes: la primera vez que Julia se encuentra con una función y unos tipos particulares para sus argumentos de entrada, tiene que definir el código de bajo nivel para esos tipos y compilarlo. Pero una vez hecho esto, repetir la operación con nuevos argumentos del mismo tipo es a menudo mucho más rápido.
+[^2]: Esto ocurre a bajo nivel, de forma transparente para el usuario, aunque no del todo imperceptible. De hecho, esta es una de las razones por las que Julia es eficiente para hacer programas complejos, con numerosísimas operaciones, pero que pueden costar de "arrancar" comparado con otros lenguajes: la primera vez que Julia se encuentra con una función y unos tipos particulares para sus argumentos de entrada, tiene que definir el código de bajo nivel para esos tipos y compilarlo. Pero una vez hecho esto, repetir la operación con nuevos argumentos del mismo tipo es a menudo mucho más rápido.
 
 Para que Julia pueda compilar las funciones y sacar el máximo rendimiento de ellas, lo más importante no es definir los tipos de los argumentos de entrada, sino asegurarse de que las operaciones dentro del cuerpo de la función dan resultados con "tipos estables". Esto significa que para cualquier operación, si las variables con las que se opera son de unos tipos concretos, el resultado sea también de un tipo concreto, y predecible incluso sin conocer los valores.
-
-!!! note
-
-    La estabilidad de tipos es la razón por la que, por ejemplo, la división de los números enteros `6/3` da como resultado el número decimal `2.0`, aunque este caso particular bien pudiera haber sido representado como otro entero. (Para obtener el entero `2` se podría utilizar `div(6, 3)`.) Por el mismo motivo, la raíz cuadrada (`sqrt`) falla cuando se aplica a un número real negativo, en lugar de dar un número complejo. (Para obtener la raíz imaginaria de `-1`, por ejemplo, habría que pasarlo como un número complejo: `sqrt(-1 + 0im)` o `sqrt(Complex(-1))`.) 
 
 En general, todas las operaciones y funciones básicas cumplen este requisito. Tomando la multiplicación `z = x * y` como ejemplo:
 
@@ -205,7 +220,11 @@ En general, todas las operaciones y funciones básicas cumplen este requisito. T
 * Si `x` e `y` son dos cadenas de texto (`String`s), `z` será otro `String` que concatena `x` seguido de `y`.
 * Etc.
 
-Del mismo modo, una función que conste únicamente de una serie de operaciones de tipos estables, será ella misma una función de tipo estable. El problema puede darse con estructuras de código como los bloques condicionales o los bucles, que pueden añadir incertidumbre al tipo de los resultados. Por ejemplo, en la siguiente función:
+!!! note
+
+    La estabilidad de tipos es la razón por la que, por ejemplo, la división de los números enteros `6/3` da como resultado el número decimal `2.0`, aunque este caso particular bien pudiera haber sido representado como otro entero  --para obtener el entero `2` se podría utilizar `div(6, 3)`--. Por el mismo motivo, la raíz cuadrada (`sqrt`) falla cuando se aplica a un número real negativo, en lugar de dar un número complejo --para obtener la raíz imaginaria de `-1`, por ejemplo, habría que pasarlo como un número complejo: `sqrt(-1 + 0im)` o `sqrt(Complex(-1))`--.
+
+Las funciones que constan únicamente de una serie de operaciones de tipos estables, son por extensión funciones de tipo estable. El problema puede darse con estructuras de código como los bloques condicionales o los bucles, que pueden añadir incertidumbre al tipo de los resultados. Por ejemplo, en la siguiente función:
 
 ```julia
 function fun(x, y)
@@ -220,13 +239,13 @@ end
 
 Si tanto `x` como `y` son números enteros, la operación `x*y` dará lugar a otro entero, pero `x/y` dará un número decimal. Por lo tanto, aunque esas operaciones sean de tipo estable individualmente, no se puede predecir de qué tipo será el resultado `z` antes de conocer los valores de los argumentos.
 
-Otro ejemplo de inestabilidad de tipos, esa vez a causa de un bucle:
+Otro ejemplo de inestabilidad de tipos, esta vez a causa de un bucle que trata de reproducir lo que hace la función `sum`:
 
 ```julia
-function sumaserie(valores)
+function suma(valores)
     y = 0
-    for (k, x) in valores
-        y += k * x
+    for x in valores
+        y += x
     end
     return y
 end
@@ -242,7 +261,7 @@ También se puede forzar que el resultado devuelto por una función determinada 
 
 ## Métodos paramétricos
 
-Los tipos requeridos en los métodos de una función, además de declararse explícitamente, también pueden describirse tras la palabra `where` después de definir la función. Las dos siguientes declaraciones son equivalentes:
+Los tipos requeridos en los métodos de una función, además de declararse explícitamente, también pueden describirse tras la palabra `where` después de definir los argumentos. Las dos siguientes declaraciones son equivalentes:
 
 ```julia
 function fun(x::Real)
@@ -254,9 +273,9 @@ function fun(x::T) where {T <: Real}
 end
 ```
 
-La expresión `T <: Real` significa "`T` es el tipo `Real`" --o como `Real` es un tipo abstracto, "`T` es un subtipo de `Real`"-- (véase la sección sobre [tipos de elementos](5-arrays.md#Tipos-de-elementos) en el capítulo 5). Obviamente, en este caso no parece muy práctica esta forma alternativa de señalar el tipo del argumento. Pero hay otras situaciones en las que sí resulta útil. Por ejemplo, hay casos en los que el tipo o conjunto de tipos a especificar tienen una definición muy larga, y esta es una forma de evitar que la declaración de los argumentos se alargue en exceso (sobre todo si hay varios argumentos).
+La expresión `T <: Real` significa "`T` es el tipo `Real`" (o dado que `Real` es un tipo abstracto, "`T` es un subtipo de `Real`"; véase la sección sobre [tipos de elementos](5-arrays.md#Tipos-de-elementos) en el capítulo 5). Obviamente, en este caso no parece muy práctica esta forma alternativa de señalar el tipo del argumento. Pero hay otras situaciones en las que sí resulta útil. Por ejemplo, hay casos en los que el tipo o conjunto de tipos a especificar tienen una definición muy larga, y esta es una forma de evitar que la declaración de los argumentos se alargue en exceso (sobre todo si hay varios argumentos).
 
-Pongamos el caso de una función llamada `siguiente`, de la que queremos definir un método específico para números enteros o un caracteres de texto. Los distintos tipos de números enteros se encuentran englobados por el tipo abstracto `Integer`, y también existe un tipo `AbstractChar` para referirse a todos los tipos de caracteres. Sin embargo no existe un tipo abstracto para la unión de estos dos, así que tenemos que recurrir a una declaración explícita de esa unión, como `Union{<:Integer, <:AbstractChar}`. De este modo, la función `siguiente` podría definirse como sigue:
+Pongamos el caso de una función llamada `siguiente`, de la que queremos definir un método específico para números enteros y otro para caracteres de texto. Los distintos tipos de números enteros se encuentran englobados por el tipo abstracto `Integer`, y también existe un tipo `AbstractChar` para referirse a todos los tipos de caracteres. Sin embargo no existe un tipo abstracto para la unión de estos dos, así que tenemos que recurrir a una declaración explícita de esa unión, como `Union{<:Integer, <:AbstractChar}`. De este modo, la función `siguiente` podría definirse como sigue:
 
 ```@example c9
 function siguiente(x::T) where {T <: Union{<:Integer, <:AbstractChar}}
@@ -268,19 +287,19 @@ siguiente(1)
 siguiente('a')
 ```
 
-!!! tip
+!!! note
 
     `Union{<:Integer, <:AbstractChar}` significa "la unión de los tipos `Integer`, `AbstractChar`, *y también los subtipos* comprendidos por ellos. Escribir `Union{Integer, AbstractChar}` no hubiera funcionado, porque esa definición no incluye los subtipos, que es lo que aplicará normalmente. Por ejemplo, al llamar `siguiente(1)` se hubiera buscado el método para valores de tipo `Int`, que es un subtipo de `Integer` pero no coincide con `Integer` ni con `AbstractChar`. 
 
 
 Por otro lado, los métodos paramétricos también son útiles para poder operar con los tipos de los argumentos. Por ejemplo, la función `mismotipo` que se define a continuación devuelve `true` si sus dos argumentos son del mismo tipo, y `false` en caso contrario --sean cuales sean esos tipos, que no hace falta concretar--.
 
-```@example c9
+```@example c8
 function mismotipo(x::T1, y::T2) where {T1, T2}
     return (T1 == T2)
 end
 ```
-```@repl
+```@repl c8
 mismotipo(1, 2)
 mismotipo(1, 2.0)
 ```
@@ -294,9 +313,11 @@ mismotipo(_, _) = false
 
 ## Variables globales y locales
 
-Dentro de las funciones se puede distinguir entre variables "locales" y las "globales". Normalmente el tratamiento de estas variables y objetos no reviste grandes complicaciones, y basta con tener en cuenta los conceptos básicos mencionados en la [sección correspondiente del capítulo 3](3-funciones-control.md#Cuerpo-de-la-función-variables-locales-y-globales-1). Sin embargo hay algunas situaciones particulares que pueden dar lugar a confusión, por lo que a continuación se explica esta cuestión en detalle.
+Dentro de las funciones se puede distinguir entre variables "locales" y las "globales".[^3] Normalmente el tratamiento de estas variables no reviste grandes complicaciones, y basta con tener en cuenta los conceptos básicos mencionados en la [sección correspondiente del capítulo 3](3-funciones-control.md#Cuerpo-de-la-función-variables-locales-y-globales-1). Sin embargo hay algunas situaciones particulares que pueden dar lugar a confusión, por lo que a continuación se explica esta cuestión en detalle.
 
-Los contextos (*scopes* en ingles) son los fragmentos de código en los que "viven" las distintas variables de un programa, es decir, donde se reconocen sus nombres y se puede operar con ellas. (Utilizamos aquí el término "variables" para referirnos a cualquier variable, constante, función u otro tipo de objeto de datos.) Una variable dada puede pertenecer a un contexto global o a uno local.
+[^3]: Utilizamos aquí el término "variables" por simplificar, para referirnos a cualquier variable, constante, función u otro tipo de objeto de datos.
+
+Los contextos (*scopes* en ingles) son los fragmentos de código en los que "viven" las distintas variables de un programa, es decir, donde se reconocen sus nombres y se puede operar con ellas. Una variable dada puede pertenecer a un contexto global o a uno local.
 
 Aunque esta nomenclatura puede hacer pensar que el contexto global es único, en una sesión de Julia pueden manejarse varios contextos globales simultáneamente, aunque en lo que sigue solo vamos a ocuparnos de uno de ellos, el llamado `Main`. Durante una sesión de trabajo interactiva, cada vez que creamos una variable, por ejemplo mediante una asignación como `x = 1`, la variable toma este contexto, y decimos que es una "variable global".
 
@@ -335,7 +356,7 @@ end
 
 Aunque se trata de un código muy poco optimizado, nos sirve para explicar cómo funcionan los contextos anidados. Tenemos una variable global, `fib_iniciales`, definida fuera de la función, con los vectores a devolver para los valores de `n` más bajos. Todas las demás variables son locales:
 
-* En el contexto de la función `fibonnaci` se crean las variables `n` (argumento de entrada) y `fib` (asignada en la primera línea).
+* En el contexto de la función `fibonnaci` se crean las variables `n` (argumento de entrada) y `fib` (asignada en la quinta línea).
 * En el contexto del bucle, dentro de la función, se crean las variables `i` (el iterador), `fn1` y `fn2`.
 
 Cada variable es reconocible por todo el código dentro de los límites de su contexto. Así pues, `i`, `fn1` y `fn2` pueden usarse dentro del bucle, pero al terminar cada iteración, esas variables se destruyen; una vez acabado el bucle, ninguna de ellas podría usarse en el resto de la función. Por otro lado, `n` y `fib` puede usarse en cualquier punto de la función, incluyendo dentro del bucle, con total libertad, pero fuera de la función es como si no existieran. Finalmente, la global `fib_iniciales` es visible por todo el código, dentro y fuera de la función.
@@ -371,7 +392,7 @@ También se podría escribir `local x` para declarar explícitamente que `x` es 
 
 ### Conflictos de nombres locales y globales en el REPL
 
-Como se ha comentado al comienzo de este capítulo, para programar de foma eficiente es recomendable encapsular la mayor cantidad de operaciones posibles en funciones, minimizando así el uso de variables globales. También se aconseja no redefinir las variables globales dentro de las funciones, lo cual reduce la necesidad de declarar variables globales dentro de los contextos locales.
+Para programar de foma eficiente es recomendable encapsular la mayor cantidad de operaciones posibles en funciones, lo cual minimiza el uso de variables globales. También se aconseja no redefinir las variables globales dentro de las funciones, lo cual reduce la necesidad de declarar variables globales dentro de los contextos locales.
 
 Sin embargo, cuando se están prototipando programas, o haciendo análisis sencillos, a menudo se hacen operaciones de forma interactiva, en el REPL, que producen variables en el contexto global `Main`. Podría darse, por ejemplo, el caso en que quisiéramos probar de forma interactiva la secuencia de operaciones usadas para calcular el término `n`-ésimo de la serie de Fibonnaci:
 
@@ -404,6 +425,5 @@ Por otro lado, se han visto algunas herramientas nuevas como:
 
 * El módulo `Dates` para trabajar con variables que representan fechas.
 * Los bloques `begin`-`end` y las expresiones `let`.
-* Algunas funciones para buscar elementos de una colección que cumplen una condición determinada (`findfirst`, `findlast`, `findall`).
-* Las funciones `isodd` e `iseven` para determinar si un número es par o impar.
+* La función `mapslices` para aplicar otra función a lo largo de porciones de un *array*.
 

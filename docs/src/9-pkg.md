@@ -1,20 +1,20 @@
-# Capítulo 5. Gestión de paquetes
+# Capítulo 9. Gestión de paquetes
 
-Si comparamos los lenguajes de programación con los lenguajes naturales, se podría decir que a lo largo de esta guía se han tratado los elementos esenciales de la "gramática" de Julia, con los que se podría construir cualquier programa. Una vez dominada esta gramática, lo siguiente que hace falta para un uso fluido del lenguaje es conocer más "vocabulario" (principalmente funciones), que sirvan para expresar los conceptos (operaciones) necesarios.
+Si comparamos los lenguajes de programación con los lenguajes naturales, se podría decir que a lo largo de esta guía se han tratado los elementos esenciales de la "gramática" de Julia, con los que se podría construir cualquier programa. Una vez dominada esta gramática, lo siguiente que hace falta para un uso fluido del lenguaje es conocer más "vocabulario" (principalmente funciones), que sirvan para expresar las ideas (operaciones) necesarias.
 
-En la [documentación oficial](https://docs.julialang.org/en/stable/) se puede encontrar la lista completa de las funciones y otros elementos disponibles en el [módulo base](https://docs.julialang.org/en/v1/base/base/), así como los múltiples módulos de la "biblioteca estándar" (sección *Standard Library* del manual). Esos módulos incluyen algunos de los que se han usado en esta guía, como [`DelimitedFiles`](https://docs.julialang.org/en/v1/stdlib/DelimitedFiles/), [`LinearAlgebra`](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/), [`Statistics`](https://docs.julialang.org/en/v1/stdlib/Statistics/), [`Random`](https://docs.julialang.org/en/v1/stdlib/Random/), [`Dates`](https://docs.julialang.org/en/v1/stdlib/Dates/) o [`Printf`](https://docs.julialang.org/en/v1/stdlib/Printf/).
+En la [documentación oficial](https://docs.julialang.org/en/stable/) se puede encontrar la lista completa de las funciones y otros elementos disponibles en el [módulo base](https://docs.julialang.org/en/v1/base/base/), así como en los múltiples módulos de la "biblioteca estándar" (sección *Standard Library* del manual). Esos módulos incluyen algunos de los que se han usado en esta guía, como [`DelimitedFiles`](https://docs.julialang.org/en/v1/stdlib/DelimitedFiles/), [`LinearAlgebra`](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/), [`Statistics`](https://docs.julialang.org/en/v1/stdlib/Statistics/), [`Random`](https://docs.julialang.org/en/v1/stdlib/Random/), [`Dates`](https://docs.julialang.org/en/v1/stdlib/Dates/) o [`Printf`](https://docs.julialang.org/en/v1/stdlib/Printf/).
 
-Sin embargo, para un uso realmente productivo de Julia hay que ir más allá de la biblioteca estándar, y recurrir a paquetes externos, como [`CSV`](https://github.com/JuliaData/CSV.jl), [`DataFrames`](https://github.com/JuliaData/DataFrames.jl) y [`GRUtils`](https://github.com/heliosdrm/GRUtils.jl), por poner tres ejemplos usados en la guía. En este último capítulo veremos algunos detalles sobre cómo instalar y gestionar tales paquetes. Las herramientas que se presentarán también facilitan el desarrollo y mantenimiento de los paquetes; pero en esta guía las explicaciones se limitan a las que tienen que ver con el uso de paquetes desarrollados por otros.
+Sin embargo, para un uso realmente productivo de Julia hay que ir más allá de la biblioteca estándar, y recurrir a paquetes externos, como [`CSV`](https://juliadata.github.io/CSV.jl/stable/), [`DataFrames`](http://juliadata.github.io/DataFrames.jl/stable/) y [`GRUtils`](https://heliosdrm.github.io/GRUtils.jl/stable/), por poner tres ejemplos usados en la guía. En este capítulo veremos algunos detalles sobre cómo instalar y gestionar tales paquetes. Las herramientas que se presentarán también facilitan el desarrollo y mantenimiento de los paquetes; pero en esta guía las explicaciones se limitan a las que tienen que ver con el uso de paquetes desarrollados por otros.
 
 ## Dónde encontrar paquetes para Julia
 
 La mayoría de paquetes para Julia están creados por la comunidad de usuarios, y su desarrollo está descentralizado. Cada usuario/desarrollador puede escoger la forma y el sitio donde publicar los paquetes creados, pero para facilitar su instalación existe un "Registro General" que recoge una lista con detalles técnicos de miles de paquetes. Los más conocidos, y en general la mayoría de los que se suelen necesitar, están incluidos en ese registro.[^1]
 
-[El sitio web del Registro General](https://github.com/JuliaRegistries/General) no es fácil de explorar, ni proporciona directamente la información que necesitan los usuarios para "descubrir" los paquetes. Para ello se puede usar el servicio [JuliaHub](https://juliapackages.com/), que permite buscar los paquetes registrados por nombre, temática o popularidad, entre otros criterios. También existe la web [Julia Packages](https://juliapackages.com/), de código abierto, que ofrece un servicio semejante. Además, parala [web oficial de Julia](https://julialang.org/) tiene un apartado titulado "*Ecosystem*" que recomienda algunos paquetes para tareas o dominios de uso habituales.
+[El sitio web del Registro General](https://github.com/JuliaRegistries/General) no es fácil de explorar, ni proporciona directamente la información que necesitan los usuarios para "descubrir" los paquetes. Para ello se puede usar el servicio [JuliaHub](https://juliapackages.com/), que permite buscar los paquetes registrados por nombre, temática o popularidad, entre otros criterios. También existe la web [Julia Packages](https://juliapackages.com/), de código abierto, que ofrece un servicio semejante. Además, la [web oficial de Julia](https://julialang.org/) tiene un apartado titulado "*Ecosystem*" que recomienda algunos paquetes para tareas o dominios de uso habituales.
 
-!!! note "Disclaimer"
+!!! note "¿Son fiables los paquets de terceros?"
 
-    El Registro General es un repositorio de uso público, es decir que cualquier usuario puede proponer paquetes para ser incluidos en él, siempre que cumplan ciertas reglas para que se pueda instalar de forma segura. No se hace, sin embargo, ninguna revisión de la funcionalidad de los paquetes. Por lo tanto, el hecho de que un paquete esté en ese registro no garantiza que funcione correctamente. Para saber qué paquetes son más recomendables, lo mejor es guiarse por las valoraciones de los usuarios. Los buscadores incluyen una métrica de popularidad en forma de "estrellas" concedidas por la comunidad de usuarios. 
+    El Registro General es un repositorio de uso público, es decir que cualquier usuario puede proponer paquetes para ser incluidos en él, siempre que cumplan ciertas reglas para que se pueda instalar de forma segura. No se hace, sin embargo, ninguna revisión de la funcionalidad de los paquetes. Por lo tanto, el hecho de que un paquete esté en ese registro no garantiza que funcione correctamente. Para saber qué paquetes son más recomendables, lo mejor es guiarse por las valoraciones de los usuarios. Los servicios de búsqueda citados incluyen una métrica de popularidad en forma de "estrellas" concedidas por la comunidad de usuarios. 
      
 [^1]: Los usuarios de [JuliaPro](https://juliacomputing.com/products/juliapro.html) tienen también acceso a un repositorio de paquetes basado en el Registro General, pero con un mayor control sobre los contenidos y documentación de los paquetes.
 
@@ -35,7 +35,7 @@ julia> Pkg.add("CSV")
 
 Como se puede apreciar, en el "modo pkg" el nombre del paquete se escribe sin comillas. También se pueden instalar paquetes no incluidos en los registros, si están disponibles a través de una URL, escribiendo dicha URL en lugar del nombre del paquete.
 
-En el momento en el que se instala un paquete, la consola comienza a poblarse de mensajes como los mostrados en la siguiente figura, con referencias al paquete en cuestión pero también muchos otros.
+En el momento en el que se instala un paquete, la consola comienza a poblarse de mensajes como los mostrados en la siguiente figura, con referencias al paquete en cuestión pero también a muchos otros.
 
 ![Figure 1](../assets/pkgadd.png)
 
@@ -47,7 +47,7 @@ Es importante tener en cuenta que, aunque al añadir un paquete se instalen toda
 
 Para verificar qué paquetes se han instalado explícitamente y están disponibles para usar, se puede ejecutar el comando `]status` (o de forma abreviada, `]st`).
 
-También se pueden quitar paquetes que ya no se consideren necesarios, mediante `]remove` o `]rm`. Por ejemplo, si se ha instalado el paquete `CSV`, para eliminarlo valdía cualquiera de las dos siguientes instrucciones:
+También se pueden quitar paquetes que ya no se consideren necesarios, mediante `]remove` o `]rm`. Por ejemplo, si se ha instalado el paquete `CSV`, para eliminarlo valdría cualquiera de las dos siguientes instrucciones:
 
 ```julia-remove
 pkg> remove CSV
@@ -58,7 +58,7 @@ Esta acción hace que el paquete ya no esté disponible (no se mostrará con `]s
 
 ## Actualizar y fijar versiones
 
-Los paquetes externos tienen un ritmo de desarrollo propio, independiente del núcleo del lenguaje, y a menudo se publican nuevas versiones con arreglos y mejoras de estos paquetes con más frecuencia que la distribución base de Julia. El comando `]status` o `]st` muestra, junto a los nombres de los paquetes instalados, las versiones de los mismos. Una vez instalado un el paquete `X`, este se puede actualizar en cualquier momento a la más reciente posible mediante `]update X` o `]up X`. Si no se indica ningún paquete concreto, `]update` o `]up` busca actualizaciones de todos los paquetes instalados.[^2]
+Los paquetes externos tienen un ritmo de desarrollo propio, independiente del núcleo del lenguaje, y a menudo se publican nuevas versiones con arreglos y mejoras de estos paquetes con más frecuencia que la distribución base de Julia. El comando `]status` o `]st` muestra, junto a los nombres de los paquetes instalados, las versiones de los mismos. Una vez instalado un el paquete `X`, este se puede actualizar en cualquier momento a la versión más reciente posible mediante `]update X` o `]up X`. Si no se indica ningún paquete en particular, `]update` o `]up` busca actualizaciones de todos los paquetes instalados.[^2]
 
 [^2]: Esto solo afecta a los paquetes que se hayan instalado desde un repositorio como el Registro General u otro equivalente. En particular, los paquetes añadidos directamente desde una URL no se pueden actualizar de este modo.
 
@@ -73,7 +73,7 @@ pkg> pin Plots
 pkg> pin Plots@1.0.0
 ```
 
-También se puede especificar un rango de versiones más amplio. Por ejemplo, `@1` permitiría actualizar el paquete, haciéndolo variar entre cualquiera de las versiones que tengan el patrón `1.X.Y` (1.0.5, 1.1.1, etc.); `@1.0` permitiría todas las versiones del tipo `1.0.Y`, y así sucesivamente. Los límites inferior y superior también se pueden fijar con dos números separados por un guión. Por ejemplo, para cualquier versión entre 1.0.0 y 1.1.1, incluyendo ambas:
+Si se quiere, se puede especificar un rango de versiones más amplio. Por ejemplo, `@1` permitiría actualizar el paquete, haciéndolo variar entre cualquiera de las versiones que tengan el patrón `1.X.Y` (1.0.5, 1.1.1, etc.); `@1.0` permitiría todas las versiones del tipo `1.0.Y`, y así sucesivamente. Los límites inferior y superior también se pueden fijar con dos números separados por un guión. Por ejemplo, para cualquier versión entre 1.0.0 y 1.1.1, incluyendo ambas:
 
 ```julia-repl
 pkg> pin Plots@1.0-1.1.1
@@ -89,15 +89,17 @@ Esto hará que el paquete se libere de las restricciones fijadas a mano, aunque 
 
 ## Trabajar por proyectos
 
-Cualquier usuario puede reconocerse en esta situación: tienes un archivo creado con un programa antiguo, e intentas abrirlo con la última versión del mismo. Puede que el contenido se vea distinto de como era cuando se creó originalmente, pero incluso eso es una suerte; también podría haber ocurrido que la nueva versión del programa ni siquiera permitiese abrir el archivo.
+Cualquier usuario puede reconocerse en esta situación: tienes un archivo creado con un programa antiguo, e intentas abrirlo con la última versión del mismo. Entonces observas con consternación que el contenido ya no se ve como cuando se creó originalmente; o peor, que la nueva versión del programa ni siquiera permite abrir el archivo.
 
-Lo mismo ocurre con las versiones de los paquetes: las actualizaciones introducen mejoras y arreglan fallos de las versiones anteriores, pero también pueden introducir cambios en los resultados de un estudio, o incluso crear incompatibilidades que impidan ejecutar el programa que se escribió originalmente.
+Lo mismo puede ocurrir con las versiones de los paquetes de Julia: las actualizaciones introducen mejoras y arreglan fallos de las versiones anteriores, pero también pueden introducir cambios en los resultados de un estudio, o incluso crear incompatibilidades que impidan ejecutar el programa que se escribió originalmente.
 
-Para resolver este conflicto, Julia permite trabajar por proyectos con entornos de paquetes aislados y estables, aunque el conjunto de paquetes instalados en el sistema se amplíe y actualice libremente. Cuando se añade un paquete nuevo, o cuando se actualizan los existentes, en realidad se instalan todas sus versiones disponibles. La versión particular que aparece reflejada cuando se llama a `]status`, y la que se carga en la sesión de trabajo cuando se llama a `using`, viene determinada por la configuración del "entorno", que se puede cambiar de forma muy sencilla.
+Para resolver este conflicto, Julia permite trabajar por proyectos con entornos de paquetes aislados y estables, aunque el conjunto de paquetes instalados en el sistema se amplíe y actualice libremente.
 
-Asignar un entorno particular a un proyecto se reduce a seleccionar una carpeta para ese proyecto. Normalmente será la carpeta que recoge toda la información del mismo, pero puede ser cualquiera, y la única restricción es que no puede ser compartida por otro proyecto de Julia.
+Cuando se añade un paquete nuevo, o cuando se actualizan los existentes, en realidad se instalan todas sus versiones disponibles. La versión particular que aparece reflejada cuando se llama a `]status`, y la que se carga en la sesión de trabajo cuando se llama a `using`, viene determinada por la configuración del "entorno", que se puede cambiar de forma muy sencilla.
 
-Lo primero que hay que hacer es, en una sesión de Julia, activar la carpeta escogida como un nuevo entorno de trabajo, con el comando `]activate` seguido de la ruta de la carpeta. Si esta coincide con el directorio de trabajo actual, basta con escribir `]activate .`. La etiqueta mostrada en la consola cambiará para mostrar el nombre del nuevo entorno. Por ejemplo, si la carpeta escogida tuviese la ruta `proyectos_julia/estudio1`.:
+Asignar un entorno particular a un proyecto se reduce a seleccionar una carpeta para ese proyecto. Normalmente será la carpeta que recoge toda la información del proyecto, pero puede ser cualquiera, y la única restricción es que no puede ser compartida por otro proyecto de Julia.
+
+Lo primero que hay que hacer es, en una sesión de Julia, activar la carpeta escogida como un nuevo entorno de trabajo, con el comando `]activate` seguido de la ruta de la carpeta. Si esta coincide con el directorio de trabajo actual, basta con escribir `]activate .` (un punto representa el directorio actual). La etiqueta mostrada en la consola cambiará para mostrar el nombre del nuevo entorno. Por ejemplo, si la carpeta escogida tuviese la ruta `proyectos_julia/estudio1`:
 
 ```julia-repl
 pkg (v1.5)> activate proyectos_julia/estudio1
@@ -107,21 +109,23 @@ pkg (estudio1)>
 
 Si se quiere volver al entorno por defecto, basta con ejecutar `]activate` sin ningúna ruta a continuación.
 
-Cuando se activa un entorno por primera vez, este está "limpio" de paquetes, como si se estuviese trabajando con una instalación nueva de Julia. Para trabajar con cualquiery paquete externo hay que añadirlo de la forma habitual, con `]add`, etc. La instalación de paquetes en un entorno nuevo no duplica los archivos descargados o instalados en el sistema; únicamente crea dos archivos de texto en el directorio del entorno:
+Cuando se activa un entorno por primera vez, este está "limpio" de paquetes, como si se estuviese trabajando con una instalación nueva de Julia. Para trabajar con cualquier paquete externo hay que añadirlo de la forma habitual, con `]add`, etc. La instalación de paquetes en un entorno nuevo no duplica los archivos descargados o instalados en el sistema; únicamente crea dos archivos de texto en el directorio del entorno:
 
 * `Project.toml`. Este archivo contiene la lista de paquetes que se han añadido explicitamente al entorno, es decir los que se podrán cargar con el comando `using` mientras se esté trabajando en ese entorno.
 * `Manifest.tom`. Contiene una lista completa de todos los paquetes necesarios para trabajar en el entorno, incluyendo los listados en `Project.toml` y todas sus dependencias directas e indirectas. Además, para cada paquete señala su lista de dependencias directas y la versión que se cargará en el entorno.
 
 De este modo, cada proyecto puede tener definida su propia configuración de paquetes, y mantenerla fijada cuando se cierre el proyecto, sin renunciar a tener otros entornos con versiones más actualizadas. Al estar todas las versiones recogidas en el archivo `Manifest.toml`, siempre que se vuelva a activar esa carpeta del proyecto el gestor de paquetes utilizará las mismas versiones, aunque en otros proyectos se hayan cambiado. (Naturalmente, esto es así mientras no se hagan actualizaciones en el entorno en cuestión.) 
 
-Incluso en otro ordenador, con una instalación de Julia aparte, se puede reproducir el conjunto de paquetes y sus versiones asociadas a un proyecto, si se mantienen los archivos `Project.toml` y `Manifest.toml`. En el nuevo ordenador únicamente haría falta ejecutar --una vez activado el entorno del proyecto-- el comando `]instantiate`, para descargar e instalar en el sistema los paquetes indicados en el *manifest*. Si la versión de Julia es la misma, los proyectos funcionarán igualmente en ambos ordenadores (salvo por diferencias que pudiera haber en utilidades del sistema operativo, al margen de los componentes de Julia). Si la versión de Julia ha cambiado, podría haber incompatibilidades con los paquetes o diferencias en el funcionamiento del programa. Para controlar incluso este detalle, se puede añadir a `Project.toml` una indicación sobre la versión de Julia, con las siguientes líneas:
+Incluso en otro ordenador, con una instalación de Julia aparte, se puede reproducir el conjunto de paquetes y sus versiones asociadas a un proyecto, si se mantienen los archivos `Project.toml` y `Manifest.toml`. En el nuevo ordenador únicamente haría falta ejecutar --una vez activado el entorno del proyecto-- el comando `]instantiate`, para descargar e instalar en el sistema los paquetes indicados en el *manifest*. Si la versión de Julia es la misma, los proyectos funcionarán igualmente en ambos ordenadores (salvo por diferencias que pudiera haber en utilidades del sistema operativo, al margen de los componentes de Julia). Si la versión de Julia ha cambiado, podría haber incompatibilidades con los paquetes o diferencias en el funcionamiento del programa. Para controlar incluso este detalle, se puede añadir a `Project.toml` una indicación sobre la versión de Julia a emplear, con las siguientes líneas:
 
 ```toml
 [compat]
 julia = "1"
 ```
 
-Es muy recomendable trabajar siempre de este modo, con un entorno distinto para cada proyecto, en parte porque hace que el trabajo sea reproducible a largo plazo, tal como se ha dicho. Pero además, si cada proyecto tiene en su entorno solo los paquetes que necesita, se evitan los entornos con un número excesivo de paquetes, que son una causa frecuente de incompatibilidades entre versiones.
+(En este ejemplo se indica que se ha de usar la versión 1 de Julia. Puede indicarse una versión más específica --p.ej. `julia="1.5"`, o incluso distintas versiones separadas por comas.)
+
+Es muy recomendable trabajar siempre de este modo, con un entorno distinto para cada proyecto, en parte porque hace que el trabajo sea reproducible a largo plazo, tal como se ha dicho. Pero además, si cada proyecto tiene en su entorno con solo los paquetes que necesita, se evitan los entornos con un número excesivo de paquetes, que son una causa frecuente de incompatibilidades entre versiones.
 
 El entorno por defecto, que se activa al inicio de cada sesión de Julia, tiende a ser un terreno de pruebas, en el que se van acumulando los distintos paquetes que se instalan, a veces antes de decidir su uso definitivo en los proyectos en curso. Esta práctica hace proliferar incompatibilidades, por lo que algunos paquetes en el entorno por defecto se quedan bloqueados en versiones antiguas, y otros no se pueden añadir. Así pues, es preferible mantener razonablemente limpio el entorno por defecto, y tener algún directorio reservado para las pruebas, que llegado el caso de problemas se puede "resetear" borrando los archivos `Project.toml` y `Manifest.toml`.
 
@@ -137,8 +141,8 @@ Por defecto Julia se inicia en un estado "limpio", en el que no se ha cargado na
 
 Esto es tan sencillo como añadir una o varias líneas con la instrucciones correspondientes en un archivo llamado `startup.jl`, guardado en uno de estos dos lugares:
 
-* El directorio `config` dentro del "depósito" local de Julia --normalmente un directorio llamado `.julia` en la ruta donde se encuentra el perfil del usuario del ordenador--. Si en una sesión de Julia se escribe `DEPOT_PATH`, se presentará una lista de directorios, el primero del cual suele ser este depósito. Así pues, la ruta exacta del archivo a editar normalmente se podrá obtener como `joinpath(DEPOT_PATH[1], "config", "startup.jl")`.
-* El directorio de configuración global de Julia, cuya ruta se puede obtener como `joinpath(Sys.BINDIR, Base.SYSCONFDIR)`-
+* El directorio `config` dentro del "depósito" local de Julia --normalmente un directorio llamado `.julia` en la ruta donde se encuentra el perfil del usuario del ordenador--. Si en una sesión de Julia se escribe `DEPOT_PATH`, se presentará una lista de directorios, el primero de los cuales suele ser este depósito. Así pues, la ruta exacta del archivo a editar normalmente se podrá obtener como `joinpath(DEPOT_PATH[1], "config", "startup.jl")`.
+* El directorio de configuración global de Julia, cuya ruta se puede obtener como `joinpath(Sys.BINDIR, Base.SYSCONFDIR)`.
 
 Cualquiera de los dos sitios son válidos para guardar el archivo `startup.jl`, solo que en el primer caso se guardará una configuración específica para el usuario, y en el segundo será una configuración global para todos los usuarios. Dependiendo de cómo se haya instalado Julia, un usuario que no sea administrador podría tener solo acceso a la configuración local.
 
@@ -155,13 +159,13 @@ O en una sola línea:
 using Statistics, LinearAlgebra
 ```
 
-En general solo conviene hacer esto con módulos de la biblioteca estándar. Salvo en contadas excepciones, es mejor no cargar paquetes externos al inicio, aunque se usen con mucha frecuencia, porque esto hará que se carguen las versiones presentes en el entorno por defecto. Si luego se cambia a otro entorno que use otra versión de los mismos paquetes (incluso si es una dependencia indirecta), podrían darse conflictos entre versiones, u obtenerse resultados distintos a la hora de ejecutar los programas.
+En general solo conviene hacer esto con módulos de la biblioteca estándar. Salvo en contadas excepciones, es mejor no cargar paquetes externos al inicio, aunque se usen con mucha frecuencia, porque esto hará que se carguen las versiones presentes en el entorno por defecto. Si luego se cambia a un entorno que use otra versión de los mismos paquetes (incluso si es una dependencia indirecta), podrían darse conflictos entre versiones, u obtenerse resultados distintos a la hora de ejecutar los programas.
 
 ## Conflictos con nombres de funciones
 
-Al cargar un módulo estándar o un paquete con el comando `using`, los nombres de las funciones y otros objetos "exportados" pasan a ser utilizables directamente, como ocurre con `readdlm` al cargar `DelimitedFiles`, `plot` de `GRUtils`, etc. Por otro lado, los paquetes generalmente contienen muchas otras funciones y objetos que no se exportan; la mayoría suelen ser elementos "internos", es decir, que no están pensados para que el usuario que carga el paquete los use habitualmente, pero no siempre es así. Por ejemplo, la función `read` del paquete `CSV` no está exportada, y por eso para leer archivos con ese paquete hay que llamarla `CSV.read`.
+Al cargar un módulo estándar o un paquete con el comando `using`, los nombres de las funciones y otros objetos "exportados" pasan a ser utilizables directamente, como ocurre con `readdlm` al cargar `DelimitedFiles`, `plot` de `GRUtils`, etc. Por otro lado, los paquetes generalmente contienen muchas otras funciones y objetos que no se exportan; la mayoría suelen ser elementos "internos", es decir, que no están pensados para que el usuario que carga el paquete los use habitualmente, pero no siempre es así. Por ejemplo, la función `read` del paquete `CSV` no está exportada, y por eso para leer archivos con ese paquete hay que llamarla como `CSV.read`.
 
-Esto es conveniente en el caso de funciones cuyo nombre sea muy genérico, de tal manera que puedan entrar en conflicto con funciones distintas de otros paquetes [^3]. Si por ejemplo en la misma sesión se carga el paquete `GRUtils` y también `Plots`, al usar la función `plot` ocurre esto:
+Esto es conveniente en el caso de funciones cuyo nombre sea muy genérico, de tal manera que puedan entrar en conflicto con funciones distintas de otros paquetes.[^3] Si por ejemplo en la misma sesión se carga el paquete `GRUtils` y también `Plots`, al usar la función `plot` ocurre esto:
 
 ```julia-repl
 julia> using GRUtils, Plots

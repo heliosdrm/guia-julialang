@@ -4,7 +4,7 @@
 cp("../../datos/", "./datos")
 ```
 
-En los capítulos anteriores se han explorado las nociones básicas sobre los elementos necesarios para hacer programas en Julia. Llegados a este punto, podemos revisitar y explorar en más profundidad cada uno de los conceptos estudiados, para sacarles el máximo provecho.
+En los capítulos anteriores se han explorado con algunos ejemplos prácticos las nociones básicas sobre los elementos necesarios para hacer programas en Julia. Llegados a este punto, podemos revisitar y explorar en más profundidad cada uno de los conceptos estudiados, para sacarles el máximo provecho.
 
 Empezaremos por el de las variables conocidas como *arrays*, entre las que se cuentan los vectores y las matrices que se introdujeron en el capítulo sobre [series y tablas de datos](2-series-tablas.md). Los *arrays* son series organizadas de datos que pueden tener una, dos o más dimensiones. En el presente capítulo veremos más detalles sobre este tipo de variables, que son un elemento fundamental en la mayoría de cálculos numéricos, y por lo tanto conviene dominar desde un principio. Además, estos detalles servirán como introducción práctica a otros asuntos importantes para la programación en Julia.
 
@@ -13,7 +13,7 @@ Empezaremos por el de las variables conocidas como *arrays*, entre las que se cu
 
 ### Vectores
 
-Hay distintas formas de crear y componer *arrays*, algunas de las cuales ya se han visto en el capítulo 2. El caso más sencillo es el de los vectores, que recordemos que son *arrays* unidimensionales, que se puede definir escribiendo los valores entre corchetes, separados por comas:
+Hay distintas formas de crear y componer *arrays*, algunas de las cuales ya se han visto en el capítulo 2. El caso más sencillo es el de los vectores (*arrays* unidimensionales), que se pueden definir escribiendo sus valores entre corchetes, separados por comas:
 
 ```@repl
 numeros = [1,2,3,4]
@@ -37,10 +37,6 @@ sudoku = cat(
     [2,1,4,3],
     dims=2)
 ```
-
-!!! tip
-
-    Como se ve en este ejemplo con los argumentos de la función `cat`, una "línea" de código se puede "partir" en varias líneas, siempre que al final de cada línea salvo la última la sintaxis deje claro que se espera más código (por ejemplo, con un paréntesis pendiente de cerrar).
 
 Como las matrices son un objeto de cálculo tan habitual, al igual que pasa con los vectores existen formas más prácticas de componerlas. La operación `cat(a, b..., dims=2)` se puede escribir como `hcat(a, b...)` --con "h" de "horizontal"--. Por lo tanto el sudoku anterior podría haberse escrito como:
 
@@ -88,7 +84,7 @@ julia> [
        ]
 ```
 
-Y una forma más de componer matrices, especialmente práctica en estos casos en los que todos los valores son escalares breves de escribir, es mediante la operación combinada de concatenación horizontal y vertical. La función correspondiente es `hvcat`, y su forma abreviada utiliza una sola pareja de corchetes para todo el conjunto de datos y los mismos separadores entre elementos que se emplean para la concatenación horizontal y vertical:
+Y una forma más de componer matrices, especialmente práctica en estos casos en los que todos los valores son escalares breves de escribir, es mediante la operación combinada de concatenación horizontal y vertical. La función correspondiente es `hvcat`, y su forma abreviada utiliza una sola pareja de corchetes para todo el conjunto de datos, y los mismos separadores entre elementos que se emplean para la concatenación horizontal y vertical:
 
 ```julia-repl
 julia> [1 2 3 4;
@@ -109,7 +105,7 @@ donde `ncols` es el número de columnas esperado en cada fila, y `valores...` re
 hvcat(3, "a", "b", "c", "x", "y", "z")
 ```
 
-En un ejemplo más realista los valores estarían agrupados en otra variable, como podría ser un vector. Un conjunto de valores recogidos en una sola variable pueden desagruparse y pasarlos a modo de argumentos separados a una función como `hvcat`, añadiendo unos "puntos suspensivos" a la variable que se quiere desagrupar. (Esto es lo que se llama *splatting* en inglés, es decir "esparcimiento" de variables):
+En un ejemplo más realista los valores estarían agrupados en otra variable, como podría ser un vector. Los valores individuales de dicho vector podrían pasarse a la función `hvcat` mediante la técnica de *splatting* (añadiendo puntos suspensivos al nombre de la variable), como se indicaba en la sección sobre [Agrupaciones de argumentos](@ref) del capítulo anterior:
 
 ```@repl c5
 letras = ["a", "b", "c", "x", "y", "z"];
@@ -125,7 +121,7 @@ matriz_columna = hvcat(1, "a", "b", "c")
 
 Aunque la disposición de los valores es idéntica, el tipo de *array* es distinto: El primero es un `Array{String, 1}` (es decir, un *array* cuyos elementos son de tipo `String` con una sola dimensión), que contiente "3 elementos". Por contra, el segundo es un `Array{String, 2}` (con dos dimensiones), de tamaño 3×1.
 
-Para finalizar con las matrices y las distintas formas de concatenar valores en dos dimensiones, resulta pertinente destacar la diferencia entre el uso de la coma y el punto y coma (o el cambio de línea) como separador de elementos: la coma es el separador de elementos *en vectores*, mientras que el punto y coma indica que el siguiente elemento se concatene con los anteriores añadiendo filas al *array* --sea un vector o una matriz--. Esto explica los resultados radicalemnte distintos de estas dos operaciones:
+Para finalizar con las matrices y las distintas formas de concatenar valores en dos dimensiones, resulta pertinente destacar la diferencia entre el uso de la coma y el punto y coma (o el cambio de línea) como separador de elementos: la coma es el separador de elementos *en vectores*, mientras que el punto y coma indica que el siguiente elemento se concatene con los anteriores añadiendo filas al *array* --sea un vector o una matriz--. Esto explica los distintos resultados de estas dos operaciones:
 
 ```@repl
 unodos = [1, 2];
@@ -144,9 +140,9 @@ julia> [1, 2; 3]   # Pero esto no funciona
 ERROR: syntax: unexpected semicolon in array expression
 ```
 
-!!! warning
+!!! warning "¡No te confundas con las reglas de Matlab!"
 
-    Las funciones `cat` y derivadas, así como la composición de matrices escribiendo valores entre corchetes, es muy semejante a la de Matlab, pero los que estén acostumbrados a este otro lenguaje de programación han de tener precaución con algunas diferencias clave en cuanto al uso de la coma en la creación de matrices y la disposición dimensional de los vectores (que en Matlab se asimilan a filas, en lugar de columnas).
+    Las funciones `cat` y derivadas, así como la composición de matrices escribiendo valores entre corchetes, es muy semejante a la de Matlab y Octave, pero los que estén acostumbrados a este otro lenguaje de programación han de tener precaución para no confundirse al usar Julia. En Matlab la coma tiene un uso distinto a la hora de crear matrices, y los vectores se interpretan como matrices de una fila, al contrario que en Julia.
 
 ### *Arrays* n-dimensionales
 
@@ -176,7 +172,7 @@ Además, `reshape` también puede servir de contrapartida a `hvcat` para crear m
 
 ### Valores predefinidos
 
-Hay algunos *arrays* prototípicos que se emplean a menudo, y se pueden crear de forma rápida con funciones específicas para ellos, sin tener que definir sus valores uno a uno. Por ejemplo, las funciones `zeros` y `ones` sirven para crear *arrays* compuestos enteramente de ceros o unos, con unas dimensiones dadas. También existen las funciones análogas `trues` and `falses`, para crear *arrays* con los correspondientes valores lógicos (verdadero o falso). Por ejemplo, podemos crear las siguientes matrices de tamaño 2×3 (aunque estas funciones sirven para crear *arrays* cualquier número de dimensiones):
+Hay algunos *arrays* prototípicos que se emplean a menudo, y se pueden crear de forma rápida con funciones específicas para ellos, sin tener que definir sus valores uno a uno. Por ejemplo, las funciones `zeros` y `ones` sirven para crear *arrays* compuestos enteramente de ceros o unos, con unas dimensiones dadas. También existen las funciones análogas `trues` and `falses`, para crear *arrays* con los correspondientes valores lógicos (verdadero o falso). Por ejemplo, podemos crear las siguientes matrices de tamaño 2×3 (aunque estas funciones sirven para crear *arrays* con cualquier número de dimensiones):
 
 ```@repl
 zeros(2,3)
@@ -226,9 +222,9 @@ letras = ["a","b","c","d"];
 rand(letras, 3)
 ```
 
-!!! tip
+!!! tip "Otros generadores de números aleatorios"
 
-    En el módulo `Random`, que es donde están definidas estas funciones, también hay otras funciones no importadas por defecto, para generar números aleatorios a partir de otras distribuciones, como `randexp` (distribución exponencial de media igual a 1) o `bitrand` (selección aleatoria de números binarios), así como variantes para "rellenar" arrays ya existentes con números aleatorios: `rand!`, `randn!`, etc., que se manejan con la misma sintaxis que `fill!`. Para acceder a ellas se puede importar el módulo con la orden `using Random`.
+    En el módulo estándar `Random` también hay otras funciones no importadas por defecto, para generar números aleatorios a partir de otras distribuciones, como `randexp` (distribución exponencial de media igual a 1) o `bitrand` (selección aleatoria de números binarios), así como variantes para "rellenar" arrays ya existentes con números aleatorios: `rand!`, `randn!`, etc., que se manejan con la misma sintaxis que `fill!`. Para acceder a ellas se puede importar el módulo con la orden `using Random`.
 
 Si se quiere generar estos números aleatorios (en realidad *pseudoaleatorios*) de forma reproducible, es decir que sean los mismos cuando se vuelva a ejecutar el programa, se puede fijar la "semilla" del algoritmo de aleatorización, con la función `Random.seed!` (antes hay que importar el módulo `Random`). Esta función toma solo un argumento, que es un número entero arbitrario (sirve cualquiera, pero ha de ser el mismo para conseguir resultados repetibles):
 
@@ -237,8 +233,10 @@ rand() # un número aleatorio
 rand() # otro número aleatorio distinto
 Random.seed!(111); # fijamos semilla
 rand() # número repetible
+rand() # siguiente número repetible
 Random.seed!(111); # misma semilla
-rand() # mismo número
+rand() # mismos resultados que antes...
+rand()
 ```
 
 ### Valores indefinidos
@@ -250,11 +248,11 @@ Array{Int}(undef, 1, 3, 2)
 Array{String}(undef, 3)
 ```
 
-En todos los casos, la función que crea el *array* toma como nombre `Array{T}`, donde `T` es el tipo de elemento que se quiere definir (en los ejemplos `Int` y `String`; véanse más detalles sobre los tipos en el siguiente apartado. El primer argumento de la función es siempre `undef`, y los siguientes son las dimensiones del *array* creado.
+En todos los casos, la función que crea el *array* toma como nombre `Array{T}`, donde `T` es el tipo de elemento que se quiere definir (en los ejemplos `Int` y `String`; véanse más detalles sobre los tipos en el siguiente apartado). El primer argumento de la función es siempre la palabra clave `undef`, y los siguientes son las dimensiones del *array* creado.
 
 !!! tip
 
-    Para mayor control se pueden utilizar constructores más específicos, como `Array{T, N}`, donde `N` es un número entero que define la cantidad de diemsniones del *array*, o `Vector{T}` (equivalente a `Array{T, 1}`), o `Matrix{T}` (equivalente a `Array{T, 2}`). En estos casos el número de dimensiones proprocionado como argumentos ha de coincidir con `N`.
+    Para mayor control se pueden utilizar constructores más específicos, como `Array{T, N}`, donde `N` es un número entero que define la cantidad de dimensiones del *array*, o `Vector{T}` (equivalente a `Array{T, 1}`), o `Matrix{T}` (equivalente a `Array{T, 2}`). En estos casos el número de dimensiones proprocionado como argumentos ha de coincidir con `N`.
 
 Otra forma de crear *arrays* con valores indefinidos es tomando otros *arrays* existentes como patrón, con la posibilidad de modificar su tipo o número de dimensiones, mediante la función `similar`:
 
@@ -274,10 +272,9 @@ Es posible leer o modificar uno o varios valores de un *array*, indexando la pos
 
 ```@repl c5
 mat = [1 10 0.1; 2 20 0.2; 3 30 0.3]
-# Primera fila, segunda columna de la matriz:
-mat[1, 2]
-# O lo que es lo mismo, primer valor tras la primera columna:
-mat[3 + 1]
+mat[1, 2] # Primera fila, segunda columna de la matriz:
+mat[3 + 1] # Lo mismo: primer valor tras la primera columna:
+
 ```
 
 Se pueden utilizar vectores de índices, para seleccionar varios valores o combinaciones de filas y columnas en la misma operación. Por ejemplo, para intercambiar la segunda y tercera filas de la matriz (completas, es decir los valores de las tres columnas para esas dos filas):
@@ -309,16 +306,19 @@ collect(5:-1:1) # Correcto
 collect(5:1) # Serie vacía
 ```
 
-Algunos trucos útiles con rangos cuando se usan como índices son: la palabra clave `end` hace referencia a la última posición/fila/columna indexable en el *array* manipulado; y los dos puntos aislados (`:`) hacen referencia a "todas" las posiciones, filas o columnas.
+Algunos trucos útiles con rangos cuando se usan como índices son: las palabras clave `begin` y `end` hacen referencia respectivamente a la primera y la última posición/fila/columna indexable en el *array* manipulado; y los dos puntos aislados (`:`) hacen referencia a "todas" las posiciones, filas o columnas.
 
 ```@repl c5
-# Serie de números invertida:
 numeros = [1, 2, 5, 10];
-numeros[end:-1:1]
-# Intercambiar las filas primera y segunda (antes tercera) de mat
+numeros[end:-1:1] # Serie de números invertida: # cambiar a begin
+# Intercambiar las filas primera y segunda (antes tercera) de `mat`
 mat[1:2,:] = mat[[2,1],:];
 mat
 ```
+
+!!! note
+
+    El uso de `begin` como índice para referirse al primer elemento no funciona en versiones anteriores a Julia 1.4.
 
 ## Tipos de elementos
 
@@ -427,7 +427,7 @@ Como el propósito de redondear suele ser convertir a un entero, estas funciones
 round(Int, sqrt(5.0^2))
 ```
 
-!!! tip
+!!! tip "Opciones de redondeo"
 
     La funciones `round`, etc. admiten argumentos con nombre `digits` o `sigdigits`, si se quieren usar para redondear a un número particular de cifras decimales distinto de cero, o a un número de cifras signficativas (independientemente de dónde caiga el punto decimal).
 
@@ -436,9 +436,9 @@ round(Int, sqrt(5.0^2))
 Además de estos tipos de números que tienen una representación concreta en memoria, Julia tiene definida una jerarquía de tipos "abstractos", que permite interpretar variables de distintos tipos como elementos de un mismo "supertipo". La jerarquía de tipos numéricos en Julia es la siguiente:
 
 ```
-Number --- Complex
+Number ----------------------------------- Complex
         |
-        ·- Real --- Rational
+        ·- Real -------------------------- Rational
                  |
                  ·- AbstractIrrational --- Irrational
                  |
@@ -448,7 +448,7 @@ Number --- Complex
                  |                       | Float32
                  |                       | Float16
                  |
-                 ·- Integer -- Bool
+                 ·- Integer -------------- Bool
                             |
                             ·- Signed  --| BigInt
                             |            | Int128
@@ -468,7 +468,7 @@ Cuando se crea un *array* combinando elementos de distintos tipos, Julia escoge 
 
 Por otro lado, si se juntan números y otro tipo de objetos (por ejemplo cadenas de texto), el tipo de elementos del *array* creado será `Any`, el "supertipo" abstracto que sirve para recoger cualquier tipo de objeto en Julia:
 
-```@repl
+```@repl c5
 unos = [1, 1.0, 1+0im, "uno"]
 ```
 
@@ -486,6 +486,15 @@ zeros(Real, 3)
 
 Si el tipo escogido es abstracto, como en los ejemplos anteriores, esto permite asignar al *array* resultante elementos de cualquiera de sus "subtipos".
 
+Que un *array* esté definido como de un tipo abstracto no significa, sin embargo, que sus elementos individuales lo sean. Estos son siempre de tipos concretos, como se puede observar si se consultan sus valores:
+
+```@repl c5
+unos
+typeof(unos[1])
+typeof(unos[2])
+typeof(unos[3])
+typeof(unos[4])
+```
 
 ## Mutabilidad de los *arrays*
 
@@ -493,14 +502,10 @@ Una característica importante de los *arrays* es que son un tipo de objeto *mut
 
 ```@repl c5
 sa = [1, 2, 3];
-# Creamos otro array `sb` "igual a `sa`"
-sb = sa;
-# Ahora modificamos `sa`...
-sa[1] = 0;
-# Volvemos a cambiar `sa`, multiplicándolo por 10
-sa = sa * 10;
-# Vemos cómo ha quedado `sa`:
-sa
+sb = sa; # Creamos otro array `sb` "igual a `sa`"
+sa[1] = 0; # Ahora modificamos `sa`...
+sa = sa * 10; # Volvemos a cambiar `sa`
+sa # Vemos cómo ha quedado `sa`:
 ```
 
 El resultado de `sa` coincide con el esperado, pero si ahora volvemos a `sb`, quizás uno no esperaría esto:
@@ -509,7 +514,7 @@ El resultado de `sa` coincide con el esperado, pero si ahora volvemos a `sb`, qu
 sb
 ```
 
-Una forma de entender lo que pasa en este ejemplo es considerar que las variables `sa`, `sb` no son lo mismo que los objetos contenidos en ellas (en este caso los *arrays*, sino meras referencias, una especie de "etiquetas" que pueden asignarse de forma independiente, e incluso redundante a los diversos objetos que hay en el espacio de trabajo. La siguiente figura muestra gráficamente lo que ocurre en cada una de las operaciones.
+Una forma de entender lo que pasa en este ejemplo es considerar que las variables `sa`, `sb` no son lo mismo que los objetos contenidos en ellas (en este caso los *arrays*), sino meras referencias, una especie de "etiquetas" que pueden asignarse de forma independiente, e incluso redundante a los diversos objetos que hay en el espacio de trabajo. La siguiente figura muestra gráficamente lo que ocurre en cada una de las operaciones.
 
 ![Asignación de arrays a variables](../assets/arrays-asignacion-modificacion.png)
 
@@ -519,13 +524,11 @@ Esta situación no ocurre solo al asignar *arrays* explícitamente, como en el e
 
 ### Evitar mutaciones inesperadas
 
-Este tipo de situaciones se pueden evitar usando copias de los *arrays* cuando se asignan a distintas variables. Cuando el *array* es un vector, la forma más concisa de hacer una copia del mismo es "subindexando" todos sus elementos, como sigue:
+Estas situaciones se pueden evitar usando copias de los *arrays* cuando se asignan a distintas variables. Cuando el *array* es un vector, la forma más concisa de hacer una copia del mismo es "subindexando" todos sus elementos, como sigue:
 
 ```@repl c5
-# Redefinimos `sa` como un array con "todos los valores de `sb`"
-sa = sb[:]
-# Los cambios en `sa`, ya no se aplican a `sb`
-sa[1] = 1;
+sa = sb[:] # Redefinimos `sa` como un array con los valores de `sb`
+sa[1] = 1; # Los cambios en `sa`, ya no se aplican a `sb`
 sa
 sb
 ```
@@ -535,16 +538,12 @@ Para cualquier tipo de *array* también se puede utilizar la función `copy` o `
 ```@repl
 vectores = [[1,2],[3,4]]
 copia_vectores = copy(vectores);
-# Reemplazamos el primer vector
-copia_vectores[1] = zeros(3);
+copia_vectores[1] = zeros(3); # Reemplazamos el primer vector
 copia_vectores
-# El array original sigue intacto:
-vectores
-# Pero si hacemos cambios a otro nivel...
-copia_vectores[2][1] = 0;
+vectores # El array original sigue intacto:
+copia_vectores[2][1] = 0; # Pero si hacemos cambios a otro nivel...
 copia_vectores
-# ... `copy` no ha evitado la mutación
-vectores
+vectores # ... `copy` no ha evitado la mutación
 ```
 
 Por otro lado, si usamos `deepcopy` en lugar de `copy` sí que se evitan las modificaciones en todos los niveles:
@@ -556,6 +555,10 @@ copia_vectores[2][1] = 0;
 copia_vectores
 vectores
 ```
+
+!!! tip "Paquete StaticArrays"
+
+    El paquete [StaticArrays](https://juliaarrays.github.io/StaticArrays.jl/stable/) proporciona unos tipos especiales de *arrays* con dimensiones fijas, y que pueden ser inmutables (`SVector`, `SMatrix`, `SArray`...) o también mutables (`MVector`, etc.), según convenga. Además de que es más fácil controlar mutaciones accidentales, la principal ventaja de este tipo de *arrays* es que su manejo puede ser mucho más eficiente en términos de consumo de memoria y de tiempo (sobre todo para *arrays* pequeños). 
 
 ### Forzar la mutación
 
@@ -569,7 +572,7 @@ matriz
 
 Esto no ha funcionado, porque `matriz[:, 3]` es vector en el que se ha *copiado* de la tercera columna de `matriz`, lo mismo que `sb[:]` contenía una copia de `sb` en el ejemplo de la sección anterior.
 
-La forma de trabajar con una parte del array sin hacer una copia es mediante la función `view` --o para mayor comodidad, con la macro `@view`, que permite utilizar un código más semejante al usado cuando se trabaja con copias--:
+La forma de trabajar con una parte del array sin hacer una copia es mediante la función `view` --o para mayor comodidad, con la macro[^1] `@view`, que permite utilizar un código más semejante al usado cuando se trabaja con copias--:
 
 ```@repl
 matriz = zeros(2,3)
@@ -578,9 +581,11 @@ fill!(ultima_columna, 0.5)
 matriz
 ```
 
+[^1]: Las [*macros*](https://es.wikipedia.org/wiki/Macro) son un tipo especial de instrucciones que se utilizan como "truco" para generar expresiones más complejas a partir de otras más sencillas. En Julia, las macros se identifican por nombres que comienzan con `@`, como `@view`. Su definición es un tema complejo que no se aborda en esta guía, pero por simplificar se pueden considerar como una especie de funciones, aunque sus argumentos no suelen ser variables sino otras instrucciones. Para más detalles, se puede consultar (en inglés) la [sección sobre macros del manual oficial](https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros-1)
+.
 ## Manipulación de las dimensiones
 
-Además del tipo de variables contenidas, los *arrys* tienen unas dimensiones determinadas, por lo que en general no se puede acceder ni asignar valores en posiciones fuera de las mismas. En el caso particular de los vectores, sin embargo, hay múltiples funciones para redimensionarlos (sin tener que crear nuevas variables):
+Además del tipo de variables contenidas, los *arrays* tienen unas dimensiones determinadas, por lo que en general no se puede acceder a posiciones fuera de esas dimensiones, ni para leerlas ni para asignarles valores en ellas. En el caso particular de los vectores, sin embargo, hay múltiples funciones para redimensionarlos (sin tener que crear nuevas variables):
 
 * `resize(v, n)` para cambiar la longitud del vector `v` a `n` elementos (añadiendo valores indefinidos si `n` es mayor que la longitud original de `v`).
 * `push!(v, x, y...)` para añadir uno o más elementos (`x`, `y`, etc.),  al final del vector `v`.
@@ -589,12 +594,12 @@ Además del tipo de variables contenidas, los *arrys* tienen unas dimensiones de
 * `append!(v, w)` para extender el vector `v` añadiéndole el conjunto de datos `w` (otro vector u otro tipo de colección) al final.
 * `prepend!(v, w)` para extender el vector `v` añadiéndolo los datos de `w` al principio.
 * `pop!(v)` para extraer y eliminar el último elemento del vector `v`.
-* `popfirst!(v) para extraer y eliminar el primer elemento del vector `v`.
+* `popfirst!(v)` para extraer y eliminar el primer elemento del vector `v`.
 * `deleteat!(v, indices)` para eliminar los elementos señalados en `indices` del vector `v`.
 * `splice!(v, indices, w)` para eliminar los elementos señalados en `indices` del vector `v`, y opcionalmente poner los elementos de `w` en su lugar (semejante a una combinación de `deleteat!` e `insert!`).
 * `empty!(v)` para eliminar todos los elementos del vector `v`.
 
-!!! note
+!!! note "Coste de redimensionar los *arrays*"
 
     Aunque estas operaciones facilitan la creación dinámica de vectores, si se conoce de antemano el número de elementos que se ha de gestionar en un vector es recomendable predefinirlo con el tamaño necesario para contener todos los elementos que requiera, sobredimensionándolo si hace falta. El redimensionamiento de los vectores tiene un coste computacional, que puede ralentizar significativamente la velocidad de los cálculos.
 
@@ -606,33 +611,36 @@ Por otro lado, la función `permutedims` sirve para cambiar el orden de las dime
 
 ```@repl
 numeros = cat([1 10; 2 20; 3 30],
-    [0.1 0.01; 0.2 0.02; 0.3 0.03],
-    dims=3)
+[0.1 0.01; 0.2 0.02; 0.3 0.03],
+dims=3)
 permutedims(numeros, (3, 2, 1))
 ```
 
+Los elementos de los *arrays* resultantes de estas operaciones son referencias directas a los elementos de los originales. Esto significa que los cambios que se hagan en los *arrays* transformados también modificarán los primeros. 
+
 ## Broadcasting
 
-Cuando se quiere aplicar una misma operación a todos los elementos de un *array*, o de varios *arrays* del mismo tamaño, una forma compacta y eficiente de hacerlo es escribiendo la operación como si se hiciese con variables escalares, pero añadiendo un punto tras el nombre de las funciones que se aplican a los *arrays*, o antes de los símbolos de las operaciones. En el capítulo sobre [manejo de conjuntos de datos](2-series-tablas.md) anterior ya se vio un ejemplo de cómo hacer esto, que repetimos aquí con unos vectores pequeños:
+Cuando se quiere aplicar una misma operación a todos los elementos de un *array*, o de varios *arrays* del mismo tamaño, una forma compacta y eficiente de hacerlo es escribiendo la operación como si se hiciese con variables escalares, pero añadiendo un punto tras el nombre de las funciones que se aplican a los *arrays*, o antes de los símbolos de las operaciones.
+
+Vamos a ver un ejemplo con la operación para calcular el módulo de un vector de dos elementos, que se usó para introducir esta forma de operar en el capítulo 2. Primero vemos los resultados de la operación con escalares:
 
 ```@repl
-# Primero vemos los resultados con escalares:
-# Módulo de un vector de dos elementos:
 x = 0.5; y = 1.2;
 sqrt(x^2 + y^2)
-# Misma operación con otros datos
 x = 3; y = 4;
 sqrt(x^2 + y^2)
-# Y ahora lo hacemos con vectores:
+```
+
+Y ahora hacemos la misma operación con las coordenadas en vectores. El resultado lo asignamos a otro vector `m` definido de antemano, para mostrar como las "operaciones con punto" también incluyen la asignación de valores a *arrays* existentes:
+
+```@repl
 x = [0.5, 3]; y = [1.2, 4]; m = zeros(2);
 m .= sqrt.(x.^2 .+ y.^2)
 ```
 
-(Se ha definido el vector `m` para mostrar también como las "operaciones con punto" también incluyen la asignación de valores a *arrays* existentes.)
-
 Esta forma de operar se conoce como *broadcasting*, ya que los valores escalares (p.ej. el `2` que se utiliza como exponente en el código anterior) se aplican a todos los elementos de los *arrays*, como si ellos mismos estuviesen en *arrays* de la misma dimensión, con el mismo valor en todas las celdas. Además, los *arrays* también se pueden comportar como si sus dimensiones "unitarias" se ampliasen en la medida necesaria. Esto se ve mejor con otro ejemplo:
 
-Imaginemos que queremos multiplicar cada elemento del vector columna `[1, 2, 3]` por cada uno del vector fila `[4 5]` (a la manera de un [producto tensorial](https://es.wikipedia.org/wiki/Producto_tensorial)). Una forma de hacerlo sería multiplicar dos matrices de tamaños congruentes, cuyas filas y columnas fuesen réplicas de esos vectores. Por ejemplo, usando la función `repeat`:
+Imaginemos que queremos multiplicar cada elemento del vector columna `[1, 2, 3]` por cada uno del vector fila `[4 5]`, a la manera de un [producto tensorial](https://es.wikipedia.org/wiki/Producto_tensorial). Una forma de hacerlo sería multiplicar dos matrices de tamaños congruentes, cuyas filas y columnas fuesen réplicas de esos vectores. Por ejemplo, usando la función `repeat`:
 
 ```@repl c5
 a = [1, 2, 3]
@@ -665,7 +673,7 @@ m .= sqrt.(x.^2 .+ y.^2)
 
 ## Operaciones matriciales
 
-Las matrices numéricas son solo un tipo particular de *arrays*, pero especialmente relevante, ya que son un elemento fundamental del álgebra lineal. La relevancia de las matrices implica que hay una cantidad muy importante de operaciones matemáticas dirigidas a este tipo de variables, y que no son válidas para *arrays* no numéricos o de más dimensiones. Sí se pueden usar, sin embargo, con vectores, con los que a estos efectos se opera como si fueran matrices de una sola columna.
+Las matrices numéricas son solo un tipo particular de *arrays*, pero especialmente relevante, ya que son un elemento fundamental del álgebra lineal. Debido a su importancia, hay una gran cantidad de operaciones matemáticas específicas para este tipo de variables, que no son aplicables a *arrays* no numéricos o de más dimensiones. Sí se pueden usar, sin embargo, con vectores, con los que a estos efectos se opera como si fueran matrices de una sola columna.
 
 Las cálculos matriciales incluyen las operaciones algebraicas elementales (suma, resta, multiplicación, división, potenciación por un escalar...), cálculos en el espacio de los números complejos, y cálculos numéricos como exponenciales, logaritmos, funciones trigonométricas, etc. En el caso particular de la suma y la resta de matrices, el resultado es el mismo que si se hace "elemento a elemento":
 
@@ -676,7 +684,7 @@ m + m2 # suma matricial
 m .+ m2 # suma de elementos
 ```
 
-!!! tip
+!!! tip "Sumas matriciales vs. broadcasting"
 
     Aunque los resultados sean iguales, el proceso de cálculo de la suma matricial es distinto. Una diferencia práctica es que la suma matricial no realiza *broadcasting*; pero por otro lado las funciones de cálculo de álgebra lineal están extraordinariamente optimizadas, lo que significa que para matrices grandes la suma matricial es mucho  más rápida.
 
@@ -745,8 +753,7 @@ I - n * n'
 Para crear una matriz identidad con un tipo de número y tamaño concreto (no necesariamente cuadrada), se puede utilizar la siguiente sintaxis:
 
 ```@repl c5
-# Numeros decimales (como 1.0), de tamaño 3×5
-Matrix(1.0 * I, 3, 5)
+Matrix(1.0 * I, 3, 5) # Numeros decimales (como 1.0), de tamaño 3×5
 ```
 
 (Si se cambia el `1.0` de este ejemplo por cualquier otro número, las entradas de la diagonal aparecerán multiplicadas por ese número.)
@@ -772,11 +779,11 @@ El álgebra de matrices es un campo muy amplio, del que solo hemos visto aspecto
 
 En este capítulo hemos visto cómo trabajar con *arrays* (vectores, matrices y conjuntos de datos multidimensionales en general). En particular, se ha explicado:
 
-* Cómo crear *arrays* de distintas dimensiones con las funciones `cat`, `hcat`, `vcat`, `hvcat`, o mediante la sintaxis abreviada con corchetes (a partir de valores concretos), así como algunas formas de hacer *arrays* con valores predefinidos (a través de `zeros`, `ones`, `fill` o `fill!`), o con valores indefinidos (usando constructores con `undef`).
+* Cómo crear *arrays* de distintas dimensiones con las funciones `cat`, `hcat`, `vcat`, `hvcat`, o mediante la sintaxis abreviada con corchetes (a partir de valores concretos), así como algunas formas de hacer *arrays* con valores predefinidos (a través de `zeros`, `ones`, `trues`, `falses`, `fill` o `fill!`), o con valores indefinidos (usando constructores con `undef`).
 * La definición de algunas matrices especiales: matrices diagonales con `diagm` y de tipo `Diagonal`, y matriz identidad con `I`; uso de la función `diag` para extraer diagonales de una matriz.
 * Cómo añadir y eleminar elementos de vectores (sin crear nuevas variables) mediante las funciones `push!`, `pushfirst!`, `insert!`, `append!`, `prepend!`, `pop!`, `popfirst!`, `deleteat!`, `splice!` y `empty!`.
 * Cómo reorganizar las dimensiones de *arrays* mediante las funciones `reshape` y `permutedims` -- y en el caso de matrices numéricas, con `transpose` y `adjoint` (o con el operador `'` como forma abreviada de `adjoint`).
-* La sintaxis para "subindexar" *arrays*, y el uso de la macro `@view` para que los subarrays creados hagan referencia a los valores originales.
+* La sintaxis para "subindexar" *arrays* a través de índices numéricos y rangos, y el uso de la macro `@view` para que los subarrays creados hagan referencia a los valores originales.
 * La sintaxis para aplicar *broadcasting* a las operaciones con *arrays* (funciones y operadores "con punto").
 
 Además, se han explorado otros aspectos de Julia no estrictamente asociados a los *arrays*, aunque tienen especial relevancia en los mismos:

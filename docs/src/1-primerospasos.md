@@ -30,34 +30,27 @@ Uno de los entornos más completos es el proporcionado por [Juno](http://junolab
 Veamos ahora un primer ejemplo práctico de Julia, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.[^1] Se trata de un algoritmo simple, consistente en los siguientes pasos:
 
 1. Si el número del mes (`m`) es igual o mayor que 3 (de marzo en adelante), el número del año (`y`) se descompone en el número del siglo (`c`, correspondiente a las centenas) y el resto (`g`). En el caso de enero o febrero (`m < 3`) se hace la misma descomposición para `y-1`.
-
 2. Se escoge un número `e` en función del número del mes (de 1 a 12), según la siguiente tabla:
-    
-    |mes        |`e`|
-    |-----------|---|
-    |enero      | 0 |
-    |febrero    | 3 |
-    |marzo      | 2 |
-    |abril      | 5 |
-    |mayo       | 0 |
-    |junio      | 3 |
-    |julio      | 5 |
-    |agosto     | 1 |
-    |septiembre | 4 |
-    |octubre    | 6 |
-    |noviembre  | 2 |
-    |diciembre  | 4 |
-
 3. Se escoge un número `f` según el número del siglo, en un ciclo de 4 siglos (el ciclo de años bisiestos se repite cada 400 años).
-    
-    |año (`100*c`)  | f |
-    |---------------|---|
-    |1600, 2000, ...| 0 |
-    |1700, 2100, ...| 5 |
-    |1800, 2200, ...| 3 |
-    |1900, 2300, ...| 1 |
-
 4. El día de la semana viene determinado por el resto de la división entera entre `w` y 7, siendo `w = d + e + f + g + ⌊g/4⌋`. (el último sumando es el cociente de la división entera entre `g` y 4).
+
+*Tabla 1: código de mes*
+
+|mes: `e`   |mes: `e`  |mes: `e`      |
+|----------:|---------:|-------------:|
+|enero: 0   |mayo: 0   |septiembre: 4 |
+|febrero: 3 |junio: 3  |octubre: 6    |
+|marzo: 4   |julio: 5  |noviembre: 2  |
+|abril: 5   |agosto: 1 |diciembre: 4  |
+
+*Tabla 2: código de siglo*
+
+|año (`100*c`)  |`f`|
+|---------------|---|
+|1600, 2000, ...| 0 |
+|1700, 2100, ...| 5 |
+|1800, 2200, ...| 3 |
+|1900, 2300, ...| 1 |
 
 Este algoritmo se puede implementar en Julia con la siguiente función:
 
@@ -78,7 +71,7 @@ function gauss_diasemana(d, m, y)
     end
     # Dividir el año entre centenas (c) y el resto (g)
     c = div(y, 100)
-    g = mod(y, 100)
+    g = rem(y, 100)
     # Definir e y f en función del mes (de 1 a 12) y el siglo
     # (en ciclos de 400 años --- 4 siglos)
     earray = [0,3,2,5,0,3,5,1,4,6,2,4]
@@ -88,7 +81,7 @@ function gauss_diasemana(d, m, y)
     # Seleccionar el día de la semana en función del cálculo de Gauss
     warray = ["domingo","lunes","martes","miércoles",
         "jueves","viernes","sábado"]
-    w = mod(d + e + f + g + div(g, 4), 7)
+    w = rem(d + e + f + g + div(g, 4), 7)
     return(warray[w+1])
 end
 nothing #hide
@@ -100,7 +93,7 @@ nothing #hide
 
     Para asimilar mejor las explicaciones que siguen puedes copiar este ejemplo de código en un archivo, y probarlo en una sesión interactiva de Julia tal como se comenta a continuación, o con variantes de las instrucciones que se propongan. Además, al tener el código en un archivo aparte podrás consultarlo en paralelo mientras lees las explicaciones de la guía, sin tener que desplazarte hacia atrás y hacia delante a lo largo de las páginas. (Esta recomendación también sirve para todos los demás ejemplos que se usen en los siguientes capítulos.)
 
-Supongamos que el código mostrado arriba está guardado en un archivo llamado `calc_diasemana.jl` (el nombre del archivo es arbitrario, y puede ser cualquier nombre aceptado por el sistema operativo). El programa consiste en una sola función con tres argumentos (los números del día, el mes y el año), basada en unas pocas divisiones enteras (definidas en la función `div`) y el cálculo de "restos" de dichas divisiones (`mod`),[^2] más la selección de unos valores a partir de los resultados intermedios y unas listas predefinidas.
+Supongamos que el código mostrado arriba está guardado en un archivo llamado `calc_diasemana.jl` (el nombre del archivo es arbitrario, y puede ser cualquier nombre aceptado por el sistema operativo). El programa consiste en una sola función con tres argumentos (los números del día, el mes y el año), basada en unas pocas divisiones enteras (definidas en la función `div`) y el cálculo de "restos" de dichas divisiones (`rem`, del inglés *remainder*),[^2] más la selección de unos valores a partir de los resultados intermedios y unas listas predefinidas.
 
 [^2]: Existen dos funciones para el resto de una división: `mod` y `rem`, que funcionan de forma distinta cuando alguno de los dos operandos es negativo. Para el caso que nos ocupa esa diferencia no es relevante.
 
@@ -147,10 +140,10 @@ Para escribir un programa en Julia o cualquier otro lenguaje de programación ha
 
   * Cada operación se escribe normalmente en una línea distinta, aunque es posible "partir" las expresiones en varias líneas. Si una línea acaba con una expresión incompleta se asume que continúa en la siguiente, como ocurre en la definición de la variable `warray` con los nombres de los días de la semana:
   
-    ```julia
-    warray = ["domingo","lunes","martes","miércoles",
-        "jueves","viernes","sábado"]
-    ```
+```julia
+warray = ["domingo","lunes","martes","miércoles",
+    "jueves","viernes","sábado"]
+```
   
   * Todo el texto que sigue al símolo `#` hasta el final de la línea se considera un comentario, y no se ejecuta. También se pueden hacer bloques de comentarios que ocupen varias líneas, delimitados por `#=` al principio y `=#` al final, como se ha hecho al comienzo de la función.
 

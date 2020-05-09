@@ -4,13 +4,13 @@ Los *arrays* que hemos visto en el capítulo anterior son una forma de represent
 
 ## Rangos
 
-Anteriormente ya hemos visto el uso de rangos para crear iteradores en los bucles `for` y para indexar *arrays*. La forma más compacta de crear rangos es mediante la expresión `a:p:b`, donde `a` es el primer valor del rango, `b` el límite del rango, y `p` el "paso" o intervalo entre dos números seguidos del rango.
+Anteriormente hemos visto el uso de rangos para crear iteradores en los bucles `for` y para indexar *arrays*. La forma más compacta de crear rangos es mediante la expresión `a:s:b`, donde `a` es el primer valor del rango, `b` el límite del rango, y `s` el "paso" o intervalo entre dos números seguidos del rango.
 
 Por ejemplo, `1:1.5:6` representa los números 1.0, 2.5, 4.0 y 5.5 (el 6 es el límite superior, que no entra en el rango). El intervalo también puede ser negativo: por ejemplo `5:-1:3` representa los números contados "hacia atrás" 5, 4 y 3.
 
-!!! note
+!!! note "Reglas de precedencia del operador `:`"
 
-    El operador `:` usado en estas expresiones tiene menos precedencia que los operadores aritméticos como la suma (`+`), la multiplicación (`*`), etc. Esto significa que por ejemplo `4 + 1:10` es lo mismo que `5:10`. Para sumar 4 a todos los valores del rango `1:10` se habría de escribir `4 .+ (1:10)`. (Nótese también que es necesario hacer el [*broadcasting*](5-arrays.md#Broadcasting-1) al operador de la suma.)
+    El operador `:` usado en estas expresiones tiene menos precedencia que los operadores aritméticos como la suma (`+`), la multiplicación (`*`), etc. Esto significa que por ejemplo `4 + 1:10` es lo mismo que `5:10`. Para sumar 4 a todos los valores del rango `1:10` se tendría que escribir `4 .+ (1:10)`. (Nótese también que es necesario hacer el [*broadcasting*](5-arrays.md#Broadcasting-1) al operador de la suma.)
 
 Para mayor flexibilidad también se puede usar la función `range`, cuyo primer argumento es el valor en el que comienza el rango, y el resto de valores se define mediante una combinación de los argumentos con nombre `stop`, `length` y `step`, como en los siguientes ejemplos:
 
@@ -40,7 +40,7 @@ collect(r)
 
 ## Diccionarios
 
-Los diccionarios (objetos de tipo `Dict`) son colecciones de datos que, al contrario que los *arrays* y los rangos, no identifican sus elementos por su posición en el conjunto, sino a través de una tabla de "claves" (*keys*). Hay muchas circunstancias en las que es interesante emplear estas series asociativas, aunque los diccionarios son particularmente útiles cuando el conjunto de claves no está predeterminado ni sigue un orden específico. Un buen ejemplo puede ser un conjunto de datos como la siguiente tabla de población por continente (datos de 2010, en millones de personas, según [bases de datos de la ONU](https://population.un.org/wpp/Download/Standard/Population/)).
+Los diccionarios (objetos de tipo `Dict`) son colecciones de datos que, al contrario que los *arrays* y los rangos, no identifican sus elementos por su posición en el conjunto, sino a través de una tabla de "claves" (*keys*). Hay muchas circunstancias en las que es interesante emplear estas series asociativas, aunque los diccionarios son particularmente útiles cuando el conjunto de claves no está predeterminado ni sigue un orden específico. Un buen ejemplo puede ser un conjunto de datos como la siguiente tabla de población, en millones de personas por continente.[^1]
 
 | Continente | Población |
 |:----------:|:---------:|
@@ -49,6 +49,8 @@ Los diccionarios (objetos de tipo `Dict`) son colecciones de datos que, al contr
 | Asia       | 4170      |
 | Europa     |  735      |
 | Oceanía    |   36      |
+
+[^1]: Población en 2010, según [bases de datos de la ONU](https://population.un.org/wpp/Download/Standard/Population/).
 
 Esto podría hacerse con un vector de países y otro de datos:
 
@@ -70,7 +72,7 @@ Además, esta operación no devuelve el resultado como un escalar, sino como un 
 poblacion[findfirst(continentes .== "Europa")]
 ```
 
-Sin embargo, el uso de un diccionario aquí simplifica las cosas. El constructor de diccionarios `Dict` puede usarse con parejas de claves y valores asociadas con el símbolo `=>` (a modo de flecha):
+Sin embargo, el uso de un diccionario aquí simplifica las cosas. El constructor de diccionarios `Dict` puede usarse con parejas de claves y valores, asociados mediante el símbolo `=>` (a modo de flecha):
 
 ```@repl c6
 dic_poblacion = Dict(
@@ -85,7 +87,7 @@ dic_poblacion["Europa"]
 
 Un primer detalle que llama la atención es que el orden de los elementos en la presentación del diccionario no coincide con el orden en el que se han especificado en la creación. Esto destaca lo que ya se ha señalado, que los valores del diccionario *no* se pueden identificar por posición, sino por su asociación con las claves.
 
-La forma de ampliar los diccionarios también es distinta a como se haría con un *array*. Las funciones que se emplean con éstos, como `push!`, `append!`, etc., no sirven para los diccionarios. Añadir un elemento a un diccionario es más sencillo; por ejemplo, si quisiéramos añadir al diccionario la población de la Antártida (que se reduce a poco más de mil habitantes temporales), bastaría escribir:
+La forma de ampliar los diccionarios también es distinta a como se haría con un *array*. Las funciones que se emplean con *arrays*, como `push!`, `append!`, etc., no sirven para los diccionarios. Añadir un elemento a un diccionario es más sencillo; por ejemplo, si quisiéramos añadir al diccionario la población de la Antártida (que se reduce a poco más de mil habitantes temporales), bastaría escribir:
 
 ```julia
 dic_poblacion["Antártida"] = 0
@@ -129,8 +131,8 @@ valores = values(dic_poblacion)
 
 Estas funciones devuelven variables que se asemejan a vectores con las claves y valores extraídos del diccionario, en un orden indeterminado pero coherente entre sí. Sin embargo hay que señalar un par de detalles importantes:
 
-* Aunque se puede iterar sobre esas variables (por ejemplo con un bucle `for`), sus elementos no pueden indexarse; por `claves[1]` no es una operación válida.
-* Los contenidos de esas variables son referencias al diccionario original; si por ejemplo se modifica el valor de un elemento o se añade una nueva clave, las variables `claves` y `valores` que hemos definido arriba cambiarán al mismo tiempo.
+* Aunque se puede iterar sobre esas variables (por ejemplo con un bucle `for`), sus elementos no pueden indexarse; por ejemplo `claves[1]` no es una operación válida.
+* Los contenidos de esas variables son referencias al diccionario original; así que si se modifica el valor de un elemento o se añade una nueva clave, las variables `claves` y `valores` que hemos definido arriba cambiarán al mismo tiempo.
 
 Una utilidad de extraer las claves es poder reorganizarlas de forma arbitraria, por ejemplo en este caso en el que las claves son etiquetas textuales, para presentar los resultados en orden alfabético. Para ello hemos primero hemos de convertir el conjunto de claves a un *array*, de tal modo que podamos ordenarlo con la función `sort!`:
 
@@ -144,13 +146,14 @@ for k = claves
 end
 ```
 
-!!! note
+!!! note "`sort!` vs. `sort`"
 
     La función `sort!` sirve para sustituir los valores del *array* original por los del ordenado. Para conservar el *array* original y crear otro con los valores ordenados, se puede usar la función `sort` (sin exclamación en el nombre).
 
-!!! tip
+!!! tip "Diccionarios ordenados"
 
-    Para casos en los que sea importante trabajar con claves ordenadas, también se puede recurrir a los "diccionarios ordenados" que proporciona el paquete ["DataStructures"](https://juliacollections.github.io/DataStructures.jl/stable/), aunque son más lentos que los diccionarios básicos.
+    El paquete DataStructures proporciona un tipo especial de diccionario llamado [`OrderedDict`](https://juliacollections.github.io/DataStructures.jl/stable/ordered_containers/), en el que las entradas conservan el orden de creación, y el de tipo [`SortedDict`](https://juliacollections.github.io/DataStructures.jl/stable/sorted_containers/), en el que las claves se pueden ordenar por su valor.
+
 
 ### Formas de construir diccionarios
 
@@ -160,14 +163,14 @@ Si las parejas de claves y valores están recogidas en una variable, esta se pue
 
 ```@repl
 glosas = [
-    ["es", "libro"],
-    ["en", "book"],
-    ["de", "buch"]
+["es", "libro"],
+["en", "book"],
+["de", "buch"]
 ]
 Dict(glosas)
 ```
 
-También puede darse el caso en el que tengamos las claves y los valores por separado, como los vectores `continentes` y `poblacion` usadas anteriormente. En casos como ese, podemos usar la función `zip` para combinar los dos vectores en otro objeto iterable de la misma longitud, cuyo primer elemento recoge el primer elemento de cada vector, en el segundo recoge los segundos, etc.:
+También puede darse el caso en el que tengamos las claves y los valores por separado, como los vectores `continentes` y `poblacion` usadas anteriormente. En casos como ese podemos usar la función `zip` para combinar los dos vectores en otro objeto iterable de la misma longitud, cuyo primer elemento recoge el primer elemento de cada vector, en el segundo recoge los segundos, etc.:
 
 ```@repl c6
 claves_y_valores = zip(continentes, poblacion);
@@ -180,11 +183,11 @@ A la hora de definir un diccionario pueden especificarse otros tipos de claves y
 
 ```@repl
 dic_poblacion = Dict{String, Float64}(
-    "África" => 1044, 
-    "América" => 944,
-    "Asia" => 4170,
-    "Europa" => 735,
-    "Oceanía" => 36
+"África" => 1044, 
+"América" => 944,
+"Asia" => 4170,
+"Europa" => 735,
+"Oceanía" => 36
 )
 ```
 
@@ -198,13 +201,13 @@ unos = 1, 1.0, 1+0im, true
 
 Las tuplas se parecen a los vectores en que sus elementos vienen determinados por su posición en la serie; por ejemplo el número entero del ejemplo anterior es `unos[1]`, el número complejo es `unos[3]`, etc. Sin embargo tienen algunas diferencias importantes.
 
-En un vector (y en general en cualquier *array*) todos los elementos han de ser del mismo tipo (aunque sea un "supertipo" como `Any`, que comprende todos los tipos posibles). Por el contrario, cada elemento de una tupla puede ser de un tipo distinto: 
+En un vector (y en general en cualquier *array*) todos los elementos están declarados como objetos del mismo tipo (aunque sea un "supertipo" como `Any`, que comprende todos los tipos posibles). Por el contrario, cada elemento de una tupla lleva asociado su propio tipo: 
 
 ```@repl c6
 typeof(unos)
 ```
 
-Además, al contrario que los *arrays*, las tuplas son objetos "inmutables"; es decir, que una tupla no se puede ampliar ni reducir, ni se puede cambiar uno de sus elementos por otro (aunque se puede sustituir la tupla completa por otro contenido).
+Además, al contrario que los *arrays*, las tuplas son objetos "inmutables"; es decir, que una tupla no se puede ampliar ni reducir, ni se puede cambiar uno de sus elementos por otro.
 
 Hay que destacar, sin embargo, que esta inmutabilidad solo afecta a la tupla en sí: técnicamente no se puede cambiar un elemento por otro, pero puede parecer lo contrario si se trata de un elemento que *sí* es mutable, por ejemplo un *array*:
 
@@ -295,7 +298,7 @@ cuadrados
 
 !!! tip
     
-    El superíndice numérico que se ha utilizado para expresar los exponentes es un carácter especial, que se pueden escribir en la REPL de Julia con la secuencia de escape `\^2`, seguidas del tabulador.
+    El superíndice numérico que se ha utilizado para expresar los exponentes es un carácter especial, que se puede escribir en la REPL de Julia con la secuencia de escape `\^2`, seguidas del tabulador.
 
 Una forma más compacta de hacer esto esto es mediante lo que en inglés se llama *comprehension*. Este recurso se suele utilizar cuando contenido de un bucle `for` es una línea cuya única finalidad es "rellenar" una colección. En este caso, el código equivalente a todo lo anterior sería:
 
