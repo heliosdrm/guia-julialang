@@ -175,8 +175,17 @@ WARNING: both GRUtils and Plots export "plot"; uses of it in module Main must be
 ERROR: UndefVarError: plot not defined
 ```
 
+[^3]: Algunos paquetes pueden *extender* funciones de otros paquetes o módulos, añadiendo nuevos métodos. Ese tipo de extensiones no producen ese tipo de conflictos.
+
 Para evitar este error, en lugar de `plot` habría que usar `GRUtils.plot` o `Plots.plot`, según lo que se desee.
 
 En lugar de `using` también se puede usar el comando `import`. Esto carga el paquete del mismo modo que lo haría `using`, pero todas las funciones definidas en él han de usarse cualificándolas con el nombre del paquete.
 
-[^3]: Algunos paquetes pueden *extender* funciones de otros paquetes o módulos, añadiendo nuevos métodos. Ese tipo de extensiones no producen ese tipo de conflictos.
+## Sumario del capítulo
+
+En este capítulo hemos visto las utilidades básicas relacionadas con la gestión de paquetes:
+
+* Cómo buscar, añadir, eliminar, actualizar y fijar versiones de paquetes para ampliar las funcionalidades de Julia.
+* El uso de entornos para trabajar con proyectos reproducibles y prevenir problemas de incompatibilidades entre versiones de los paquetes.
+* Las diferencias entre `using` e `import` como dos formas de cargar los módulos de la biblioteca estándar y otros paquetes.
+* El uso del archivo de configuración `startup.jl` para cargar módulos y ejecutar otras acciones al inicio de cada sesión. 

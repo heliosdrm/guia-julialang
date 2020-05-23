@@ -32,7 +32,7 @@ Veamos ahora un primer ejemplo práctico de Julia, con un programa sencillo para
 1. Si el número del mes (`m`) es igual o mayor que 3 (de marzo en adelante), el número del año (`y`) se descompone en el número del siglo (`c`, correspondiente a las centenas) y el resto (`g`). En el caso de enero o febrero (`m < 3`) se hace la misma descomposición para `y-1`.
 2. Se escoge un número `e` en función del número del mes (de 1 a 12), según la siguiente tabla:
 3. Se escoge un número `f` según el número del siglo, en un ciclo de 4 siglos (el ciclo de años bisiestos se repite cada 400 años).
-4. El día de la semana viene determinado por el resto de la división entera entre `w` y 7, siendo `w = d + e + f + g + ⌊g/4⌋`. (el último sumando es el cociente de la división entera entre `g` y 4).
+4. El día de la semana viene determinado por el resto de la división entera entre `x` y 7, siendo `x = d + e + f + g + ⌊g/4⌋`. (el último sumando es el cociente de la división entera entre `g` y 4).
 
 *Tabla 1: código de mes*
 
@@ -127,11 +127,50 @@ Una vez se ha conseguido cargar el archivo que define la función, esta ya se pu
 gauss_diasemana(11, 8, 2018)
 ```
 
-!!! note
-
-    Normalmente, cuando se ejecuta una línea o un bloque de código en el REPL, inmediatamente debajo del código introducido aparece el resultado, como la palabra `"sábado"` en este ejemplo. En algunos casos puede quererse ocultar el resultado (por ejemplo si ocupa demasiadas líneas). En ese caso basta con añadir un punto y coma al final del código a ejecutar.
-
 Lo que se hace "en un día cualquiera" usando Julia es esencialmente este modelo de rutina, con funciones más complicadas y muchas más operaciones interactivas, explorando resultados, corrigiendo argumentos y repitiendo operaciones, claro está.
+
+Durante una sesión de trabajo habitual, los datos generados suelen guardarse en variables para usarlas en pasos posteriores. Por ejemplo, podríamos definir las variables `día`, `mes` y `año` para recoger los números que luego utilizamos en la función `gauss_diasemana`:
+
+```@repl c1
+día = 11;
+mes = 8;
+año = 2018;
+diasemana = gauss_diasemana(día, mes, año)
+```
+
+!!! tip "Uso del punto y coma para omitir los resultados"
+
+    Normalmente, cuando se ejecuta una línea o un bloque de código en el REPL, inmediatamente debajo del código introducido aparece el resultado, como la palabra `"sábado"` en este ejemplo. En algunos casos puede quererse ocultar el resultado (por ejemplo si ocupa demasiadas líneas). En ese caso basta con añadir un punto y coma al final del código a ejecutar, como en las primeras líneas del último ejemplo.
+
+En una sesión de trabajo larga puede perderse la pista a qué variables se han creado. Juno y otros IDEs incluyen un panel para presentar la lista de variables actual, que también puede visualizarse en el REPL con la función `varinfo`:
+
+La función `varinfo` proporciona esa información:
+
+```julia-repl
+julia> varinfo()
+name                    size summary                
+–––––––––––––––– ––––––––––– –––––––––––––––––––––––
+Base                         Module                 
+Core                         Module                 
+InteractiveUtils 163.926 KiB Module                 
+Main                         Module                 
+ans                 15 bytes String                 
+año                  8 bytes Int64                  
+diasemana           15 bytes String                 
+día                  8 bytes Int64                  
+gauss_diasemana      0 bytes typeof(gauss_diasemana)
+mes                  8 bytes Int64                  
+```
+
+En el caso anterior podemos ver las variables `día`, `mes`, `año` y `diasemana` que hemos generado, más la función `gauss_diasemana`, y cuatro elementos más descritos como `Module`, que forman parte de la sesión de trabajo, aunque normalmente no hace falta interactuar directamente con ellos. Por contra, las variables creadas durante la ejecución de `gauss_diasemana` (`c`, `g`, etc.) no se recogen, ya que son variables "locales" a la función, a las que no se puede acceder desde el entorno del REPL, y que se puede considerar que se destruyen al terminar la función.
+
+Esta lista puede llegar a contener muchas variables, creadas en algún momento de la sesión pero que no se necesitan más, y que incluso pueden molestar porque ocupan grandes cantidades de memoria o interfieren en cálculos posteriores. Una forma de librarse de ellas es "vaciarlas" de contenido, del siguiente modo:
+
+```@repl
+x = nothing
+```
+
+Esta operación asigna a la variable `x` un objeto que "no es nada", y su valor anterior, si no es utilizado por ninguna otra variable, será eliminado automáticamente para liberar memoria cuando haga falta. El nombre de la variable aún seguirá presente en la sesión de trabajo, porque borrar todo rastro de las variables creadas puede dar lugar a problemas e inestabilidades no previstas, según el entorno en el que se esté trabajando. (Para limpiar completamente el espacio de trabajo, el único modo es terminar la sesión de Julia y comenzar una nueva.)
 
 
 ## Sintaxis básica
