@@ -2,26 +2,34 @@
 
 ## Instalación de Julia
 
-Lo primero que se necesita para trabajar con cualquier lenguaje de programación son las herramientas para crear y ejecutar los programas. El software básico para usar Julia está disponible en su página oficial [https://julialang.org/downloads](https://julialang.org/downloads), en forma de código fuente así como en binarios preparados para instalar en Windows, Mac OS X, y algunas distribuciones de Linux. Desde esa página podrás encontrar también enlaces con explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son específicas para cada sistema, y por lo tanto no desarrollaremos aquí.
+Lo primero que se necesita para trabajar con cualquier lenguaje de programación son las herramientas para crear y ejecutar los programas. El software básico para usar Julia está disponible en su página oficial [https://julialang.org/downloads](https://julialang.org/downloads), en forma de código fuente así como en paquetes preparados para instalar en Windows, Mac OS X, y algunas distribuciones de Linux. Desde esa página podrás encontrar también enlaces con explicaciones detalladas sobre cómo instalar y ejecutar Julia, que son específicas para cada sistema, y por lo tanto no desarrollaremos aquí.
 
-Existen varias versiones disponibles de Julia. En general la mejor opción es usar la más reciente (señalada como la "versión estable actual"), aunque los usuarios más conservadores pueden preferir la versión "LTS" (de *long term support*, con "soporte a largo plazo"). Esta guía sirve para la versión 1 de Julia, que incluye las etiquetadas como 1.0, 1.1, etc.
+En esencia, los paquetes instalables simplemente descomprimen sus contenidos en una carpeta elegida por el usuario, incluyendo el archivo ejecutable llamado `julia` que servirá para interactuar con el lenguaje de programación. Dependiendo del sistema operativo, también puede realizar algunas operaciones para que otros programas o elementos del sistema reconozcan la ruta de este ejecutable o los tipos de archivos asociados. Cuando se comience a usar Julia, normalmente también se creará una carpeta con el nombre `.julia` (incluyendo el punto, que la convierte en una "carpeta oculta") dentro de la carpeta personal del usuario (en la que suelen estar los destinos por defecto para guardar y cargar documentos, imágenes, etc.). Esta carpeta `.julia` está destinada a contener, principalmente, archivos de configuración y paquetes auxiliares.
 
-El paquete básico de Julia presenta una sencilla consola de comandos (figura 1) conocida como "REPL" por las siglas de *Read-Eval-Print-Loop*  ("bucle leer-evaluar-imprimir"). El REPL es una interfaz ligera y rápida, útil para realizar pruebas o rutinas sencillas. Sin embargo, para muchos usuarios este tipo de interfaz resulta poco "amigable", y por otro lado, para ejecutar rutinas más complejas, y siempre que se quiera obtener resultados reproducibles, es recomendable escribir las instrucciones en un archivo de código (*script*), y luego ejecutarlo en Julia. Con la interfaz básica se puede ejecutar un *script* (véase un ejemplo en la siguiente sección), pero para escribirlo se necesitaría un programa auxiliar.
+Existen varias versiones disponibles de Julia. En general la mejor opción es usar la más reciente (señalada como la "versión estable actual"), aunque los usuarios más conservadores pueden preferir la versión "LTS" (de *long term support*, con "soporte a largo plazo"). Esta guía está elaborada para la versión 1 de Julia, que incluye las etiquetadas como 1.0, 1.1, etc., aunque en unos pocos puntos se consideran características que solo existen a partir de la versión 1.5, por lo que se recomienda utilizar versiones posteriores a la misma.
 
+A menudo, Julia se usa con otros complementos que se instalan y configuran aparte, y de los que hablaremos un poco más adelante. Pero el paquete básico aporta todas las herramientas necesarias para trabajar. Así que para empezar veremos las distintas formas de usar Julia con estas herramientas, sin tener que instalar nada más.
+
+!!! note: "Julia Pro y otras alternativas"
+    
+    La compañía [Julia Computing](https://juliacomputing.com), fundada por algunos de los desarrolladores principales de Julia, ofrece productos como [Julia Pro](https://juliacomputing.com/products/juliapro.html), una distribución de Julia que ya viene con algunos complementos incorporados. Algunos detalles de configuración de estas distribuciones pueden diferir respecto a los de una instalación básica. Otras diferencias entre la versión básica de Julia y Julia Pro son la licencia de uso, el conjunto de paquetes disponibles y el soporte: la versión básica es software libre (bajo licencia MIT), con paquetes mantenidos y controlados por la "comunidad de Julia". Por otro lado Julia Computing tiene sus propios términos de uso para sus productos, ofrece un conjunto de paquetes con versiones controladas por la compañía, y también soporte profesional y funcionalidades extra bajo pago.
+
+## El REPL
+
+La forma más rápida de operar con Julia es trabajando de forma interactiva, en lo que se llama el "REPL", por las siglas de *Read-Eval-Print-Loop* ("bucle leer-evaluar-imprimir"). Este proceso se realiza desde una terminal de comandos --a la que por extensión también se le da el nombre de REPL--, que es lo que se presenta al usuario al lanzar el programa (figura 1).
 ![Figura 1](../assets/repl.png)
 
 *Figura 1. REPL de Julia*
 
-Para combinar ambas tareas de forma eficiente en una sola interfaz lo habitual es usar los llamados "entornos de desarrollo integrados" (conocidos por sus siglas IDE en inglés), que juntan en una misma interfaz una consola de comandos, un editor de código y otras utilidades como visores de variables y gráficas, herramientas de depuración, etc. Julia cuenta, más que con un IDE particular, con "plug-ins" para múltiples editores de código avanzados, como [Atom](https://atom.io), [Visual Studio Code](https://code.visualstudio.com/), [Sublime Text](https://www.sublimetext.com/), [Emacs](https://www.gnu.org/software/emacs/), etc., que integran estas mismas herramientas.
+Como se observa en la figura anterior, al iniciar una sesión de Julia el REPL presenta una línea marcada con la etiqueta "`julia>`", a la espera de que el usuario introduzca algún comando --seguido de la tecla `Enter` para confirmar su introducción--. Por poner un ejemplo trivial, para calcular la exponencial de 2, --utilizando la función `exp`--, habría que escribir (sin contar la etiqueta "`julia>`":
 
-Uno de los entornos más completos es el proporcionado por [Juno](http://junolab.org/), el IDE para Julia basado en Atom (figura 2). En particular, los que prefieran soluciones empaquetadas pueden optar por descargar y usar [Julia Pro](https://juliacomputing.com/products/juliapro.html), una distribución de Julia + Juno preparada por la compañía [Julia Computing](https://juliacomputing.com). Julia Pro existe tanto en una versión gratuita para uso personal, como de pago con soporte profesional. En ambos casos, la principal diferencia entre usar Julia Pro y una instalación manual de Julia con Juno es que en el caso de Julia Pro, el conjunto de paquetes disponibles para ampliar la funcionalidad del lenguaje está controlado por Julia Computing, lo cual hace que en principio sea una solución más estable, aunque también más limitada.
+```julia-repl
+exp(2)
+```
 
-![Figura 2](../assets/juno.png)
+Tras introducir la operación, Julia la evalúa y muestra el resultado justo debajo, seguido de una nueva línea a la espera de la siguiente instrucción, completándose así una interación del bucle que da nombre al REPL.
 
-*Figura 2. Julia en Atom (Juno)*
-
-
-## Un ejemplo básico
+## Un ejemplo para empezar
 
 ```@raw html
 <div id="gauss_diasemana" />
@@ -30,8 +38,8 @@ Uno de los entornos más completos es el proporcionado por [Juno](http://junolab
 Veamos ahora un primer ejemplo práctico de Julia, con un programa sencillo para calcular el día de la semana en el que cae cualquier fecha del calendario Gregoriano, usando el algoritmo de Gauss tal como está publicado por Bernt Schwerdtfeger.[^1] Se trata de un algoritmo simple, consistente en los siguientes pasos:
 
 1. Si el número del mes (`m`) es igual o mayor que 3 (de marzo en adelante), el número del año (`y`) se descompone en el número del siglo (`c`, correspondiente a las centenas) y el resto (`g`). En el caso de enero o febrero (`m < 3`) se hace la misma descomposición para `y-1`.
-2. Se escoge un número `e` en función del número del mes (de 1 a 12), según la siguiente tabla:
-3. Se escoge un número `f` según el número del siglo, en un ciclo de 4 siglos (el ciclo de años bisiestos se repite cada 400 años).
+2. Se escoge un número `e` en función del número del mes (de 1 a 12), según la tabla 1 que se presenta a continuación.
+3. Se escoge un número `f` según el número del siglo (tabla 2), en un ciclo de 4 siglos (el ciclo de años bisiestos se repite cada 400 años).
 4. El día de la semana viene determinado por el resto de la división entera entre `x` y 7, siendo `x = d + e + f + g + ⌊g/4⌋`. (el último sumando es el cociente de la división entera entre `g` y 4).
 
 *Tabla 1: código de mes*
@@ -97,20 +105,16 @@ Supongamos que el código mostrado arriba está guardado en un archivo llamado `
 
 [^2]: Existen dos funciones para el resto de una división: `mod` y `rem`, que funcionan de forma distinta cuando alguno de los dos operandos es negativo. Para el caso que nos ocupa esa diferencia no es relevante.
 
-Este programa se puede cargar usando la función `include` en la consola de Julia, como sigue:
+Este programa se puede cargar usando la función `include` en el REPL, como sigue:
 
 ```julia-repl
 julia> include("calc_diasemana.jl")
 ```
 
-!!! note
-
-    A lo largo de esta guía se mostrarán varios ejemplos como el de arriba, con líneas que comienzan con `julia>`. Esto representa líneas del REPL en las que el usuario introduce código a ejecutar (pero la etiqueta "`julia>`" no forma parte de lo que hay que escribir). 
-
 El resultado posiblemente sea algo decepcionante, porque lo único que se ha hecho es definir una función, que por sí misma no da ningún resultado. Por otro lado, lo más probable es que al introducir esa línea sin más, ni siquiera se obtenga ningún resultado, sino un error debido a que no se encuentra el archivo de código. Para asegurarse de que Julia encuentra el archivo hay varias alternativas:
 
   * Copiar el archivo de código `calc_diasemana.jl` al directorio de trabajo de Julia. La ruta de ese directorio se puede obtener con la función `pwd()` --sin ningún argumento--.
-  * Cambiar el directorio de trabajo al lugar que contiene el archivo. El cambio de directorio se hace con el comando `cd(directorio)`, donde `directorio` ha de ser la ruta de destino. La mayoría de IDEs también incluyen alguna opción en los menús gráficos para escoger el directorio de trabajo.
+  * Cambiar el directorio de trabajo al lugar que contiene el archivo. El cambio de directorio se hace con el comando `cd(directorio)`, donde `directorio` ha de ser la ruta de destino.
   * Introducir la ruta completa del archivo de código en la llamada a `include`. Esta se puede escribir literalmente, o si el directorio que contiene el archivo está definido en una variable (supongamos que esta variable se llama `directorio`, la ruta se puede componer con la función `joinpath`. Es decir, la expresión anterior sería `include(joinpath(directorio, "calc_diasemana.jl"))`.
 
 !!! tip "Nombres de rutas en Windows"
@@ -120,7 +124,6 @@ El resultado posiblemente sea algo decepcionante, porque lo único que se ha hec
     1. Si se está trabajando de forma interactiva, guardar directamente el contenido del portapapeles en una variable, mediante la función `clipboard`. Por ejemplo, con el comando `directorio = clipboard()`.
     2. Si se va a pegar el nombre de la ruta en un *script*, etiquetar la cadena de texto con el prefijo `raw`. Por ejemplo: `directorio = raw"C:\Users\ABC\Documents\Julia\"`. (Esto equivale a `directorio = "C:\\Users\\ABC\\Documents\\Julia\\"`, pero se evita duplicar las barras; véanse más detalles en la sección sobre [Secuencias de escape](@ref) del capítulo 7.) 
     
-
 Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó 11 de agosto de 2018, la fecha en la que se publicó la version 1 de Julia:
 
 ```@repl c1
@@ -141,36 +144,6 @@ diasemana = gauss_diasemana(día, mes, año)
 !!! tip "Uso del punto y coma para omitir los resultados"
 
     Normalmente, cuando se ejecuta una línea o un bloque de código en el REPL, inmediatamente debajo del código introducido aparece el resultado, como la palabra `"sábado"` en este ejemplo. En algunos casos puede quererse ocultar el resultado (por ejemplo si ocupa demasiadas líneas). En ese caso basta con añadir un punto y coma al final del código a ejecutar, como en las primeras líneas del último ejemplo.
-
-En una sesión de trabajo larga puede perderse la pista a qué variables se han creado. Juno y otros IDEs incluyen un panel para presentar la lista de variables actual, que también puede visualizarse en el REPL con la función `varinfo`:
-
-La función `varinfo` proporciona esa información:
-
-```julia-repl
-julia> varinfo()
-name                    size summary                
-–––––––––––––––– ––––––––––– –––––––––––––––––––––––
-Base                         Module                 
-Core                         Module                 
-InteractiveUtils 163.926 KiB Module                 
-Main                         Module                 
-ans                 15 bytes String                 
-año                  8 bytes Int64                  
-diasemana           15 bytes String                 
-día                  8 bytes Int64                  
-gauss_diasemana      0 bytes typeof(gauss_diasemana)
-mes                  8 bytes Int64                  
-```
-
-En el caso anterior podemos ver las variables `día`, `mes`, `año` y `diasemana` que hemos generado, más la función `gauss_diasemana`, y cuatro elementos más descritos como `Module`, que forman parte de la sesión de trabajo, aunque normalmente no hace falta interactuar directamente con ellos. Por contra, las variables creadas durante la ejecución de `gauss_diasemana` (`c`, `g`, etc.) no se recogen, ya que son variables "locales" a la función, a las que no se puede acceder desde el entorno del REPL, y que se puede considerar que se destruyen al terminar la función.
-
-Esta lista puede llegar a contener muchas variables, creadas en algún momento de la sesión pero que no se necesitan más, y que incluso pueden molestar porque ocupan grandes cantidades de memoria o interfieren en cálculos posteriores. Una forma de librarse de ellas es "vaciarlas" de contenido, del siguiente modo:
-
-```@repl
-x = nothing
-```
-
-Esta operación asigna a la variable `x` un objeto que "no es nada", y su valor anterior, si no es utilizado por ninguna otra variable, será eliminado automáticamente para liberar memoria cuando haga falta. El nombre de la variable aún seguirá presente en la sesión de trabajo, porque borrar todo rastro de las variables creadas puede dar lugar a problemas e inestabilidades no previstas, según el entorno en el que se esté trabajando. (Para limpiar completamente el espacio de trabajo, el único modo es terminar la sesión de Julia y comenzar una nueva.)
 
 
 ## Sintaxis básica
@@ -198,6 +171,64 @@ warray = ["domingo","lunes","martes","miércoles",
   
   * En general los espacios son irrelevantes: con contadas excepciones, cuando haya algun símbolo delimitador (operadores matemáticos, signos de puntuación, paréntesis...) puede usarse un espacio, varios o ninguno entre nombres de variables, funciones, etc., o al principio de la línea.
 
+## VS Code y otros IDEs para Julia
+
+Para muchos usuarios, las interfaces basadas en una consola de comandos como el REPL resultan poco "amigables", y por otro lado, para ejecutar rutinas más complejas, y siempre que se quiera obtener resultados reproducibles, es recomendable escribir las instrucciones en un archivo de código (*script*), como hemos hecho con el archivo `calc_diasemana.jl` en el ejemplo anterior.
+
+Para combinar ambas tareas de forma eficiente en una sola interfaz lo habitual es usar los llamados "entornos de desarrollo integrados" (conocidos por sus siglas IDE en inglés), que juntan en una misma interfaz una consola de comandos, un editor de código y a menudo otras utilidades como pueden ser visores de variables, tablas y gráficas, herramientas de depuración, etc. Julia cuenta, más que con un IDE particular, con *plug-ins* para crear IDEs sobre editores de código avanzados, como [Atom](https://atom.io), [Emacs](https://www.gnu.org/software/emacs/), [Sublime Text](https://www.sublimetext.com/), [Vim](https://www.vim.org), [VS Code](https://code.visualstudio.com/) y varios más.
+
+El IDE más completo y popular es el basado en VS Code. Para trabajar en este entorno, además de Julia, hay que instalar VS Code, y activar su [extensión para Julia](https://www.julia-vscode.org/) desde el panel de extensiones (ver en la figura 2). Existen (en inglés) unos excelentes [materiales introductorios](https://code.visualstudio.com/docs) para iniciarse en el uso de VS Code, así como una exhaustiva [documentación de la extensión para Julia](https://www.julia-vscode.org/docs/stable/) para sacar todo el partido a este IDE, que proporciona un amplio conjunto de herramientas para facilitar la creación, edición y ejecución de programas.
+
+![Figura 2](../assets/vscode_etiquetado.png)
+
+El recurso más versátil de VS Code es la "paleta de comandos", a la que se accede con la combinación de teclas `Ctrl`+ `Mayúsc.` + `P`. Escribiendo la palabra "julia" en el el cuadro que surge al pulsar esa combinación, se pueden ver las operaciones relacionadas con la extensión de Julia. Por ejemplo, el comando *Julia: Start REPL* sirve para abrir una terminal con el REPL de Julia que se integra con el resto de elementos de VS Code. También son particularmente útiles los distintos comandos para ejecutar el código de un *script* en la sesión de Julia asociada al REPL abierto:
+
+* *Execute File*: ejecutar el contenido completo del *script*; básicamente equivalente a usar la función `include` mencionada en la sección anterior.
+* *Send Current Line or Selection to REPL*: ejecutar en el REPL el código seleccionado en el editor de texto activo, o si no hay nada seleccionado, la línea en la que se encuentra el cursor.
+* *Execute Code*: ejecutar el bloque de código en el que se encuentra el cursor en el editor de código. Un "bloque" se corresponde a menudo con una línea, o varias cuando se está dentro de una expresión larga que ocupa múltiples líneas, en una función, bucle u otra [estructura de código](3-funciones-control.md).
+* *Execute Code Cell*: ejecutar la celda de código en la que se encuentra el cursor en el editor de código, y moverse a la siguiente celda. Las "celdas" son conjuntos arbitrarios de código en un *script* separados por una línea de comentario que comience por `##`.
+
+Los comandos *Execute Code* y *Execute Code Cell* también cuentan con variantes que después de ejecutar el código mueven el cursor al inicio del siguiente bloque o celda, lo cual es muy útil para ejecutar *scripts* paso a paso.
+
+!!! tip "Atajos de teclado"
+
+    Muchos comandos en VS Code tienen atajos de teclado. Por ejemplo, en la extensión de Julia se puede usar `Alt` + `J` seguido de `Alt` + `O` para lanzar el REPL, `Ctrl` + `Enter` para ejecutar el código seleccionado en el REPL, `Alt + Enter` para ejecutar un bloque de código y continuar, o `Shift + Enter` para hacer lo mismo con una celda de código. Seleccionando en el menú `File > Preferences > Keyboard Shortcuts`, se abre una página con todos los comandos disponibles, y desde ahí se pueden añadir nuevas combinaciones personalizadas a comandos que no las tengan, o modificar las existentes. 
+
+La extensión de Julia tiene numerosas opciones configurables para personalizar la experiencia del usuario. Se puede acceder a ellas a través del menú de configuración general de VS Code (en el icono de la rueda dentada o con el atajo de teclado `Ctrl + ,`), o desde el menú de las extensiones (ver arriba en la figura 2). Para más detalles sobre dichas opciones, véase la [documentación sobre la extensión de Julia para VS Code](https://www.julia-vscode.org/docs/stable/)).
+
+
+## Manejando el espacio de trabajo
+
+Al iniciar el REPL de Julia se crea un *workspace* o "espacio de trabajo", en el que se registran las distintas variables que se crean o modifican con cada operación. En una sesión de trabajo larga es fácil perder la pista de la variables que se han creado o a su contenido; la función `varinfo` sirve para observar esa información:
+
+```julia-repl
+julia> varinfo()
+name                    size summary                
+–––––––––––––––– ––––––––––– –––––––––––––––––––––––
+Base                         Module                 
+Core                         Module                 
+InteractiveUtils 163.926 KiB Module                 
+Main                         Module                 
+ans                 15 bytes String                 
+año                  8 bytes Int64                  
+diasemana           15 bytes String                 
+día                  8 bytes Int64                  
+gauss_diasemana      0 bytes typeof(gauss_diasemana)
+mes                  8 bytes Int64                  
+```
+
+Asímismo, la extensión para VS Code y otros IDEs tienen un menú específico para mostrar el espacio de trabajo, así como para explorar sus contenidos con mayor detalle (representaciones de las varialbes en texto, tablas u otros formatos, según su tipo).
+
+En este ejemplo podemos ver las variables `día`, `mes`, `año` y `diasemana` que hemos generado, más la función `gauss_diasemana`, y cuatro elementos más descritos como `Module`, que forman parte de la sesión de trabajo, aunque normalmente no hace falta interactuar directamente con ellos. Por contra, las variables creadas durante la ejecución de `gauss_diasemana` (`c`, `g`, etc.) no se recogen, ya que son variables "locales" a la función, a las que no se puede acceder desde el entorno del REPL, y que se puede considerar que se destruyen al terminar la función.
+
+Esta lista puede llegar a contener muchas variables, creadas en algún momento de la sesión pero que no se necesitan más, y que incluso pueden molestar porque ocupan grandes cantidades de memoria o interfieren en cálculos posteriores. Una forma de librarse de ellas es "vaciarlas" de contenido, del siguiente modo:
+
+```@repl
+x = nothing
+```
+
+Esta operación asigna a la variable `x` un objeto que "no es nada", y su valor anterior, si no es utilizado por ninguna otra variable, será eliminado automáticamente para liberar memoria cuando haga falta. El nombre de la variable aún seguirá presente en la sesión de trabajo, porque borrar todo rastro de las variables creadas puede dar lugar a problemas e inestabilidades no previstas, según el entorno en el que se esté trabajando. (Para limpiar completamente el espacio de trabajo, el único modo es terminar la sesión de Julia y comenzar una nueva.)
+
 ## Módulos y paquetes
 
 ```@raw html
@@ -217,9 +248,9 @@ La distribución básica de Julia viene con una biblioteca estándar que incluye
 * [`Statistics`](https://docs.julialang.org/en/v1/stdlib/Statistics/) para cálculos estadísticos (a menudo junto con [`Random`](https://docs.julialang.org/en/v1/stdlib/Random/) para trabajar con números aleatorios y distribuciones de probabilidad).
 * [`Sockets`](https://docs.julialang.org/en/v1/stdlib/Sockets/) para trabajar con conexiones a redes informáticas.
 
-Hay muchas otras utilidades que pueden considerse importantes, incluso fundamentales por la mayoría de los potenciales usuarios, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (*debugging*), etc., pero no están incluidas en la biblioteca estándar, sino en un "ecosistema" de paquetes que se han desarrollo de forma coordinada (aunque independiente) por la comunidad de usuarios y desarrolladores de Julia. Puede consultarse la sección *Ecosystem* en la web oficial ([https://julialang.org](https://julialang.org)) para ver algunos de los dominios principales, o la web [Julia Packages](https://juliapackages.com/) para explorar muchos más paquetes disponibles.
+Hay muchas otras utilidades que pueden considerse importantes, incluso fundamentales por la mayoría de los potenciales usuarios, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (*debugging*), etc., pero no están incluidas en la biblioteca estándar, sino en un "ecosistema" de paquetes que se han desarrollo de forma coordinada (aunque independiente) por la comunidad de usuarios y desarrolladores de Julia. Puede consultarse la sección *Ecosystem* en la web oficial ([https://julialang.org](https://julialang.org)) para ver algunos de los dominios principales, o webs como [Julia Packages](https://juliapackages.com/) o [Julia Hub](https://juliahub.com/ui/Packages) para explorar muchos más paquetes disponibles.
 
-Las soluciones más completas como Julia Pro ya incorporan muchos de los paquetes más importantes, pero incluso en esos casos puede ser necesario gestionarlos, actualizarlos o añadir nuevos paquetes. En el caso de paquetes "registrados" (que es el caso de los más populares, y todos los que se comentan en esta guía), la forma más sencilla de instalarlos es desde el modo de gestión de paquetes de la línea de comandos, mediante los siguientes pasos:
+En el caso de paquetes "registrados" (que es el caso de los más populares, y todos los que se comentan en esta guía), la forma más sencilla de instalarlos es desde el modo de gestión de paquetes de la línea de comandos, mediante los siguientes pasos:
 
 1. Cambiar del modo "normal" al de gestión de paquetes ("pkg"), pulsando la tecla `]` (se verá un cambio en la etiqueta al comienzo de cada línea, como en la figura 3).
 2. Escribir el comando `add` seguido del nombre del paquete. Por ejemplo, para añadir el paquete "CSV", que utilizaremos en el siguiente capítulo: `add CSV`
@@ -228,6 +259,10 @@ Las soluciones más completas como Julia Pro ya incorporan muchos de los paquete
 ![Figura 3](../assets/pkgmode.png)
 
 *Figura 3. Cambio a "modo pkg"*
+
+!!! note
+
+    El ciclo de desarrollo de los paquetes externos es independiente (en muchos casos más rápido) que el de Julia. Por ese motivo, aunque se ha procurado que los ejemplos de código esta guía sean compatibles con la versión 1 de Julia, no se puede asegurar que los que dependen de los paquetes externos funcionen adecuadamente en todas las versiones compatibles con Julia 1. Cuando se usen paquetes externos se darán indicaciones de qué versiones de los mismos se han empleado, para reducir la incertidumbre.
 
 ## Buscando ayuda
 
@@ -241,8 +276,6 @@ El documento de referencia para las funciones es clave incluso para los programa
 
 Puedes probar con cualquier función básica (por ejemplo `?div` para leer la ayuda sobre la división entre enteros), con un operador (p.ej. `?+` para la suma), o incluso para una variable que se haya definido (en ese caso dará una información básica sobre su contenido).
 
-La interfaz de Juno también proporciona un panel de documentación en el que se puede buscar por texto el nombre de funciones, variables, etc., y presenta la misma información de ayuda.
-
 !!! note "Documentación a través de "docstrings""
 
     Si has realizado el ejercicio de crear la función [`gauss_diasemana`](#gauss_diasemana) con el código completo presentado en este capítulo, al escribir `?gauss_diasemana` podrás leer el texto de las líneas que preceden a la definición de la función. Esta forma de documentar las funciones u otro tipo de objetos es muy útil y recomendable para hacer programas trazables y comprensibles. Puedes encontrar más detalles en el [capítulo 3 sobre funciones](3-funciones-control.md#Docstring-1).
@@ -253,7 +286,7 @@ Para las dudas no resueltas en el  manual, entre otras cuestions, los creadores 
 
 En este primer y breve capítulo hemos aprendido los siguientes puntos fundamentales para trabajar en Julia:
 
-* Las distintas distribuciones y entornos de trabajo disponibles: Julia, JuliaPro, el REPL básico e IDEs diversos.
+* Las distintas distribuciones y entornos de trabajo disponibles: Julia, JuliaPro, el REPL básico e IDEs diversos (con especial mención de la extensión para VS Code).
 * Algunas reglas básicas de sintaxis del lenguaje.
 * Cómo instalar y cargar paquetes.
 * Cómo buscar ayuda.

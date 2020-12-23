@@ -43,7 +43,7 @@ Las funciones, por otro lado, están pensadas para un flujo de trabajo mucho má
 
 Sin embargo, en general es ventajoso empezar a encapsular el código en pequeñas funciones desde casi el principio. En Julia se recomienda definir funciones sencillas porque así es más fácil asegurar la [estabilidad de tipos](@ref), lo que permite que se compilen de forma óptima y se ejecuten más rápido. Pero otra ventaja muy importante, que además es común a todos los lenguajes de programación, es que encapsular secuencias de operaciones en funciones hace que los pasos realizados durante el análisis, incluso en las primeras fases exploratorias, sean más repetibles y menos propensos a errores. Además, esto permite que el código sea más conciso, más modular y fácil de leer y entender posteriormente por el propio autor o por otros.
 
-Las funciones sencillas también facilitan el uso de [tests unitarios](@ref) y las herramientas de *[debugging](@ref)*, que se comentan en secciones posteriores como estrategias para prevenir y arreglar errores en los programas.
+Las funciones sencillas también facilitan el uso de tests unitarios y las herramientas de *debugging*, que se comentan en secciones posteriores como estrategias para prevenir y arreglar errores en los programas.
 
 ## Documentar el código
 
@@ -140,11 +140,6 @@ using Test
 @test resto(a2, b2) < min(a2, b1)
 ```
 
-
->
-
-
-
 La macro `@test` también facilita probar igualdades o desigualdades aproximadas con una tolerancia determinada. Por ejemplo, podemos probar la [aproximación de Bhaskara I a la función seno](https://en.wikipedia.org/wiki/Bhaskara_I%27s_sine_approximation_formula):
 
 ```@repl c10
@@ -166,7 +161,7 @@ end
 
 Julia proporciona varias utilidades más, por ejemplo para verificar si una función se interrumpe con un error o emite *warnings* cuando corresponde, comprobar los tipos de variable que dan como resultado las funciones, etc. Estas utilidades se pueden consultar en la sección del manual oficial sobre el [módulo `Test`](https://docs.julialang.org/en/v1/stdlib/Test/).
 
-## `Revise`
+## El paquete Revise
 
 Después de escribir el código de una función es necesario pasárselo a la sesión en curso de Julia para poder usarla --bien pegando el código en el REPL, leyendo el archivo que lo contiene con `include`, o con las herramientas que ofrecen los IDEs para ejecutar fragmentos de código--. Asimismo, si en algún momento corregimos alguna parte de la función, también tenemos que "recargarla" en la sesión de Julia, si queremos que se reconozca su nuevo comportamiento. Pero cuando se está escribiendo un programa con muchas funciones (y si se sigue el consejo que se ha dado arriba, eso debería ser lo normal), es fácil perder la pista a los cambios que se les va haciendo según encontramos fallos y los corregimos. Esto puede hacer que llegue un momento en que no sepamos si las funciones que estamos usando son las presentes en el código fuente o una versión anterior.
 
@@ -174,13 +169,13 @@ En esas circunstancias, una solución drástica es terminar la sesión de Julia 
 
 Esto significa que si se modifica alguna parte del archivo cargado con `includet`, este se "recarga" automáticamente. Las nuevas variables y funciones definidas en el código pasan a formar parte del espacio de trabajo; se aplican los cambios que se hayan hecho en sus definiciones, y en el caso de las funciones, las que se borren del código también desaparecen del espacio de trabajo.[^1]
 
-[^1]: Usando el paquete Revise también se pueden redefinir módulos de manera segura sin reiniciar la sesión de trabajo. Lo que no se pueden actualizar son las definiciones de tipos de variables. La definición de módulos y de tipos son aspectos algo más avanzados, que no se abordan en esta guía.
-
 El paquete Revise solo depende de los módulos de la biblioteca estándar de Julia, por lo que se trata de uno de los pocos paquetes de terceros que se puede recomendar [cargar de forma automática al inicio](9-pkg.md#Cargar-paquetes-al-inicio-1). Esta recomendación es especialmente aplicable para usuarios que trabajen en el desarrollo de paquetes, ya que Revise también puede seguir los cambios que se han hecho a los paquetes cargados con `using` o `import`. (Para asegurarse de que Revise funciona bien al cargarlo al inicio, conviene seguir las instrucciones mencionadas en sus páginas de documentación.) 
+
+[^1]: Usando el paquete Revise también se pueden redefinir módulos de manera segura sin reiniciar la sesión de trabajo. Lo que no se pueden actualizar son las definiciones de tipos de variables. La definición de módulos y de tipos son aspectos algo más avanzados, que no se abordan en esta guía.
 
 ## Registro de mensajes con `@debug`
 
-Hay circunstancias en las que se necesita consultar lo que ocurre en algún punto determinado de un programa sin tener que recorrer manualmente todos sus pasos, o dentro de una función cuando se ejecuta, para verificar que funciona como se espera o para entender por qué no lo hace. A continuación presentamos tres mecanismos para hacer este tipo de "investigación" o *debugging*.
+Hay circunstancias en las que se necesita consultar lo que ocurre en algún punto determinado de un programa sin tener que recorrer manualmente todos sus pasos, o dentro de una función cuando se ejecuta, para verificar que funciona como se espera o para entender por qué no lo hace. A continuación presentamos las herramientas principales para hacer este tipo de "investigación" o *debugging*.
 
 El método más básico consiste en escribir instrucciones en los puntos de interés del programa, para registrar la información que se desea consultar. La versión más rudimentaria de este proceso sería introducir líneas de código con la función `print` o `println` para mostrar los valores de ciertas variables en ese instante, bien en la pantalla, en archivos de texto, etc.
 
@@ -277,7 +272,7 @@ debug_logger = SimpleLogger(io, Logging.Debug)
 
 Los registros de mensajes que acabamos de ver son como radiografías que podemos hacer a los programas y funciones para echar un vistazo a su interior. Son una herramienta sencilla y muy eficiente, pero para que resulten útiles hemos de saber dónde buscar y qué información queremos observar. Desafortunadamente muchas veces esto no es así, por lo que a menudo necesitaremos técnicas de *debugging* más flexibles.
 
-Cuando tenemos localizados los puntos críticos de un programa, un método conveniente para explorarlos con más libertad es utilizar la macro `@infiltrate` del paquete [Infiltrator](https://github.com/JuliaDebug/Infiltrator.jl), en lugar de `@debug`. Esto hace que la ejecución del programa se detenga en ese punto. Por ejemplo, en la función `gauss_diasemana` podríamos cambiar las últimas líneas por las siguientes:
+Cuando tenemos localizados los puntos críticos de un programa, un método conveniente para explorarlos con más libertad es utilizar la macro `@infiltrate` del paquete [Infiltrator](https://github.com/JuliaDebug/Infiltrator.jl), en lugar de `@debug`[^4]. Esto hace que la ejecución del programa se detenga en ese punto. Por ejemplo, en la función `gauss_diasemana` podríamos cambiar las últimas líneas por las siguientes:
 
 ```julia
     w = rem(d + e + f + g + div(g, 4), 7)
@@ -286,7 +281,9 @@ Cuando tenemos localizados los puntos críticos de un programa, un método conve
 end
 ```
 
-A continuación cargamos el paquete Infiltrate y empleamos la nueva versión de nuestra función:
+[^4]: La versión de Infiltrator usada para estos ejemplos es la v0.3.
+
+A continuación cargamos el paquete Infiltrator y empleamos la nueva versión de nuestra función:
 
 ```julia-repl
 julia> using Infiltrator
@@ -304,7 +301,7 @@ Hay varias cosas a notar aquí:
 
 * La instrucción `using Infiltrator` ha de usarse antes de cargar la función que incluye la línea con `@infiltrate`. En este caso hemos supuesto que el archivo que contiene nuestra función se llama `gauss_diasemana.jl`.
 
-* Al llegar a esa línea, la función detiene su ejecución, y la etiqueta del REPL cambia de `julia>  a `debug>`, para indicar que se ha entrado en "modo de depuración" (*debug mode* en inglés).
+* Al llegar a esa línea, la función detiene su ejecución, y la etiqueta del REPL cambia de `julia>`  a `debug>`, para indicar que se ha entrado en "modo de depuración" (*debug mode* en inglés).
 
 En este momento se pueden ejecutar nuevas instrucciones en el REPL, que funcionarán como si estuvieran escritas en el punto de la función donde nos hemos detenido. Esto significa que podemos usar las variables locales de la función, que podemos consultar con la macro `@locals`:
 
@@ -357,17 +354,70 @@ Hay dos maneras de desactivar y reactivar el efecto de `@infiltrate` sin redefin
 
 * Si se ejecuta la macro `@stop` dentro del modo *debug*, el punto de interrupción (*breakpoint*) actual dejará de tener efecto la siguiente vez que se ejecute el programa o la función. La instrucción `Infiltrator.clear_stop()` reactiva todos los *breakpoints*.
 
-* Se puede añadir una condición después de `@infiltrate`, de tal modo que el *breakpoint* se active solo cuando esa condición es cierta. Por ejemplo, se podría crear la variable `Main.activar_infiltrate`[^4] que podamos definir arbitrariamente como `true` o `false`, y en la línea en la que queremos detener el código escribir:
+* Se puede añadir una condición después de `@infiltrate`, de tal modo que el *breakpoint* se active solo cuando esa condición es cierta. Por ejemplo, se podría crear la variable `Main.activar_infiltrate`[^5] que podamos definir arbitrariamente como `true` o `false`, y en la línea en la que queremos detener el código escribir:
 
 ```julia
 @infiltrate Main.activar_infiltrate
 ```
+[^5]: El motivo por el que se sugiere definir explícitamente esta variable en el entorno global de `Main` es para asegurar que es esa la variable que controla el comportamiento de `@infiltrate`, en el caso de que hubiera alguna variable local con el mismo nombre en el entorno de la función manipulada.
 
-[^4]: El motivo por el que se sugiere definir explícitamente esta variable en el entorno global de `Main` es para asegurar que es esa la variable que controla el comportamiento de `@infiltrate`, en el caso de que hubiera alguna variable local con el mismo nombre en el entorno de la función manipulada.
+!!! note "No dejes las líneas con `@infiltrate` al terminar"
 
+    Aunque la macro `@infiltrate` nos proporciona una posibilidad de interacción que no tiene `@debug`, una desventaja frente a la macro más simple es que depende de un paquete externo. Así, si en un programa dejamos una línea con `@debug`, este se podría ejecutar sin problemas cuando no estemos depurándolo; pero si dejamos la macro `@infiltrate` en el código, en una sesión de Julia posterior el programa fallaría si no se carga el paquete Infiltrator con antelación. Así que cuando se use esta herramienta, es importante acordarse de borrar las líneas con `@infiltrate` cuando se haya acabod de hacer la depuración.
+    
 !!! tip "Infiltrator y Revise"
 
     Tener el paquete Revise en funcionameinto hace más fácil usar Infiltrator: en los *scripts* que se hayan cargado con `includet`, también se pueden activar y desactivar *breakpoints* simplemente escribiendo y borrando las líneas con `@infiltrate`, respectivamente.
     
 
-## *Debugger* gráfico
+## *Debuggers* interactivos
+
+Cuando queremos investigar el funcionamiento de un programa, pero los puntos críticos no están bien definidos desde un principio o pueden ir cambiando de un caso a otro, lo que necesitamos es un *debugger* interactivo, que ofrece mayor flexibilidad para detener la función en distintos lugares, en lugar de puntos fijos como hemos visto con las herramientas anteriores.
+
+El paquete [Debugger](https://github.com/JuliaDebug/Debugger.jl) permite depurar un programa de este modo a través del REPL. Si se ejecuta una expresión precedida de la macro `@enter`, su ejecución se detendrá en la primera lína de código, en un modo *debug* muy semejante al que se ha visto con Infiltrator, pero con dos diferencias importantes
+
+* Además de hacer operaciones en ese mismo punto del código, se pueden ejecutar instrucciones para detenerse en la siguiente línea, dentro de funciones a las que se llama, etc. (véanse los detalles en la página web del paquete). 
+* Esta mayor libertad tiene un precio: para poder detener el programa de forma arbitraria en cualquier punto del código hay que renunciar a compilarlo, lo que en general hará que funcione más lento; a veces *mucho* más lento.
+
+También es posible hacer avanzar el programa y detenerse en un punto arbitrario, añadiendo *breakpoints*. Pero en este caso disponemos de múltiples formas de definir los *breakpoints*:
+
+* Añadiendo al código la macro `@bp` en la línea correspondiente. Como ocurre con Infiltrator, esta forma de añadir *breakpoints* hace que el programa solo se pueda usar si se tiene cargado el paquete Debugger.
+* La función `breakpoint(f, n)` añade un *breakpoint* en el archivo de código o la función con el nombre `f`, en la línea `n`. Ese *breakpoint* no altera el código original, y solo está disponible en la sesión presente. Si el *breakpoint* se asigna a una variable (`b = breakpoint(...)`), este se puede activar, desactivar o borrar con operaciones como `activate(b)`, `enable(b)` o `disable(b)`.
+* La macro `@breakpoint f(x) n` ejecuta la expresión `f(x)` en "modo *debug*", fijando un *breakpoint*  en la línea `n`. Ese *breakpoint* se elimina después de ejecutar la expresión.
+
+Para que el programa se detenga en esos *breakpoints* es necesario que se ejecute en "modo *debug*". Como se ha señalado, usando la macro `@breakpoint` esto ocurre automáticamente. Pero si el *breakpoint* se ha añadido a priori de cualquiera de las otras dos maneras, el *script* o la función en cuestión ha de ejecutarse precedida de `@enter`, o bien con `@run` para que no se detenga en la primera línea, sino directamente en la marcada con el *breakpoint*. 
+
+### *Debugger* en VS Code
+
+Hay IDEs que también proporcionan un *debugger* con herramientas gráficas. En particular, la extensión para Julia de VS Code permite usar las macros `@enter` y `@run` para entrar en "modo *debug*" sin instalar el paquete Debugger. Con esa herramienta el control de la ejecución resulta más visual: las operaciones como ir a la siguiente línea, saltar al siguiente *breakpoint*, entrar o salir de la función, etc. se pueden manejar desde un conjunto de botones (véase la barra superior en la Figura 1); los *breakpoints* se marcan como botones rojos sobre el archivo de código, pulsando junto al número de línea correspondiente (como en la línea 18 del ejemplo de la figura), etc.
+
+Por otro lado, cuando se entra en modo *debug* en VS Code se cambia de entorno visual. Durante las interrupciones el REPL integrado en VS Code no está operativo, y las instrucciones a ejecutar se introducen en el "*debug console*". Además, la interfaz del *debugger* tiene su propio explorador de variables que es distinto del habitual, más otros menús, cuyo funcionamiento está explicado en la [documentación de la extensiónd e VS Code](https://www.julia-vscode.org/docs/stable/userguide/debugging/).
+
+![Figura 1. Entorno de *debugging* en VS Code](../assets/vscode-debug.png)
+
+*Figura 1. Entorno de debugging en VS Code*
+
+### *Debug* en modo compilado
+
+Como se ha señalado arriba, un inconvienente notable de ejecutar un programa en "modo *debug*" es que en general es mucho más lento, tanto más lento cuanto más complejo es el programa. Para reducir este problema se puede activar la opción "*compiled mode*" en cualquier punto de interrupción. Eso hará que cuando se ejecute la línea de código en la que está detenido el programa, las operaciones se hagan en modo compilado, a la velocidad de costumbre (y también las de las líneas siguientes, hasta que se desactive la opción), a no ser que se "entre" expresamente en ellas con la acción de "*step into*". Ahora bien, los *breakpoints* marcados en el código de las operaciones que se ejecutan en modo compilado no son operativos.
+
+Consideremos, por ejemplo, que se ha entrado en modo *debug* en un programa con las siguientes líneas:
+
+![Ejemplo de Debug](../assets/debug-ejemplo.png)
+
+A modo de ayuda visual, el código se muestra como se vería en el editor de VS Code. La primera línea (#11) está resaltada, indicando que la ejecución se ha detenido en ese punto. El punto rojo en la tercera línea señala un *breakpoint*. Supongamos, además, que dentro del código de la función `g` (que no se muestra aquí) también se ha activado otro *breakpoint*.
+
+Si no está activado el modo compilado y se selecciona la opción de "continuar" la ejecución, la siguiente interrupción tendrá lugar durante la ejecución de la segunda línea, en el *breakpoint* que hay dentro de la función `g`. Pero si estuviera activado el modo compilado, la función `g` se ejecutaría sin detenerse, y la interrupción se daría en el *breakpoint* de la tercera línea, que está al mismo "nivel" que el punto desde el que se reanuda la ejecución.
+
+¿Cómo hacer entonces para utilizar *breakpoints* que se encuentran a distintos "niveles" y a la vez aprovechar la mayor eficiencia del "modo compilado"? Si, por ejemplo, la función `f` fuese muy compleja y lenta de ejecutar en modo *debug*, sería conveniente ejecutarla de ese modo. Pero en lugar de seleccionar la acción de continuar la ejecución (que busca directamente el siguiente *breakpoint*), se podría ejecutar solo esa línea con la acción *step over*, de modo que nos detendríamos en la línea #12, a la entrada de la función `g` que queremos inspeccionar. (Alternativamente, y a sabiendas de que queremos detenernos en algún punto dentro de `g`, se podría haber fijado otro *breakpoint* en esa línea donde se llama a la función.)
+
+Entonces, para evitar que `g` se ejecute por completo de modo compilado, se puede entrar en su código mediante la acción *step into*, de forma que la siguiente interrupción se dará en la primera línea de código de `g`. Si el *breakpoint* que buscamos está a ese mismo nivel, desde ahí se podría continuar la ejecución hasta que se detenga en él. Y así sucesivamente. Pasado el *breakpoint*, se puede ejecutar el resto de la función y quedarse a la salida de la misma con la acción *step out*.
+
+## Sumario del capítulo
+
+En este último capítulo hemos visto diversas estrategias y herramientas para afrontar los errores de programación, reduciendo el riesgo de que ocurran, y detectarlos y analizarlos de forma eficaz cuando no se han podido evitar. Lo más eficaz es adoptar unos buenos hábitos de programación, documentando adecuadamente y probando de forma contínua las pequeñas piezas que conforman un programa. Pero además Julia ofrece una serie de ayudas, sobre todo a través de paquetes, que facilitan esa tarea, y entre ellas hemos explorado, en particular:
+
+* Las herramientas para hacer tests unitarios, mediante la macro `@assert` o las utilidades del módulo estándar `Test` (las macros `@test`, `@testset`, entre otras).
+* El registro de mensajes con la macro `@debug`, que se pueden mostrar en pantalla o volcar a archivos para analizarlos posteriormente.
+* El uso del paquete Revise para facilitar la continuidad del trabajo a la vez que se redefinen funciones, módulos y otros elementos.
+* El uso de paquetes como Infiltrator o Debugger, y herramientas análogas de algunos IDEs, para detenerse la ejecución de programas en puntos de interés.

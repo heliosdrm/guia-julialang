@@ -318,9 +318,9 @@ maxima_esperanza = maximum(datos_un[:,3])
 
 ## *Data frames* (tablas de datos)
 
-En términos coloquiales se puede usar indistintamente el término "matriz" y el de "tabla" de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son *arrays* de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de "tabla de datos" (*data frame* en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete [DataFrames](http://juliadata.github.io/DataFrames.jl/stable/), y que se pueden leer y guardar en archivos de texto a través del paquete [CSV](https://juliadata.github.io/CSV.jl/stable/), entre otros.
+En términos coloquiales se puede usar indistintamente el término "matriz" y el de "tabla" de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son *arrays* de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de "tabla de datos" (*data frame* en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete [DataFrames](http://juliadata.github.io/DataFrames.jl/stable/), y que se pueden leer y guardar en archivos de texto a través del paquete [CSV](https://juliadata.github.io/CSV.jl/stable/), entre otros.[^1]
 
-Una tabla de datos es parecida a una matriz; también se puede leer a partir de un archivo de texto mediante la función `CSV.read`, al igual que hacíamos con `readdlm` para las matrices, con algunas diferencias entre las cuales podemos destacar las siguientes:
+Una tabla de datos es parecida a una matriz; también se puede leer a partir de un archivo de texto mediante la función `CSV.File`, al igual que hacíamos con `readdlm` para las matrices, con algunas diferencias entre las cuales podemos destacar las siguientes:
 
 * La primera línea se interpreta por defecto como la lista de nombres de las columnas. Al leer el archivo estos nombres se incorporan a la propia tabla, en lugar de devolverse como una variable aparte.
 
@@ -330,13 +330,13 @@ Una tabla de datos es parecida a una matriz; también se puede leer a partir de 
 
 * Las columnas pueden contener valores perdidos (`missing`), que por defecto se representan mediante posiciones "vacías" (dos delimitadores seguidos). Los argumentos `missingstrings` y `allowmissing` se pueden usar para personalizar cómo se interpretan y gestionan dichos valores perdidos.
 
-Podemos ver cómo los nombres de las columnas están incorporados en la tabla leyendo el archivo "esperanzadevida.txt" como sigue:
+Podemos ver cómo los nombres de las columnas están incorporados en la tabla leyendo el archivo "esperanzadevida.txt" como sigue (el resultado de `CSV.File` se pasa a un `DataFrame` para visualizarlo y manejarlo mejor):
 
 ```julia-repl
-julia> using CSV
+julia> using CSV, DataFrames
 
-julia> tabla_un = CSV.read("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true)
-18×4 DataFrames.DataFrame
+julia> tabla_un = DataFrame(CSV.File("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true))
+18×4 DataFrame
 │ Row │ continente    │ género  │ media   │ desv_tip │
 │     │ String        │ String  │ Float64 │ Float64  │
 ├─────┼───────────────┼─────────┼─────────┼──────────┤
@@ -361,8 +361,8 @@ julia> tabla_un = CSV.read("datos/esperanzadevida.txt", delim=' ', ignorerepeate
 Además, tal como se ha señalado, el país o el género son series de cadenas de texto (datos de tipo `String`) mientras que los datos numéricos son números decimales (`Float64`). Se puede hacer referencia a las distintas columnas por su posición en la tabla al igual que en las matrices, pero también por sus nombres, que se representan en forma de símbolos (véase al final de la sección sobre cadenas de texto sobre este tipo especial de nombres):
 
 ```@setup c2
-using CSV
-tabla_un = CSV.read("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true)
+using CSV, DataFrames
+tabla_un = CSV.read("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true) |> DataFrame
 ```
 ```@repl c2
 tabla_un[:, :media]   # Equivale a ... tabla_un[:,3]
@@ -371,9 +371,10 @@ tabla_un[:, :media]   # Equivale a ... tabla_un[:,3]
 Este tipo de tablas también se pueden crear a mano, con la función "constructora" `DataFrame` del paquete DataFrames. La forma normal de construir estas tablas es introduciendo los datos por columnas, a cada una de las cuales se le asigna un nombre. Por ejemplo, la última línea del ejemplo inicial de este capítulo podría haberse cambiado para crear una tabla de este tipo:
 
 ```julia
-using DataFrames
 tabla_resultados = DataFrame(archivo=archivos, tiempo=tiempos, extremo=extremos)
 ```
+
+[^1]: Las versiones de los paquetes empleados son DataFrames v0.22 y CSV 0.8.
 
 ## Guardar datos
 
@@ -391,7 +392,7 @@ CSV.write("tabla.txt", tabla_resultados; delim=';')
 
 La diferencia más notable entre `writedlm` y `CSV.write`, además del tipo de tabla de entrada, es que `CSV.write` también escribe una primera línea con los nombres de las columnas. (Se puede omitir usando el argumento opcional `header=false`).
 
-Guardar conjuntos de datos en archivos de texto es especialmente útil para emplearlos posteriormente, copiando la tabla en un informe, abriéndola con una hoja de cálculo, o importándola en cualquier otro programa. Pero para reutilizar los datos en una sesión de Julia posterior, también viene bien poder guardarlos en un archivo binario que conserve las propiedades de las variables originales. Paquetes como [BSON](https://github.com/JuliaIO/BSON.jl) o [JLD2](https://github.com/JuliaIO/JLD2.jl) contienen las utilidades necesarias para salvar y cargar datos de este tipo.
+Guardar conjuntos de datos en archivos de texto es especialmente útil para emplearlos posteriormente, copiando la tabla en un informe, abriéndola con una hoja de cálculo, o importándola en cualquier otro programa. Pero para reutilizar los datos en una sesión de Julia posterior, también viene bien poder guardarlos en un archivo binario que conserve las propiedades de las variables originales. Paquetes como [BSON](https://github.com/JuliaIO/BSON.jl) o [JLD2](https://github.com/JuliaIO/JLD2.jl) contienen las utilidades necesarias para salvar y cargar datos de este tipo.[^2]
 
 Ambos paquetes proporcionan métodos semejantes para salvar y guardar datos. Por ejemplo, para salvar las variables `archivos` y `resultados`, en un archivo llamado "datos" -- y para cargarlas después a partir del archivo--, en ambos casos se podría escribir:
 
@@ -401,6 +402,8 @@ Ambos paquetes proporcionan métodos semejantes para salvar y guardar datos. Por
 ```
 
 Normalmente al nombre del archivo se le añade una extensión según el tipo de archivo correspondiente. En el caso del paquete JLD2 esta extensión sería `jld2`, y en el de BSON sería `bson`. Ambos son tipos de archivo binarios, el primero específio para Julia y el segundo un estándar más genérico y robusto. Puede consultarse la documentación de estos paquetes para más detalles, y otras formas de guardar y cargar datos.
+
+[^2]: Las versiones de los paquetes referidos son BSON v0.3 y JLD2 0.2.
 
 ## Sumario del capítulo
 

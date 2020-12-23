@@ -12,7 +12,7 @@ Parece lógico, por tanto, que las instrucciones para crear gráficos también s
 
 ## Paquetes de gráficos para Julia
 
-Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías gráficas[^1] necesarias, y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [GRUtils](https://heliosdrm.github.io/GRUtils.jl/stable/), que proporciona una buena experiencia como primera contacto con los gráficos en Julia, por la forma en que combina rapidez y facilidad de uso con potencia y versatilidad de los gráficos generados.
+Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías gráficas[^1] necesarias, y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [GRUtils](https://heliosdrm.github.io/GRUtils.jl/stable/), que proporciona una buena experiencia como primera contacto con los gráficos en Julia, por la forma en que combina rapidez y facilidad de uso con potencia y versatilidad de los gráficos generados.[^2]
 
 Hay muchos otros paquetes recomendables para hacer gráficos en Julia. El más conocido es [Plots](http://docs.juliaplots.org/latest/), que proporciona una interfaz común para manejar muchas librerías gráficas, lo que le confiere una mayor versatilidad y potencia. Para gráficos más sofisiticados o que requieran mayor nivel de personalización que el que proporciona GRUtils, Plots es una magnífica opción, aunque más pesada en términos de instalación y velocidad.
 
@@ -20,6 +20,7 @@ Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl),
 
 [^1]: "Librería gráfica" es una traducción macarrónica del inglés *graphic library*, que designa un conjunto de herramientas de software, utilizadas por el sistema operativo para hacer operaciones gráficas (crear y manipular ventanas en pantalla, generar archivos gráficos, "dibujar" formas geométricas en dichas ventanas y archivos, etc.)
 
+[^2]: En lo que sigue consideraremos la versión 0.5 de GRUtils
 
 ## Instalación de GRUtils
 
