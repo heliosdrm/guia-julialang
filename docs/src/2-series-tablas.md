@@ -17,8 +17,7 @@ Pongamos el siguiente caso. Tenemos unas medidas de un experimento, consistente 
 Cada uno de estos archivos tiene 100 líneas con dos columnas de números separadas por tabuladores: la primera columna es una línea de tiempos equiespaciada que varía entre 0.01 y 1.00, y la segunda contiene los valores de las medidas.
 
 ```@example c2
-using DelimitedFiles, GRUtils # hide
-GRUtils.GR.inline("png") # hide
+using DelimitedFiles, Plots # hide
 datos = readdlm("datos/series/sA12.txt") # hide
 plot(datos[:,1],datos[:,2]) # hide
 ```
@@ -358,15 +357,19 @@ julia> tabla_un = DataFrame(CSV.File("datos/esperanzadevida.txt", delim=' ', ign
 │ 18  │ Oceanía       │ Mujeres │ 80.2    │ 5.55     │
 ```
 
-Además, tal como se ha señalado, el país o el género son series de cadenas de texto (datos de tipo `String`) mientras que los datos numéricos son números decimales (`Float64`). Se puede hacer referencia a las distintas columnas por su posición en la tabla al igual que en las matrices, pero también por sus nombres, que se representan en forma de símbolos (véase al final de la sección sobre cadenas de texto sobre este tipo especial de nombres):
+Además, tal como se ha señalado, el país o el género son series de cadenas de texto (datos de tipo `String`) mientras que los datos numéricos son números decimales (`Float64`). Se puede hacer referencia a las distintas columnas por su posición en la tabla al igual que en las matrices, pero también por sus nombres):
 
 ```@setup c2
 using CSV, DataFrames
 tabla_un = CSV.read("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true) |> DataFrame
 ```
 ```@repl c2
-tabla_un[:, :media]   # Equivale a ... tabla_un[:,3]
+tabla_un[:, "media"]   # Equivale a ... tabla_un[:,3]
 ```
+
+!!! tip "Acceso a columnas completas de los `DataFrames`"
+
+    Para acceder a las columnas completas se puede utilizar la sintaxis `tabla_un[!, "media"]`, con una exclamación en lugar de los dos puntos. La diferencia es que el resultado es el propio vector de datos que hay en la columna seleccionada de la tabla, en lugar de una copia del mismo, lo cual resulta más eficiente. Un efecto secundario es que las modificaciones que se hagan en el resultado se reflejarán en la tabla original.
 
 Este tipo de tablas también se pueden crear a mano, con la función "constructora" `DataFrame` del paquete DataFrames. La forma normal de construir estas tablas es introduciendo los datos por columnas, a cada una de las cuales se le asigna un nombre. Por ejemplo, la última línea del ejemplo inicial de este capítulo podría haberse cambiado para crear una tabla de este tipo:
 

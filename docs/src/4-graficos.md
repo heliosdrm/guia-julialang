@@ -10,49 +10,35 @@ Hay una buena razón para hacerlo así. El usuario de una herramienta informáti
 
 Parece lógico, por tanto, que las instrucciones para crear gráficos también se introduzcan lo más pronto posible a la hora de presentar una herramienta para el análisis de datos. Además, parafraseando el refrán popular, se puede decir que un gráfico vale más que mil números. Julia tiene una potencia extaordinaria para hacer cálculos complejos y costosos de forma rápida y eficaz; pero la representación de los resultados en un sencillo gráfico a veces da una mayor sensación de productividad, y aprender a crear esos gráficos es una buena manera de aumentar la motivación para introducirse en un lenguaje de programación.
 
-## Paquetes de gráficos para Julia
+## El paquete Plots y otras alternativas
 
-Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías gráficas[^1] necesarias, y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [GRUtils](https://heliosdrm.github.io/GRUtils.jl/stable/), que proporciona una buena experiencia como primera contacto con los gráficos en Julia, por la forma en que combina rapidez y facilidad de uso con potencia y versatilidad de los gráficos generados.[^2]
+Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías gráficas[^1] necesarias y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [Plots](http://docs.juliaplots.org/latest/) (versión 1), uno de los más populares, y que proporciona una interfaz común para manejar muchos de esos otros paquetes, de tal manera que solo hace falta aprender una forma de crear y editar gráficos. Además, tiene una excelente documentación con numerosos tutoriales, ejemplos y demostraciones disponibles en su página web (en inglés), muy recomendables para ampliar los conceptos más básicos que se presentan aquí.
 
-Hay muchos otros paquetes recomendables para hacer gráficos en Julia. El más conocido es [Plots](http://docs.juliaplots.org/latest/), que proporciona una interfaz común para manejar muchas librerías gráficas, lo que le confiere una mayor versatilidad y potencia. Para gráficos más sofisiticados o que requieran mayor nivel de personalización que el que proporciona GRUtils, Plots es una magnífica opción, aunque más pesada en términos de instalación y velocidad.
+Según los gráficos que se quieran hacer, también puede ser interesante instalar [paquetes complementarios](http://docs.juliaplots.org/latest/ecosystem/) que aumentan su funcionalidad, según el campo en el que se vaya a trabajar. Aunque con el paquete básico de Plots ya se pueden conseguir muchos resultados.
 
-Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl), basado en la librería gráfica que se suele usar con Python, [VegaLite](https://www.queryverse.org/VegaLite.jl/stable/) para hacer sofisticados gráficos interactivos, o [UnicodePlots](https://github.com/Evizero/UnicodePlots.jl) en el otro extremo, para crear gráficos basados en caracteres de texto sobre la consola de comandos. Una vez se ha "roto mano" con el lenguaje, y si se dispone de tiempo para ello, lo mejor es explorar distintos paquetes para escoger el que mejor se adapta a las necesidades y limitaciones de cada uno.
+Si no se tienen otras librerías gráficas instaladas, Plots utiliza por defecto la del paquete [GR](https://github.com/jheinen/GR.jl). Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl), basado en la librería gráfica que se suele usar con Python, [VegaLite](https://www.queryverse.org/VegaLite.jl/stable/) para hacer sofisticados gráficos interactivos, o [UnicodePlots](https://github.com/Evizero/UnicodePlots.jl) en el otro extremo, para crear gráficos basados en caracteres de texto sobre la consola de comandos. Una vez se ha "roto mano" con el lenguaje, y si se dispone de tiempo para ello, puede ser buena idea explorar distintos paquetes para escoger el que mejor se adapta a las necesidades y limitaciones de cada uno.
 
 [^1]: "Librería gráfica" es una traducción macarrónica del inglés *graphic library*, que designa un conjunto de herramientas de software, utilizadas por el sistema operativo para hacer operaciones gráficas (crear y manipular ventanas en pantalla, generar archivos gráficos, "dibujar" formas geométricas en dichas ventanas y archivos, etc.)
 
-[^2]: En lo que sigue consideraremos la versión 0.5 de GRUtils
-
-## Instalación de GRUtils
-
-Como cualquier otro paquete de Julia, GRUtils necesita instalarse antes de poder usarlo. La principal diferencia con los paquetes vistos hasta ahora es que, indirectamente, la instalación de GRUtils en Julia intenta instalar en el sistema la librería gráfica [GR](http://gr-framework.org). GR se suele instalar sin problemas en los sistemas operativos habituales (Linux, Windows y OSX), pero puede haber casos en los que este paso falle, bien por alguna limitación del sistema o por algún error de conexión durante el proceso. Si esto ocurre se pueden probar las siguientes soluciones:
-
-* Reconstruir el paquete GR, que es el que lleva a cabo la compilación e instalación de la librería gráfica. Esto se hace en con dos instrucciones en la consola de comandos de Julia. La segunda instrucción se ha de ejecutar en el modo de gestión de paquetes (como viene indicado por la etiqueta `pkg>` al comienzo de la línea), en la que se entra pulsando la tecla `]`, como se indicó en el capítulo de [primeros pasos](1-primerospasos.md):
-
-```julia-repl
-julia> ENV["GRDIR"] = ""
-pkg> build GR
-```
-
-* Si la anterior solución no da resultados, puede ser que no tengas permiso para instalar la librería gráfica. En Windows puede intentarse saltarse esta limitación ejecutando Julia en modo administrador (al menos en la sesión en la que se quieran instalar los paquetes).
-
-
 ## Un ejemplo básico
 
-Una vez instalado el paquete GRUtils, hacer gráficos es rápido y sencillo. Por ejemplo, el [gráfico del capítulo 2](2-series-tablas.md#ejemplo_series) con una muestra de las señales analizadas se realizó con las siguientes instrucciones:
+Una vez instalado el paquete Plots, hacer gráficos es rápido y sencillo. Por ejemplo, el [gráfico del capítulo 2](2-series-tablas.md#ejemplo_series) con una muestra de las señales analizadas se realizó con las siguientes instrucciones:
 
 ```@example c4
 # Primero leemos el archivo con la serie de datos datos a representar
 # (la primera columna tiene los tiempos, y la otra los valores de la serie)
 using DelimitedFiles
 datos = readdlm("datos/series/sA01.txt")
-# Cargamos el paquete GRUtils y utilizamos la función `plot`
-using GRUtils
-GRUtils.GR.inline("png") # hide
-Figure(); # hide
+# Cargamos el paquete Plots y utilizamos la función `plot`
+using Plots
 x = datos[:,1]
 y = datos[:,2]
 plot(x, y)
 ```
+
+!!! note "¿Por qué tarda tanto el primer gráfico?"
+
+    Al reproducir el ejemplo anterior se puede observar que desde que se ejecuta la línea `plot(x, y)` hasta que se presenta el gráfico pasa un tiempo (puede ser corto o largo dependiendo del ordenador y la versión de Julia). La generación y presentación de gráficos es una operación relativamente compleja, y la mayor parte de ese tiempo está dedicado a compilar las instrucciones. La buena noticia es que tras el primer gráfico, la generación de los siguientes es generalmente muy rápida.
 
 Según el entorno en el que se esté trabajando, este código hará que el gráfico se muestre de una manera u otra. Por ejemplo, en el REPL normalmente se abre en una nueva ventana; en IDEs como Juno y VSCode se muestra en el panel de gráficos dedicado; y en un notebook de IJulia los gráficos aparecen en celdas como imágenes integradas en las celdas de resultados.
 
@@ -67,199 +53,186 @@ matriz = [y y2]
 plot(x, matriz)
 ```
 
-Otra forma de hacerlo es dibujando la segunda gráfica sobre la primera, poniendo la figura en modo `hold`:
+Otra forma de hacerlo es dibujando la segunda gráfica sobre la primera, usando la función `plot!` (con una exclamación al final):
 
 ```julia
 plot(x, y)
-hold(true)   # Usar `hold(false)` para desactivar este modo
-plot(x, y2)
+plot!(x, y2)
 ```
 
-Además, la función `plot` también admite que se pasen varias parejas de series X-Y a la vez. Esto hace que se representen todas en la misma gráfica como si se hubiera activado el modo `hold`:
+En ambos casos, el resultado sería la misma gráfica mostrada antes.
+
+## Atributos de las líneas
+
+Por defecto, las series de datos se presentan como líneas que se dibujan con colores diferentes para ayudar a diferenciarlas, y etiquetadas como `y1`, `y2`, etc. Pero podemos modificar el color y el estilo de línea, las etiquetas, o incluso sustituir las líneas por otros elementos gráficos (puntos, barras y otras geometrías)
+
+Esto se consigue especificando los atributos de las series de datos, como argumentos "con nombre" que se añaden a la función `plot` (o `plot!`). Veamos una variación de la gráfica anterior combinando distintos atributos, que se explican a continuación
+
+```@example c4
+plot(x, [y y2],
+    style = [:solid :dash], width = 2,
+    color = ["purple" colorant"#00ff00"],
+    label = ["sA01" "sB30"]
+)
+```
+
+En este ejemplo se han modificado cuatro atributos de las líneas:
+
+* `style` (forma abreviada de `linestyle`), que define el estilo de línea. Algunos de los valores posibles son `:solid` (línea continua, que es el valor por defecto), `:dash` (a rayas), `:dot` (punteada), o `:dashdot`(línea con puntos).
+* `width` (o `linewidth`), que define la anchura de la línea en píxeles.
+* `color` (forma abreviada de `seriescolor`), que define el color de la línea. El color puede venir definido por su nombre en inglés en forma de texto (p.ej. `"purple"`) o símbolo (`:purple`), o bien por un código numérico expresado con la clave `colorant`, como `colorant"#00ff00"`, que es un verde saturado en código hexadecimal (equivalente al color "lime").
+* `label`: la etiqueta usada en la leyenda.
+
+!!! tip "Códigos de color"
+
+    Los nombres y los códigos numéricos que se pueden emplear para definir los colores son los recogidos por el [estándar para CSS](https://www.w3.org/TR/css3-color/). Este incluye 62 nombres, desde los más básicos hasta algunos tan exóticos como el "blanco fantasmal" ("ghostwhite") o el de "papaya batida" ("papayawhip"), códigos RGB como `colorant"rgb(0,255,0) --también en porcentaje `colorant"rgb(0,100%,0)"`, o en código hexadecimal `colorant"#00ff00"`--, y códigos HSL como `colorant"hsl(120,100%,50%)"`.
+
+Algunas librerías gráficas permiten definir además el nivel de opacidad (llamado "canal alfa"), con el atributo `seriesalpha` (también `linealpha` o simplemente `alpha`), que puede adoptar un número entre 0 (transparente) y 1 (totalmente opaco).
+
+Así pues, una línea en color lima semitransparente también podría dibujarse con cualquiera de las siguientes expresiones:
 
 ```julia
-plot(x, y, x, y2)
-```
+plot(x,y, color=:lime, alpha=0.5)
+plot(x,y, color=colorant"rgb(0,255,0,0.5)")
+plot(x,y, color=colorant"hsl(120,100%,50%)", alpha=0.5)
+``` 
 
-En todos los casos, el resultado sería la misma gráfica mostrada antes.
+Otro detalle a destacar en el ejemplo anterior es cómo se han estructurado los conjuntos de atributos:
 
-## Códigos de formato para `plot`
+* Al atributo `width` solo se le ha dado un valor, que por lo tanto se aplica por igual a todas las líneas.
+* Los atributos `style`, `color` y `label` se han definido como dos valores en una *matriz columna* (elementos separados por espacios), de tal que a cada línea se le ha asignado el valor de la columna correspondiente.
 
-Cada nueva línea aparece dibujada con un color diferente, para ayudar a diferenciarlas. Además, tanto el color como el estilo de la línea se puede modificar, y también se pueden añadir símbolos como marcadores de los puntos representados. Todo esto se puede configurar pasando un "código de formato" en forma de cadena de texto a la función `plot`, después de las coordenadas X, Y. Por ejemplo, para añadir a la línea de datos asteriscos de color rojo:
-
-```@example c4
-plot(x, y, "-*r")
-```
-
-Los tres símbolos del código de formato representan lo siguiente:
-
-* El guión (`-`) indica que se muestre la línea que conecta los puntos.
-* El asterisco (`*`) indica que se añadan asteriscos en los puntos.
-* La letra `r` indica que la serie (línea y marcadores) se muestre de color rojo.
-
-Estos tres símbolos podrían haberse puesto en cualquier otro orden, por ejemplo `"r-*"`, `"*r-"`, etc.
-
-Hay ocho códigos de colores posibles, identificados por letras características del nombre del color en inglés:
-
-* `"r"` para el rojo (red)
-* `"g"` para el verde (green)
-* `"b"` para el azul (blue)
-* `"c"` para el cian (cyan)
-* `"m"` para el magenta (magenta)
-* `"y"` para el amarillo (yellow)
-* `"k"` para el negro (black)
-* `"w"` para el blanco (white)
-
-Si el código de formato no incluye ninguna de estas seis letras, se utilizará el siguiente color de la secuencia automática. Por otro lado, un espacio en blanco dentro de la cadena sirve como un código de color especial, que reinicia la secuencia de colores automáticos.
-
-Hay cuatro códigos para tipos de línea:
-
-* `-` para líneas continuas
-* `--` para líneas discontinuas
-* `:` para líneas punteadas
-* `-.` para líneas discontinuas alternadas con puntos
-
-Si no se da ningún código de formato, por defecto se usa una línea continua. Pero si se proporciona dicho código sin ninguna de estas secuencias, no se dibuja ninguna línea.
-
-Finalmente, los códigos habituales para marcadores son los doce que se muestran a continuación:
-
-![Marcadores de GRUtils](../assets/marcadores.svg)
-
-Además se puede indicar que los datos de las series se marquen como puntos (`"."`) --siempre que el punto en el código de formato no vaya después de un guión, en cuyo caso se está indicando un tipo de línea, como se ha señalado antes--. Sin embargo este tipo de marcador solo es visible para nubes de puntos con muchos datos concentrados en áreas semejantes, por ejemplo la siguiente distribución aleatoria:
+Los atributos correspondientes a series de datos distintas se disponen en columnas, igual que las propias series de datos. Si se dispusieran en un vector (equivalente a una columna), se interpretaría que cada valor del atributo se corresponde con *un punto* de la(s) serie(s). Por ejemplo, se puede hacer variar el grosor de la línea dándole un valor a cada punto como en el siguiente ejemplo:
 
 ```@example c4
-GRUtils.GR.inline("svg") # hide
-# x: diez mil puntos aleatorios
-# que siguen una distribución normal
-x = randn(10_000)
-# y: otros tantos puntos aleatorios
-# correlacionados con x
-y = x .+ randn(10_000)
-# Nube de puntos en color negro
-plot(x, y, ".k")
+plot(x, y, width=range(0, 5, length=100))
 ```
 
-!!! tip
-    El guión bajo usado en este ejemplo para indicar el número "diez mil" (`10_000`) es puramente estético, para ayudar a interpretar el número visualmente. No tiene ningún efecto sobre el número, que podría haberse escrito igualmente como `10000`.
+## Otros tipos de gráficos y atributos
 
-## Ajustar y etiquetar gráficos
+En los ejemplos anteriores, las secuencias de puntos formadas por los datos de entrada se han representado como líneas trazadas en el plano X-Y, que es una de las formas más habituales de dibujar series de datos. Pero hay muchas otras posibilidades, que también dependen del conjunto de datos introducidos.
 
-Normalmente interesa complementar los gráficos con etiquetas en los ejes, títulos, leyendas y otros elementos que ayuden a interpetarlos. Por ejemplo, veamos un gráfico con los resultados del análisis de las señales realizado en el [capítulo 2](2-series-tablas.md#ejemplo_series). La tabla de resultados era:
+Los gráficos de líneas también pueden ser tridimensionales, para lo cual hay que introducir una tercera serie de datos (`plot(x, y, z)`). Y también se puede introducir un solo vector que representa las coordenadas en el eje Y, en cuyo caso los valores en X son una secuencia de números enteros (1, 2, 3...).
+
+Además, se puede cambiar el elemento geométrico que representa de los datos, ajustando el atributo `seriestype`, que también puede ser, por mencionar algunos casos habituales:
+
+* `:scatter` para gráficos de dispersión (con puntos), de dos o tres dimensiones.
+* `:bar` para gráficos de barras.
+* `:quiver` para campos de flechas (requiere argumentos adicionales para indicar la dirección y tamaño de las flechas).
+* `:histogram` para histogramas de una serie de datos.
+* `:surface` y `:wireframe`para gráficos tridimensionales, representadas como superficies coloreadas o mallas, respectivamente.
+* `:contour` para gráficos de contorno (como superficies vistas en 2D).
+
+Los gráficos con esos y otros tipos de elementos se pueden crear utilizando directamente el valor de `seriestype` como nombre de la función, en lugar de `plot`. Por ejemplo, un gráfico de barras podría dibujarse con `plot(y, seriestype=:bar)` o sencillamente `bar(y)`. En esos casos también existen las funciones "con exclamación" (`bar!`, etc.) para dibujar encima del gráfico anterior.
+
+Vamos a mostrar, como ejemplo, un gráfico de barras a partir de la tabla de esperanzas de vida que vimos en el capítulo 2. Además, vamos a añadirle un par de atributos más para mostrar algunas funcionalidades extra:
+
+```@example c4
+using CSV, DataFrames
+tabla_un = DataFrame(CSV.File("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true))
+# Seleccionamos los casos de ambos géneros
+todos = (tabla_un[!, "género"] .== "Todos")
+bar(tabla_un[todos, "continente"], tabla_un[todos, "media"],
+    yerror=tabla_un[todos, "desv_tip"],
+    label="")
+```
+
+En este ejemplo hemos añadido el atributo `label=""` para que no haya leyenda, y también `yerror` con los valores de la desviación típica para superponer barras de error verticales en torno a los datos.
+
+Hay muchísimos más atributos disponibles, aunque dependiendo del tipo de elemento gráfico algunos atributos pueden tener sentido o no. Por ejemplo, el atributo `color` o `seriescolor` se puede aplicar a la mayoría de elementos gráficos, pero `linewidth` solo es aplicable a líneas. El color también puede definirse de forma más específica según el elemento, por ejemplo se puede especificar un color para las líneas (atributo `linecolor`) distinto del color de los marcadores (`markercolor`), el color de relleno (`fillcolor`), etc.
+
+El conjunto completo de atributos disponibles para los elementos geométricos se puede consultar con la instrucción `plotattr(:Series)`. La definición concreta de cada atributo también se puede obtener con la misma función, indicando el nombre del atributo, p.ej. `plot("color")`. Toda esa información también viene recogida en [la documentación de Plots](http://docs.juliaplots.org/latest/generated/attributes_series/)
+
+## Ajustes y decoraciones
+
+Los gráficos se pueden complementar con etiquetas en los ejes, títulos, leyendas y otros elementos que ayuden a interpetarlos. Por ejemplo, veamos un gráfico con los resultados del análisis de las señales realizado en el [capítulo 2](2-series-tablas.md#ejemplo_series). La tabla de resultados era:
 
 ```@example c4
 using CSV # hide
-tabla_resultados = CSV.read("datos/tabla.txt") # hide
+tabla_resultados = DataFrame(CSV.File("datos/tabla.txt", header=["Archivo", "X", "Y"])) # hide
 ```
 
 El siguiente gráfico muestra la relación entre tiempos y valores de los picos de las señales, separando los quince primeros casos (los que comienzan como "sA", de los quince segundos ("sB"). El gráfico incluye una leyenda para distinguir estos dos conjuntos, etiquetas para los ejes X e Y, y un título. Además, se han ajustado los límites de los ejes a unos rangos mayores que los que se muestran por defecto:
 
 ```@example c4
-GRUtils.GR.inline("png") # hide
-Figure() #hide
 using DelimitedFiles
 resultados = readdlm("datos/tabla.txt", ';')
-plot(resultados[1:15,2], resultados[1:15,3], "o")
-hold(true)
-plot(resultados[16:30,2], resultados[16:30,3], "o")
-legend("sA", "sB")
-xlim(0, 1)
-ylim(0, 30)
-xlabel("tiempo")
-ylabel("valor extremo")
-title("Resultados del análisis")
+scatter(resultados[1:15,2], resultados[1:15,3], label="sA")
+scatter!(resultados[16:30,2], resultados[16:30,3], label="sB")
+xlims!(0, 1)
+ylims!(0, 30)
+xlabel!("tiempo")
+ylabel!("valor extremo")
+title!("Resultados del análisis")
 ```
 
-En este ejemplo vemos una muestra de cómo utilizar las siguientes funciones:
+En este ejemplo vemos de nuevo el uso del atributo `label` para modificar la leyenda del gráfico, y otras funciones que permiten modificar otras partes del mismo:
+* `xlims!` e `ylims!` para ajustar los rangos de valores mostrados en los ejes X e Y. (También existe `zlims!` para el eje Z en gráficos tridimensionales.)
+* `xlabel!` e `ylabel!` para añadir etiquetas a los ejes X e Y. (Usar `zlabel!` para el eje Z en gráficos tridimensionales.)
+* `title!` para añadir un título en la parte superior del gráfico.
 
-* `legend` para añadir una leyenda de los distintos grupos de datos representados.
-* `xlim` e `ylim` para ajustar los rangos de valores mostrados en los ejes X e Y. (También existe `zlim` para el eje Z en gráficos tridimensionales.)
-* `xlabel` e `ylabel` para añadir etiquetas a los ejes X e Y. (Usar `zlabel` para el eje Z en gráficos tridimensionales.)
-* `title` para añadir un título en la parte superior del gráfico.
+En lugar de las funciones `xlims!`, etc., se podrían haber defindo los atributos correspondientes al llamar a `scatter` (o `plot`, o cualquiera de las funciones que generan los graficos), p.ej. `scatter(x, y, xlims=(0,1))`.
 
-Hay muchas más opciones para configurar estos elementos, así como otras funciones que sirven para añadir o modificar atributos como la escala de los ejes, líneas guía, mapas de color, etc. La referencia completa de las funciones que se pueden emplear para ello se puede consultar en la sección de ["Plot attributes"](https://heliosdrm.github.io/GRUtils.jl/stable/api/attributes/) en la documentación de GRUtils (en inglés).
+Hay muchos más atributos de los gráficos que se pueden ajustar como la escala de los ejes, líneas guía, mapas de color, formato de los textos, etc. Esos atributos no se asocian a los elementos que representan las series de datos, sino a otras partes del gráfico:
 
-## Otros tipos de gráficos
+* El plano en el que se proyecta el espacio de coordenadas en el que se representa el conjunto de datos. Suele ser un rectángulo, aunque hay gráficos en coordenadas polares con una disposición circular. Este elemento recibe el nombre de `Axis`, aunque incluye más cosas aparte de los ejes de coordenadas (p.ej. el color de fondo, las guías, etc.)
+* El panel sobre el que se organizan los elementos del gráfico: los ejes de coordenadas y sus etiquetas, el título, las leyendas, etc. Este elemento recibe el nombre de `Subplot` --considerando la posibilidad de que existan composiciones de gráficos con más de uno de estos paneles--.
+* El marco global, que es lo que recibe el nombre genérico de `Plot`, y contiene todos los elementos de un gráfico. Puede ser una ventana, una página de un documento o un cuadro dentro de la misma en la que se enmarca el gráfico, etc.
 
-Los gráficos con líneas y puntos están entre los usados con más frecuencia, pero también hay muchos otros tipos de gráficos muy útiles, disponibles con otras funciones. El catálogo completo puede verse en la sección ["Plotting functions"](https://heliosdrm.github.io/GRUtils.jl/stable/api/plotting/) de la documentación, con ejemplos de todos ellos y explicaciones detalladas de cómo usar las funciones). Como resumen, estas son algunas funciones que se usan a menudo:
+Las distintas opciones disponibles para cada atributo se pueden consultar, como se ha visto antes, usando la función `plotattr`, por ejemplo `plotattr("xlims")` para ver cómo se definen los límites del eje X. Los atributos configurables de cada una de esas partes de un gráfico también se pueden consultar con la misma función, por ejemplo `plotattr(:Axis)` para listar los atributos del plano de coordenadas, etc. La página web de Plots también tiene secciones que muestran todas las opciones, como se ha visto antes para los elementos geométricos.
 
-* Gráficos de líneas y marcadores: `plot`, `plot3` (gráficos tridimensionales) y `polar` (gráficos en coordenadas polares).
-* Gráficos de dispersión --con la posibilidad de variar el tamaño o el color de los puntos en función de otras series de datos--: `scatter` y `scatter3`.
-* Gráficos de flechas (campos vectoriales): `quiver` y `quiver3` (en tres dimensiones).
-* Gráficos de barras: `barplot`.
-* Histogramas: `histogram`, `polarhistogram` (en coordenadas polares) y `hexbin` (histogramas bidimensionales, presentados con celdas hexagonales).
-* Gráficos con barras de error: `errorbar`.
-* Gráficos de superficies tridimensionales: `surface` (superficie coloreada) y `wireframe` (superficie dibujada como una malla).
-* Gráficos de contorno (como superficies vistas en 2D, con líneas que conectan puntos de la misma altura): `contour` y `contourf` (con áreas coloreadas).
+## Trabajar con varios gráficos
 
-En general, la interfaz de todas estas funciones es semejante: los primeros argumentos han de ser vectores (o matrices, según el tipo de gráfico) con los datos a representar. Normalmente el primer argumento son los valores asociados al eje X y el segundo los del eje Y --y en los gráficos tridimensionales, el tercero es el eje Z--. Además, hay tipos de gráficos que requieren más información como la dirección de las flecha en los campos vectoriales, el tamaño de las barras de error, etc., cuyos valores se pasan en otros argumentos a continuación.
-
-Por otro lado, en varios casos (cuando no hay ambigüedad posible) se admite la omisión de algunos de los datos anteriores, que se calculan de forma implícita como series de números enteros comenzando por el uno. Por ejemplo, si a `plot` se le pasa solo un vector de datos, se asume que estos son los valores del eje Y, calculándose los del eje X como 1, 2... hasta *N*, siendo *N* la longitud del vector. Asímismo, `surface` y otras funciones para representar superficies admiten que se les pase solo una matriz de datos que representa los valores en el eje Z, considerando que los valores X, Y son los de las coordenadas de cada celda de la matriz.
-
-En las funciones para gráficos basados en líneas y marcadores, su color y estilo se puede configurar mediante el código de formato que se ha explicado arriba, que se puede pasar como una cadena de texto después de los vectores de datos. Pero hay muchas otras características de las geometrías en estos y otros tipos de gráficos (colores, transparencia, tamaño de los objetos, orientación, etc.) que se pueden ajustar mediante argumentos "con nombre". Este tipo de argumentos también se puede usar para definir en la misma llamada a la función algunos atributos del gráfico, para los que antes hemos utilizado funciones aparte (`hold`, `xlim`, `title`, y muchos más).
-
-Todas estas opciones y más detalles están comentados en la página de documentación de GRUtils referida antes.
-
-
-## Alternar entre figuras
-
-En las secciones anteriores hemos visto cómo dibujar gráficos y editarlos. Pero cuando creamos un gráfico nuevo, el anterior queda borrado. La forma de evitar que pase esto es trabajar con varias figuras.
-
-Podemos imaginarnos que estamos en un estudio con un caballete en el que se puede colocar un lienzo para dibujar los gráficos. Estos lienzos son lo que en GRUtils se llaman objetos de tipo `Figure`. Normalmente trabajamos sobre el lienzo que está sobre el caballete, que es la "figura actual". En este lienzo podemos dibujar formas, escribir textos, y reemplazarlos o borrarlos en parte o por completo. Pero también podemos descabalgar el lienzo actual y poner uno nuevo en su lugar. Para crear una nueva figura basta con escribir `Figure()`. A esta función también se le pueden añadir argumentos para definir el tamaño de la figura; por ejemplo, para crear una figura de 4 centímetros de ancho y 3 de alto:
+Las funciones como `plot`, `plot!` y equivalentes devuelven un objeto de tipo `Plot`, que se puede guardar en una variable para recuperar el gráfico generado o modificado, incluso después de haberlo reemplazado por otros. Por ejemplo, tomemos este bloque de código:
 
 ```julia
-Figure((4, 3), "cm")
+p1 = plot(x, y)
+p2 = scatter(w, z)
 ```
 
-También se puede indicar el tamaño en pulgadas (`"in"`), metros (`"m"`) o píxeles (`"px"`). El tamaño por defecto es de 600×450 px.
+La primera línea genera un gráfico del líneas que se guarda en la variable `p1`, y la segunda un gráfico de dispersión que se guarda en `p2`. Si se ejecutan las dos líneas en el mismo bloque, el primer gráfico normalmente no se verá porque lo hemos reemplazado por el segundo, pero aún lo tendremos disponible en la variable `p1`. Para visualizarlo, lo único que tenemos que hacer es ejecutar otra línea de código que simplemente contenga `p1` (la forma habitual de ver el contenido de una variable).
 
-Por otro lado, para poder recuperar una figura "descabalgada" es necesario identificarla antes de poner otra en su lugar. Esto se puede conseguir de varias formas:
-
-* En el momento en el que se crea o modifica un gráfico, con funciones como `plot`, `title`, `xlim`, etc., asignando su resultado a una variable, por ejemplo `figura = plot(x, y)`.
-* En cualquier momento, con la función `gcf` --de las siglas en inglés *get current figure*, por ejemplo `figura = gcf()`.
-* Una figura creada con la función `Figure` también se puede asignar a una variable en el momento de su construcción: `figura = Figure()`
-
-La función `gcf` también sirve para hacer que una figura existente se convierta en la actual (recolocarla en nuestro caballete metafórico). Por ejemplo:
-
+Asímismo, a las funciones que sirven para modificar gráficos se les puede indicar explícitamente cuál de ellos se quiere editar, cuando se está trabajando con varios a la vez. Por ejemplo, antes hemos utilizado `title!` con una cadena de texto para añadir un título con ese texto al último gráfico generado. Pero también podemos especificar que queremos poner título a un gráfico generado anteriormente, poniendo la variable que lo contienen como primer argumento:
 
 ```julia
-fig1 = plot(x, y) # Asignamos la figura del gráfico creado a `fig1`
-fig2 = gcf()      # Esto es lo mismo (fig2 == fig1)
-fig3 = Figure()   # A partir de ahora `gcf()` se refiere a `fig3`.
-plot(x, z)        # Hacemos un gráfico en la nueva figura (`fig3`)
-gcf(fig1)         # Recuperamos la primera figura
+title!(p1, "Líneas")
+title!(p2, "Puntos")
 ```
 
-## Gráficos múltiples
-
-En lo comentado hasta este punto, cada figura se correspondía con un gráfico en un momento dado, pero una figura puede contener varios gráficos --o "sub-gráficos", como suelen denominarse en ese caso--. Para añadir un gráfico a la figura actual se usa la función `subplot`, que crea el gráfico dentro de una cuadrícula. Veamos un ejemplo:
+Por otro lado, un conjunto de gráficos pueden componerse como *subplots* de otro, simplemente pasándolos a la función `plot` como argumentos. Por ejemplo:
 
 ```julia
-subplot(3, 4, [2,7])
+plot(p1, p2)
 ```
 
-Este código crea un gráfico en una cuadrícula de 3 filas y 4 columnas cuyas celdas vienen identificadas secuencialmente como se muestra en la siguiente figura. Si el tercer argumento hubiera sido cualquier número del 1 al 12, el subgráfico se encuadraría en la celda correspondiente. Al ser un vector con varios números, el subgráfico se encuadra en el mínimo rectángulo que los contiene. (En este caso, el resultado hubiera sido el mismo si el vector también contuviese los números 3 ó 6.)
+La disposición de los gráficos se calcula de forma automática intentando que la relación de anchura y altura se altere lo mínimo posible. En este caso, el gráfico generado dispondría `p1` a la izquierda de `p2`. Si se compusiesen cuatro gráficos, por defecto se dispondrían en una malla de 2×2, etc. Y también se puede hacer un diseño personalizado, usando el atributo `layout`. El valor asignado a este atributo puede ser:
 
-![Distribución de paneles en subplot](../assets/subplots-grutils.png)
+* Una tupla de números enteros indicando las filas y columnas de una cuadrícula homogénea; por ejemplo `layout=(2,3)` para disponerlos en una cuadrícula de 2 filas y 3 columnas.
+* Un objeto de tipo `GridLayout` para composiciones más complejas.
 
-*Distribución de "subplots" con `subplot(3, 4, [2,7])`*
-
-El subgráfico recién creado se convierte en el objetivo de las siguientes operaciones para crear y modificar gráficos, pero los subgráficos que se hayan creado antes siguen disponibles para su edición. Para poner un subgráfico anterior de nuevo en el objetivo, basta con llamar a la función `subplot` con unos índices que den lugar a un recuadro equivalente.
-
-Por ejemplo, el siguiente código crea un conjunto de gráficos con una nube de puntos como la mostrada en uno de los ejemplos anteriores, con dos histogramas a los márgenes:
+La manera más sencilla de generar un `GridLayout` es mediante la función `grid`, pasándole el número de filas y columnas, más (opcionalmente) los argumentos con nombre `heights` o `widths` para definir los tamaños relativos de las filas o las columnas. Veamos por ejemplo, un gráfico de dispersión con histogramas marginales:
 
 ```@example c4
-GRUtils.GR.inline("svg") # hide
+using Random
+x = randn(1000)
+y = x .+ randn(1000)
 # Gráfico principal con la nube de puntos
-subplot(3, 3, (4, 8))
-x = randn(10_000)
-y = x .+ randn(10_000)
-plot(x, y, ".")
-# Histogramas marginales
-subplot(3, 3, (1, 2))
-histogram(x)
-subplot(3, 3, (6, 9))
-histogram(y, horizontal = true, xflip = true)
+sxy = scatter(x, y, markersize=1,
+    xlabel="X", ylabel="Y", border=:box)
+# Histogramas marginales (el del eje Y en horizontal)
+hx = histogram(x)
+hy = histogram(y, orientation=:horizontal)
+# Gráfico vacío para la esquina superior derecha
+p = Plots.Plot()
+# Cuadrícula de paneles
+cuadricula = grid(2,2, heights=(0.2,0.8), widths=(0.8,0.2))
+plot(hx, p, sxy, hy, legend=:none, layout=cuadricula)
 ```
+
+En la última línea de este ejemplo hemos pasado a `plot` los cuatro gráficos que rellenan la cuadrícula de 2×2, en la que la fila superior y la columna derecha ocupan el 20% de la ventana. Los gráficos se pasan ordenados de izquierda a derecha y de arriba a abajo. Para que la esquina superior derecha quede vacía hemos generado un gráfico vacío con `Plots.Plot()`. Además, hemos manipulado algunos atributos (`border`, `orientation` y `legend`) para personalizar más los gráficos.
+
+Se pueden conseguir composiciones aún más sofisticadas usando la macro `@layout`. (Véase la [página sobre *layouts*](http://docs.juliaplots.org/latest/layouts/) en la documentación del paquete Plots para más detalles sobre cómo usar esa macro.)
+
 
 ## Guardar gráficos como archivos de imagen
 
@@ -276,9 +249,17 @@ El tipo de archivo dependerá de la extensión indicada en su nombre. En este ej
 
 ## Sumario del capítulo
 
-En este capítulo hemos visto algunos aspectos elementales sobre cómo hacer y editar gráficos con través del paquete GRUtils. En particular, nos hemos centrado en:
+En este capítulo hemos visto algunos aspectos elementales sobre cómo hacer y editar gráficos con través del paquete Plots. En particular, nos hemos centrado en:
 
 * El uso de la función `plot` para representar una o varias series de datos.
+* Cómo modificar los atributos de un gráfico mediante argumentos con nombre en `plot` y otras funciones; y cómo usar la función `plotattr` para consultar los múltiples atributos que se pueden manipular.
+* Ejemplos de atributos para modificar el tipo de elemento gráfico que representa los datos, sus tamaños, colores, las coordenadas del gráfico, etiquetas y leyendas, etc.
+* Funciones equivalentes a `plot` para dibujar tipos de gráficos distintos del de líneas (equivalente a cambiar el atributo `seriestype`): gráficos de dispersión, de barras, histogramas, y algunos gráficos tridimensionales.
+* Funciones "con exclamación" como `plot!` y otras, que sirven para modificar gráficos previos, así como sus atributos.
+* Las partes en las que se componen los gráficos: `Series`, `Axis`, `Subplot` y `Plot`, y cómo usar esos conceptos para explorar los atributos que se pueden manipular.
+* La asignación de gráficos a variables para poder trabajar con múltiples figuras, incluyendo gráficos compuestos.
+* Cómo guardar gráficos en archivos de dibujo matriciales y vectoriales.
+
 * Los códigos de formato usados para especificar el color y tipo de líneas y marcadores en los gráficos.
 * Cómo crear leyendas, etiquetas y títulos para anotar los gráficos.
 * El uso de la función `hold` para añadir nuevos datos a un gráfico anterior.
