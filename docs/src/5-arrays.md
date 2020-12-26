@@ -516,7 +516,7 @@ sb
 
 Una forma de entender lo que pasa en este ejemplo es considerar que las variables `sa`, `sb` no son lo mismo que los objetos contenidos en ellas (en este caso los *arrays*), sino meras referencias, una especie de "etiquetas" que pueden asignarse de forma independiente, e incluso redundante a los diversos objetos que hay en el espacio de trabajo. La siguiente figura muestra gráficamente lo que ocurre en cada una de las operaciones.
 
-![Asignación de arrays a variables](../assets/arrays-asignacion-modificacion.png)
+![Asignación de arrays a variables](assets/arrays-asignacion-modificacion.png)
 
 Como los *arrays* son elementos mutables, al hacer que `sb` se identifique con  `sa`, los cambios realizados a una de las variables afecta también a la otra --a no ser que una de las variables se reasigne, como ocurre en el cuarto paso--.
 

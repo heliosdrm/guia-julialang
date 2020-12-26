@@ -85,7 +85,7 @@ En este ejemplo se han modificado cuatro atributos de las líneas:
 
 !!! tip "Códigos de color"
 
-    Los nombres y los códigos numéricos que se pueden emplear para definir los colores son los recogidos por el [estándar para CSS](https://www.w3.org/TR/css3-color/). Este incluye 62 nombres, desde los más básicos hasta algunos tan exóticos como el "blanco fantasmal" ("ghostwhite") o el de "papaya batida" ("papayawhip"), códigos RGB como `colorant"rgb(0,255,0) --también en porcentaje `colorant"rgb(0,100%,0)"`, o en código hexadecimal `colorant"#00ff00"`--, y códigos HSL como `colorant"hsl(120,100%,50%)"`.
+    Los nombres y los códigos numéricos que se pueden emplear para definir los colores son los recogidos por el [estándar para CSS](https://www.w3.org/TR/css3-color/). Este incluye 62 nombres, desde los más básicos hasta algunos tan exóticos como el "blanco fantasmal" ("ghostwhite") o el de "papaya batida" ("papayawhip"), códigos RGB como `colorant"rgb(0,255,0)` --también en porcentaje `colorant"rgb(0,100%,0)"`, o en código hexadecimal `colorant"#00ff00"`--, y códigos HSL como `colorant"hsl(120,100%,50%)"`.
 
 Algunas librerías gráficas permiten definir además el nivel de opacidad (llamado "canal alfa"), con el atributo `seriesalpha` (también `linealpha` o simplemente `alpha`), que puede adoptar un número entre 0 (transparente) y 1 (totalmente opaco).
 
@@ -273,6 +273,5 @@ Además, también se han introducido otros dos detalles generales de Julia, no r
 * El uso del guión bajo como separador visual en números de muchas cifras (p.ej. `10_000`).
 
 ```@example c4
-Figure(); # hide
 rm("datos", recursive=true) # hide
 ```

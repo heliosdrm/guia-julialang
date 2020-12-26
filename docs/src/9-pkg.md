@@ -4,7 +4,7 @@ Si comparamos los lenguajes de programación con los lenguajes naturales, se pod
 
 En la [documentación oficial](https://docs.julialang.org/en/stable/) se puede encontrar la lista completa de las funciones y otros elementos disponibles en el [módulo base](https://docs.julialang.org/en/v1/base/base/), así como en los múltiples módulos de la "biblioteca estándar" (sección *Standard Library* del manual). Esos módulos incluyen algunos de los que se han usado en esta guía, como [`DelimitedFiles`](https://docs.julialang.org/en/v1/stdlib/DelimitedFiles/), [`LinearAlgebra`](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/), [`Statistics`](https://docs.julialang.org/en/v1/stdlib/Statistics/), [`Random`](https://docs.julialang.org/en/v1/stdlib/Random/), [`Dates`](https://docs.julialang.org/en/v1/stdlib/Dates/) o [`Printf`](https://docs.julialang.org/en/v1/stdlib/Printf/).
 
-Sin embargo, para un uso realmente productivo de Julia hay que ir más allá de la biblioteca estándar, y recurrir a paquetes externos, como [`CSV`](https://juliadata.github.io/CSV.jl/stable/), [`DataFrames`](http://juliadata.github.io/DataFrames.jl/stable/) y [`GRUtils`](https://heliosdrm.github.io/GRUtils.jl/stable/), por poner tres ejemplos usados en la guía. En este capítulo veremos algunos detalles sobre cómo instalar y gestionar tales paquetes. Las herramientas que se presentarán también facilitan el desarrollo y mantenimiento de los paquetes; pero en esta guía las explicaciones se limitan a las que tienen que ver con el uso de paquetes desarrollados por otros.
+Sin embargo, para un uso realmente productivo de Julia hay que ir más allá de la biblioteca estándar, y recurrir a paquetes externos, como [`CSV`](https://juliadata.github.io/CSV.jl/stable/), [`DataFrames`](http://juliadata.github.io/DataFrames.jl/stable/) y [`Plots`](http://docs.juliaplots.org/latest/), por poner tres ejemplos usados en la guía. En este capítulo veremos algunos detalles sobre cómo instalar y gestionar tales paquetes. Las herramientas que se presentarán también facilitan el desarrollo y mantenimiento de los paquetes; pero en esta guía las explicaciones se limitan a las que tienen que ver con el uso de paquetes desarrollados por otros.
 
 ## Dónde encontrar paquetes para Julia
 
@@ -37,7 +37,7 @@ Como se puede apreciar, en el "modo pkg" el nombre del paquete se escribe sin co
 
 En el momento en el que se instala un paquete, la consola comienza a poblarse de mensajes como los mostrados en la siguiente figura, con referencias al paquete en cuestión pero también a muchos otros.
 
-![Figure 1](../assets/pkgadd.png)
+![Figure 1](assets/pkgadd.png)
 
 Esto ocurre porque en Julia, como en muchos otros lenguajes de programación, los paquetes que añaden nuevas funcionalidades forman un "ecosistema" con una compleja red de dependencias entre ellos. Así, por ejemplo, un paquete como `CSV` que sirve para grabar tablas de datos en archivos de texto estructurados, o crear las tablas a partir de ese tipo de archivos, emplea las utilidades de otros paquetes que definen tipos de tablas de datos (`DataFrames`, `Tables`), algunos que facilitan la conversión de texto a otro tipo de valores (`Parsers`, `WeakRefStrings`), etc. Y estos a su vez utilizan funcionalidades de otros paquetes, y así se forma un árbol de dependencias, que habitualmente abarca decenas de paquetes.
 
@@ -163,21 +163,21 @@ En general solo conviene hacer esto con módulos de la biblioteca estándar. Sal
 
 ## Conflictos con nombres de funciones
 
-Al cargar un módulo estándar o un paquete con el comando `using`, los nombres de las funciones y otros objetos "exportados" pasan a ser utilizables directamente, como ocurre con `readdlm` al cargar `DelimitedFiles`, `plot` de `GRUtils`, etc. Por otro lado, los paquetes generalmente contienen muchas otras funciones y objetos que no se exportan; la mayoría suelen ser elementos "internos", es decir, que no están pensados para que el usuario que carga el paquete los use habitualmente, pero no siempre es así. Por ejemplo, la función `read` del paquete `CSV` no está exportada, y por eso para leer archivos con ese paquete hay que llamarla como `CSV.read`.
+Al cargar un módulo estándar o un paquete con el comando `using`, los nombres de las funciones y otros objetos "exportados" pasan a ser utilizables directamente, como ocurre con `readdlm` al cargar `DelimitedFiles`, `plot` de `Plots`, etc. Por otro lado, los paquetes generalmente contienen muchas otras funciones y objetos que no se exportan; la mayoría suelen ser elementos "internos", es decir, que no están pensados para que el usuario que carga el paquete los use habitualmente, pero no siempre es así. Por ejemplo, la función `read` del paquete `CSV` no está exportada, y por eso para leer archivos con ese paquete hay que llamarla como `CSV.read`.
 
-Esto es conveniente en el caso de funciones cuyo nombre sea muy genérico, de tal manera que puedan entrar en conflicto con funciones distintas de otros paquetes.[^3] Si por ejemplo en la misma sesión se carga el paquete `GRUtils` y también `Plots`, al usar la función `plot` ocurre esto:
+Esto es conveniente en el caso de funciones cuyo nombre sea muy genérico, de tal manera que puedan entrar en conflicto con funciones distintas de otros paquetes.[^3] Si por ejemplo en la misma sesión se carga el paquete `Plots` y también `Plots`, al usar la función `plot` ocurre esto:
 
 ```julia-repl
-julia> using GRUtils, Plots
+julia> using Plots, PyPlot
 
 julia> plots(x, y)
-WARNING: both GRUtils and Plots export "plot"; uses of it in module Main must be qualified
+WARNING: both Plots and PyPlot export "plot"; uses of it in module Main must be qualified
 ERROR: UndefVarError: plot not defined
 ```
 
 [^3]: Algunos paquetes pueden *extender* funciones de otros paquetes o módulos, añadiendo nuevos métodos. Ese tipo de extensiones no producen ese tipo de conflictos.
 
-Para evitar este error, en lugar de `plot` habría que usar `GRUtils.plot` o `Plots.plot`, según lo que se desee.
+Para evitar este error, en lugar de `plot` habría que usar `Plots.plot` o `PyPlot.plot`, según lo que se desee.
 
 En lugar de `using` también se puede usar el comando `import`. Esto carga el paquete del mismo modo que lo haría `using`, pero todas las funciones definidas en él han de usarse cualificándolas con el nombre del paquete.
 

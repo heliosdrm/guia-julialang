@@ -2,7 +2,7 @@ using Documenter
 
 makedocs(sitename="Programación básica con Julia",
     pages = [
-        "0-introduccion.md",
+        "index.md",
         "1-primerospasos.md",
         "2-series-tablas.md",
         "3-funciones-control.md",
@@ -10,7 +10,9 @@ makedocs(sitename="Programación básica con Julia",
         "5-arrays.md",
         "6-iterables.md",
         "7-strings.md",
-        "8-funciones-avanzado.md"
+        "8-funciones-avanzado.md",
+        "9-pkg.md",
+        "10-debugging.md"
     ],
-    expandfirst = ["0-introduccion.md"]
+    expandfirst = ["index.md"]
 )

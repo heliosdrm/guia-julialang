@@ -10,14 +10,15 @@ Existen varias versiones disponibles de Julia. En general la mejor opción es us
 
 A menudo, Julia se usa con otros complementos que se instalan y configuran aparte, y de los que hablaremos un poco más adelante. Pero el paquete básico aporta todas las herramientas necesarias para trabajar. Así que para empezar veremos las distintas formas de usar Julia con estas herramientas, sin tener que instalar nada más.
 
-!!! note: "Julia Pro y otras alternativas"
+!!! note "Julia Pro y otras alternativas"
     
     La compañía [Julia Computing](https://juliacomputing.com), fundada por algunos de los desarrolladores principales de Julia, ofrece productos como [Julia Pro](https://juliacomputing.com/products/juliapro.html), una distribución de Julia que ya viene con algunos complementos incorporados. Algunos detalles de configuración de estas distribuciones pueden diferir respecto a los de una instalación básica. Otras diferencias entre la versión básica de Julia y Julia Pro son la licencia de uso, el conjunto de paquetes disponibles y el soporte: la versión básica es software libre (bajo licencia MIT), con paquetes mantenidos y controlados por la "comunidad de Julia". Por otro lado Julia Computing tiene sus propios términos de uso para sus productos, ofrece un conjunto de paquetes con versiones controladas por la compañía, y también soporte profesional y funcionalidades extra bajo pago.
 
 ## El REPL
 
 La forma más rápida de operar con Julia es trabajando de forma interactiva, en lo que se llama el "REPL", por las siglas de *Read-Eval-Print-Loop* ("bucle leer-evaluar-imprimir"). Este proceso se realiza desde una terminal de comandos --a la que por extensión también se le da el nombre de REPL--, que es lo que se presenta al usuario al lanzar el programa (figura 1).
-![Figura 1](../assets/repl.png)
+
+![Figura 1](assets/repl.png)
 
 *Figura 1. REPL de Julia*
 
@@ -48,7 +49,7 @@ Veamos ahora un primer ejemplo práctico de Julia, con un programa sencillo para
 |----------:|---------:|-------------:|
 |enero: 0   |mayo: 0   |septiembre: 4 |
 |febrero: 3 |junio: 3  |octubre: 6    |
-|marzo: 4   |julio: 5  |noviembre: 2  |
+|marzo: 2   |julio: 5  |noviembre: 2  |
 |abril: 5   |agosto: 1 |diciembre: 4  |
 
 *Tabla 2: código de siglo*
@@ -179,7 +180,9 @@ Para combinar ambas tareas de forma eficiente en una sola interfaz lo habitual e
 
 El IDE más completo y popular es el basado en VS Code. Para trabajar en este entorno, además de Julia, hay que instalar VS Code, y activar su [extensión para Julia](https://www.julia-vscode.org/) desde el panel de extensiones (ver en la figura 2). Existen (en inglés) unos excelentes [materiales introductorios](https://code.visualstudio.com/docs) para iniciarse en el uso de VS Code, así como una exhaustiva [documentación de la extensión para Julia](https://www.julia-vscode.org/docs/stable/) para sacar todo el partido a este IDE, que proporciona un amplio conjunto de herramientas para facilitar la creación, edición y ejecución de programas.
 
-![Figura 2](../assets/vscode_etiquetado.png)
+![Figura 2](assets/vscode_etiquetado.png)
+
+*Figura 2. Extensión de VS Code para Julia*
 
 El recurso más versátil de VS Code es la "paleta de comandos", a la que se accede con la combinación de teclas `Ctrl`+ `Mayúsc.` + `P`. Escribiendo la palabra "julia" en el el cuadro que surge al pulsar esa combinación, se pueden ver las operaciones relacionadas con la extensión de Julia. Por ejemplo, el comando *Julia: Start REPL* sirve para abrir una terminal con el REPL de Julia que se integra con el resto de elementos de VS Code. También son particularmente útiles los distintos comandos para ejecutar el código de un *script* en la sesión de Julia asociada al REPL abierto:
 
@@ -256,7 +259,7 @@ En el caso de paquetes "registrados" (que es el caso de los más populares, y to
 2. Escribir el comando `add` seguido del nombre del paquete. Por ejemplo, para añadir el paquete "CSV", que utilizaremos en el siguiente capítulo: `add CSV`
 3. Cambiar de nuevo al modo normal, pulsando la tecla de borrar al comienzo de la línea.
 
-![Figura 3](../assets/pkgmode.png)
+![Figura 3](assets/pkgmode.png)
 
 *Figura 3. Cambio a "modo pkg"*
 
@@ -270,7 +273,7 @@ Con toda seguridad, al programar en Julia pronto te encontrarás con dificultade
 
 El documento de referencia para las funciones es clave incluso para los programadores experimentados, ya que uno de los problemas habituales es la dificultad de recordar cómo se usa cierta función (qué argumentos acepta, qué resultados proporciona, etc.). Un atajo práctico cuando se trabaja en modo de línea de comandos consiste en escribir el signo de interrogación (`?`) al principio de una instrucción. Al hacerlo la interfaz cambia al "modo de ayuda" (la etiqueta que marca el comienzo de la línea cambia a `help?>`), y al introducir el nombre de la función (sin paréntesis ni argumentos, solo el nombre) aparece en pantalla el texto de referencia, como se muestra en la figura 4.
 
-![Figura 4](../assets/helpmode.png)
+![Figura 4](assets/helpmode.png)
 
 *Figura 4. Ejemplo de ayuda*
 

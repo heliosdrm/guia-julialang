@@ -41,7 +41,7 @@ Cuando se comienza a trabajar en un proyecto con datos que se han de procesar o 
 
 Las funciones, por otro lado, están pensadas para un flujo de trabajo mucho más sistemático, con una secuencia de operaciones concreta aplicadas a un conjunto cerrado de variables, que se van generando y modificando conforme a un guión predefinido. Esto podría hacer pensar que no vale la pena crear funciones hasta que los algoritmos a emplear en el proyecto estén suficientemente claros, o al menos hasta que se hayan definido rutinas lo suficientemente largas y repetitivas como para que guardar el código de la función suponga un ahorro de trabajo significativo.
 
-Sin embargo, en general es ventajoso empezar a encapsular el código en pequeñas funciones desde casi el principio. En Julia se recomienda definir funciones sencillas porque así es más fácil asegurar la [estabilidad de tipos](@ref), lo que permite que se compilen de forma óptima y se ejecuten más rápido. Pero otra ventaja muy importante, que además es común a todos los lenguajes de programación, es que encapsular secuencias de operaciones en funciones hace que los pasos realizados durante el análisis, incluso en las primeras fases exploratorias, sean más repetibles y menos propensos a errores. Además, esto permite que el código sea más conciso, más modular y fácil de leer y entender posteriormente por el propio autor o por otros.
+Sin embargo, en general es ventajoso empezar a encapsular el código en pequeñas funciones desde casi el principio. En Julia se recomienda definir funciones sencillas porque así es más fácil asegurar la [estabilidad de tipos](8-funciones-avanzado.md#estabilidad-de-tipos), lo que permite que se compilen de forma óptima y se ejecuten más rápido. Pero otra ventaja muy importante, que además es común a todos los lenguajes de programación, es que encapsular secuencias de operaciones en funciones hace que los pasos realizados durante el análisis, incluso en las primeras fases exploratorias, sean más repetibles y menos propensos a errores. Además, esto permite que el código sea más conciso, más modular y fácil de leer y entender posteriormente por el propio autor o por otros.
 
 Las funciones sencillas también facilitan el uso de tests unitarios y las herramientas de *debugging*, que se comentan en secciones posteriores como estrategias para prevenir y arreglar errores en los programas.
 
@@ -97,7 +97,7 @@ function gauss_diasemana(d, m, y)
 end
 ```
 
-Además de comentar el código, también es muy recomendable documentar las funciones mediante *[docstrings](@ref)*. Los *docstrings* son especialmente útiles porque no hace falta ir al código fuente para leerlos, sino que se muestran cuando se consulta la ayuda de la función. Si las funciones están bien documentadas, es mucho más fácil asegurarse de que se usan correctamente o detectar errores debidos a un mal uso de las mismas.
+Además de comentar el código, también es muy recomendable documentar las funciones mediante *[docstrings](3-funciones-control.md#docstring)*. Los *docstrings* son especialmente útiles porque no hace falta ir al código fuente para leerlos, sino que se muestran cuando se consulta la ayuda de la función. Si las funciones están bien documentadas, es mucho más fácil asegurarse de que se usan correctamente o detectar errores debidos a un mal uso de las mismas.
 
 ## Tests unitarios
 
@@ -346,7 +346,7 @@ debug> g_4
 ERROR: UndefVarError: g_4 not defined
 ```
 
-Lo que sí se puede hacer es crear una nueva variable global (p.ej. `global g_4 = div(g, 4)`), que se mantendrá en `Main` cuando se salga de la función. (Véanse más detalles en la sección sobre [variables globales y locales](@ref) en el capítulo 8.)
+Lo que sí se puede hacer es crear una nueva variable global (p.ej. `global g_4 = div(g, 4)`), que se mantendrá en `Main` cuando se salga de la función. (Véanse más detalles en la sección sobre [Variables globales y locales](@ref) en el capítulo 8.)
 
 Para salir del modo *debug* basta con pulsar `Ctrl+D`.
 
@@ -393,7 +393,7 @@ Hay IDEs que también proporcionan un *debugger* con herramientas gráficas. En 
 
 Por otro lado, cuando se entra en modo *debug* en VS Code se cambia de entorno visual. Durante las interrupciones el REPL integrado en VS Code no está operativo, y las instrucciones a ejecutar se introducen en el "*debug console*". Además, la interfaz del *debugger* tiene su propio explorador de variables que es distinto del habitual, más otros menús, cuyo funcionamiento está explicado en la [documentación de la extensiónd e VS Code](https://www.julia-vscode.org/docs/stable/userguide/debugging/).
 
-![Figura 1. Entorno de *debugging* en VS Code](../assets/vscode-debug.png)
+![Figura 1. Entorno de *debugging* en VS Code](assets/vscode-debug.png)
 
 *Figura 1. Entorno de debugging en VS Code*
 
@@ -403,7 +403,7 @@ Como se ha señalado arriba, un inconvienente notable de ejecutar un programa en
 
 Consideremos, por ejemplo, que se ha entrado en modo *debug* en un programa con las siguientes líneas:
 
-![Ejemplo de Debug](../assets/debug-ejemplo.png)
+![Ejemplo de Debug](assets/debug-ejemplo.png)
 
 A modo de ayuda visual, el código se muestra como se vería en el editor de VS Code. La primera línea (#11) está resaltada, indicando que la ejecución se ha detenido en ese punto. El punto rojo en la tercera línea señala un *breakpoint*. Supongamos, además, que dentro del código de la función `g` (que no se muestra aquí) también se ha activado otro *breakpoint*.
 

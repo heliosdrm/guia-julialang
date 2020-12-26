@@ -1,3 +1,8 @@
+```@raw html
+<h1 style="text-align:center"><span style="font-size:larger; font-weight:bolder">Programación básica con Julia</span></h1>
+<br />
+```
+
 # Introducción
 
 Los lenguajes de programación son una herramienta esencial en muchas profesiones científicas, en las que a menudo se presentan problemas que implican cálculos complejos. Cálculos que además suponen un planteamiento nuevo en cada ocasión, y cuya resolución hay que programar, aunque normalmente existan trabajos previos en los que basarse, a falta de ciertos retoques o extensiones.
@@ -20,8 +25,8 @@ Los cinco siguientes capítulos vuelven sobre algunos de los temas anteriores pa
 
 Las herramientas presentadas en esta guía son la base para hacer cualquier programa en Julia, aunque solo abarcan una parte de todo lo que proporciona este lenguaje de programación. Otros recursos para extraer el máximo rendimiento de Julia se reservan para una guía más avanzada, que pretende seguir a la presente.
 
-## Cuestiones técnicas y legales
+## Créditos y licencia
 
-Esta guía está elaborada con el paquete [Documenter](https://github.com/JuliaDocs/Documenter.jl) de Julia, a partir del código publicado en el repositorio [https://github.com/heliosdrm/guia-julialang/](https://github.com/heliosdrm/guia-julialang/).
+Esta guía está elaborada por Helios De Rosario Martínez con el paquete [Documenter](https://github.com/JuliaDocs/Documenter.jl) de Julia, a partir del código publicado en el repositorio [https://github.com/heliosdrm/guia-julialang/](https://github.com/heliosdrm/guia-julialang/).
 
 Esta guía está publicada bajo la licencia [Creative Commons Attribution-ShareAlike (CC BY-SA) 4.0](http://creativecommons.org/licenses/by-sa/4.0/). Esto significa que se permite su libre distribución y transformación, incluso con propósitos comerciales, en cualquier medio y formato, siempre que en las copias u obras derivadas se acredite apropiadamente la autoría original y se mantengan los términos de esta licencia.

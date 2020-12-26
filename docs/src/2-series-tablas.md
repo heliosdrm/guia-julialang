@@ -317,13 +317,15 @@ maxima_esperanza = maximum(datos_un[:,3])
 
 ## *Data frames* (tablas de datos)
 
-En términos coloquiales se puede usar indistintamente el término "matriz" y el de "tabla" de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son *arrays* de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de "tabla de datos" (*data frame* en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete [DataFrames](http://juliadata.github.io/DataFrames.jl/stable/), y que se pueden leer y guardar en archivos de texto a través del paquete [CSV](https://juliadata.github.io/CSV.jl/stable/), entre otros.[^1]
+En términos coloquiales se puede usar indistintamente el término "matriz" y el de "tabla" de datos, como ocasionalmente hemos hecho en la sección anterior, para hablar de conjuntos de números, cadenas de texto u otro tipo de variables dispuestos en una estructura regular de filas y columnas. Pero en términos más formales, todos los ejemplos que hemos visto hasta ahora son *arrays* de dos dimensiones, aunque por abreviar también se les da el nombre de matrices. El término de "tabla de datos" (*data frame* en inglés) se reserva para unas estructuras más sofisticadas que vienen definidas en el paquete [DataFrames](http://juliadata.github.io/DataFrames.jl/stable/), y que se pueden leer y guardar en archivos de texto a través del paquete [CSV](https://juliadata.github.io/CSV.jl/stable/), entre otros.[^4]
+
+[^4]: Las versiones de los paquetes empleados son DataFrames v0.22 y CSV 0.8.
 
 Una tabla de datos es parecida a una matriz; también se puede leer a partir de un archivo de texto mediante la función `CSV.File`, al igual que hacíamos con `readdlm` para las matrices, con algunas diferencias entre las cuales podemos destacar las siguientes:
 
 * La primera línea se interpreta por defecto como la lista de nombres de las columnas. Al leer el archivo estos nombres se incorporan a la propia tabla, en lugar de devolverse como una variable aparte.
 
-* El carácter de separación entre columnas considerado por defecto por `CSV.read` es una coma; para especificar un carácter de separación distinto se utiliza el argumento con nombre `delim`. Si las columnas están separadas por más de un espacio en blanco, hay que añadir también el argumento `ignorerepeated=true`.
+* El carácter de separación entre columnas considerado por defecto por `CSV.File` es una coma; para especificar un carácter de separación distinto se utiliza el argumento con nombre `delim`. Si las columnas están separadas por más de un espacio en blanco, hay que añadir también el argumento `ignorerepeated=true`.
 
 * Si el tipo de datos (números decimales, enteros, cadenas de texto...) es consistente en cada columna del archivo de entrada, dichos tipos se mantienen en las distintas columnas de la tabla resultante, mientras que `readdlm` crearía una matriz homogénea de tipo `Any`.
 
@@ -361,7 +363,7 @@ Además, tal como se ha señalado, el país o el género son series de cadenas d
 
 ```@setup c2
 using CSV, DataFrames
-tabla_un = CSV.read("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true) |> DataFrame
+tabla_un = CSV.File("datos/esperanzadevida.txt", delim=' ', ignorerepeated=true) |> DataFrame
 ```
 ```@repl c2
 tabla_un[:, "media"]   # Equivale a ... tabla_un[:,3]
@@ -377,8 +379,6 @@ Este tipo de tablas también se pueden crear a mano, con la función "constructo
 tabla_resultados = DataFrame(archivo=archivos, tiempo=tiempos, extremo=extremos)
 ```
 
-[^1]: Las versiones de los paquetes empleados son DataFrames v0.22 y CSV 0.8.
-
 ## Guardar datos
 
 Naturalmente, además de leer datos a partir de archivos de texto, normalmente también interesa *escribir* archivos con los resultados generados. Si estos resultados están en forma de matrices o vectores, se pueden guardar a través de la función `writedlm` de `DelimitedFiles`, que funciona de forma simétrica a `readdlm`. Por ejemplo, para guardar la matriz `resultados` creada en el primer ejemplo de este capítulo en el archivo "tabla.txt", usando el punto y coma como separador entre columnas:
@@ -387,7 +387,7 @@ Naturalmente, además de leer datos a partir de archivos de texto, normalmente t
 writedlm("tabla.txt", resultados, ';')
 ```
 
-Si solo se introduce el nombre del archivo y la matriz o vector de datos, por defecto `writedlm` separa las columnas con un carácter de tabulación. En el caso de tener una tabla del tipo `DataFrame`, se puede utilizar `CSV.write` para volcarla en un archivo de texto, empleando los mismos argumentos con nombre que emplea `CSV.read` para la lectura; por ejemplo:
+Si solo se introduce el nombre del archivo y la matriz o vector de datos, por defecto `writedlm` separa las columnas con un carácter de tabulación. En el caso de tener una tabla del tipo `DataFrame`, se puede utilizar `CSV.write` para volcarla en un archivo de texto, empleando los mismos argumentos con nombre que emplea `CSV.File` para la lectura; por ejemplo:
 
 ```julia
 CSV.write("tabla.txt", tabla_resultados; delim=';')
@@ -395,7 +395,9 @@ CSV.write("tabla.txt", tabla_resultados; delim=';')
 
 La diferencia más notable entre `writedlm` y `CSV.write`, además del tipo de tabla de entrada, es que `CSV.write` también escribe una primera línea con los nombres de las columnas. (Se puede omitir usando el argumento opcional `header=false`).
 
-Guardar conjuntos de datos en archivos de texto es especialmente útil para emplearlos posteriormente, copiando la tabla en un informe, abriéndola con una hoja de cálculo, o importándola en cualquier otro programa. Pero para reutilizar los datos en una sesión de Julia posterior, también viene bien poder guardarlos en un archivo binario que conserve las propiedades de las variables originales. Paquetes como [BSON](https://github.com/JuliaIO/BSON.jl) o [JLD2](https://github.com/JuliaIO/JLD2.jl) contienen las utilidades necesarias para salvar y cargar datos de este tipo.[^2]
+Guardar conjuntos de datos en archivos de texto es especialmente útil para emplearlos posteriormente, copiando la tabla en un informe, abriéndola con una hoja de cálculo, o importándola en cualquier otro programa. Pero para reutilizar los datos en una sesión de Julia posterior, también viene bien poder guardarlos en un archivo binario que conserve las propiedades de las variables originales. Paquetes como [BSON](https://github.com/JuliaIO/BSON.jl) o [JLD2](https://github.com/JuliaIO/JLD2.jl) contienen las utilidades necesarias para salvar y cargar datos de este tipo.[^5]
+
+[^5]: Las versiones de los paquetes referidos son BSON v0.3 y JLD2 0.2.
 
 Ambos paquetes proporcionan métodos semejantes para salvar y guardar datos. Por ejemplo, para salvar las variables `archivos` y `resultados`, en un archivo llamado "datos" -- y para cargarlas después a partir del archivo--, en ambos casos se podría escribir:
 
@@ -406,7 +408,6 @@ Ambos paquetes proporcionan métodos semejantes para salvar y guardar datos. Por
 
 Normalmente al nombre del archivo se le añade una extensión según el tipo de archivo correspondiente. En el caso del paquete JLD2 esta extensión sería `jld2`, y en el de BSON sería `bson`. Ambos son tipos de archivo binarios, el primero específio para Julia y el segundo un estándar más genérico y robusto. Puede consultarse la documentación de estos paquetes para más detalles, y otras formas de guardar y cargar datos.
 
-[^2]: Las versiones de los paquetes referidos son BSON v0.3 y JLD2 0.2.
 
 ## Sumario del capítulo
 
@@ -430,7 +431,7 @@ Además podemos destacar el uso de las siguientes funciones:
 * `length` para obtener la longitud de un *array* u otra estructura con múltiples datos.
 * `readdir` para obener una lista de cadenas de texto con los nombres de los archivos de un directorio.
 * `splitext` para separar la extensión de un nombre de archivo.
-* `readdlm` y `CSV.read` (esta última del paquete CSV) para leer datos tabulados, más las correspondientes `writedlm` y `CSV.read` para escribirlos en un archivo de texto.
+* `readdlm` y `CSV.File` (esta última del paquete CSV) para leer datos tabulados, más las correspondientes `writedlm` y `CSV.write` para escribirlos en un archivo de texto.
 * `zeros` para crear un array lleno de ceros al inicio.
 * `abs` para obtener el valor absoluto de un número.
 * `sqrt` para calcular la raíz cuadrada de un número.
