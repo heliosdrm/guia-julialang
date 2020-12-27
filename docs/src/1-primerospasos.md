@@ -22,7 +22,7 @@ La forma más rápida de operar con Julia es trabajando de forma interactiva, en
 
 *Figura 1. REPL de Julia*
 
-Como se observa en la figura anterior, al iniciar una sesión de Julia el REPL presenta una línea marcada con la etiqueta "`julia>`", a la espera de que el usuario introduzca algún comando --seguido de la tecla `Enter` para confirmar su introducción--. Por poner un ejemplo trivial, para calcular la exponencial de 2, --utilizando la función `exp`--, habría que escribir (sin contar la etiqueta "`julia>`":
+Como se observa en la figura anterior, al iniciar una sesión de Julia el REPL presenta una línea marcada con la etiqueta "`julia>`", a la espera de que el usuario introduzca algún comando --seguido de la tecla `Enter` para confirmar su introducción--. Por poner un ejemplo trivial, para calcular la exponencial de 2, --utilizando la función `exp`--, habría que escribir (sin contar la etiqueta "`julia>`"):
 
 ```julia-repl
 exp(2)
@@ -116,7 +116,7 @@ El resultado posiblemente sea algo decepcionante, porque lo único que se ha hec
 
   * Copiar el archivo de código `calc_diasemana.jl` al directorio de trabajo de Julia. La ruta de ese directorio se puede obtener con la función `pwd()` --sin ningún argumento--.
   * Cambiar el directorio de trabajo al lugar que contiene el archivo. El cambio de directorio se hace con el comando `cd(directorio)`, donde `directorio` ha de ser la ruta de destino.
-  * Introducir la ruta completa del archivo de código en la llamada a `include`. Esta se puede escribir literalmente, o si el directorio que contiene el archivo está definido en una variable (supongamos que esta variable se llama `directorio`, la ruta se puede componer con la función `joinpath`. Es decir, la expresión anterior sería `include(joinpath(directorio, "calc_diasemana.jl"))`.
+  * Introducir la ruta completa del archivo de código en la llamada a `include`. Esta se puede escribir literalmente, o si el directorio que contiene el archivo está definido en una variable (supongamos que esta variable se llama `directorio`), la ruta se puede componer con la función `joinpath`. Es decir, la expresión anterior sería `include(joinpath(directorio, "calc_diasemana.jl"))`.
 
 !!! tip "Nombres de rutas en Windows"
 
@@ -144,7 +144,7 @@ diasemana = gauss_diasemana(día, mes, año)
 
 !!! tip "Uso del punto y coma para omitir los resultados"
 
-    Normalmente, cuando se ejecuta una línea o un bloque de código en el REPL, inmediatamente debajo del código introducido aparece el resultado, como la palabra `"sábado"` en este ejemplo. En algunos casos puede quererse ocultar el resultado (por ejemplo si ocupa demasiadas líneas). En ese caso basta con añadir un punto y coma al final del código a ejecutar, como en las primeras líneas del último ejemplo.
+    Normalmente, cuando se ejecuta una línea o un bloque de código en el REPL, inmediatamente debajo del código introducido aparece el resultado, como la palabra `"sábado"` en este ejemplo. En ocasiones puede quererse ocultar el resultado (por ejemplo si ocupa demasiadas líneas). En ese caso basta con añadir un punto y coma al final del código a ejecutar, como en las primeras líneas del último ejemplo.
 
 
 ## Sintaxis básica
@@ -158,7 +158,7 @@ warray = ["domingo","lunes","martes","miércoles",
     "jueves","viernes","sábado"]
 ```
   
-  * Todo el texto que sigue al símolo `#` hasta el final de la línea se considera un comentario, y no se ejecuta. También se pueden hacer bloques de comentarios que ocupen varias líneas, delimitados por `#=` al principio y `=#` al final, como se ha hecho al comienzo de la función.
+  * Todo el texto que sigue al símbolo `#` hasta el final de la línea se considera un comentario, y no se ejecuta. También se pueden hacer bloques de comentarios que ocupen varias líneas, delimitados por `#=` al principio y `=#` al final, como se ha hecho al comienzo de la función.
 
   * Las expresiones más habituales son las del tipo `a = f(b)`, como `c = div(y, 100)`, donde `a` es un nombre de variable, `f` el nombre de una función, y `b` el número, cadena de texto u otro tipo de argumento sobre el que opera esa función, o bien el nombre de la variable a la que se le ha asignado el valor de ese argumento. (La función también puede aceptar varios argumentos de entrada, como ocurre con `div`, o tener varias salidas, que se presentan como variables separadas por comas.)
   
@@ -170,7 +170,7 @@ warray = ["domingo","lunes","martes","miércoles",
   
   * Los programas suelen tener diversos bloques de código anidados. La función `gauss_diasemana` es en sí un bloque, dentro del cual hay un bloque condicional (el que comienza por `if m < 3`). Los bloques de código se delimitan cerrándolos con la palabra clave `end`, y se recomienda indentar las líneas interiores al código para hacerlo más legible, aunque el programa funcionaría igualmente si no se hace. Otros bloques de código habituales son los bucles `for` y `while`. Para más detalles sobre los distintos tipos de bloques, véase el [capítulo 3](3-funciones-control.md) sobre funciones y estructuras de control.
   
-  * En general los espacios son irrelevantes: con contadas excepciones, cuando haya algun símbolo delimitador (operadores matemáticos, signos de puntuación, paréntesis...) puede usarse un espacio, varios o ninguno entre nombres de variables, funciones, etc., o al principio de la línea.
+  * En general los espacios son irrelevantes: con contadas excepciones, puede usarse un espacio, varios o ninguno tanto al principio como al final de las líneas, o entre nombres de variables o funciones y símbolos delimitadores varios (operadores matemáticos, signos de puntuación, paréntesis...).
 
 ## VS Code y otros IDEs para Julia
 
@@ -251,7 +251,7 @@ La distribución básica de Julia viene con una biblioteca estándar que incluye
 * [`Statistics`](https://docs.julialang.org/en/v1/stdlib/Statistics/) para cálculos estadísticos (a menudo junto con [`Random`](https://docs.julialang.org/en/v1/stdlib/Random/) para trabajar con números aleatorios y distribuciones de probabilidad).
 * [`Sockets`](https://docs.julialang.org/en/v1/stdlib/Sockets/) para trabajar con conexiones a redes informáticas.
 
-Hay muchas otras utilidades que pueden considerse importantes, incluso fundamentales por la mayoría de los potenciales usuarios, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (*debugging*), etc., pero no están incluidas en la biblioteca estándar, sino en un "ecosistema" de paquetes que se han desarrollo de forma coordinada (aunque independiente) por la comunidad de usuarios y desarrolladores de Julia. Puede consultarse la sección *Ecosystem* en la web oficial ([https://julialang.org](https://julialang.org)) para ver algunos de los dominios principales, o webs como [Julia Packages](https://juliapackages.com/) o [Julia Hub](https://juliahub.com/ui/Packages) para explorar muchos más paquetes disponibles.
+Hay muchas otras utilidades que pueden considerse importantes, incluso fundamentales por la mayoría de los potenciales usuarios, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (*debugging*), etc., pero no están incluidas en la biblioteca estándar, sino en un "ecosistema" de paquetes que se desarrollan de forma coordinada (aunque independiente) por la comunidad de usuarios y desarrolladores de Julia. Puede consultarse la sección *Ecosystem* en la web oficial ([https://julialang.org](https://julialang.org)) para ver algunos de los dominios principales, o webs como [Julia Packages](https://juliapackages.com/) o [Julia Hub](https://juliahub.com/ui/Packages) para explorar muchos más paquetes disponibles.
 
 En el caso de paquetes "registrados" (que es el caso de los más populares, y todos los que se comentan en esta guía), la forma más sencilla de instalarlos es desde el modo de gestión de paquetes de la línea de comandos, mediante los siguientes pasos:
 
@@ -301,3 +301,7 @@ A lo largo de las explicaciones también hemos empleado las siguientes funciones
 * `joinpath` para componer nombres de directorios y archivos.
 * `div` para divisiones enteras y `mod` para el resto de una división.
 
+```@raw html
+<hr>
+<img src="assets/cc-by-sa-88x31.png" alt="CC-BY-SA"><br><span style="font-size:smaller">Except where otherwise noted, this website is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike 4.0 International License</a></span>.
+```

@@ -4,7 +4,7 @@
 cp("../../datos/", "./datos")
 ```
 
-## Un ejemplo para empezar
+## Ejemplo: leyendo datos de archivos
 
 En un uso productivo de un lenguaje de programación no nos limitamos a introducir datos con el teclado y leer los resultados en pantalla. Usamos series largas de datos, tablas numéricas... que normalmente se leen a partir de archivos de texto u hojas de cálculo. La salida también pueden ser archivos de ese tipo, o bien gráficas (que veremos en el [capítulo 4](4-graficos.md)). Vamos a ver como se leen, escriben y estructuran esos datos.
 
@@ -12,14 +12,14 @@ En un uso productivo de un lenguaje de programación no nos limitamos a introduc
 <div id="ejemplo_series" />
 ```
 
-Pongamos el siguiente caso. Tenemos unas medidas de un experimento, consistente en 30 series de datos semejantes a la mostrada abajo -- aunque en algunos casos la señal aparece invertida--. Estos datos se encuentran grabados en los archivos de texto contenidos en la carpeta `datos/series/` en el repositorio de esta guía [https://github.com/heliosdrm/guia-julialang](https://github.com/heliosdrm/guia-julialang/).
+Pongamos el siguiente caso. Tenemos unas medidas de un experimento, consistente en 30 series de datos semejantes a la mostrada abajo -- aunque en algunos casos la señal aparece invertida--. Estos datos se encuentran grabados en los archivos de texto contenidos en la carpeta `datos/series/` en el repositorio de esta guía ([https://github.com/heliosdrm/guia-julialang](https://github.com/heliosdrm/guia-julialang/)).
 
 Cada uno de estos archivos tiene 100 líneas con dos columnas de números separadas por tabuladores: la primera columna es una línea de tiempos equiespaciada que varía entre 0.01 y 1.00, y la segunda contiene los valores de las medidas.
 
 ```@example c2
 using DelimitedFiles, Plots # hide
 datos = readdlm("datos/series/sA12.txt") # hide
-plot(datos[:,1],datos[:,2]) # hide
+plot(datos[:,1],datos[:,2], label="") # hide
 ```
 
 En todos los casos las series tienen una forma semejante: comienzan fluctuando ligeramente en torno a cero, hasta que en un momento la curva asciende (o desciende) hasta un valor máximo (positivo o negativo) y luego vuelve a un esado de reposo cercano a cero. Supongamos que en nuestro estudio el hecho de que el extremo sea positivo o negativo es irrelevante (podría ser causado por haber invertido el sistema de medida), y que queremos crear una tabla con el valor extremo de cada serie y el instante en el que se alcanza. El código para construir la tabla de datos, que iremos analizando a lo largo del capítulo, es el siguiente:
@@ -67,12 +67,12 @@ Una forma de ver lo que pasa es sustituir la línea `for i=1:n` por `i = 1`, y e
 
 ## Números escalares y series de números
 
-Cuando se habla de "datos" o "variables", lo más inmediato es pensar en números, que son también el tipo de datos con los que es más sencillo trabajar en la mayoría de lenguajes de programación, incluyendo Julia.[^1] Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones sobre cómo programar operaciones con variables numéricas: los nombres de las funciones y la sintaxis de las operaciones numéricas son iguales que en muchos otros lenguajes de programación, y en esencia son una transposición a texto simple de las fórmulas matemáticas que se desean implementar. Por ejemplo, para sumar los logartimos de las variables `a` y `b`, y asignar el resultado a la variable `x`, se escribe `x = log(a) + log(b)`, etc.
+Cuando se habla de "datos" o "variables", lo más inmediato es pensar en números, que son también el tipo de datos con los que es más sencillo trabajar en la mayoría de lenguajes de programación, incluyendo Julia.[^1] Incluso para los principantes generalmente no hace falta dar demasiadas explicaciones sobre cómo programar operaciones con variables numéricas: los nombres de las funciones y la sintaxis de las operaciones numéricas son iguales que en muchos otros lenguajes de programación, y en esencia son una transposición a texto simple de las fórmulas matemáticas que se desean implementar. Por ejemplo, para sumar los logaritmos de las variables `a` y `b`, y asignar el resultado a la variable `x`, se escribe `x = log(a) + log(b)`, etc.
 
 En Julia, la capacidad de escribir código imitando fórmulas matemáticas se lleva incluso más lejos que en otros lenguajes; por ejemplo:
 
 * Si `a` es el nombre de una variable, `2a` significa "2 veces `a`" (y lo mismo con cualquier otro número, sea entero, decimal o de otro tipo). Esto es posible gracias a que los nombres de variables no pueden comenzar por números, por lo que no hay ambigüedad posible. En otros lenguajes es obligatorio expresarlo como un producto explícito, es decir `2*a`.
-* Se pueden utilizar símbolos matemáticos de Unicode para representar algunos operadores matemáticos habituales que no están en el conjunto de caracteres ASCII: `≠` para "no es igual que" (equivalente a `!=` cuando se escribe solo con ASCII), o `≤` y `≥` para "menor que" y "mayor que", respectivamente (equivalentes a `<=`, `>=`). Como dichos símbolos no suelen estar disponibles en los teclados, los principales interfaces para Julia permiten escribirlos a partir de "secuencias de escapes". Por ejemplo, el símbolo de "no es igual" (`≠`) se escribiría con la secuencia de escape `\neq` (del inglés *not equal*), pulsando el tabulador a continuación para convertirla en el símbolo deseado. En la documentación oficial de Julia se puede encontrar una lista completa de las secuencias de escape disponibles para [caracteres Unicode](https://docs.julialang.org/en/v1/manual/unicode-input).
+* Se pueden utilizar símbolos matemáticos de Unicode para representar algunos operadores matemáticos habituales que no están en el conjunto de caracteres ASCII: `≠` para "no es igual que" (equivalente a `!=` cuando se escribe solo con ASCII), o `≤` y `≥` para "menor que" y "mayor que", respectivamente (equivalentes a `<=`, `>=`). Como dichos símbolos no suelen estar disponibles en los teclados, las principales interfaces para Julia permiten escribirlos a partir de "secuencias de escapes". Por ejemplo, el símbolo de "no es igual" (`≠`) se escribiría con la secuencia de escape `\ne` (del inglés *not equal*), pulsando el tabulador a continuación para convertirla en el símbolo deseado. En la documentación oficial de Julia se puede encontrar una lista completa de las secuencias de escape disponibles para [caracteres Unicode](https://docs.julialang.org/en/v1/manual/unicode-input).
 * Es posible escribir comparaciones lógicas concatenadas, como `0 ≤ x ≤ 1` para comprobar si la variable `x` se encuentra entre `0` y `1`. (En otros lenguajes es necesario expresarlo de forma más compleja, como `(0 <= x) && (x <= 1)`.
 
 [^1]: Los números son también el "vocabulario natural" de los ordenadores. Toda la información procesada en un programa informático se representa en última instancia mediante números, en particular como números binarios, y se manipula mediante operaciones matemáticas.  
@@ -93,7 +93,7 @@ Es posible extraer un valor concreto del vector, utilizando también los corchet
 
 ```@repl c2
 primos[3]
-primos[1] # cambiar a begin
+primos[begin]
 primos[end]
 primos[end-1]
 ```
@@ -102,7 +102,7 @@ primos[end-1]
 
     El uso de `begin` como índice para referirse al primer elemento no funciona en versiones anteriores a Julia 1.4.
 
-En el programa para analizar las señales del ejemplo, vemos el uso de los corchetes para referirse a elementos particulares de un vector en líneas como las siguientes:
+En el programa para analizar las señales del ejemplo, vemos el uso de los corchetes para referirse a elementos de un vector en líneas como las siguientes:
 
 ```julia
 tiempos[i] = x[indice_maximo]
@@ -162,7 +162,7 @@ Julia es un lenguaje pensado especialmente para trabajar con números, pero tamb
 
 Las cadenas de texto son un tipo de datos más, que al igual que los números pueden organizarse en *arrays*; así, los nombres de los 30 archivos tratados en el ejemplo anterior se agrupan en el vector de *strings* llamado `archivos`, de tal modo que el nombre del primer archivo es `archivos[1]`, etc.
 
-Las cadenas de texto son secuencias de letras que se presentan delimitadas por comillas dobles (`"`). En parte se pueden comparar a vectores de letras, ya que es posible extraer letras aisladas o partes del texto con la misma sintaxis que se utiliza con los *arrays*. Por ejemplo, supongamos que queremos extraer el nombre del archivo sin la extensión `.txt` del archivo que está en la posición `i` de la lista. Se trata de una operación que ya está programada en la función `splitext`; pero como la extensión que queremos eliminar tiene cuatro letras, se podría asignar el nombre sin extensión a la variable `sinextension` del siguiente modo:
+Las cadenas de texto se componen de secuencias de letras que se presentan delimitadas por comillas dobles (`"`). En parte se pueden comparar a vectores de letras, ya que es posible extraer letras aisladas o partes del texto con la misma sintaxis que se utiliza con los *arrays*. Por ejemplo, supongamos que queremos extraer el nombre del archivo sin la extensión `.txt` del archivo que está en la posición `i` de la lista. Se trata de una operación que ya está programada en la función `splitext`; pero como la extensión que queremos eliminar tiene cuatro letras, se podría asignar el nombre sin extensión a la variable `sinextension` del siguiente modo:
 
 ```@setup c2
 archivos = ["sA01.txt"]
@@ -172,8 +172,7 @@ archivos = ["sA01.txt"]
 i = 1;
 nombrearchivo = archivos[i]
 sinextension = nombrearchivo[1:end-4]
-# O en una sola línea:
-sinextension = archivos[i][1:end-4]
+sinextension = archivos[i][1:end-4] # Todo en una línea
 ```
 
 Si extraemos una sola letra, como el carácter `A` o `B` que aparece en segunda posición del nombre archivo, podemos ver cómo las letras individuales se delimitan con comillas simples (`'`), en lugar de las dobles usadas para las cadenas de texto:
@@ -199,7 +198,7 @@ Lo que sí se puede hacer es crear una nueva cadena de texto a partir de trozos 
 nombrearchivo[1] * 'C' * nombrearchivo[3:end]
 ```
 
-Hay muchos otros métodos y funciones para manipular cadenas de texto, las más importantes de las cuales se comentan en el capítulo dedicado a este tema. Pero hay otra forma de componer cadenas de texto que es especialmente práctica y vale la pena adelantar: la "interpolación". Dada una variable `x`, sea numérica, de texto o cualquier otro tipo, su contenido puede insertarse dentro de un texto utilizando el signo del dólar (`$`) para marcarla. También se puede interpolar una expresión más compleja encerrándola entre paréntesis:
+Hay muchos otros métodos y funciones para manipular cadenas de texto, las más importantes de las cuales se comentan en el capítulo dedicado a ese tema. Pero hay otra forma de componer cadenas de texto que es especialmente práctica y vale la pena adelantar: la "interpolación". Dada una variable `x`, sea numérica, de texto o cualquier otro tipo, su contenido puede insertarse dentro de un texto utilizando el signo del dólar (`$`) para marcarla. También se puede interpolar una expresión más compleja encerrándola entre paréntesis:
 
 ```@repl c2
 x = 2;
@@ -220,7 +219,7 @@ Por ejemplo, para escribir la cadena de texto `"El símbolo del dólar es "$""` 
 
 [^2]: El hecho de que la barra invertida sea el marcador de las secuencias de escape es lo que complica escribir rutas de archivos en Windows, que utiliza precisamente ese símbolo como separador de directorios. Por eso los nombres de rutas de Windows se escriben con barras invertidas dobles (`\\`), que en realidad representan una sola barra invertida.
 
-Finalmente haremos mención a un tipo especial de cadenas de texto, los *símbolos*: se trata de secuencias de caracteres alfanuméricos o signos que pueden representar nombres de variables, funciones u operadores, que se escriben precediéndolas de dos puntos (`:`) para distinguirlas de cadenas de texto convencionales. Los símbolos pueden referirse a operaciones o variables existentes como `:+`, `:log`, `:include`, o también inexistentes. Están particularmente pensados para procesos de metaprogramación, es decir para manipular y crear código programáticamente, que es una forma de uso particularmente avanzado de Julia, que no se trata en esta guía. Pero incluso en el uso cotidiano nos encontraremos de vez en cuando con este tipo de símbolos, como veremos a continuación, y por eso vale la pena introducirlos ahora.
+Finalmente haremos mención a un tipo especial de cadenas de texto, los *símbolos*: se trata de secuencias de caracteres alfanuméricos o signos que pueden representar nombres de variables, funciones u operadores, que se escriben precediéndolas de dos puntos (`:`) para distinguirlas de cadenas de texto convencionales. Los símbolos pueden referirse a operaciones o variables existentes como `:+`, `:log`, `:include`, o también inexistentes. Están particularmente pensados para procesos de metaprogramación, es decir para manipular y crear código programáticamente, que es una forma de uso particularmente avanzado de Julia, que no se trata en esta guía. Pero incluso en el uso cotidiano nos encontraremos de vez en cuando con este tipo de símbolos.
 
 ## Matrices de datos
 
@@ -280,7 +279,7 @@ datos_un = readdlm("datos/esperanzadevida.txt", skipstart=1)
 (datos_un, nombres) = readdlm("datos/esperanzadevida.txt", header=true)
 ```
 
-Ambos argumentos se pueden combinar, si el encabezado contiene más líneas con otro tipo de información. En este caso `skipstart` indicaría el número de líneas a ignorar antes de leer los nombres de las columnas. Ambos son "argumentos con nombre" o "con clave" (en inglés *keyword arguments*), que pueden ponerse en cualquier orden después de los argumentos principales, pero tienen que ser llamados por su nombre para evitar confusiones. Por ejemplo, si hay dos líneas de texto con "metadatos" antes de la fila de nombres:
+Ambos argumentos se pueden combinar, si el encabezado contiene más líneas con otro tipo de información. En ese caso `skipstart` indicaría el número de líneas a ignorar antes de leer los nombres de las columnas. Ambos son "argumentos con nombre" o "con clave" (en inglés *keyword arguments*), que pueden ponerse en cualquier orden después de los argumentos principales, pero tienen que ser llamados por su nombre para evitar confusiones. Por ejemplo, si hay dos líneas de texto con "metadatos" antes de la fila de nombres:
 
 ```julia
 # Todas estas expresiones son equivalentes
@@ -295,7 +294,7 @@ Las matrices también pueden construirse "a mano" a partir de un conjunto de dat
 resultados = [archivos tiempos extremos]
 ```
 
-Asimismo, se pueden concatenar valores por filas separándolas por puntos y comas. Por ejemplo los datos de África de la tabla de esperanzas de vida anterior (dejando de lado los nombres de las variables y la columna con el nombre del continente) se podría escribir del siguiente modo:
+Asimismo, se pueden concatenar valores por filas separándolas por puntos y comas. Por ejemplo los datos de África de la tabla de esperanzas de vida anterior (dejando de lado los nombres de las variables y la columna con el nombre del continente) se podrían escribir del siguiente modo:
 
 ```@repl c2
 datos_africa =["Todos" 60.23 7.25; "Hombres" 58.58 6.91; "Mujeres" 61.9 7.71]
@@ -325,7 +324,7 @@ Una tabla de datos es parecida a una matriz; también se puede leer a partir de 
 
 * La primera línea se interpreta por defecto como la lista de nombres de las columnas. Al leer el archivo estos nombres se incorporan a la propia tabla, en lugar de devolverse como una variable aparte.
 
-* El carácter de separación entre columnas considerado por defecto por `CSV.File` es una coma; para especificar un carácter de separación distinto se utiliza el argumento con nombre `delim`. Si las columnas están separadas por más de un espacio en blanco, hay que añadir también el argumento `ignorerepeated=true`.
+* El carácter de separación entre columnas considerado por defecto por `CSV.File` es una coma; para especificar un carácter de separación distinto se utiliza el argumento con nombre `delim`. En el caso de usar espacios en blanco, si las columnas están separadas por más de un espacio, hay que añadir también el argumento `ignorerepeated=true`.
 
 * Si el tipo de datos (números decimales, enteros, cadenas de texto...) es consistente en cada columna del archivo de entrada, dichos tipos se mantienen en las distintas columnas de la tabla resultante, mientras que `readdlm` crearía una matriz homogénea de tipo `Any`.
 
@@ -432,6 +431,7 @@ Además podemos destacar el uso de las siguientes funciones:
 * `readdir` para obener una lista de cadenas de texto con los nombres de los archivos de un directorio.
 * `splitext` para separar la extensión de un nombre de archivo.
 * `readdlm` y `CSV.File` (esta última del paquete CSV) para leer datos tabulados, más las correspondientes `writedlm` y `CSV.write` para escribirlos en un archivo de texto.
+* `DataFrame` para construir tablas de datos.
 * `zeros` para crear un array lleno de ceros al inicio.
 * `abs` para obtener el valor absoluto de un número.
 * `sqrt` para calcular la raíz cuadrada de un número.

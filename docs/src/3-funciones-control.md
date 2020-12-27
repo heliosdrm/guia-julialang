@@ -5,7 +5,7 @@ La potencia de un lenguaje de programación se encuentra a la hora de implementa
 * Funciones que encapsulen "trozos" de código con el fin de reutilizarlos o simplificar el código fuente.
 * Estructuras de control para definir flujos condicionales e iterativos en la ejecución del código.
 
-En los capítulos anteriores ya hemos visto ejemplos de funciones y estructuras de control, que se han presentado sin apenas explicaciones. En este capítulo vamos a dar las explicaciones básicas para entenderlas y utilizarlas, ya que son una parte fundamental de cualquier lenguaje de programación, aunque sin entrar en ciertos detalles avanzados que se dejan para capítulos específicos más adelante.
+En los capítulos anteriores ya hemos visto ejemplos de funciones y estructuras de control, que se han presentado sin apenas comentarios. En este capítulo vamos a dar las explicaciones básicas para entenderlas y utilizarlas, ya que son una parte fundamental de cualquier lenguaje de programación, aunque sin entrar en ciertos detalles avanzados que se dejan para capítulos específicos más adelante.
 
 Siguiendo el esquema habitual, comenzamos con un ejemplo más que nos servirá como guía para las explicaciones posteriores.
 
@@ -177,7 +177,7 @@ La conversión de la tabla a HTML la haremos con la función `tabla_html` que se
 ```@example c3
 function tabla_html(tabla, encabezado)
     html = "<table>"
-    # Primera fila con nombres de los días (en mayúsculas)
+    # Primera fila con nombres de los días
     html *= "<tr>"
     for celda = encabezado
         html *= "<td>$celda</td>"
@@ -274,7 +274,7 @@ Las palabras en mayúsculas representan los elementos que son propios de cada fu
 * `DOCSTRING` es un texto de documentación de la función. Se trata de un elemento opcional, que en el ejemplo anterior solo hemos usado para la función principal (`calendario_html`).
 * `NOMBRE` es el nombre de la función, como `calendario_html`, `numero_primer_dia`, etc. Cualquier nombre válido para una variable es válido también para funciones. En el caso de las funciones que modifican los contenidos de sus argumentos, es costumbre darles un nombre acabado en una exclamación, como se ha hecho con `rellenar_calendario!`. Pero esto es una convención opcional más que un requisito, y el símbolo de exclamación no tiene en sí ningún efecto.
 * `ENTRADAS` es la lista de variables de entrada a la función (véanse los detalles más abajo). Pueden definirse funciones que no requieran ningún argumento, en cuyo caso los paréntesis después del nombre de la función se dejan vacíos.
-* `CODIGO` es el cuerpo con el código que se ha de ejecutar en la función, utilizando los argumentos de `ENTRADA` y cualesquiera otras variables que se definan dentro de la función. El código se suele escribir indentado respecto al encabezado de la función
+* `CÓDIGO` es el cuerpo con el código que se ha de ejecutar en la función, utilizando los argumentos de `ENTRADA` y cualesquiera otras variables que se definan dentro de la función. El código se suele escribir indentado respecto al encabezado de la función
 * `SALIDAS` es la lista de variables de salida de la función (véanse los detalles más abajo). La función finaliza inmediatamente cuando se ejecuta la línea que contiene la palabra `return`, aunque haya más código escrito después. Si no se pone ninguna línea con la palabra `return`, se devuelve por defecto el valor de la última línea de código de la función, como `HTML(tablahtml)` en la función `tabla_html`.
 
 Cuando el cuerpo de la función es tan sencillo que se puede reducir a una sola línea, también se puede simplificar la forma de definirla, eliminando la clave `function` y el finalizador `end`. Este es el caso, por ejemplo, de la función `es_bisiesto`. Por poner otro ejemplo, las siguientes declaraciones definen la misma función para calcular la suma aritmética `1+2+ ... + n`
@@ -390,7 +390,7 @@ A la hora de definir los argumentos de una función, el conjunto de argumentos v
 
 #### Argumentos "con nombre"
 
-Algunas funciones también admiten argumentos identificados por su nombre, en lugar de por su posición (lo que en inglés se llaman *keyword arguments*). En el capítulo anterior hemos visto algunos ejemplos, como los argumentos `skipstart` y `header` de la función `readdlm`, o `delim`, `ignorerepeated`, `missingstring`, etc. de `CSV.read`.
+Algunas funciones también admiten argumentos identificados por su nombre, en lugar de por su posición (lo que en inglés se llaman *keyword arguments*). En el capítulo anterior hemos visto algunos ejemplos, como los argumentos `skipstart` y `header` de la función `readdlm`, o `delim`, `ignorerepeated`, `missingstring`, etc. de `CSV.File`.
 
 Los argumentos "con nombre" se introducen siempre después de los argumentos posicionales, y es habitual (aunque no obligatorio en general) separar ambos conjuntos de argumentos por un punto y coma, en lugar de una coma. Una propiedad interesante de estos argumentos es que se pueden pasar en cualquier orden, ya que el nombre es suficiente para distinguirlos.
 
@@ -473,9 +473,9 @@ duplicar(x)
 x # ... pero el valor original permanece inalterado
 ```
 
-Luego están las variables que se definen dentro de las funciones, como `primerdia`, `ndias` en el caso de `calendario_html`, etc. Estas también son variables locales, que se destruyen al término de la función, y por lo tanto no se puede acceder a ellas desde fuera (al margen de que sus valores sí se puedan devolver como resultado de la función). Al igual que ocurre con los argumentos, estas variables locales pueden tomar nombres idénticos a los de variables definidas fuera de la función --o en otras funciones--, sin que haya conflico o confusión entre ellas.
+Luego están las variables que se definen dentro de las funciones, como `primerdia`, `ndias` en el caso de `calendario_html`, etc. Esas también son variables locales, que se destruyen al término de la función, y por lo tanto no se puede acceder a ellas desde fuera (al margen de que sus valores sí se puedan devolver como resultado de la función). Al igual que ocurre con los argumentos, esas variables locales pueden tomar nombres idénticos a los de variables definidas fuera de la función --o en otras funciones--, sin que haya conflico o confusión entre ellas.
 
-Finalmente, dentro de una función también se pueden usar variables definidas en otra parte del código que contiene la función. Esto es lo que ocurre, por ejemplo, con la variable `listadias`, que hemos definido como una variable "global", externa a las funciones, pero es usada directamente por `numero_primer_dia`, sin haberla asignado a ninguna variable local. Lo que no puede hacerse con las variables globales es asignarles nuevos valores, ya que la operación de reasignación se confundiría con la definición de una variable local.
+Finalmente, dentro de una función también se pueden usar variables definidas en otra parte del código que contiene la función. Eso es lo que ocurre, por ejemplo, con la variable `listadias`, que hemos definido como una variable "global", externa a las funciones, pero es usada directamente por `numero_primer_dia`, sin haberla asignado a ninguna variable local. Lo que no puede hacerse con las variables globales es asignarles nuevos valores, ya que la operación de reasignación se confundiría con la definición de una variable local.
 
 Esta capacidad de las funciones para reconocer objetos globales, definidos fuera de su contexto local, no solo es útil para poder reutilizar variables, sino que es crucial para que las funciones puedan llamarse entre ellas --ya que las funciones son objetos al igual que otras variables--.
 
@@ -529,11 +529,11 @@ La condición asociada a los bloques `if` o `elseif`, así como al operador tern
 * `a <= b` (`true` si `a` es menor o igual que `b`)
 * `a >= b` (`true` si `a` es mayor o igual que `b`)
 
-Algunos de estos operadores de comparación pueden escribirse de forma más "elegante", usando los símbolos matemáticos correspondientes. Como dichos símbolos no suelen estar disponibles en los teclados, los principales interfaces para Julia permiten escribirlos a partir de "secuencias de escape". Los símbolos matemáticos correspondientes a los operadores anteriores son:
+Algunos de estos operadores de comparación pueden escribirse de forma más "elegante", usando los símbolos matemáticos correspondientes. Como dichos símbolos no suelen estar disponibles en los teclados, las principales interfaces para Julia permiten escribirlos a partir de "secuencias de escape". Los símbolos matemáticos correspondientes a los operadores anteriores son:
 
 |operador | símbolo | sec. de escape |
 |:-------:|:-------:|:--------------:|
-| `!=`    | `≠`     | `\neq`         |
+| `!=`    | `≠`     | `\ne`         |
 | `<=`    | `≤`     | `\le`          |
 | `>=`    | `≥`     | `\ge`          |
 

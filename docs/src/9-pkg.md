@@ -102,7 +102,7 @@ Asignar un entorno particular a un proyecto se reduce a seleccionar una carpeta 
 Lo primero que hay que hacer es, en una sesión de Julia, activar la carpeta escogida como un nuevo entorno de trabajo, con el comando `]activate` seguido de la ruta de la carpeta. Si esta coincide con el directorio de trabajo actual, basta con escribir `]activate .` (un punto representa el directorio actual). La etiqueta mostrada en la consola cambiará para mostrar el nombre del nuevo entorno. Por ejemplo, si la carpeta escogida tuviese la ruta `proyectos_julia/estudio1`:
 
 ```julia-repl
-pkg (v1.5)> activate proyectos_julia/estudio1
+pkg (@v1.5)> activate proyectos_julia/estudio1
 
 pkg (estudio1)>
 ```

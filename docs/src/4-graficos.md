@@ -6,7 +6,7 @@ cp("../../datos/", "./datos")
 
 En los capítulos anteriores de esta guía hemos hecho un tratamiento superficial, incluso podría decirse que apresurado, de unos pocos aspectos básicos en los que muchos otros manuales, sean de Julia o cualquier otro lenguaje de programación, suelen ser más detallados en sus capítulos introductorios. En este capítulo dedicado a los gráficos, sin embargo, vamos a detenernos más a pesar de que es una funcionalidad bastante avanzada, y requiere instalar algunos paquetes auxiliares y herramientas externas para empezar.
 
-Hay una buena razón para hacerlo así. El usuario de una herramienta informática normalmente no juzga si una tarea es "básica" o "avanzada" según las complejidades que supone para esa herramienta, sino por cuestiones más prácticas. Y explorar visualmente los datos es una de las primeras cosas que se suele hace después de recogerlos, como mínimo para valorar si parecen correctos o hay algún tipo de anomalía. En este sentido los gráficos podrían considerarse como una de las tareas más básicas. De hecho no es raro que el ansia por ver qué pinta tienen los datos conduzca a atajos "sucios y rápidos", como abrir los ficheros con una hoja de cálculo e improvisar gráficas con un par de *clicks* de ratón, antes de empezar los preparativos para un análisis más formal.
+Hay una buena razón para hacerlo así. El usuario de una herramienta informática normalmente no juzga si una tarea es "básica" o "avanzada" según las complejidades que supone para esa herramienta, sino por cuestiones más prácticas. Y explorar visualmente los datos es una de las primeras cosas que se suele hace después de recogerlos, como mínimo para valorar si parecen correctos o hay algún tipo de anomalía. En este sentido los gráficos podrían considerarse como una de las tareas más básicas. De hecho no es raro que el interés por ver qué pinta tienen los datos conduzca a atajos como abrir los ficheros con una hoja de cálculo e improvisar gráficas con un par de *clicks* de ratón, antes de empezar los preparativos para un análisis más formal.
 
 Parece lógico, por tanto, que las instrucciones para crear gráficos también se introduzcan lo más pronto posible a la hora de presentar una herramienta para el análisis de datos. Además, parafraseando el refrán popular, se puede decir que un gráfico vale más que mil números. Julia tiene una potencia extaordinaria para hacer cálculos complejos y costosos de forma rápida y eficaz; pero la representación de los resultados en un sencillo gráfico a veces da una mayor sensación de productividad, y aprender a crear esos gráficos es una buena manera de aumentar la motivación para introducirse en un lenguaje de programación.
 
@@ -14,7 +14,7 @@ Parece lógico, por tanto, que las instrucciones para crear gráficos también s
 
 Julia nos ofrece la versatilidad y potencia de múltiples herramientas externas para generar gráficos, a través de paquetes complementarios que instalan automáticamente las librerías gráficas[^1] necesarias y proporcionan funciones para manejarlas desde Julia. El que usaremos para los ejemplos que siguen es [Plots](http://docs.juliaplots.org/latest/) (versión 1), uno de los más populares, y que proporciona una interfaz común para manejar muchos de esos otros paquetes, de tal manera que solo hace falta aprender una forma de crear y editar gráficos. Además, tiene una excelente documentación con numerosos tutoriales, ejemplos y demostraciones disponibles en su página web (en inglés), muy recomendables para ampliar los conceptos más básicos que se presentan aquí.
 
-Según los gráficos que se quieran hacer, también puede ser interesante instalar [paquetes complementarios](http://docs.juliaplots.org/latest/ecosystem/) que aumentan su funcionalidad, según el campo en el que se vaya a trabajar. Aunque con el paquete básico de Plots ya se pueden conseguir muchos resultados.
+Según los gráficos que se quieran hacer, también puede ser interesante instalar [paquetes complementarios](http://docs.juliaplots.org/latest/ecosystem/) que aumentan su funcionalidad, según el campo en el que se vaya a trabajar, aunque con el paquete básico de Plots ya se pueden conseguir muchos resultados.
 
 Si no se tienen otras librerías gráficas instaladas, Plots utiliza por defecto la del paquete [GR](https://github.com/jheinen/GR.jl). Otros paquetes muy populares son [PyPlot](https://github.com/JuliaPy/PyPlot.jl), basado en la librería gráfica que se suele usar con Python, [VegaLite](https://www.queryverse.org/VegaLite.jl/stable/) para hacer sofisticados gráficos interactivos, o [UnicodePlots](https://github.com/Evizero/UnicodePlots.jl) en el otro extremo, para crear gráficos basados en caracteres de texto sobre la consola de comandos. Una vez se ha "roto mano" con el lenguaje, y si se dispone de tiempo para ello, puede ser buena idea explorar distintos paquetes para escoger el que mejor se adapta a las necesidades y limitaciones de cada uno.
 
@@ -38,9 +38,9 @@ plot(x, y)
 
 !!! note "¿Por qué tarda tanto el primer gráfico?"
 
-    Al reproducir el ejemplo anterior se puede observar que desde que se ejecuta la línea `plot(x, y)` hasta que se presenta el gráfico pasa un tiempo (puede ser corto o largo dependiendo del ordenador y la versión de Julia). La generación y presentación de gráficos es una operación relativamente compleja, y la mayor parte de ese tiempo está dedicado a compilar las instrucciones. La buena noticia es que tras el primer gráfico, la generación de los siguientes es generalmente muy rápida.
+    Al reproducir el ejemplo anterior se puede observar que la instrucción `using Plots` cuesta más tiempo en ejecutarse que la carga de otros paquetes, y desde que se ejecuta la línea `plot(x, y)` hasta que se presenta el gráfico pasa un tiempo (puede ser corto o largo dependiendo del ordenador y la versión de Julia). La generación y presentación de gráficos es una operación relativamente compleja, y la mayor parte de ese tiempo está dedicado a compilar las instrucciones. La buena noticia es que tras el primer gráfico, la generación de los siguientes es generalmente muy rápida.
 
-Según el entorno en el que se esté trabajando, este código hará que el gráfico se muestre de una manera u otra. Por ejemplo, en el REPL normalmente se abre en una nueva ventana; en IDEs como Juno y VSCode se muestra en el panel de gráficos dedicado; y en un notebook de IJulia los gráficos aparecen en celdas como imágenes integradas en las celdas de resultados.
+Según el entorno en el que se esté trabajando, este código hará que el gráfico se muestre de una manera u otra. Por ejemplo, en el REPL normalmente se abre en una nueva ventana; en IDEs como VS Code se muestra en el panel de gráficos dedicado; y en un notebook de IJulia los gráficos aparecen en celdas como imágenes integradas en las celdas de resultados.
 
 Si nos interesase mostrar varias señales en la misma gráfica, tenemos a nuestra disposición muchas formas de hacerlo. Por ejemplo, vamos a añadir la última señal.
 
@@ -87,7 +87,7 @@ En este ejemplo se han modificado cuatro atributos de las líneas:
 
     Los nombres y los códigos numéricos que se pueden emplear para definir los colores son los recogidos por el [estándar para CSS](https://www.w3.org/TR/css3-color/). Este incluye 62 nombres, desde los más básicos hasta algunos tan exóticos como el "blanco fantasmal" ("ghostwhite") o el de "papaya batida" ("papayawhip"), códigos RGB como `colorant"rgb(0,255,0)` --también en porcentaje `colorant"rgb(0,100%,0)"`, o en código hexadecimal `colorant"#00ff00"`--, y códigos HSL como `colorant"hsl(120,100%,50%)"`.
 
-Algunas librerías gráficas permiten definir además el nivel de opacidad (llamado "canal alfa"), con el atributo `seriesalpha` (también `linealpha` o simplemente `alpha`), que puede adoptar un número entre 0 (transparente) y 1 (totalmente opaco).
+Algunas librerías gráficas permiten definir además el nivel de opacidad (llamado "canal alfa"), con el atributo `seriesalpha` (o simplemente `alpha`), que puede adoptar un número entre 0 (transparente) y 1 (totalmente opaco).
 
 Así pues, una línea en color lima semitransparente también podría dibujarse con cualquiera de las siguientes expresiones:
 
@@ -100,7 +100,7 @@ plot(x,y, color=colorant"hsl(120,100%,50%)", alpha=0.5)
 Otro detalle a destacar en el ejemplo anterior es cómo se han estructurado los conjuntos de atributos:
 
 * Al atributo `width` solo se le ha dado un valor, que por lo tanto se aplica por igual a todas las líneas.
-* Los atributos `style`, `color` y `label` se han definido como dos valores en una *matriz columna* (elementos separados por espacios), de tal que a cada línea se le ha asignado el valor de la columna correspondiente.
+* Los atributos `style`, `color` y `label` se han definido como dos valores en una *matriz columna* (elementos separados por espacios), de tal manera que a cada línea se le ha asignado el valor de la columna correspondiente.
 
 Los atributos correspondientes a series de datos distintas se disponen en columnas, igual que las propias series de datos. Si se dispusieran en un vector (equivalente a una columna), se interpretaría que cada valor del atributo se corresponde con *un punto* de la(s) serie(s). Por ejemplo, se puede hacer variar el grosor de la línea dándole un valor a cada punto como en el siguiente ejemplo:
 
@@ -120,7 +120,7 @@ Además, se puede cambiar el elemento geométrico que representa de los datos, a
 * `:bar` para gráficos de barras.
 * `:quiver` para campos de flechas (requiere argumentos adicionales para indicar la dirección y tamaño de las flechas).
 * `:histogram` para histogramas de una serie de datos.
-* `:surface` y `:wireframe`para gráficos tridimensionales, representadas como superficies coloreadas o mallas, respectivamente.
+* `:surface` y `:wireframe` para gráficos tridimensionales, representadas como superficies coloreadas o mallas, respectivamente.
 * `:contour` para gráficos de contorno (como superficies vistas en 2D).
 
 Los gráficos con esos y otros tipos de elementos se pueden crear utilizando directamente el valor de `seriestype` como nombre de la función, en lugar de `plot`. Por ejemplo, un gráfico de barras podría dibujarse con `plot(y, seriestype=:bar)` o sencillamente `bar(y)`. En esos casos también existen las funciones "con exclamación" (`bar!`, etc.) para dibujar encima del gráfico anterior.
@@ -152,7 +152,7 @@ using CSV # hide
 tabla_resultados = DataFrame(CSV.File("datos/tabla.txt", header=["Archivo", "X", "Y"])) # hide
 ```
 
-El siguiente gráfico muestra la relación entre tiempos y valores de los picos de las señales, separando los quince primeros casos (los que comienzan como "sA", de los quince segundos ("sB"). El gráfico incluye una leyenda para distinguir estos dos conjuntos, etiquetas para los ejes X e Y, y un título. Además, se han ajustado los límites de los ejes a unos rangos mayores que los que se muestran por defecto:
+El siguiente gráfico muestra la relación entre tiempos y valores de los picos de las señales, separando los quince primeros casos (los que comienzan como "sA"), de los quince segundos ("sB"). El gráfico incluye una leyenda para distinguir estos dos conjuntos, etiquetas para los ejes X e Y, y un título. Además, se han ajustado los límites de los ejes a unos rangos mayores que los que se muestran por defecto:
 
 ```@example c4
 using DelimitedFiles
@@ -166,17 +166,17 @@ ylabel!("valor extremo")
 title!("Resultados del análisis")
 ```
 
-En este ejemplo vemos de nuevo el uso del atributo `label` para modificar la leyenda del gráfico, y otras funciones que permiten modificar otras partes del mismo:
-* `xlims!` e `ylims!` para ajustar los rangos de valores mostrados en los ejes X e Y. (También existe `zlims!` para el eje Z en gráficos tridimensionales.)
-* `xlabel!` e `ylabel!` para añadir etiquetas a los ejes X e Y. (Usar `zlabel!` para el eje Z en gráficos tridimensionales.)
+En este ejemplo vemos de nuevo el uso del atributo `label` para modificar la leyenda del gráfico, y funciones que permiten modificar otras partes del mismo:
+* `xlims!` e `ylims!` para ajustar los rangos de valores mostrados en los ejes de coordenadas. (También existe `zlims!` para el eje Z en gráficos tridimensionales.)
+* `xlabel!` e `ylabel!` para añadir etiquetas a los ejes. (Usar `zlabel!` para el eje Z en gráficos tridimensionales.)
 * `title!` para añadir un título en la parte superior del gráfico.
 
 En lugar de las funciones `xlims!`, etc., se podrían haber defindo los atributos correspondientes al llamar a `scatter` (o `plot`, o cualquiera de las funciones que generan los graficos), p.ej. `scatter(x, y, xlims=(0,1))`.
 
-Hay muchos más atributos de los gráficos que se pueden ajustar como la escala de los ejes, líneas guía, mapas de color, formato de los textos, etc. Esos atributos no se asocian a los elementos que representan las series de datos, sino a otras partes del gráfico:
+Hay muchos más atributos de los gráficos que se pueden ajustar como la escala de los ejes, líneas guía, mapas de color, formato de los textos, etc. Esos atributos no se asocian a los elementos que representan las series de datos, sino a otras partes del gráfico, a saber:
 
-* El plano en el que se proyecta el espacio de coordenadas en el que se representa el conjunto de datos. Suele ser un rectángulo, aunque hay gráficos en coordenadas polares con una disposición circular. Este elemento recibe el nombre de `Axis`, aunque incluye más cosas aparte de los ejes de coordenadas (p.ej. el color de fondo, las guías, etc.)
-* El panel sobre el que se organizan los elementos del gráfico: los ejes de coordenadas y sus etiquetas, el título, las leyendas, etc. Este elemento recibe el nombre de `Subplot` --considerando la posibilidad de que existan composiciones de gráficos con más de uno de estos paneles--.
+* El plano en el que se proyecta el espacio de coordenadas del gráfico. Suele ser un rectángulo, aunque hay gráficos en coordenadas polares con una disposición circular. Este elemento recibe el nombre de `Axis`, aunque incluye más cosas aparte de los ejes de coordenadas (p.ej. el color de fondo, las guías, etc.)
+* El panel sobre el que se organizan los diferentes elementos del gráfico, como los ejes de coordenadas y sus etiquetas, el título, las leyendas, etc. Este elemento recibe el nombre de `Subplot` --considerando la posibilidad de que existan composiciones de gráficos con más de uno de estos paneles--.
 * El marco global, que es lo que recibe el nombre genérico de `Plot`, y contiene todos los elementos de un gráfico. Puede ser una ventana, una página de un documento o un cuadro dentro de la misma en la que se enmarca el gráfico, etc.
 
 Las distintas opciones disponibles para cada atributo se pueden consultar, como se ha visto antes, usando la función `plotattr`, por ejemplo `plotattr("xlims")` para ver cómo se definen los límites del eje X. Los atributos configurables de cada una de esas partes de un gráfico también se pueden consultar con la misma función, por ejemplo `plotattr(:Axis)` para listar los atributos del plano de coordenadas, etc. La página web de Plots también tiene secciones que muestran todas las opciones, como se ha visto antes para los elementos geométricos.
@@ -199,7 +199,7 @@ title!(p1, "Líneas")
 title!(p2, "Puntos")
 ```
 
-Por otro lado, un conjunto de gráficos pueden componerse como *subplots* de otro, simplemente pasándolos a la función `plot` como argumentos. Por ejemplo:
+Por otro lado, podemos componer varios gráficos como *subplots* de otro más amplio, simplemente pasándolos como argumentos a la función `plot`. Por ejemplo:
 
 ```julia
 plot(p1, p2)

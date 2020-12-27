@@ -21,7 +21,9 @@ Hay múltiples formas de plantear una guía o tutorial para aprender a utilizar 
 
 Con esa estructura se plantean los cuatro primeros capítulos, dedicados a introducir el [flujo de trabajo habitual con Julia](1-primerospasos.md), el [manejo de series y tablas de datos](2-series-tablas.md), las [funciones y estructuras de control](3-funciones-control.md) de los programas, y el [uso de gráficos](4-graficos.md), respectivamente. Con los contenidos de esos cuatro primeros capítulos se cubre la base necesaria para hacer un uso productivo de Julia, aunque los temas se tratan de forma muy superficial, pensando más en introducir los conceptos --incluso para alguien que tenga poca o ninguna experiencia práctica en programación-- que en una descripción completa de los temas tratados.
 
-Los cinco siguientes capítulos vuelven sobre algunos de los temas anteriores para tratarlos con más profundidad. En particular, se proporcionan detalles sobre cómo crear, manipular y usar [*arrays*](5-arrays.md) y otros [tipos de objetos iterables](6-iterables.md), así como [cadenas de texto](7-strings.md), [funciones](8-funciones-avanzado.md), y finalmente como [gestionar los paquetes](9-pkg.md) que amplían la funcionalidad básica de Julia, convirtiéndolo así en un lenguaje de programación útil y eficaz en muchos dominios.
+Los cinco siguientes capítulos vuelven sobre algunos de los temas anteriores para tratarlos con más profundidad. En particular, se proporcionan detalles sobre cómo crear, manipular y usar [*arrays*](5-arrays.md) y otros [tipos de objetos iterables](6-iterables.md), así como [cadenas de texto](7-strings.md), [funciones](8-funciones-avanzado.md), y cómo [gestionar los paquetes](9-pkg.md) que amplían la funcionalidad básica de Julia, convirtiéndolo así en un lenguaje de programación útil y eficaz en muchos dominios.
+
+Para finalizar, el último capítulo presenta estrategias y herramientas para [detectar y depurar errores](10-debugging.md) en los programas, uno de los desafíos más importantes tanto para principiantes como para las personas con más experiencia programando. 
 
 Las herramientas presentadas en esta guía son la base para hacer cualquier programa en Julia, aunque solo abarcan una parte de todo lo que proporciona este lenguaje de programación. Otros recursos para extraer el máximo rendimiento de Julia se reservan para una guía más avanzada, que pretende seguir a la presente.
 
@@ -30,3 +32,7 @@ Las herramientas presentadas en esta guía son la base para hacer cualquier prog
 Esta guía está elaborada por Helios De Rosario Martínez con el paquete [Documenter](https://github.com/JuliaDocs/Documenter.jl) de Julia, a partir del código publicado en el repositorio [https://github.com/heliosdrm/guia-julialang/](https://github.com/heliosdrm/guia-julialang/).
 
 Esta guía está publicada bajo la licencia [Creative Commons Attribution-ShareAlike (CC BY-SA) 4.0](http://creativecommons.org/licenses/by-sa/4.0/). Esto significa que se permite su libre distribución y transformación, incluso con propósitos comerciales, en cualquier medio y formato, siempre que en las copias u obras derivadas se acredite apropiadamente la autoría original y se mantengan los términos de esta licencia.
+
+```@raw html
+<img src="assets/cc-by-sa-88x31.png" alt="CC-BY-SA">
+```
