@@ -1,0 +1,16 @@
+# Introducción
+
+Los lenguajes de programación dinámicos son una herramienta esencial en muchas profesiones científicas, que a menudo requieren realizar cálculos complejos en un corto plazo de tiempo; cálculos que además suponen un problema nuevo en cada ocasión, en el que los algoritmos a utilizar suelen basarse en trabajos anteriores, pero siempre necesitan ciertos retoques o extensiones.
+
+Entre los distintos lenguajes de programación diseñados con este propósito se encuentra [*Julia*](https://julialang.org), creado por investigadores informáticos del Massachusets Institute of Technology (MIT), y distribuido bajo la licencia del MIT para software libre. Julia se usa para cálculos numéricos en múltiples ámbitos como la física, biología, ingeniería, matemáticas y finanzas, entre otros. Su principal punto fuerte es la resolución de problemas numéricos complejos y con grandes cantidades de datos, que otros lenguajes de programación dinámicos no pueden abordar de forma eficiente, salvo que se combinen con código compilado en un segundo lebuaje (típicamente en C o C++).
+
+El *leit motiv* de Julia es su productividad para realizar cálculos a una velocidad comparable a la de programas compilados en C, sin dejar de ser un lenguaje plenamente dinámico y que permita trabajar con el paradigma del [*read-eval-print loop*](https://es.wikipedia.org/wiki/REPL). Esto hace que Julia tenga un nicho de aplicación muy atractivo: la ejecución de algoritmos iterativos o rutinas masivas de lectura y escritura de dispositivos y archivos, que en lenguajes de bajo nivel pueden ser muy eficientes, pero a la hora de ejecutarlas en alguno de los lenguajes antes mencionados puedan consumir hasta horas de trabajo de la máquina. Con poco esfuerzo de programación, una hora de procesamiento en Matlab puede traducirse en unos pocos segundos de Julia.
+
+## Objetivo y estructura de esta guía
+
+Esta guía es una introducción a la programación con Julia, que no asume conocimientos previos sobre este u otros lenguajes de programación en particular.
+
+Hay múltiples formas de plantear una guía o tutorial para aprender a utilizar un lenguaje de programación desde cero. A menudo se comienza con ejercicios triviales como el de escribir `"Hola mundo"` en pantalla, para introducir poco a poco los conceptos y así suavizar la barrera de entrada al mundo de la programación, a expensas de resultar un inicio lento y poco estimulante. En esta guía se opta por un primer encuentro con el lenguaje basado en ejemplos algo más prácticos, que no es necesario entender al detalle desde el principio, pero que contienen buena parte de los conceptos que se quieren explicar en cada lección.
+
+Con esa estructura se plantean los cuatro primeros capítulos, dedicados a introducir el [flujo de trabajo habitual con Julia](primerospasos.md), el [manejo de series y tablas de datos](series-tablas.md), las [funciones y estructuras de control](funciones-control.md) de los programas, y el [uso de gráficos](graficos.md), respectivamente. Con los contenidos de esos cuatro primeros capítulos se cubre la base necesaria para hacer un uso productivo de Julia, aunque los temas se tratan de forma muy superficial, pensando más en introducir los conceptos --incluso para alguien que tenga poca o ninguna experiencia práctica en programación-- que en una descripción completa de los temas tratados.
+
