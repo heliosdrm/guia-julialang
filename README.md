@@ -1,5 +1,7 @@
-# Guía básica de Julia
+# Guías para programación en Julia
 
-[En construcción]
+[Work in progress]
 
-Guía para aprender a programar en Julia
+Contenidos:
+
+1. [Programación básica en Julia](basico) 
