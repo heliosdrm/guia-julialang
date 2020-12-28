@@ -298,7 +298,7 @@ cuadrados
 
 !!! tip
     
-    El superíndice numérico que se ha utilizado para expresar los exponentes es un carácter especial, que se puede escribir en la REPL de Julia con la secuencia de escape `\^2`, seguidas del tabulador.
+    El superíndice numérico que se ha utilizado para expresar los exponentes es un carácter especial, que se puede escribir en el REPL de Julia con la secuencia de escape `\^2`, seguidas del tabulador.
 
 Una forma más compacta de hacer esto esto es mediante lo que en inglés se llama *comprehension*. Este recurso se suele utilizar cuando contenido de un bucle `for` es una línea cuya única finalidad es "rellenar" una colección. En este caso, el código equivalente a todo lo anterior sería:
 

@@ -105,7 +105,7 @@ donde `ncols` es el número de columnas esperado en cada fila, y `valores...` re
 hvcat(3, "a", "b", "c", "x", "y", "z")
 ```
 
-En un ejemplo más realista los valores estarían agrupados en otra variable, como podría ser un vector. Los valores individuales de dicho vector podrían pasarse a la función `hvcat` mediante la técnica de *splatting* (añadiendo puntos suspensivos al nombre de la variable), como se indicaba en la sección sobre [Agrupaciones de argumentos](@ref) del capítulo anterior:
+En un ejemplo más realista los valores estarían agrupados en otra variable, como podría ser un vector. Los valores individuales de dicho vector podrían pasarse a la función `hvcat` mediante la técnica de *splatting* (añadiendo puntos suspensivos al nombre de la variable), como se indicaba en la sección sobre [Agrupaciones de argumentos](@ref) del capítulo 3:
 
 ```@repl c5
 letras = ["a", "b", "c", "x", "y", "z"];
@@ -310,7 +310,7 @@ Algunos trucos útiles con rangos cuando se usan como índices son: las palabras
 
 ```@repl c5
 numeros = [1, 2, 5, 10];
-numeros[end:-1:1] # Serie de números invertida: # cambiar a begin
+numeros[end:-1:begin] # Serie de números invertida:
 # Intercambiar las filas primera y segunda (antes tercera) de `mat`
 mat[1:2,:] = mat[[2,1],:];
 mat
@@ -370,6 +370,10 @@ Además, existen otros tipos de números derivados de los anteriores:
 * Números complejos (`Complex`), compuestos por una parte real y una imaginaria de números que pueden ser enteros (p.ej. `1 + 2im`) o decimales (`1.0 + 0.5im`).
 
 Finalmente, existe un tipo dedicado específicamente a representar el valor exacto de números irracionales (`Irrational`), como π o el número de Euler (ℯ), que funcionan de manera distinta.
+
+!!! warning "Limitaciones con los números enteros"
+
+    El uso de números de tipo entero (como `Int64`) o decimales (`Float64`, etc.) tiene sobre todo implicaciones en la eficiencia de los programas, pero cuando se trabaja con magnitudes muy grandes (del orden de decenas de billones) también se pueden dar problemas de precisión o incluso errores de cálculo, si no se usa el tipo adecuado. Concretamente, con tipos enteros hay un rango más allá del cual se produce un [desbordamiento aritmético](https://es.wikipedia.org/wiki/Desbordamiento_aritm%C3%A9tico); los límites de ese rango pueden consultar con las funciones `typemax` y `typemin` (p.ej. `typemax(Int64)` es el valor 9223372036854775807). Por otro lado, el tipo decimal `Float64` no puede representar todos los números enteros a partir de 2^53 (9007199254740992) --por ejemplo el 9007199254740993 no existe en ese tipo--. Para trabajar con precisión y enteros arbitrariamente altos, se puede usar el tipo `BigInt`.
 
 ### Reglas de conversión entre tipos
 
@@ -527,7 +531,7 @@ Esta situación no ocurre solo al asignar *arrays* explícitamente, como en el e
 Estas situaciones se pueden evitar usando copias de los *arrays* cuando se asignan a distintas variables. Cuando el *array* es un vector, la forma más concisa de hacer una copia del mismo es "subindexando" todos sus elementos, como sigue:
 
 ```@repl c5
-sa = sb[:] # Redefinimos `sa` como un array con los valores de `sb`
+sa = sb[:] # Redefinimos `sa` como un vector con los valores de `sb`
 sa[1] = 1; # Los cambios en `sa`, ya no se aplican a `sb`
 sa
 sb
@@ -581,8 +585,8 @@ fill!(ultima_columna, 0.5)
 matriz
 ```
 
-[^1]: Las [*macros*](https://es.wikipedia.org/wiki/Macro) son un tipo especial de instrucciones que se utilizan como "truco" para generar expresiones más complejas a partir de otras más sencillas. En Julia, las macros se identifican por nombres que comienzan con `@`, como `@view`. Su definición es un tema complejo que no se aborda en esta guía, pero por simplificar se pueden considerar como una especie de funciones, aunque sus argumentos no suelen ser variables sino otras instrucciones. Para más detalles, se puede consultar (en inglés) la [sección sobre macros del manual oficial](https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros-1)
-.
+[^1]: Las [*macros*](https://es.wikipedia.org/wiki/Macro) son un tipo especial de instrucciones que se utilizan como "truco" para generar expresiones más complejas a partir de otras más sencillas. En Julia, las macros se identifican por nombres que comienzan con `@`, como `@view`. Su definición es un tema complejo que no se aborda en esta guía, pero por simplificar se pueden considerar como una especie de funciones, aunque sus argumentos no suelen ser variables sino otras instrucciones. Para más detalles, se puede consultar (en inglés) la [sección sobre macros del manual oficial](https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros-1).
+
 ## Manipulación de las dimensiones
 
 Además del tipo de variables contenidas, los *arrays* tienen unas dimensiones determinadas, por lo que en general no se puede acceder a posiciones fuera de esas dimensiones, ni para leerlas ni para asignarles valores en ellas. En el caso particular de los vectores, sin embargo, hay múltiples funciones para redimensionarlos (sin tener que crear nuevas variables):

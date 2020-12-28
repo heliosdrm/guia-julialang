@@ -103,7 +103,7 @@ Además de comentar el código, también es muy recomendable documentar las func
 
 Para que una construcción no se desmorone es esencial que sus piezas sean robustas --además de que estén bien ensambladas--. Del mismo modo, lo primero para prevenir los fallos de un programa es asegurar que las funciones que emplea son fiables. Los llamados "tests unitarios" son pequeños programas que se escriben para poner a prueba las funciones.
 
-Este tipo de pruebas se suelen hacer de forma espontánea mientras se están definiendo las funciones. Por ejemplo, al comienzo del capítulo tres desarrollamos una función para crear en formato HTML el calendario de un mes cualquiera, basado en la función `gauss_diasemana` comentada arriba y unas cuantas más; y tras definir cada una de ellas se probaba su resultado con un ejemplo particular (el mes de agosto de 2018). Los tests unitarios no son otra cosa que una manera formal, sistemática y más exhaustiva de hacer ese tipo de comprobaciones. En lugar de hacer pruebas informales en el REPL, estas se escriben en un *script* que se guarda para poder repetirlas más adelante, y poder así verificar que las funciones siguen funcionando como se esperaba.
+Este tipo de pruebas se suelen hacer de forma espontánea mientras se están definiendo las funciones. Por ejemplo, al comienzo del capítulo 3 desarrollamos una función para crear en formato HTML el calendario de un mes cualquiera, basado en la función `gauss_diasemana` comentada arriba y unas cuantas más; y tras definir cada una de ellas se probaba su resultado con un ejemplo particular (el mes de agosto de 2018). Los tests unitarios no son otra cosa que una manera formal, sistemática y más exhaustiva de hacer ese tipo de comprobaciones. En lugar de hacer pruebas informales en el REPL, estas se escriben en un *script* que se guarda para poder repetirlas más adelante, y poder así verificar que las funciones siguen funcionando como se esperaba.
 
 !!! note "Test-driven development"
 
@@ -159,7 +159,7 @@ Además, se pueden escribir bloques de pruebas con la macro `@testset`, de tal m
 end
 ```
 
-Julia proporciona varias utilidades más, por ejemplo para verificar si una función se interrumpe con un error o emite *warnings* cuando corresponde, comprobar los tipos de variable que dan como resultado las funciones, etc. Estas utilidades se pueden consultar en la sección del manual oficial sobre el [módulo `Test`](https://docs.julialang.org/en/v1/stdlib/Test/).
+Julia proporciona varias utilidades más, por ejemplo para verificar si una función se interrumpe con un error o emite *warnings* cuando corresponde, comprobar los tipos de variable que dan como resultado las funciones, etc. Estas utilidades se pueden consultar en la documentación oficial sobre el [módulo `Test`](https://docs.julialang.org/en/v1/stdlib/Test/).
 
 ## El paquete Revise
 
@@ -221,7 +221,7 @@ julia> gauss_diasemana(11, 8, 2018)
 
 Lo que hemos hecho antes de llamar a la función `gauss_diasemana` es crear un registro del tipo `ConsoleLogger`, que dirige la información al dispositivo donde se hayan de mostrar los mensajes de diagnóstico (`stderr`, normalmente en pantalla), y que tiene en cuenta todos los registros de tipo `Debug` o de mayor prioridad.[^2] A continuación, se ha configurado el sistema de registro global para usar el que hemos creado. De este modo, al llegar a la línea con la macro `@debug`, se presenta en pantalla la cadena de texto y la variables especificadas --incluyendo el cálculo `div(g, 4)`, al que se le da el nombre `g_4`.
 
-[^2]: El sistema de registro de Julia tiene tres niveles de prioridad, que en orden ascendente son: `Debug` (el de menor prioridad, pensado para desarrolladores), `Info` (información dirigida al usuario), `Warning` (avisos de que puede pasar algo anormal) y `Error` (mensajes de fallos críticos, que normalmente harán que se interrumpa la ejecución del código). Por defecto se muestran los mensajes de nivel `Info` o superiores. Este sistema se describe con detalle en la sección [Logging](https://docs.julialang.org/en/v1/stdlib/Logging/) del manual oficial. 
+[^2]: El sistema de registro de Julia tiene cuatro niveles de prioridad, que en orden ascendente son: `Debug` (el de menor prioridad, pensado para desarrolladores), `Info` (información dirigida al usuario), `Warning` (avisos de que puede pasar algo anormal) y `Error` (mensajes de fallos críticos, que normalmente harán que se interrumpa la ejecución del código). Por defecto se muestran los mensajes de nivel `Info` o superiores. Este sistema se describe con detalle en la sección [Logging](https://docs.julialang.org/en/v1/stdlib/Logging/) del manual oficial. 
 
 El registro que se usa por defecto también es del tipo `ConsoleLogger`, por lo que para volver a la configuración original, que ignora los mensajes de `Debug`, se podría escribir:
 
@@ -268,7 +268,7 @@ debug_logger = SimpleLogger(io, Logging.Debug)
 
     Hay que recordar cerrar el archivo con la instrucción `close(io)` para que los mensajes se queden grabados en él. Además, si se desea utilizar el mismo archivo para registrar distintos conjuntos de mensajes, hay que abrirlos con la opción `"a"` en lugar de `"w"` para que los nuevos mensajes se escriban a continuación de los anteriores, en lugar de sobreescribir el archivo.
 
-## `Infiltrator`
+## Infiltrator
 
 Los registros de mensajes que acabamos de ver son como radiografías que podemos hacer a los programas y funciones para echar un vistazo a su interior. Son una herramienta sencilla y muy eficiente, pero para que resulten útiles hemos de saber dónde buscar y qué información queremos observar. Desafortunadamente muchas veces esto no es así, por lo que a menudo necesitaremos técnicas de *debugging* más flexibles.
 
@@ -370,14 +370,16 @@ Hay dos maneras de desactivar y reactivar el efecto de `@infiltrate` sin redefin
     Tener el paquete Revise en funcionameinto hace más fácil usar Infiltrator: en los *scripts* que se hayan cargado con `includet`, también se pueden activar y desactivar *breakpoints* simplemente escribiendo y borrando las líneas con `@infiltrate`, respectivamente.
     
 
-## *Debuggers* interactivos
+## *Debuggers* dinámicos
 
-Cuando queremos investigar el funcionamiento de un programa, pero los puntos críticos no están bien definidos desde un principio o pueden ir cambiando de un caso a otro, lo que necesitamos es un *debugger* interactivo, que ofrece mayor flexibilidad para detener la función en distintos lugares, en lugar de puntos fijos como hemos visto con las herramientas anteriores.
+Cuando queremos investigar el funcionamiento de un programa, pero los puntos críticos no están bien definidos desde un principio o pueden ir cambiando de un caso a otro, lo que necesitamos es un *debugger* dinámico, que ofrece mayor flexibilidad para detener la función en distintos lugares, en lugar de puntos fijos como hemos visto con las herramientas anteriores.
 
-El paquete [Debugger](https://github.com/JuliaDebug/Debugger.jl) permite depurar un programa de este modo a través del REPL. Si se ejecuta una expresión precedida de la macro `@enter`, su ejecución se detendrá en la primera lína de código, en un modo *debug* muy semejante al que se ha visto con Infiltrator, pero con dos diferencias importantes
+El paquete [Debugger](https://github.com/JuliaDebug/Debugger.jl) permite depurar un programa de este modo a través del REPL.[^6] Si se ejecuta una expresión precedida de la macro `@enter`, su ejecución se detendrá en la primera lína de código, en un modo *debug* muy semejante al que se ha visto con Infiltrator, pero con dos diferencias importantes:
 
 * Además de hacer operaciones en ese mismo punto del código, se pueden ejecutar instrucciones para detenerse en la siguiente línea, dentro de funciones a las que se llama, etc. (véanse los detalles en la página web del paquete). 
 * Esta mayor libertad tiene un precio: para poder detener el programa de forma arbitraria en cualquier punto del código hay que renunciar a compilarlo, lo que en general hará que funcione más lento; a veces *mucho* más lento.
+
+[^6]: La versión de Debugger considerada en este texto la v0.6.
 
 También es posible hacer avanzar el programa y detenerse en un punto arbitrario, añadiendo *breakpoints*. Pero en este caso disponemos de múltiples formas de definir los *breakpoints*:
 

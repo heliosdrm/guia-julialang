@@ -127,6 +127,10 @@ julia> numeros[7] = 10  # Esto también, porque el vector solo tenía 6 elemento
 ERROR: BoundsError: attempt to access 6-element Array{Int64,1} at index [7]
 ```
 
+!!! note "Tipos de números"
+
+    Como se ha mostrado en el ejemplo anterior, en Julia no es lo mismo un número entero (p.ej. `5`) que uno decimal (`5.0`), aunque representen el mismo valor. Véase la sección sobre [Tipos de elementos](@ref) en el capítulo 5 para más detalles y precauciones que hay que tomar al respecto. 
+
 La lectura y asignación de valores se puede hacer elemento a elemento, o también sobre varios elementos a la vez, utilizando un "vector de índices" para referirse a los elementos de interés. Para abreviar, un rango de índices correlativos se puede expresar como `a:b`, que significa "desde `a` hasta `b`.
 
 Por ejemplo, estas son dos formas alternativas para extraer los tres primeros números del vector `primos`:

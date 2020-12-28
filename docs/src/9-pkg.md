@@ -1,6 +1,6 @@
 # Capítulo 9. Gestión de paquetes
 
-Si comparamos los lenguajes de programación con los lenguajes naturales, se podría decir que a lo largo de esta guía se han tratado los elementos esenciales de la "gramática" de Julia, con los que se podría construir cualquier programa. Una vez dominada esta gramática, lo siguiente que hace falta para un uso fluido del lenguaje es conocer más "vocabulario" (principalmente funciones), que sirvan para expresar las ideas (operaciones) necesarias.
+Si comparamos los lenguajes de programación con los lenguajes naturales, se podría decir que hasta el presente punto de esta guía se han tratado los elementos esenciales de la "gramática" de Julia, con los que se podría construir cualquier programa. Una vez dominada esta gramática, lo siguiente que hace falta para un uso fluido del lenguaje es conocer más "vocabulario" (principalmente funciones y otros tipos de variables), que sirvan para expresar las ideas (operaciones) necesarias.
 
 En la [documentación oficial](https://docs.julialang.org/en/stable/) se puede encontrar la lista completa de las funciones y otros elementos disponibles en el [módulo base](https://docs.julialang.org/en/v1/base/base/), así como en los múltiples módulos de la "biblioteca estándar" (sección *Standard Library* del manual). Esos módulos incluyen algunos de los que se han usado en esta guía, como [`DelimitedFiles`](https://docs.julialang.org/en/v1/stdlib/DelimitedFiles/), [`LinearAlgebra`](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/), [`Statistics`](https://docs.julialang.org/en/v1/stdlib/Statistics/), [`Random`](https://docs.julialang.org/en/v1/stdlib/Random/), [`Dates`](https://docs.julialang.org/en/v1/stdlib/Dates/) o [`Printf`](https://docs.julialang.org/en/v1/stdlib/Printf/).
 
@@ -14,14 +14,14 @@ La mayoría de paquetes para Julia están creados por la comunidad de usuarios, 
 
 !!! note "¿Son fiables los paquets de terceros?"
 
-    El Registro General es un repositorio de uso público, es decir que cualquier usuario puede proponer paquetes para ser incluidos en él, siempre que cumplan ciertas reglas para que se pueda instalar de forma segura. No se hace, sin embargo, ninguna revisión de la funcionalidad de los paquetes. Por lo tanto, el hecho de que un paquete esté en ese registro no garantiza que funcione correctamente. Para saber qué paquetes son más recomendables, lo mejor es guiarse por las valoraciones de los usuarios. Los servicios de búsqueda citados incluyen una métrica de popularidad en forma de "estrellas" concedidas por la comunidad de usuarios. 
+    El Registro General es un repositorio de uso público, es decir que cualquier usuario puede proponer paquetes para ser incluidos en él, siempre que cumplan ciertas reglas para que se puedan instalar de forma segura. No se hace, sin embargo, ninguna revisión de la funcionalidad de los paquetes. Por lo tanto, el hecho de que un paquete esté en ese registro no garantiza que funcione correctamente. Para saber qué paquetes son más recomendables, lo mejor es guiarse por las valoraciones de los usuarios. Los servicios de búsqueda citados incluyen una métrica de popularidad en forma de "estrellas" concedidas por la comunidad de usuarios. 
      
 [^1]: Los usuarios de [JuliaPro](https://juliacomputing.com/products/juliapro.html) tienen también acceso a un repositorio de paquetes basado en el Registro General, pero con un mayor control sobre los contenidos y documentación de los paquetes.
 
 
 ## Instalación y eliminación de paquetes y sus dependencias
 
-Como ya se explicó en el [capítulo 1](1-primerospasos.md#pkg), la gestión de paquetes se hace habitualmente desde el modo de "gestor de paquetes" del REPL, que se activa introduciendo el símbolo `]` al comienzo de una instrucción. Al hacerlo, la etiqueta del REPL cambia de `julia>` a `pkg (vX)>`, donde `X` es el número de versión de Julia. Para volver al modo normal, basta pulsar la tecla de borrar antes de escribir ninguna instrucción. En los ejemplos que siguen, el modo de gestión de paquetes se distinguirá igualmente por la etiqueta `pkg>` al principio de la línea. Las instrucciones para este modo que se mencionen a lo largo del texto irán precedidas por el símbolo `]` para distinguirlas.
+Como ya se explicó en el [capítulo 1](1-primerospasos.md#pkg), la gestión de paquetes se hace habitualmente desde el modo de "gestor de paquetes" del REPL, que se activa introduciendo el símbolo `]` al comienzo de una instrucción. Al hacerlo, la etiqueta del REPL cambia de `julia>` a `pkg (@vX)>`, donde `X` es el número de versión de Julia. Para volver al modo normal, basta pulsar la tecla de borrar antes de escribir ninguna instrucción. En los ejemplos que siguen, el modo de gestión de paquetes se distinguirá igualmente por la etiqueta `pkg>` al principio de la línea. Las instrucciones para este modo que se mencionen a lo largo del texto irán precedidas por el símbolo `]` para distinguirlas.
 
 Todos los comandos el el "modo pkg" se corresponden con una función del módulo `Pkg`, que se puede usar para programar las acciones en un *script* de Julia. Así pues, por ejemplo para instalar el paquete `CSV` valdrían igualmente las siguientes instrucciones (primero en el modo de gestor de paquetes, y luego en el modo normal de Julia):
 
@@ -39,19 +39,19 @@ En el momento en el que se instala un paquete, la consola comienza a poblarse de
 
 ![Figure 1](assets/pkgadd.png)
 
-Esto ocurre porque en Julia, como en muchos otros lenguajes de programación, los paquetes que añaden nuevas funcionalidades forman un "ecosistema" con una compleja red de dependencias entre ellos. Así, por ejemplo, un paquete como `CSV` que sirve para grabar tablas de datos en archivos de texto estructurados, o crear las tablas a partir de ese tipo de archivos, emplea las utilidades de otros paquetes que definen tipos de tablas de datos (`DataFrames`, `Tables`), algunos que facilitan la conversión de texto a otro tipo de valores (`Parsers`, `WeakRefStrings`), etc. Y estos a su vez utilizan funcionalidades de otros paquetes, y así se forma un árbol de dependencias, que habitualmente abarca decenas de paquetes.
+Esto ocurre porque en Julia, como en muchos otros lenguajes de programación, los paquetes que añaden nuevas funcionalidades forman un "ecosistema" con una compleja red de dependencias entre ellos. Así, por ejemplo, un paquete como `CSV` que sirve para grabar tablas de datos en archivos de texto estructurados, o crear las tablas a partir de ese tipo de archivos, emplea las utilidades de otros paquetes que definen tipos de tablas de datos (p.ej. `Tables`), algunos que facilitan la conversión de texto a otro tipo de valores (`Parsers`), etc. Y estos a su vez utilizan funcionalidades de otros paquetes, y así se forma un árbol de dependencias, que habitualmente abarca decenas de paquetes.
 
 Para facilitar el proceso de instalación, todas las dependencias directas e indirectas se descargan y se instalan automáticamente. Los mensajes mostrados en pantalla reflejan los paquetes que se han instalado o modificado a causa de esas relaciones de dependencia.
 
-Es importante tener en cuenta que, aunque al añadir un paquete se instalen todas sus dependencias, solo se permite cargar con `using` aquellos que se han instalado explícitamente. Por ejemplo, con `]add CSV` se instalan tanto el paquete `CSV` como todas sus dependencias, pero aunque `DataFrames` sea una de ellas, la instrucción `using DataFrames` no funcionará salvo que antes se ejecute también `]add DataFrames`.
+Es importante tener en cuenta que, aunque al añadir un paquete se instalen todas sus dependencias, solo se permite cargar con `using` aquellos que se han instalado explícitamente. Por ejemplo, con `]add Plots` se instalan tanto el paquete `Plots` como todas sus dependencias, pero aunque `JSON` sea una de ellas, la instrucción `using JSON` no funcionará salvo que antes se ejecute también `]add JSON`.
 
 Para verificar qué paquetes se han instalado explícitamente y están disponibles para usar, se puede ejecutar el comando `]status` (o de forma abreviada, `]st`).
 
-También se pueden quitar paquetes que ya no se consideren necesarios, mediante `]remove` o `]rm`. Por ejemplo, si se ha instalado el paquete `CSV`, para eliminarlo valdría cualquiera de las dos siguientes instrucciones:
+También se pueden quitar paquetes que ya no se consideren necesarios, mediante `]remove` o `]rm`. Por ejemplo, si se ha instalado el paquete `Plots`, para eliminarlo valdría cualquiera de las dos siguientes instrucciones:
 
 ```julia-remove
-pkg> remove CSV
-pkg> rm CSV
+pkg> remove Plots
+pkg> rm Plots
 ```
 
 Esta acción hace que el paquete ya no esté disponible (no se mostrará con `]status`), pero no borra necesariamente los archivos de su instalación, ya que en principio puede servir de dependencia para otros paquetes. Para desinstalar paquetes completamente y liberar espacio de disco se puede ejecutar `]gc` (de las siglas en inglés *garbage collector*, "retirada de basura"). Esta operación revisa si hay paquetes instalados que no se usen, directa o indirectamente, en ningún proyecto de Julia usado en ese ordenador, y si se da el caso los borra del sistema.
@@ -109,7 +109,7 @@ pkg (estudio1)>
 
 Si se quiere volver al entorno por defecto, basta con ejecutar `]activate` sin ningúna ruta a continuación.
 
-Cuando se activa un entorno por primera vez, este está "limpio" de paquetes, como si se estuviese trabajando con una instalación nueva de Julia. Para trabajar con cualquier paquete externo hay que añadirlo de la forma habitual, con `]add`, etc. La instalación de paquetes en un entorno nuevo no duplica los archivos descargados o instalados en el sistema; únicamente crea dos archivos de texto en el directorio del entorno:
+Cuando se activa un entorno por primera vez, este está "limpio" de paquetes, como si se estuviese trabajando con una instalación nueva de Julia. Para trabajar con cualquier paquete externo hay que añadirlo de la forma habitual, con `]add`, etc. La instalación de paquetes en un entorno nuevo no duplica los archivos descargados o instalados en el sistema; únicamente edita dos archivos de texto en el directorio del entorno:
 
 * `Project.toml`. Este archivo contiene la lista de paquetes que se han añadido explicitamente al entorno, es decir los que se podrán cargar con el comando `using` mientras se esté trabajando en ese entorno.
 * `Manifest.tom`. Contiene una lista completa de todos los paquetes necesarios para trabajar en el entorno, incluyendo los listados en `Project.toml` y todas sus dependencias directas e indirectas. Además, para cada paquete señala su lista de dependencias directas y la versión que se cargará en el entorno.
@@ -129,6 +129,9 @@ Es muy recomendable trabajar siempre de este modo, con un entorno distinto para 
 
 El entorno por defecto, que se activa al inicio de cada sesión de Julia, tiende a ser un terreno de pruebas, en el que se van acumulando los distintos paquetes que se instalan, a veces antes de decidir su uso definitivo en los proyectos en curso. Esta práctica hace proliferar incompatibilidades, por lo que algunos paquetes en el entorno por defecto se quedan bloqueados en versiones antiguas, y otros no se pueden añadir. Así pues, es preferible mantener razonablemente limpio el entorno por defecto, y tener algún directorio reservado para las pruebas, que llegado el caso de problemas se puede "resetear" borrando los archivos `Project.toml` y `Manifest.toml`.
 
+!!! note "Entornos en VS Code"
+
+    Si se trabaja en VS Code con la extensión de Julia, y la carpeta del proyecto activo contiene un archivo `Project.toml`, el entorno por defecto se convierte automáticamente en esa carpeta de proyecto, lo que facilita trabajar del modo recomendado.
 
 !!! warning "Problema de alternar entre entornos"
 
@@ -163,9 +166,9 @@ En general solo conviene hacer esto con módulos de la biblioteca estándar. Sal
 
 ## Conflictos con nombres de funciones
 
-Al cargar un módulo estándar o un paquete con el comando `using`, los nombres de las funciones y otros objetos "exportados" pasan a ser utilizables directamente, como ocurre con `readdlm` al cargar `DelimitedFiles`, `plot` de `Plots`, etc. Por otro lado, los paquetes generalmente contienen muchas otras funciones y objetos que no se exportan; la mayoría suelen ser elementos "internos", es decir, que no están pensados para que el usuario que carga el paquete los use habitualmente, pero no siempre es así. Por ejemplo, la función `read` del paquete `CSV` no está exportada, y por eso para leer archivos con ese paquete hay que llamarla como `CSV.read`.
+Al cargar un módulo estándar o un paquete con el comando `using`, los nombres de las funciones y otros objetos "exportados" pasan a ser utilizables directamente, como ocurre con `readdlm` al cargar `DelimitedFiles`, `plot` de `Plots`, etc. Por otro lado, los paquetes generalmente contienen muchas otras funciones y objetos que no se exportan; la mayoría suelen ser elementos "internos", es decir, que no están pensados para que el usuario que carga el paquete los use habitualmente, pero no siempre es así. Por ejemplo, la función `File` del paquete `CSV` no está exportada, y por eso para leer archivos con ese paquete hay que llamarla como `CSV.File`.
 
-Esto es conveniente en el caso de funciones cuyo nombre sea muy genérico, de tal manera que puedan entrar en conflicto con funciones distintas de otros paquetes.[^3] Si por ejemplo en la misma sesión se carga el paquete `Plots` y también `Plots`, al usar la función `plot` ocurre esto:
+Esto es conveniente en el caso de funciones cuyo nombre sea muy genérico, de tal manera que puedan entrar en conflicto con funciones distintas de otros paquetes.[^3] Si por ejemplo en la misma sesión se carga el paquete `Plots` y también `PyPlot`, al usar la función `plot` ocurre esto:
 
 ```julia-repl
 julia> using Plots, PyPlot

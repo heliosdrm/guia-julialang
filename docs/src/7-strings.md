@@ -2,7 +2,7 @@
 
 Las cadenas de texto, conocidas en inglés como *strings*, son un tipo de variable con el que hay que trabajar en casi cualquier proyecto, aunque sea simplemente porque son la forma habitual de identificar los archivos desde los que se leen los datos y en los que se guardan los resultados. Además, hay muchos casos en los que la información a procesar es de tipo textual.
 
-Julia tiene numerosas herramientas y funciones para trabajar con cadenas de texto, de las cuales ya hemos usado algunas en capítulos anteriores, como la concatenación de cadenas, interpolación de variables, secuencias de escape, etc. En este capítulo vamos a ver más detalles sobre estas y otras utilidades más avanzadas para trabajar con cadenas de texto, transformarlas, extraer partes de ellas, etc.
+Julia tiene numerosas herramientas y funciones para trabajar con cadenas de texto, de las cuales ya hemos usado algunas en capítulos anteriores, como la concatenación de textos, interpolación de variables o secuencias de escape. En este capítulo vamos a ver más detalles sobre estas y otras utilidades más avanzadas para trabajar con cadenas de texto, transformarlas, extraer partes de ellas, etc.
 
 ## Representación textual de variables
 
@@ -38,10 +38,10 @@ string(round(numero, sigdigits=5))
 string(trunc(numero, sigdigits=5))
 ```
 
-Alternativamente, se puede emplear la "notación compacta" que se muestra en el REPL cuando el contexto requiere acortar los números decimales (por ejemplo, los números dentro de un vector):
+Alternativamente, se puede emplear la "notación compacta" que se muestra en el REPL cuando el contexto requiere acortar los números decimales (por ejemplo, los números dentro de una matriz):
 
 ```@repl c7
-[numero, numero]
+[numero numero]
 ```
 
 Así como la función `string` se usa para crear una cadena con la representación canónica de una variable, la forma exacta presentada en el REPL se puede obtener con la función `repr`. Y la notación compacta se puede forzar definiendo el contexto como `:compact=>true`: 

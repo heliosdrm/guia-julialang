@@ -45,32 +45,35 @@ Otros cálculos no tienen una función predefinida, y tendríamos que crearla *a
 mapslices(x -> sum(x.^2), matriz, dims=1)
 ```
 
-Es habitual que el código de las funciones anónimas sea suficientemente sencillo como para condensarlo en una expresión corta, como es este caso. Pero también podría tratarse de un código algo más largo, que incluso ocupe varias líneas. Pongamos, por ejemplo, que quisiéramos calcular la suma de cuadrados de las columnas, pero sustrayendo el valor medio cuando este es más pequeño que el menor de los valores individuales.
+Es habitual que el código de las funciones anónimas sea suficientemente sencillo como para condensarlo en una expresión corta, como es este caso. Pero también podría tratarse de un código algo más largo, que incluso ocupe varias líneas. Pongamos, por ejemplo, que quisiéramos calcular para cada columna la suma de cuadrados solo hasta el primer valor negativo (excluyendo ese valor y todos los que siguen).
 
 Para poner varias líneas de código en una sola expresión, estas se pueden delimitar con las palabras claves `begin` y `end`, de modo que la función anónima para el cálculo mencionado podría ser:
 
 ```julia
 x -> begin
-    media = mean(x)
-    if abs(x) < minimum(abs.(s))
-        return sum((x .- media).^2)
-    else
-        return sum(x.^2)
+    resultado = zero(eltype(x))
+    for v = x
+        if v < 0
+            break
+        end
+        resultado += v^2
     end
+    return resultado
 end
 ```
 
 Sin embargo, escribir ese código como argumento de entrada a `mapslices` no resultaría muy práctico. Por esta razón, Julia facilita una forma cómoda de pasar funciones anónimas complejas, cuando estas ocupan el primer argumento de otra función, como es el caso. Consiste en escribir el código de la función anónima *después* de la función que la utiliza, tras la palabra `do` y el nombre de los argumentos de entrada. El ejemplo anterior tomaría esta forma:
 
 ```@repl c8
-using Statistics
 mapslices(matriz, dims=1) do x
-    media = mean(x)
-    if abs(media) < minimum(abs.(x))
-        return sum((x .- media).^2)
-    else
-        return sum(x.^2)
+    resultado = zero(eltype(x))
+    for v = x
+        if v < 0
+            break
+        end
+        resultado += v^2
     end
+    return resultado
 end
 ```
 
@@ -93,21 +96,23 @@ sumadecuadrados = x -> sum(x.^2)
 
 ## Expresiones `let`
 
-Aunque no se trata realmente de funciones, las expresiones `let` son estructuras de código que se comportan de forma semejante a funciones anónimas "de usar y tirar". Por ejemplo, para calcular la suma de cuadrados con media ajustada que hemos definido antes, aplicándola específicamente al vector `[1,2,3]`, podríamos escribir:
+Aunque no se trata realmente de funciones, las expresiones `let` son estructuras de código que se comportan de forma semejante a funciones anónimas "de usar y tirar". Por ejemplo, para calcular la suma de cuadrados modificada que hemos definido antes, aplicándola específicamente al vector `[1,2,-3]`, podríamos escribir:
 
 
 ```@repl c8
-resultado = let (x = [1,2,3])
-    media = mean(x)
-    if abs(media) < minimum(abs.(x))
-        return sum((x .- media).^2)
-    else
-        return sum(x.^2)
+y = let (x = [1, 2, -3])
+    resultado = zero(eltype(x))
+    for v = x
+        if v < 0
+            break
+        end
+        resultado += v^2
     end
+    resultado
 end
 ```
 
-Este bloque de código es equivalente a declarar: "define la variable `resultado` del siguiente modo: tomando una variable `x = [1,2,3]`, calcula su media, y en función de su valor calcula la suma de cuadrdos de `x` o la suma de cuadrados de `x` menos la media".
+Este bloque de código es equivalente a declarar: "define la variable `y` del siguiente modo: tomando una variable `x = [1,2,-3]`, suma progresivamente los cuadrados de sus elementos hasta que se encuentre un número negativo".
 
 Una diferencia entre las expresiones `let` y las funciones es que el código de las primeras se ejecuta en el mismo punto en el que se define --y por lo tanto siempre es necesario proporcionarle un valor a los "argumentos" (las variables que se declaran justo después de la palabra `let`)--. Por otro lado, al no ser realmente una función, no se debe usar `return` para devolver el resultado de la expresión; el valor devuelto es siempre el que se calcula en la última línea del bloque.
 
@@ -118,7 +123,7 @@ En este sentido, los bloques `let` también se parecen a las expresiones compues
 
 Una misma función puede hacer cosas distintas, según los argumentos que se le pasen. A cada variante de una función se le llama un "método" de la misma, y en Julia es muy habitual que las funciones tengan más de un método.
 
-De hecho, cuando se define una función con argumentos opcionales, se están definiendo distintos métodos de la misma (uno que requiere que se le pasen todos los argumentos, otro que no requiere ninguno, etc.). Así, consideremos por ejemplo la siguiente función para incrementar el valor de un número, usando la unidad como incremento por defecto:
+De hecho, cuando se define una función con argumentos opcionales, se están definiendo distintos métodos de la misma (uno que requiere que se le pasen todos los argumentos, otro que no requiere ninguno de los opcionales, etc.). Así, consideremos por ejemplo la siguiente función para incrementar el valor de un número, usando la unidad como incremento por defecto:
 
 ```@repl
 incrementar(x, inc=1) = x + inc
@@ -128,7 +133,7 @@ La descripción de esta función `incrementar` señala que tiene dos métodos, p
 
 ```julia
 incrementar(x, inc) = x + inc
-incrementar(x) = x + 1function incrementar(x, inc)
+incrementar(x) = x + 1
 ```
 
 Los métodos de una función también pueden tratar de forma completamente diferente los distintos argumentos que se le pasan. Por ejemplo, en el primer capítulo presentamos la función [`gauss_diasemana`](1-primerospasos.md#gauss_diasemana) para determinar el día de la semana que corresponde a una fecha determinada, dada por los números del día, el mes y el año:
@@ -190,7 +195,7 @@ Algunos lenguajes de programación como C, Java y similares, requieren que al de
 
 Por ese motivo, las personas con experiencia en esos lenguajes de programación pueden sentirse inclinadas a anotar los tipos de todos los argumentos en las funciones de Julia. Sin embargo, hay que insistir en que esto no es necesario, y ni siquiera deseable. Como se ha señalado arriba, es bueno usar métodos genéricos, pues resultan más flexibles y fáciles de extender que los que son muy específicos. Y omitir los tipos de variables requeridos por los métodos no significa que el código no se pueda compilar tal como se hace en C, Java, etc.
 
-De hecho, a bajo nivel Julia genera un código distinto y específico para cada combinación concreta de tipos de argumentos, se hayan definido estos de forma genérica o no. Por ejemplo, si una función es declarada como `f(a, b)`, Julia generá un código determinado para el caso en que tanto `a` como `b` sean números de tipo `Int`, otro cuando `a` sea un `Int` y `b` un `Float64`, un distinto cuando `a` sea un `String`... y así para cualquier combinación de dos tipos que pueda ser procesada por las instrucciones escritas en la función.
+De hecho, a bajo nivel Julia genera un código distinto y específico para cada combinación concreta de tipos de argumentos, se hayan definido estos de forma genérica o no. Por ejemplo, si una función es declarada como `f(a, b)`, Julia generá un código determinado para el caso en que tanto `a` como `b` sean números de tipo `Int`, otro cuando `a` sea un `Int` y `b` un `Float64`, uno distinto cuando `a` sea un `String`... y así para cualquier combinación de dos tipos que pueda ser procesada por las instrucciones escritas en la función.
 
 Como las combinaciones posibles de tipos de argumentos (que potencialmente son infinitas) no pueden determinarse a priori, esta interpretación del código se hace "a demanda", cada vez que se llama a la función `f` con una combinación nueva de tipos para `a` y `b`. Pongamos que en una sesión de Julia ya se ha utilizado `f` con dos argumentos de tipo `Int`. Esto sería como si se hubiera definido un método `f(a::Int, b::Int)`, de tal manera que si se vuelve a llamar a `f` con otros dos argumentos del mismo tipo (aunque sea con otros valores), ese método ya estaría disponible para su uso directo.[^2]
 
@@ -397,9 +402,9 @@ Dentro de una función este código funcionaría sin problemas, pero cuando trab
 
 Según las reglas presentadas arriba, esto haría que `fib` y `fib1` se considerasen variables distintas dentro y fuera del bucle, y el código no funcionaría como dentro de una función. Pero como se trata de una situación habitual al trabajar de forma interactiva, en el REPL se hace una excepción y las reglas se cambian para que el comportamiento del código sea más parecido a lo que ocurre dentro de una función.
 
-Concretamente, en un caso como este se asume que `fib` y `fib1` dentro del bucle hacen referencia a las variables globales del mismo nombre, aunque se redefinan en el código del contexto local --mostrando un *warning* para avisar de la posible inconsistencia--. Esta excepcional inversión de las reglas facilita que se pueda "copiar y pegar" código de la REPL al interior de las funciones, a pesar de que los contextos sean distintos.
+Concretamente, en un caso como este se asume que `fib` y `fib1` dentro del bucle hacen referencia a las variables globales del mismo nombre, aunque se redefinan en el código del contexto local --mostrando un *warning* para avisar de la posible inconsistencia--. Esta excepcional inversión de las reglas facilita que se pueda "copiar y pegar" código del REPL al interior de las funciones, a pesar de que los contextos sean distintos.
 
-!!! warning "Diferencias entre versiones de Julia"
+!!! note "Diferencias entre versiones de Julia"
 
     Esta regla especial para facilitar el uso de bucles en el REPL se introdujo en la versión 1.5 de Julia. En versiones anteriores, entre la 1.0 y la 1.4, habría que declarar explícitamente a `fib` y `fib1` como `global` dentro del bucle.
 
