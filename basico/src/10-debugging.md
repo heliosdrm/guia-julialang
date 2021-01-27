@@ -1,6 +1,6 @@
 # Capítulo 10. Detección y depuración de errores
 
-Los errores son inevitables a la hora de desarrollar un programa, hasta el punto que la estrategia más eficaz para prevenirlos no es tanto evitar que ocurran, sino intentar detectarlos corregirlos rápidamente. En el último capítulo de esta guía vamos a ver algunas buenas prácticas y herramientas que facilitan esta tarea, tratando de evitar algunos pasos en falso y atolladeros comunes.
+Los errores son inevitables a la hora de desarrollar un programa, hasta el punto que la estrategia más eficaz para prevenirlos no es tanto evitar que ocurran, sino intentar detectarlos y corregirlos rápidamente. En el último capítulo de esta guía vamos a ver algunas buenas prácticas y herramientas que facilitan esta tarea, tratando de evitar algunos pasos en falso y atolladeros comunes.
 
 ## Tipos de errores
 
@@ -8,7 +8,7 @@ Comencemos por ver los tres tipos de errores más comunes con los que nos solemo
 
 **Errores de código**. Con este tipo de errores nos referimos a los fallos cometidos por confusiones en los nombres de funciones o variables, por escoger las operaciones que no tocan, definir de forma incorrecta bucles o condiciones, etc. En la mayoría de casos estos fallos provocan errores sistemáticos, interrupciones del programa o resultados inesperados en los primeros intentos de uso, lo que facilita su detección.
 
-**Errores ocasionales**. Consisten en el típico *bug* que hace fallar misteriosamente un programa que parecía funcionar bien. A menudo son más difíciles de detectar, porque no siempre aparecen de forma sistemática. Suelen darse al usar datos que no cumplen alguna hipótesis implícita en el diseño del programa, que producen valores singulares, resultados fuera de rango, bucles infinitos, etc. A veces no dependen solo de los datos de entrada, sino incluso de las operaciones que se hayan hecho antes.
+**Errores ocasionales**. Consisten en el típico *bug* que hace fallar misteriosamente un programa que parecía funcionar bien. A menudo son más difíciles de detectar, porque no siempre aparecen de forma sistemática. Suelen darse al usar datos que no cumplen alguna hipótesis implícita en el diseño del programa, que producen valores singulares, resultados fuera de rango, bucles infinitos, etc. A veces no dependen solo de los datos de entrada, sino también de las operaciones que se hayan hecho antes.
 
 **Errores por cambio de versión**. El programa funcionaba perfectamente, pero después de una actualización del sistema o de los paquetes, deja de hacerlo. Es un tipo de error muy frustrante, pero afortunadamente fácil de detectar, y en el caso de Julia también es fácil de prevenir gracias al sistema de [entornos por proyectos](9-pkg.md#Trabajar-por-proyectos-1).
 
@@ -41,7 +41,7 @@ Cuando se comienza a trabajar en un proyecto con datos que se han de procesar o 
 
 Las funciones, por otro lado, están pensadas para un flujo de trabajo mucho más sistemático, con una secuencia de operaciones concreta aplicadas a un conjunto cerrado de variables, que se van generando y modificando conforme a un guión predefinido. Esto podría hacer pensar que no vale la pena crear funciones hasta que los algoritmos a emplear en el proyecto estén suficientemente claros, o al menos hasta que se hayan definido rutinas lo suficientemente largas y repetitivas como para que guardar el código de la función suponga un ahorro de trabajo significativo.
 
-Sin embargo, en general es ventajoso empezar a encapsular el código en pequeñas funciones desde casi el principio. En Julia se recomienda definir funciones sencillas porque así es más fácil asegurar la [estabilidad de tipos](8-funciones-avanzado.md#estabilidad-de-tipos), lo que permite que se compilen de forma óptima y se ejecuten más rápido. Pero otra ventaja muy importante, que además es común a todos los lenguajes de programación, es que encapsular secuencias de operaciones en funciones hace que los pasos realizados durante el análisis, incluso en las primeras fases exploratorias, sean más repetibles y menos propensos a errores. Además, esto permite que el código sea más conciso, más modular y fácil de leer y entender posteriormente por el propio autor o por otros.
+Sin embargo, en general es ventajoso empezar a encapsular el código en pequeñas funciones desde casi el principio. En Julia se recomienda definir funciones sencillas porque así es más fácil asegurar la [estabilidad de tipos](8-funciones-avanzado.md#Estabilidad-de-tipos), lo que permite que se compilen de forma óptima y se ejecuten más rápido. Pero otra ventaja muy importante, que además es común a todos los lenguajes de programación, es que encapsular secuencias de operaciones en funciones hace que los pasos realizados durante el análisis, incluso en las primeras fases exploratorias, sean más repetibles y menos propensos a errores. Además, esto permite que el código sea más conciso, más modular y fácil de leer y entender posteriormente por el propio autor o por otros.
 
 Las funciones sencillas también facilitan el uso de tests unitarios y las herramientas de *debugging*, que se comentan en secciones posteriores como estrategias para prevenir y arreglar errores en los programas.
 
@@ -97,7 +97,7 @@ function gauss_diasemana(d, m, y)
 end
 ```
 
-Además de comentar el código, también es muy recomendable documentar las funciones mediante *[docstrings](3-funciones-control.md#docstring)*. Los *docstrings* son especialmente útiles porque no hace falta ir al código fuente para leerlos, sino que se muestran cuando se consulta la ayuda de la función. Si las funciones están bien documentadas, es mucho más fácil asegurarse de que se usan correctamente o detectar errores debidos a un mal uso de las mismas.
+Además de comentar el código, también es muy recomendable documentar las funciones mediante *[docstrings](3-funciones-control.md#Docstring)*. Los *docstrings* son especialmente útiles porque no hace falta ir al código fuente para leerlos, sino que se muestran cuando se consulta la ayuda de la función. Si las funciones están bien documentadas, es mucho más fácil asegurarse de que se usan correctamente o detectar errores debidos a un mal uso de las mismas.
 
 ## Tests unitarios
 
@@ -130,7 +130,7 @@ a2, b2 = 5, -2;
 @assert resto(a2, b2) < min(a2, b1) "el resto no es más pequeño que el argumento menor"
 ```
 
-Para hacer este tipo de pruebas, después de `@assert` siempre ha de escribirse una expresión que de como resultado el valor `true` o `false`. Si el resultado es `true`, el *script* continúa sin más, pero si es `false` se emite un error de tipo `AssertionError`, con el mensaje escrito como cadena de texto después de la condición. (Ese texto opcional, de tal modo que si se omite el mensaje de error simplemente reproduce la condición.)
+Para hacer este tipo de pruebas, después de `@assert` siempre ha de escribirse una expresión que dé como resultado el valor `true` o `false`. Si el resultado es `true`, el *script* continúa sin más, pero si es `false` se emite un error de tipo `AssertionError`, con el mensaje escrito como cadena de texto después de la condición. (Ese texto es opcional, de tal modo que si se omite, el mensaje de error simplemente reproduce la condición.)
 
 Además de la macro `@assert`, Julia también tiene el módulo `Test` en la biblioteca estándar, que proporciona más utlidades para hacer tests unitarios. La principal es la macro `@test`, que funciona como `@assert`, pero no admite el texto de error personalizado, y muestra información más explícita sobre el resultado de la prueba, tanto si se pasa como si no:
 
@@ -363,7 +363,7 @@ Hay dos maneras de desactivar y reactivar el efecto de `@infiltrate` sin redefin
 
 !!! note "No dejes las líneas con `@infiltrate` al terminar"
 
-    Aunque la macro `@infiltrate` nos proporciona una posibilidad de interacción que no tiene `@debug`, una desventaja frente a la macro más simple es que depende de un paquete externo. Así, si en un programa dejamos una línea con `@debug`, este se podría ejecutar sin problemas cuando no estemos depurándolo; pero si dejamos la macro `@infiltrate` en el código, en una sesión de Julia posterior el programa fallaría si no se carga el paquete Infiltrator con antelación. Así que cuando se use esta herramienta, es importante acordarse de borrar las líneas con `@infiltrate` cuando se haya acabod de hacer la depuración.
+    Aunque la macro `@infiltrate` nos proporciona una posibilidad de interacción que no tiene `@debug`, una desventaja frente a la macro más simple es que depende de un paquete externo. Así, si en un programa dejamos una línea con `@debug`, este se podría ejecutar sin problemas cuando no estemos depurándolo; pero si dejamos la macro `@infiltrate` en el código, en una sesión de Julia posterior el programa fallaría si no se carga el paquete Infiltrator con antelación. Así que cuando se use esta herramienta, es importante acordarse de borrar las líneas con `@infiltrate` cuando se haya acabado de hacer la depuración.
     
 !!! tip "Infiltrator y Revise"
 
@@ -385,15 +385,15 @@ También es posible hacer avanzar el programa y detenerse en un punto arbitrario
 
 * Añadiendo al código la macro `@bp` en la línea correspondiente. Como ocurre con Infiltrator, esta forma de añadir *breakpoints* hace que el programa solo se pueda usar si se tiene cargado el paquete Debugger.
 * La función `breakpoint(f, n)` añade un *breakpoint* en el archivo de código o la función con el nombre `f`, en la línea `n`. Ese *breakpoint* no altera el código original, y solo está disponible en la sesión presente. Si el *breakpoint* se asigna a una variable (`b = breakpoint(...)`), este se puede activar, desactivar o borrar con operaciones como `activate(b)`, `enable(b)` o `disable(b)`.
-* La macro `@breakpoint f(x) n` ejecuta la expresión `f(x)` en "modo *debug*", fijando un *breakpoint*  en la línea `n`. Ese *breakpoint* se elimina después de ejecutar la expresión.
+* La macro `@breakpoint f(x) n` también sirve para fijar un *breakpoint*  en la línea `n`; si se trata de una función con distintos métodos definidos, el *breakpoint* se añade en el que se ejecutaría con el argumento `x`.
 
-Para que el programa se detenga en esos *breakpoints* es necesario que se ejecute en "modo *debug*". Como se ha señalado, usando la macro `@breakpoint` esto ocurre automáticamente. Pero si el *breakpoint* se ha añadido a priori de cualquiera de las otras dos maneras, el *script* o la función en cuestión ha de ejecutarse precedida de `@enter`, o bien con `@run` para que no se detenga en la primera línea, sino directamente en la marcada con el *breakpoint*. 
+Para que el programa se detenga en esos *breakpoints* es necesario que se ejecute en "modo *debug*". Para ello, el *script* o la función en cuestión ha de ejecutarse precedida de `@enter`, o bien con `@run` para que no se detenga en la primera línea, sino directamente en la marcada con el *breakpoint*. 
 
 ### *Debugger* en VS Code
 
 Hay IDEs que también proporcionan un *debugger* con herramientas gráficas. En particular, la extensión para Julia de VS Code permite usar las macros `@enter` y `@run` para entrar en "modo *debug*" sin instalar el paquete Debugger. Con esa herramienta el control de la ejecución resulta más visual: las operaciones como ir a la siguiente línea, saltar al siguiente *breakpoint*, entrar o salir de la función, etc. se pueden manejar desde un conjunto de botones (véase la barra superior en la Figura 1); los *breakpoints* se marcan como botones rojos sobre el archivo de código, pulsando junto al número de línea correspondiente (como en la línea 18 del ejemplo de la figura), etc.
 
-Por otro lado, cuando se entra en modo *debug* en VS Code se cambia de entorno visual. Durante las interrupciones el REPL integrado en VS Code no está operativo, y las instrucciones a ejecutar se introducen en el "*debug console*". Además, la interfaz del *debugger* tiene su propio explorador de variables que es distinto del habitual, más otros menús, cuyo funcionamiento está explicado en la [documentación de la extensiónd e VS Code](https://www.julia-vscode.org/docs/stable/userguide/debugging/).
+Por otro lado, cuando se entra en modo *debug* en VS Code se cambia de entorno visual. Durante las interrupciones el REPL integrado en VS Code no está operativo, y las instrucciones a ejecutar se introducen en el "*debug console*". Además, la interfaz del *debugger* tiene su propio explorador de variables que es distinto del habitual, más otros menús, cuyo funcionamiento está explicado en la [documentación de la extensión de VS Code](https://www.julia-vscode.org/docs/stable/userguide/debugging/).
 
 ![Figura 1. Entorno de *debugging* en VS Code](assets/vscode-debug.png)
 
@@ -411,15 +411,15 @@ A modo de ayuda visual, el código se muestra como se vería en el editor de VS 
 
 Si no está activado el modo compilado y se selecciona la opción de "continuar" la ejecución, la siguiente interrupción tendrá lugar durante la ejecución de la segunda línea, en el *breakpoint* que hay dentro de la función `g`. Pero si estuviera activado el modo compilado, la función `g` se ejecutaría sin detenerse, y la interrupción se daría en el *breakpoint* de la tercera línea, que está al mismo "nivel" que el punto desde el que se reanuda la ejecución.
 
-¿Cómo hacer entonces para utilizar *breakpoints* que se encuentran a distintos "niveles" y a la vez aprovechar la mayor eficiencia del "modo compilado"? Si, por ejemplo, la función `f` fuese muy compleja y lenta de ejecutar en modo *debug*, sería conveniente ejecutarla de ese modo. Pero en lugar de seleccionar la acción de continuar la ejecución (que busca directamente el siguiente *breakpoint*), se podría ejecutar solo esa línea con la acción *step over*, de modo que nos detendríamos en la línea #12, a la entrada de la función `g` que queremos inspeccionar. (Alternativamente, y a sabiendas de que queremos detenernos en algún punto dentro de `g`, se podría haber fijado otro *breakpoint* en esa línea donde se llama a la función.)
+¿Cómo hacer entonces para utilizar *breakpoints* que se encuentran a distintos "niveles" y a la vez aprovechar la mayor eficiencia del "modo compilado"? Si, por ejemplo, la función `f` fuese muy compleja y lenta de ejecutar en modo *debug*, sería conveniente ejecutarla en modo compilado. Pero en lugar de seleccionar la acción de continuar la ejecución (que busca directamente el siguiente *breakpoint*), se podría ejecutar solo esa línea con la acción *step over*, de modo que nos detendríamos en la línea #12, a la entrada de la función `g` que queremos inspeccionar. (Alternativamente, y a sabiendas de que queremos detenernos en algún punto dentro de `g`, se podría haber fijado otro *breakpoint* en esa línea donde se llama a la función.)
 
 Entonces, para evitar que `g` se ejecute por completo de modo compilado, se puede entrar en su código mediante la acción *step into*, de forma que la siguiente interrupción se dará en la primera línea de código de `g`. Si el *breakpoint* que buscamos está a ese mismo nivel, desde ahí se podría continuar la ejecución hasta que se detenga en él. Y así sucesivamente. Pasado el *breakpoint*, se puede ejecutar el resto de la función y quedarse a la salida de la misma con la acción *step out*.
 
 ## Sumario del capítulo
 
-En este último capítulo hemos visto diversas estrategias y herramientas para afrontar los errores de programación, reduciendo el riesgo de que ocurran, y detectarlos y analizarlos de forma eficaz cuando no se han podido evitar. Lo más eficaz es adoptar unos buenos hábitos de programación, documentando adecuadamente y probando de forma contínua las pequeñas piezas que conforman un programa. Pero además Julia ofrece una serie de ayudas, sobre todo a través de paquetes, que facilitan esa tarea, y entre ellas hemos explorado, en particular:
+En este último capítulo hemos visto diversas estrategias y herramientas para afrontar los errores de programación, reduciendo el riesgo de que ocurran, y detectarlos y analizarlos de forma eficaz cuando no se han podido evitar. Lo más eficaz es adoptar unos buenos hábitos de programación, documentando adecuadamente y probando de forma continua las pequeñas piezas que conforman un programa. Pero además Julia ofrece una serie de ayudas, sobre todo a través de paquetes, que facilitan esa tarea, y entre ellas hemos explorado, en particular:
 
 * Las herramientas para hacer tests unitarios, mediante la macro `@assert` o las utilidades del módulo estándar `Test` (las macros `@test`, `@testset`, entre otras).
 * El registro de mensajes con la macro `@debug`, que se pueden mostrar en pantalla o volcar a archivos para analizarlos posteriormente.
 * El uso del paquete Revise para facilitar la continuidad del trabajo a la vez que se redefinen funciones, módulos y otros elementos.
-* El uso de paquetes como Infiltrator o Debugger, y herramientas análogas de algunos IDEs, para detenerse la ejecución de programas en puntos de interés.
+* El uso de paquetes como Infiltrator o Debugger, y herramientas análogas de algunos IDEs, para detener la ejecución de programas en puntos de interés.
