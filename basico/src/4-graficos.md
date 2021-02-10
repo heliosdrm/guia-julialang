@@ -40,7 +40,7 @@ plot(x, y)
 
     Al reproducir el ejemplo anterior se puede observar que la instrucción `using Plots` cuesta más tiempo en ejecutarse que la carga de otros paquetes, y desde que se ejecuta la línea `plot(x, y)` hasta que se presenta el gráfico pasa un tiempo (puede ser corto o largo dependiendo del ordenador y la versión de Julia). La generación y presentación de gráficos es una operación relativamente compleja, y la mayor parte de ese tiempo está dedicado a compilar las instrucciones. La buena noticia es que tras el primer gráfico, la generación de los siguientes es generalmente muy rápida.
 
-Según el entorno en el que se esté trabajando, este código hará que el gráfico se muestre de una manera u otra. Por ejemplo, en el REPL normalmente se abre en una nueva ventana; en IDEs como VS Code se muestra en el panel de gráficos dedicado; y en un notebook de IJulia los gráficos aparecen en celdas como imágenes integradas en las celdas de resultados.
+Según el entorno en el que se esté trabajando, este código hará que el gráfico se muestre de una manera u otra. Por ejemplo, en el REPL normalmente se abre en una nueva ventana; en IDEs como VS Code se muestra en el panel de gráficos dedicado; y en un notebook de IJulia los gráficos aparecen como imágenes integradas en las celdas de resultados.
 
 Si nos interesase mostrar varias señales en la misma gráfica, tenemos a nuestra disposición muchas formas de hacerlo. Por ejemplo, vamos a añadir la última señal.
 
@@ -85,7 +85,7 @@ En este ejemplo se han modificado cuatro atributos de las líneas:
 
 !!! tip "Códigos de color"
 
-    Los nombres y los códigos numéricos que se pueden emplear para definir los colores son los recogidos por el [estándar para CSS](https://www.w3.org/TR/css3-color/). Este incluye 62 nombres, desde los más básicos hasta algunos tan exóticos como el "blanco fantasmal" ("ghostwhite") o el de "papaya batida" ("papayawhip"), códigos RGB como `colorant"rgb(0,255,0)` --también en porcentaje `colorant"rgb(0,100%,0)"`, o en código hexadecimal `colorant"#00ff00"`--, y códigos HSL como `colorant"hsl(120,100%,50%)"`.
+    Los nombres y los códigos numéricos que se pueden emplear para definir los colores son los recogidos por el [estándar para CSS](https://www.w3.org/TR/css3-color/). Este incluye 62 nombres, desde los más básicos hasta algunos tan exóticos como el "blanco fantasmal" ("ghostwhite") o el de "papaya batida" ("papayawhip"), códigos RGB como `colorant"rgb(0,255,0)"` --también en porcentaje `colorant"rgb(0,100%,0)"`, o en código hexadecimal `colorant"#00ff00"`--, y códigos HSL como `colorant"hsl(120,100%,50%)"`.
 
 Algunas librerías gráficas permiten definir además el nivel de opacidad (llamado "canal alfa"), con el atributo `seriesalpha` (o simplemente `alpha`), que puede adoptar un número entre 0 (transparente) y 1 (totalmente opaco).
 
@@ -100,7 +100,7 @@ plot(x,y, color=colorant"hsl(120,100%,50%)", alpha=0.5)
 Otro detalle a destacar en el ejemplo anterior es cómo se han estructurado los conjuntos de atributos:
 
 * Al atributo `width` solo se le ha dado un valor, que por lo tanto se aplica por igual a todas las líneas.
-* Los atributos `style`, `color` y `label` se han definido como dos valores en una *matriz columna* (elementos separados por espacios), de tal manera que a cada línea se le ha asignado el valor de la columna correspondiente.
+* Los atributos `style`, `color` y `label` se han definido como dos valores en una *matriz fila* (elementos separados por espacios), de tal manera que a cada línea se le ha asignado el valor de la columna correspondiente.
 
 Los atributos correspondientes a series de datos distintas se disponen en columnas, igual que las propias series de datos. Si se dispusieran en un vector (equivalente a una columna), se interpretaría que cada valor del atributo se corresponde con *un punto* de la(s) serie(s). Por ejemplo, se puede hacer variar el grosor de la línea dándole un valor a cada punto como en el siguiente ejemplo:
 
@@ -114,13 +114,13 @@ En los ejemplos anteriores, las secuencias de puntos formadas por los datos de e
 
 Los gráficos de líneas también pueden ser tridimensionales, para lo cual hay que introducir una tercera serie de datos (`plot(x, y, z)`). Y también se puede introducir un solo vector que representa las coordenadas en el eje Y, en cuyo caso los valores en X son una secuencia de números enteros (1, 2, 3...).
 
-Además, se puede cambiar el elemento geométrico que representa de los datos, ajustando el atributo `seriestype`, que también puede ser, por mencionar algunos casos habituales:
+Además, se puede cambiar el elemento geométrico que representa los datos, ajustando el atributo `seriestype`, que también puede ser, por mencionar algunos casos habituales:
 
 * `:scatter` para gráficos de dispersión (con puntos), de dos o tres dimensiones.
 * `:bar` para gráficos de barras.
 * `:quiver` para campos de flechas (requiere argumentos adicionales para indicar la dirección y tamaño de las flechas).
 * `:histogram` para histogramas de una serie de datos.
-* `:surface` y `:wireframe` para gráficos tridimensionales, representadas como superficies coloreadas o mallas, respectivamente.
+* `:surface` y `:wireframe` para gráficos tridimensionales, representados como superficies coloreadas o mallas, respectivamente.
 * `:contour` para gráficos de contorno (como superficies vistas en 2D).
 
 Los gráficos con esos y otros tipos de elementos se pueden crear utilizando directamente el valor de `seriestype` como nombre de la función, en lugar de `plot`. Por ejemplo, un gráfico de barras podría dibujarse con `plot(y, seriestype=:bar)` o sencillamente `bar(y)`. En esos casos también existen las funciones "con exclamación" (`bar!`, etc.) para dibujar encima del gráfico anterior.
@@ -141,7 +141,7 @@ En este ejemplo hemos añadido el atributo `label=""` para que no haya leyenda, 
 
 Hay muchísimos más atributos disponibles, aunque dependiendo del tipo de elemento gráfico algunos atributos pueden tener sentido o no. Por ejemplo, el atributo `color` o `seriescolor` se puede aplicar a la mayoría de elementos gráficos, pero `linewidth` solo es aplicable a líneas. El color también puede definirse de forma más específica según el elemento, por ejemplo se puede especificar un color para las líneas (atributo `linecolor`) distinto del color de los marcadores (`markercolor`), el color de relleno (`fillcolor`), etc.
 
-El conjunto completo de atributos disponibles para los elementos geométricos se puede consultar con la instrucción `plotattr(:Series)`. La definición concreta de cada atributo también se puede obtener con la misma función, indicando el nombre del atributo, p.ej. `plot("color")`. Toda esa información también viene recogida en [la documentación de Plots](http://docs.juliaplots.org/latest/generated/attributes_series/)
+El conjunto completo de atributos disponibles para los elementos geométricos se puede consultar con la instrucción `plotattr(:Series)`. La definición concreta de cada atributo también se puede obtener con la misma función, indicando el nombre del atributo, p.ej. `plotattr("color")`. Toda esa información también viene recogida en [la documentación de Plots](http://docs.juliaplots.org/latest/generated/attributes_series/)
 
 ## Ajustes y decoraciones
 
@@ -259,18 +259,6 @@ En este capítulo hemos visto algunos aspectos elementales sobre cómo hacer y e
 * Las partes en las que se componen los gráficos: `Series`, `Axis`, `Subplot` y `Plot`, y cómo usar esos conceptos para explorar los atributos que se pueden manipular.
 * La asignación de gráficos a variables para poder trabajar con múltiples figuras, incluyendo gráficos compuestos.
 * Cómo guardar gráficos en archivos de dibujo matriciales y vectoriales.
-
-* Los códigos de formato usados para especificar el color y tipo de líneas y marcadores en los gráficos.
-* Cómo crear leyendas, etiquetas y títulos para anotar los gráficos.
-* El uso de la función `hold` para añadir nuevos datos a un gráfico anterior.
-* Cómo crear nuevas figuras y cambiar la figura actual.
-* La creación de gráficos múltiples mediante la función `subplot`.
-* Salvar gráficos como archivos de imagen con `savefig`.
-
-Además, también se han introducido otros dos detalles generales de Julia, no relacionados con los gráficos:
-
-* La función `randn` para crear series de números aleatorios que siguen una distribución normal estándar.
-* El uso del guión bajo como separador visual en números de muchas cifras (p.ej. `10_000`).
 
 ```@example c4
 rm("datos", recursive=true) # hide

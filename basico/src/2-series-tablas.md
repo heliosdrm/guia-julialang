@@ -162,7 +162,7 @@ Como regla general, al vectorizar una operación todas las variables empleadas h
 
 ## Cadenas de texto y símbolos
 
-Julia es un lenguaje pensado especialmente para trabajar con números, pero también tiene múltiples herramientas para manejar cadenas de texto (*strings*), que son un tipo importante de datos en muchas aplicaciones. De hecho, en casi cualquier programa es necesario hacer algún tratamiento de textos, aunque solo sea para definir las rutas de los archivos de entrada o salida. Así pues, aunque las cadenas de texto se trata con más profundidad en el [capítulo 7](7-strings.md), aquí introduciremos algunos conceptos fundamentales para empezar a trabajar con este tipo de variables. 
+Julia es un lenguaje pensado especialmente para trabajar con números, pero también tiene múltiples herramientas para manejar cadenas de texto (*strings*), que son un tipo importante de datos en muchas aplicaciones. De hecho, en casi cualquier programa es necesario hacer algún tratamiento de textos, aunque solo sea para definir las rutas de los archivos de entrada o salida. Así pues, aunque las cadenas de texto se tratan con más profundidad en el [capítulo 7](7-strings.md), aquí introduciremos algunos conceptos fundamentales para empezar a trabajar con este tipo de variables. 
 
 Las cadenas de texto son un tipo de datos más, que al igual que los números pueden organizarse en *arrays*; así, los nombres de los 30 archivos tratados en el ejemplo anterior se agrupan en el vector de *strings* llamado `archivos`, de tal modo que el nombre del primer archivo es `archivos[1]`, etc.
 
@@ -439,7 +439,7 @@ Además podemos destacar el uso de las siguientes funciones:
 * `zeros` para crear un array lleno de ceros al inicio.
 * `abs` para obtener el valor absoluto de un número.
 * `sqrt` para calcular la raíz cuadrada de un número.
-* La "macro" `@save` para salvar variables del espacio de trabajo actual en un fichero `bson` o `jld2`, y `@load` para la operación inversa.
+* La "macro" `@save` para salvar variables del espacio de trabajo actual en un fichero `bson` o `jld2`, y `@load` para la operación inversa, con los paquetes BSON y JLD2.
 
 ```@setup c2
 rm("datos", recursive=true) # hide

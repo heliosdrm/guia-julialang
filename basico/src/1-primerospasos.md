@@ -41,7 +41,7 @@ Veamos ahora un primer ejemplo práctico de Julia, con un programa sencillo para
 1. Si el número del mes (`m`) es igual o mayor que 3 (de marzo en adelante), el número del año (`y`) se descompone en el número del siglo (`c`, correspondiente a las centenas) y el resto (`g`). En el caso de enero o febrero (`m < 3`) se hace la misma descomposición para `y-1`.
 2. Se escoge un número `e` en función del número del mes (de 1 a 12), según la tabla 1 que se presenta a continuación.
 3. Se escoge un número `f` según el número del siglo (tabla 2), en un ciclo de 4 siglos (el ciclo de años bisiestos se repite cada 400 años).
-4. El día de la semana viene determinado por el resto de la división entera entre `x` y 7, siendo `x = d + e + f + g + ⌊g/4⌋`. (el último sumando es el cociente de la división entera entre `g` y 4).
+4. El día de la semana viene determinado por el resto de la división entera entre `x` y 7, siendo `x = d + e + f + g + ⌊g/4⌋` (el último sumando es el cociente de la división entera entre `g` y 4).
 
 *Tabla 1: código de mes*
 
@@ -125,7 +125,7 @@ El resultado posiblemente sea algo decepcionante, porque lo único que se ha hec
     1. Si se está trabajando de forma interactiva, guardar directamente el contenido del portapapeles en una variable, mediante la función `clipboard`. Por ejemplo, con el comando `directorio = clipboard()`.
     2. Si se va a pegar el nombre de la ruta en un *script*, etiquetar la cadena de texto con el prefijo `raw`. Por ejemplo: `directorio = raw"C:\Users\ABC\Documents\Julia\"`. (Esto equivale a `directorio = "C:\\Users\\ABC\\Documents\\Julia\\"`, pero se evita duplicar las barras; véanse más detalles en la sección sobre [Secuencias de escape](@ref) del capítulo 7.) 
     
-Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó 11 de agosto de 2018, la fecha en la que se publicó la version 1 de Julia:
+Una vez se ha conseguido cargar el archivo que define la función, esta ya se puede usar para obtener un resultado de verdad. Por ejemplo, para conocer en qué día de la semana cayó el 11 de agosto de 2018, la fecha en la que se publicó la version 1 de Julia:
 
 ```@repl c1
 gauss_diasemana(11, 8, 2018)
@@ -202,7 +202,7 @@ La extensión de Julia tiene numerosas opciones configurables para personalizar 
 
 ## Manejando el espacio de trabajo
 
-Al iniciar el REPL de Julia se crea un *workspace* o "espacio de trabajo", en el que se registran las distintas variables que se crean o modifican con cada operación. En una sesión de trabajo larga es fácil perder la pista de la variables que se han creado o a su contenido; la función `varinfo` sirve para observar esa información:
+Al iniciar el REPL de Julia se crea un *workspace* o "espacio de trabajo", en el que se registran las distintas variables que se crean o modifican con cada operación. En una sesión de trabajo larga es fácil perder la pista de las variables que se han creado o a su contenido; la función `varinfo` sirve para observar esa información:
 
 ```julia-repl
 julia> varinfo()
@@ -220,7 +220,7 @@ gauss_diasemana      0 bytes typeof(gauss_diasemana)
 mes                  8 bytes Int64                  
 ```
 
-Asímismo, la extensión para VS Code y otros IDEs tienen un menú específico para mostrar el espacio de trabajo, así como para explorar sus contenidos con mayor detalle (representaciones de las varialbes en texto, tablas u otros formatos, según su tipo).
+Asímismo, las extensiones para VS Code y otros IDEs tienen menús específicos para mostrar el espacio de trabajo, así como para explorar sus contenidos con mayor detalle (representaciones de las variables en texto, tablas u otros formatos, según su tipo).
 
 En este ejemplo podemos ver las variables `día`, `mes`, `año` y `diasemana` que hemos generado, más la función `gauss_diasemana`, y cuatro elementos más descritos como `Module`, que forman parte de la sesión de trabajo, aunque normalmente no hace falta interactuar directamente con ellos. Por contra, las variables creadas durante la ejecución de `gauss_diasemana` (`c`, `g`, etc.) no se recogen, ya que son variables "locales" a la función, a las que no se puede acceder desde el entorno del REPL, y que se puede considerar que se destruyen al terminar la función.
 
@@ -243,12 +243,12 @@ Cuando se inicia una sesión de Julia, por defecto solo están disponibles una s
 using Statistics
 ```
 
-La distribución básica de Julia viene con una biblioteca estándar que incluye diversos módulos. Algunos de estos módulos no están activados por defecto para que la sesión de trabajo no se cargue innecesariamente con tipos de variables y funciones que no se vayan a usar --o cuyo nombre el usuario quiera emplear para otros propósitos--. La lista de módulos de la bilbioteca estándar se puede consultar en la [documentación oficial](https://docs.julialang.org/en/stable/). Algunos que suelen usarse en proyectos de muchos ámbitos son:
+La distribución básica de Julia viene con una biblioteca estándar que incluye diversos módulos. Algunos de estos módulos no están activados por defecto para que la sesión de trabajo no se cargue innecesariamente con tipos de variables y funciones que no se vayan a usar --o cuyo nombre el usuario quiera emplear para otros propósitos--. La lista de módulos de la bilbioteca estándar se puede consultar en la [documentación oficial](https://docs.julialang.org). Algunos que suelen usarse en proyectos de muchos ámbitos son:
 
 * [`Dates`](https://docs.julialang.org/en/v1/stdlib/Dates/) para trabajar con fechas y unidades de tiempo.
 * [`DelimitedFiles`](https://docs.julialang.org/en/v1/stdlib/DelimitedFiles/) para leer y escribir tablas de datos en ficheros de texto.
 * [`LinearAlgebra`](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/) para cálculos de álgebra lineal (vectores, matrices, etc.).
-* [`Statistics`](https://docs.julialang.org/en/v1/stdlib/Statistics/) para cálculos estadísticos (a menudo junto con [`Random`](https://docs.julialang.org/en/v1/stdlib/Random/) para trabajar con números aleatorios y distribuciones de probabilidad).
+* [`Statistics`](https://docs.julialang.org/en/v1/stdlib/Statistics/) para cálculos estadísticos (a menudo junto con [`Random`](https://docs.julialang.org/en/v1/stdlib/Random/) para trabajar con números aleatorios).
 * [`Sockets`](https://docs.julialang.org/en/v1/stdlib/Sockets/) para trabajar con conexiones a redes informáticas.
 
 Hay muchas otras utilidades que pueden considerse importantes, incluso fundamentales por la mayoría de los potenciales usuarios, como representaciones gráficas de datos, editor de código, ayudas para la depuración de rutinas (*debugging*), etc., pero no están incluidas en la biblioteca estándar, sino en un "ecosistema" de paquetes que se desarrollan de forma coordinada (aunque independiente) por la comunidad de usuarios y desarrolladores de Julia. Puede consultarse la sección *Ecosystem* en la web oficial ([https://julialang.org](https://julialang.org)) para ver algunos de los dominios principales, o webs como [Julia Packages](https://juliapackages.com/) o [Julia Hub](https://juliahub.com/ui/Packages) para explorar muchos más paquetes disponibles.
@@ -269,7 +269,7 @@ En el caso de paquetes "registrados" (que es el caso de los más populares, y to
 
 ## Buscando ayuda
 
-Con toda seguridad, al programar en Julia pronto te encontrarás con dificultades que no puedes resolver con la información que se recoge en esta guía, y necesitarás ayuda adicional. Lo primero con lo que se ha de contar es el [manual de referencia oficial](https://docs.julialang.org/en/stable/), que contiene numerosos detalles de todos los aspectos esenciales del lenguaje, y también explica el uso de todas las funciones que forman parte del paquete "básico" de Julia.
+Con toda seguridad, al programar en Julia pronto te encontrarás con dificultades que no puedes resolver con la información que se recoge en esta guía, y necesitarás ayuda adicional. Lo primero con lo que se ha de contar es el [manual de referencia oficial](https://docs.julialang.org), que contiene numerosos detalles de todos los aspectos esenciales del lenguaje, y también explica el uso de todas las funciones que forman parte del paquete "básico" de Julia.
 
 El documento de referencia para las funciones es clave incluso para los programadores experimentados, ya que uno de los problemas habituales es la dificultad de recordar cómo se usa cierta función (qué argumentos acepta, qué resultados proporciona, etc.). Un atajo práctico cuando se trabaja en modo de línea de comandos consiste en escribir el signo de interrogación (`?`) al principio de una instrucción. Al hacerlo la interfaz cambia al "modo de ayuda" (la etiqueta que marca el comienzo de la línea cambia a `help?>`), y al introducir el nombre de la función (sin paréntesis ni argumentos, solo el nombre) aparece en pantalla el texto de referencia, como se muestra en la figura 4.
 
@@ -278,6 +278,8 @@ El documento de referencia para las funciones es clave incluso para los programa
 *Figura 4. Ejemplo de ayuda*
 
 Puedes probar con cualquier función básica (por ejemplo `?div` para leer la ayuda sobre la división entre enteros), con un operador (p.ej. `?+` para la suma), o incluso para una variable que se haya definido (en ese caso dará una información básica sobre su contenido).
+
+La extensión para VS Code y otros IDEs también cuentan con un "panel de documentación" que facilita la visualización de la documentación de Julia.
 
 !!! note "Documentación a través de "docstrings""
 
@@ -299,9 +301,5 @@ A lo largo de las explicaciones también hemos empleado las siguientes funciones
 * `cd` y `pwd` para definir y consultar el directorio de trabajo, respectivamente.
 * `include` para ejecutar *scripts*.
 * `joinpath` para componer nombres de directorios y archivos.
-* `div` para divisiones enteras y `mod` para el resto de una división.
+* `div` para divisiones enteras y `rem` para el resto de una división.
 
-```@raw html
-<hr>
-<img src="assets/cc-by-sa-88x31.png" alt="CC-BY-SA"><br><span style="font-size:smaller">Except where otherwise noted, this website is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike 4.0 International License</a></span>.
-```

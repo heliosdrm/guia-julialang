@@ -295,14 +295,14 @@ A continuación se presentan brevemente cada uno de los elementos empleados en l
 
 ### Docstring
 
-El llamado "docstring" es un texto para documentar la función, de tal manera que si se consulta en la ayuda, se presentará ese texto en pantalla. Se trata de un elemento opcional (si no se proporciona ningún "docstring", al consultar la ayuda de la función se presentará un texto estándar declarando que se trata de una función no documentada).
+El llamado "*docstring*" es un texto para documentar la función, de tal manera que si se consulta en la ayuda, se presentará ese texto en pantalla. Se trata de un elemento opcional (si no se proporciona ningún *docstring*, al consultar la ayuda de la función se presentará un texto estándar declarando que se trata de una función no documentada).
 
-Cualquier cadena de texto entrecomillada, escrita justo antes de declarar la función, sirve de "docstring", pero el estilo habitual es el empleado en el ejemplo de `calendario_html` (y de `gauss_diasemana` del primer capítulo):
+Cualquier cadena de texto entrecomillada, escrita justo antes de declarar la función, sirve de *docstring*, pero el estilo habitual es el empleado en el ejemplo de `calendario_html` (y de `gauss_diasemana` del primer capítulo):
 
 * El texto se escribe entre dos líneas con tres comillas `"""`, que sirven para delimitar una cadena de texto que ocupa varias líneas (y en las que se pueden escribir palabras entre comillas sin tener que utilizar secuencias de escape).
 * Se puede utilizar el formato [Markdown](https://daringfireball.net/projects/markdown/) para escribir el texto de ayuda con formato (líneas de título, formato de texto, bloques de código, hiperenlaces, etc).
 * En la primera línea se escribe la forma (o formas) de llamar a la función, con el texto indentado para que al consultar la ayuda aparezca escrito como un bloque código.
-* Después de un espacio de separación se describe lo que hace la función, ejemplos de uso y otros detalles de interés.
+* Después de una línea de separación se describe lo que hace la función, ejemplos de uso y otros detalles de interés.
 
 ### Argumentos de entrada
 
@@ -312,7 +312,7 @@ Las funciones pueden tener uno, varios o ningún argumento de entrada. Los argum
 function numero_primer_dia(m, y)
 ```
 
-A la hora de llamar a una función, se le pueden pasar valores directos, p.ej. `numero_primer_dia(8, 2018)`, o variables que contengan los valores deseados, como cuando se le llama dentro de la función `calendario_html`. En este último caso, por claridad se les ha pasado variables que tienen el mismo nombre que en la declaración (`m` e `y`, respectivamente), pero podrían tener cualquier otro nombre. Por ejemplo, la función `rellenar_calendario!` está declarada como:
+A la hora de llamar a una función, se le pueden pasar valores directos, p.ej. `numero_primer_dia(8, 2018)`, o variables que contengan los valores deseados, como cuando se le llama dentro de la función `calendario_html`. En este último caso, por claridad se le han pasado variables que tienen el mismo nombre que en la declaración (`m` e `y`, respectivamente), pero podrían tener cualquier otro nombre. Por ejemplo, la función `rellenar_calendario!` está declarada como:
 
 ```julia
 function rellenar_calendario!(tabla, primerdia, ndias)    
@@ -767,7 +767,7 @@ Por otro lado, en el caso de los errores imprevisibles a menudo es mejor dejar q
 
 En este capítulo hemos visto el uso de funciones y estructuras de control (bloques condicionales y bucles), centrándonos en:
 
-* La definición de "docstrings" para documentar las funciones.
+* La definición de *docstrings* para documentar las funciones.
 * Los distintos tipos de argumentos de entrada: posicionales y con nombre, requeridos o con valores por defecto.
 * Cómo agrupar y desagrupar argumentos con los puntos suspensivos (*splatting*).
 * Cómo obtener varias salidas de una función.
