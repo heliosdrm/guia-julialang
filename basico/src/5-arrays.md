@@ -433,7 +433,7 @@ round(Int, sqrt(5.0^2))
 
 !!! tip "Opciones de redondeo"
 
-    La funciones `round`, etc. admiten argumentos con nombre `digits` o `sigdigits`, si se quieren usar para redondear a un número particular de cifras decimales distinto de cero, o a un número de cifras signficativas (independientemente de dónde caiga el punto decimal).
+    La funciones `round`, etc. admiten los argumentos con nombre `digits` o `sigdigits`, si se quieren usar para redondear a un número particular de cifras decimales distinto de cero, o a un número dado de cifras signficativas (independientemente de dónde caiga el punto decimal).
 
 ### Tipos abstractos
 
@@ -624,7 +624,7 @@ Los elementos de los *arrays* resultantes de estas operaciones son referencias d
 
 ## Broadcasting
 
-Cuando se quiere aplicar una misma operación a todos los elementos de un *array*, o de varios *arrays* del mismo tamaño, una forma compacta y eficiente de hacerlo es escribiendo la operación como si se hiciese con variables escalares, pero añadiendo un punto tras el nombre de las funciones que se aplican a los *arrays*, o antes de los símbolos de las operaciones.
+Cuando se quiere aplicar una misma operación a todos los elementos de un *array*, o a los de varios *arrays* del mismo tamaño, se puede escribir un bucle que recorra sus distintos elementos; pero también existe una forma especial de operar, conocida como *broadcasting*, que tiene una sintaxis compacta y muy práctica.
 
 Vamos a ver un ejemplo con la operación para calcular el módulo de un vector de dos elementos, que se usó para introducir esta forma de operar en el capítulo 2. Primero vemos los resultados de la operación con escalares:
 
@@ -635,14 +635,14 @@ x = 3; y = 4;
 sqrt(x^2 + y^2)
 ```
 
-Y ahora hacemos la misma operación con las coordenadas en vectores. El resultado lo asignamos a otro vector `m` definido de antemano, para mostrar como las "operaciones con punto" también incluyen la asignación de valores a *arrays* existentes:
+Si los dos valores de `x` y los dos de `y` los tuviéramos en sendos vectores, podríamos hacer la operación con todos sus elementos a la vez, utilizando la sintaxis de *broadcasting*, que esencialmente consiste en añadir un punto tras los nombres de las funciones, o antes de los operadores. El resultado lo asignaremos a otro vector `m` definido de antemano, para mostrar como esas "operaciones con punto" también incluyen la asignación de valores a *arrays* existentes:
 
 ```@repl
 x = [0.5, 3]; y = [1.2, 4]; m = zeros(2);
 m .= sqrt.(x.^2 .+ y.^2)
 ```
 
-Esta forma de operar se conoce como *broadcasting*, ya que los valores escalares (p.ej. el `2` que se utiliza como exponente en el código anterior) se aplican a todos los elementos de los *arrays*, como si ellos mismos estuviesen en *arrays* de la misma dimensión, con el mismo valor en todas las celdas. Además, los *arrays* también se pueden comportar como si sus dimensiones "unitarias" se ampliasen en la medida necesaria. Esto se ve mejor con otro ejemplo:
+A esta técnica se le llama *broadcasting* porque consiste en transmitir una operación escalar a todos los elementos de los operandos, y también porque los valores escalares (p.ej. el `2` que se utiliza como exponente en el código anterior) se aplican a todos los elementos de los *arrays*, como si ellos mismos estuviesen en *arrays* de la misma dimensión, con el mismo valor en todas las celdas. Además, los *arrays* también se pueden comportar como si sus dimensiones "unitarias" se ampliasen en la medida necesaria. Esto se ve mejor con otro ejemplo:
 
 Imaginemos que queremos multiplicar cada elemento del vector columna `[1, 2, 3]` por cada uno del vector fila `[4 5]`, a la manera de un [producto tensorial](https://es.wikipedia.org/wiki/Producto_tensorial). Una forma de hacerlo sería multiplicar dos matrices de tamaños congruentes, cuyas filas y columnas fuesen réplicas de esos vectores. Por ejemplo, usando la función `repeat`:
 
@@ -747,7 +747,7 @@ Las posiciones fuera de la diagonal se interpretan como ceros, pero en realidad 
 
 Una matriz diagonal particularmente importante es la "matriz identidad", equivalente a la unidad en el álgebra de matrices, cuya diagonal está compuesta enteramente de unos. Una matriz diagonal de tamaño `n×n` podría construirse como `Diagonal(ones(n))`. Pero también existe un tipo especial para esta matriz particular, que se construye con la letra `I` mayúscula (la forma habitual de representar la matriz identidad).
 
-`I` representa una matriz identidad de cualquier tipo numérico y tamaño, de tal manera que se puede utilizar en distintas operaciones algebraicas sin añadirle más detalles. Por ejemplo, supongamos que queremos definir una matriz que, al multiplicarla por un vector unitario cualquiera, dé como resultado la proyección de dicho vector sobre el plano perpendicular a otro vector `n`. Esa matriz está definida como la matriz identidad menos el producto tensorial de `n` por sí mismo. Esto se puede escribir como `I - n*n'`, sin tener que especificar el tamaño de `I`. Veamos un caso particular:
+`I` representa una matriz identidad de cualquier tipo numérico y tamaño, de tal manera que se puede utilizar en distintas operaciones algebraicas sin añadirle más detalles. Por ejemplo, supongamos que queremos definir una matriz que, al multiplicarla por un vector cualquiera, dé como resultado la proyección de dicho vector sobre el plano perpendicular a otro vector (unitario) `n`. Esa matriz está definida como la matriz identidad menos el producto tensorial de `n` por sí mismo. Esto se puede escribir como `I - n*n'`, sin tener que especificar el tamaño de `I`. Veamos un caso particular:
 
 ```@repl c5
 n = [1/3, 2/3, 2/3];
@@ -784,7 +784,7 @@ El álgebra de matrices es un campo muy amplio, del que solo hemos visto aspecto
 En este capítulo hemos visto cómo trabajar con *arrays* (vectores, matrices y conjuntos de datos multidimensionales en general). En particular, se ha explicado:
 
 * Cómo crear *arrays* de distintas dimensiones con las funciones `cat`, `hcat`, `vcat`, `hvcat`, o mediante la sintaxis abreviada con corchetes (a partir de valores concretos), así como algunas formas de hacer *arrays* con valores predefinidos (a través de `zeros`, `ones`, `trues`, `falses`, `fill` o `fill!`), o con valores indefinidos (usando constructores con `undef`).
-* La definición de algunas matrices especiales: matrices diagonales con `diagm` y de tipo `Diagonal`, y matriz identidad con `I`; uso de la función `diag` para extraer diagonales de una matriz.
+* La definición de algunas matrices especiales: matrices diagonales con `diagm` y de tipo `Diagonal`, y la matriz identidad con `I`; uso de la función `diag` para extraer diagonales de una matriz.
 * Cómo añadir y eleminar elementos de vectores (sin crear nuevas variables) mediante las funciones `push!`, `pushfirst!`, `insert!`, `append!`, `prepend!`, `pop!`, `popfirst!`, `deleteat!`, `splice!` y `empty!`.
 * Cómo reorganizar las dimensiones de *arrays* mediante las funciones `reshape` y `permutedims` -- y en el caso de matrices numéricas, con `transpose` y `adjoint` (o con el operador `'` como forma abreviada de `adjoint`).
 * La sintaxis para "subindexar" *arrays* a través de índices numéricos y rangos, y el uso de la macro `@view` para que los subarrays creados hagan referencia a los valores originales.

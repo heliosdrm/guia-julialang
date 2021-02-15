@@ -72,7 +72,7 @@ Además, esta operación no devuelve el resultado como un escalar, sino como un 
 poblacion[findfirst(continentes .== "Europa")]
 ```
 
-Sin embargo, el uso de un diccionario aquí simplifica las cosas. El constructor de diccionarios `Dict` puede usarse con parejas de claves y valores, asociados mediante el símbolo `=>` (a modo de flecha):
+El uso de un diccionario aquí simplifica las cosas. El constructor de diccionarios `Dict` puede usarse con parejas de claves y valores, asociados mediante el símbolo `=>` (a modo de flecha):
 
 ```@repl c6
 dic_poblacion = Dict(
@@ -222,7 +222,7 @@ tup
 
 Estas dos diferencias entre tuplas y vectores son las que determinan cuándo es preferible usar una cosa u otra: si la colección de datos ha de modificarse en algún punto del programa es mejor usar vectores. De lo contrario, a menudo es más eficiente usar tuplas, especialmente si se desea tener un conjunto heterogéneo de datos agrupados.
 
-Anteriormente hemos visto como la función `collect` se puede emplear para crear vectores a partir de otras colecciones o variables iterables. La tuplas pueden crearse de modo semejante usando el constructor `Tuple`. Alternativamente, se puede emplear la operación de *splatting* con puntos suspensivos, como cuando se reparten los contenidos de una variable entre los argumentos de una función (véase la sección sobre [Agrupaciones de argumentos](@ref) en el capítulo introductorio sobre las funciones). La diferencia es que hay que añadir una coma tras los puntos suspensivos --y también usar los paréntesis, para que no parezca una expresión inacabada--:
+Anteriormente hemos visto cómo la función `collect` se puede emplear para crear vectores a partir de otras colecciones o variables iterables. La tuplas pueden crearse de modo semejante usando el constructor `Tuple`. Alternativamente, se puede emplear la operación de *splatting* con puntos suspensivos, como cuando se reparten los contenidos de una variable entre los argumentos de una función (véase la sección sobre [Agrupaciones de argumentos](@ref) en el capítulo introductorio sobre las funciones). La diferencia es que hay que añadir una coma tras los puntos suspensivos --y también usar los paréntesis, para que no parezca una expresión inacabada--:
 
 ```@repl
 numeros = 1:3
@@ -298,7 +298,7 @@ cuadrados
 
 !!! tip
     
-    El superíndice numérico que se ha utilizado para expresar los exponentes es un carácter especial, que se puede escribir en el REPL de Julia con la secuencia de escape `\^2`, seguidas del tabulador.
+    El superíndice numérico que se ha utilizado para expresar los exponentes es un carácter especial, que se puede escribir en el REPL de Julia con la secuencia de escape `\^2`, seguida del tabulador.
 
 Una forma más compacta de hacer esto esto es mediante lo que en inglés se llama *comprehension*. Este recurso se suele utilizar cuando contenido de un bucle `for` es una línea cuya única finalidad es "rellenar" una colección. En este caso, el código equivalente a todo lo anterior sería:
 

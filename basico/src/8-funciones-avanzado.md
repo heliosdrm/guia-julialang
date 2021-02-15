@@ -114,7 +114,7 @@ end
 
 Este bloque de código es equivalente a declarar: "define la variable `y` del siguiente modo: tomando una variable `x = [1,2,-3]`, suma progresivamente los cuadrados de sus elementos hasta que se encuentre un número negativo".
 
-Una diferencia entre las expresiones `let` y las funciones es que el código de las primeras se ejecuta en el mismo punto en el que se define --y por lo tanto siempre es necesario proporcionarle un valor a los "argumentos" (las variables que se declaran justo después de la palabra `let`)--. Por otro lado, al no ser realmente una función, no se debe usar `return` para devolver el resultado de la expresión; el valor devuelto es siempre el que se calcula en la última línea del bloque.
+Una diferencia entre las expresiones `let` y las funciones es que el código de las primeras se ejecuta en el mismo punto en el que se define. Por otro lado, al no ser realmente una función, no se debe usar `return` para devolver el resultado de la expresión; el valor devuelto es siempre el que se calcula en la última línea del bloque.
 
 En este sentido, los bloques `let` también se parecen a las expresiones compuestas entre `begin` y `end`. La principal diferencia entre unas y otras es que las expresiones `let` introducen su propio contexto de variables, que se destruyen al finalizar el bloque (véase la sección sobre variables locales y globales más abajo.
 
@@ -191,7 +191,7 @@ end
 
 ## Estabilidad de tipos
 
-Algunos lenguajes de programación como C, Java y similares, requieren que al definir funciones se declaren los tipos de todas los argumentos de entrada --y también el del valor devuelto por la función, así como los de *todas las variables* que se usan en el cuerpo de una función o un programa--. Tener claramente definidos los tipos de variables a usar es importante a la hora de compilar una función o un programa (traducir las instrucciones al "lenguaje de la máquina"), pues permite definir de forma correcta y optimizada las operaciones a realizar a bajo nivel, reservar la cantidad de memoria adecuada para las variables, etc.
+Algunos lenguajes de programación como C, Java y similares, requieren que al definir funciones se declaren los tipos de todos los argumentos de entrada --y también el del valor devuelto por la función, así como los de *todas las variables* que se usan en el cuerpo de una función o un programa--. Tener claramente definidos los tipos de variables a usar es importante a la hora de compilar una función o un programa (traducir las instrucciones al "lenguaje de la máquina"), pues permite definir de forma correcta y optimizada las operaciones a realizar a bajo nivel, reservar la cantidad de memoria adecuada para las variables, etc.
 
 Por ese motivo, las personas con experiencia en esos lenguajes de programación pueden sentirse inclinadas a anotar los tipos de todos los argumentos en las funciones de Julia. Sin embargo, hay que insistir en que esto no es necesario, y ni siquiera deseable. Como se ha señalado arriba, es bueno usar métodos genéricos, pues resultan más flexibles y fáciles de extender que los que son muy específicos. Y omitir los tipos de variables requeridos por los métodos no significa que el código no se pueda compilar tal como se hace en C, Java, etc.
 
@@ -242,7 +242,7 @@ function suma(valores)
 end
 ```
 
-En este caso, la variable `y` se define inicialmente como un número del tipo de `0` (un `Int`), pero una vez se entra en el bucle, se le asignan nuevos valores que pueden ser de otro tipo, dependiendo del tipo de los elementos contenidos en `valores`. Así pues, tampoco se podrá saber a priori de qué tipo será finalmente `y`.
+En este caso, la variable `y` se define inicialmente como un número del tipo de `0` (un `Int`), pero una vez se entra en el bucle, se le asignan nuevos valores que pueden ser de otro tipo, dependiendo del tipo de los elementos contenidos en `valores`. Así pues, tampoco se podrá saber a priori de qué tipo va a ser en cada momento `y`.
 
 Cuando alguna operación dentro de una función no da un resultado de tipo estable, dicha función no podrá compilarse. Esto no significa que no se vaya a poder ejecutar, sino que no se verá acelerada gracias a la compilación de las instrucciones a bajo nivel. Dependiendo del papel que juegue la función, este problema puede ser relevante y valdrá la pena cuidar la estabilidad de los tipos, o podrá pasarse por alto.
 
@@ -304,7 +304,7 @@ mismotipo(_, _) = false
 
 ## Variables globales y locales
 
-Dentro de las funciones se puede distinguir entre variables "locales" y las "globales".[^3] Normalmente el tratamiento de estas variables no reviste grandes complicaciones, y basta con tener en cuenta los conceptos básicos mencionados en la [sección correspondiente del capítulo 3](3-funciones-control.md#Cuerpo-de-la-función-variables-locales-y-globales-1). Sin embargo hay algunas situaciones particulares que pueden dar lugar a confusión, por lo que a continuación se explica esta cuestión en detalle.
+Dentro de las funciones se puede distinguir entre variables "locales" y las "globales".[^3] Normalmente el tratamiento de estas variables no reviste grandes complicaciones, y basta con tener en cuenta los conceptos básicos mencionados en la [sección correspondiente del capítulo 3](3-funciones-control.md#Cuerpo-de-la-función:-variables-locales-y-globales). Sin embargo hay algunas situaciones particulares que pueden dar lugar a confusión, por lo que a continuación se explica esta cuestión en detalle.
 
 [^3]: Utilizamos aquí el término "variables" por simplificar, para referirnos a cualquier variable, constante, función u otro tipo de objeto de datos.
 
@@ -410,7 +410,7 @@ Concretamente, en un caso como este se asume que `fib` y `fib1` dentro del bucle
 
 ## Sumario del capítulo
 
-En este capítulo se han explicado cómo se definen y usan las funciones anónimas, y cómo se puede hacer que una misma función tenga múltiples métodos, dependiendo de tipos de variables que se pasen como argumentos. También se ha explicado el concepto de "estabilidad de tipos", y el funcionamiento de los contextos de variables globales y los locales, introducidos por funciones y otras estructuras.
+En este capítulo se ha explicado cómo se definen y usan las funciones anónimas, y cómo se puede hacer que una misma función tenga múltiples métodos, dependiendo de tipos de variables que se pasen como argumentos. También se ha explicado el concepto de "estabilidad de tipos", y el funcionamiento de los contextos de variables globales y los locales, introducidos por funciones y otras estructuras.
 
 Por otro lado, se han visto algunas herramientas nuevas como:
 

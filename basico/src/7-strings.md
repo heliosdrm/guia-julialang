@@ -22,7 +22,7 @@ string(3000, base=62) # duosexagesimal (con letras `A-Z` más `a-z`)
 string(0xff, base=10) # decimal (independientemente del tipo de entero)
 ```
 
-La operación inversa a `string` se realiza con `parse`, que requiere dos argumentos: primero el tipo de variable que se quiere crear, y luego la cadena de texto que la representa (evidentemente ha de ser una cadena interpretable como ese tipo de variable). En el caso de números enteros de cualquier tipo, también se puede añadir el argumento con nombre `base` para resolver amigüedades (por defecto se asume una base 10).
+La operación inversa a `string` se realiza con `parse`, que requiere dos argumentos: primero el tipo de variable que se quiere crear, y luego la cadena de texto que la representa (evidentemente ha de ser una cadena interpretable como ese tipo de variable). En el caso de números enteros de cualquier tipo, también se puede añadir el argumento con nombre `base` para resolver ambigüedades (por defecto se asume una representación en base 10).
 
 ```@repl
 parse(Float64, "30")      # número decimal
@@ -52,7 +52,7 @@ repr(numero, context=:compact=>true)
 
 ## Concatenación y separación de textos
 
-Si a la función `string` se le pasa más de una variable, además de crear sus respectivas cadenas de texto, las concatena en una sola.:
+Si a la función `string` se le pasa más de una variable, además de crear sus respectivas cadenas de texto, las concatena en una sola:
 
 ```@repl
 string("La raíz de 2 es ", sqrt(2))
@@ -71,7 +71,7 @@ using Printf
 @sprintf("La raíz de 2 es %0.3f", sqrt(2))
 ```
 
-La concatenación de cadenas de texto también se puede llevar a cabo usando el operador de la multiplicación (e.g. `"a" * "b"` para obtener `"ab"`). Y para repetir una cadena de texto varias veces se puede utilizar la función `repeat`, que siguiendo la analogía matemática también se puede expresar como una potencia por un número entero:
+La concatenación de cadenas de texto también se puede llevar a cabo usando el operador de la multiplicación (p.ej. `"a" * "b"` para obtener `"ab"`). Y para repetir una cadena de texto varias veces se puede utilizar la función `repeat`, que siguiendo la analogía matemática también se puede expresar como una potencia por un número entero:
 
 ```@repl
 repeat("Abc", 3)
@@ -97,7 +97,7 @@ Se puede observar que en este último caso se ha añadido una cadena vacía, por
 split(frase, (',', ' '); keepempty=false) 
 ```
 
-Un caso de uso muy habitual para unir y separar cadenas de texto en base a una serie de caracteres delimitadores es en el análisis y descomposición de rutas de archivos. Por este motivo hay un conjunto de variantes de `join` y `split` dedicadas a estas operaciones particulares:
+Un caso de uso muy habitual para unir y separar cadenas de texto en base a unos caracteres delimitadores es el análisis y descomposición de rutas de archivos. Por este motivo hay un conjunto de variantes de `join` y `split` dedicadas a estas operaciones particulares:
 
 * `joinpath` para juntar nombres de directorios y archivos.
 * `splitdir` para dividir una ruta en nombre de directorio y nombre de archivo (se puede usar recursivamente sobre el nombre del directorio para separar el último nivel de los anteriores).
@@ -546,7 +546,7 @@ Otros tipos de variables (por ejemplo números) también se pueden escribir como
 ```julia
 # Escribe "La raíz de 2 es 1.4142135623730951\n"
 io = open("archivo.txt", "w")
-println(io, "La raíz de dos 2 es ", sqrt(2)")
+println(io, "La raíz de dos 2 es ", sqrt(2))
 close(io)
 ```
 
@@ -628,7 +628,7 @@ Además, se han presentado numerosas funciones y procedimientos para manipular l
 * Funciones para unir conjuntos de cadenas y separarlas (`join`, `joinpath`, `split`, `splitdir`, `splitext` y `splitdrive`).
 * Funciones para alternar entre mayúsculas y minúsculas (`lowercase`, `uppercase` y `titlecase`).
 * Funciones para manipular los caracteres de espacio (`chomp`, `chop`, `strip`, `lstrip`, `rstrip`, `lpad` y `rpad`).
-* Métodos para buscar y reemplazar, utilizando patrones de caracteres y expresiones regulares (`findfirst`, `findlast`, `findprev`, `findnext`, `occursin`, `replace` y `match`).
+* Métodos para buscar y reemplazar, utilizando patrones de caracteres y expresiones regulares (`findfirst`, `findlast`, `findprev`, `findnext`, `occursin`, `startswith`, `endswith`, `replace` y `match`).
 
 Por último, aunque no están directamente relacionadas con las cadenas de texto, también se han presentado las funciones `round` y `truncate` como métodos para reducir el número de decimales de un número.
 
