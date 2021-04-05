@@ -1,14 +1,14 @@
-# Capítulo 1. Proyectos y paquetes
+# Capítulo 2. Proyectos
 
-```@setup c1
+```@setup c2
 using Fracciones
 ```
 
-La organización del trabajo con entornos separados por proyectos es una de las "buenas prácticas" de programación más sencillas de seguir en Julia; posiblemente la que más beneficio proporciona en relación con el esfuerzo que requiere. Por eso, aunque en el [capítulo 9 de la guía básica](https://hedero.webs.upv.es/julia-basico/9-pkg/#Trabajar-por-proyectos) también se dan unas cuantas indicaciones al respecto, es oportuno repetirlas aquí como la primera de las claves para programar con Julia. Aprovecharemos además para introducir algunas ideas que se desarrollan con mayor detalle en capítulos posteriores.
+La organización del trabajo con entornos separados por proyectos es una de las "buenas prácticas" de programación más sencillas de seguir en Julia; posiblemente la que más beneficio proporciona en relación con el esfuerzo que requiere. Por eso es oportuno dar algunas indicaciones dal respecto, como una de las claves para programar con Julia. Aprovecharemos además para introducir algunas ideas que se desarrollan con mayor detalle en capítulos posteriores.
 
 ## Ejemplo: el paquete "Fracciones"
 
-Varios de los temas que trataremos en esta guía se verán sobre el código del repositorio "Fracciones", que se puede encontrar en [https://github.com/heliosdrm/Fracciones.jl](https://github.com/heliosdrm/Fracciones.jl). Se trata un paquete que proporciona un tipo de variable para representar y hacer operaciones sencillas con fracciones de números enteros, con propósitos puramente didácticos. (Julia ya tiene su propio tipo de números racionales, mucho más versátil, práctico y eficaz; de hecho el paquete Fracciones se inspira en el código original de Julia, simplificado y adaptado para el propósito de esta guía.)
+Varios de los temas que trataremos en este y los siguientes capítulos se verán sobre el código del repositorio "Fracciones", que se puede encontrar en [https://github.com/heliosdrm/Fracciones.jl](https://github.com/heliosdrm/Fracciones.jl). Se trata un proyecto en forma de paquete que proporciona un tipo de variable para representar y hacer operaciones sencillas con fracciones de números enteros, con propósitos puramente didácticos. (Julia ya tiene su propio tipo de números racionales, mucho más versátil, práctico y eficaz; de hecho el paquete Fracciones se inspira en el código original de Julia, simplificado y adaptado para el propósito de esta guía.)
 
 En la página web se puede navegar por el conjunto de archivos, pero para mayor comodidad se puede hacer una copia local del repositorio completo en cualquier directorio del ordenador. Para quienes no sean usuarios de Git, lo más sencillo es seleccionar la opción de "descargar como ZIP" (ver en la figura siguiente, aunque la interfaz de GitHub a la que accedas pueda ser distinta de la que se muestra). Una vez descargado, se puede descomprimir el archivo en el sitio que se escoja (puede ser cualquier carpeta).
 
@@ -30,9 +30,9 @@ El árbol de archivos es muy pequeño --menos de 50 Kb en su conjunto--, y su es
 └── README.md
 ```
 
-Centrándonos por ahora en los archivos que hay en el directorio raíz, para nuestros propósitos podemos ignorar los llamados `LICENSE` y `README.md`, que son simples textos informativos. Esto nos deja los archivos `Project.toml` y `Manifest.toml`, que son los que definen el entorno del proyecto. Concretamente, el archivo `Project.toml` contiene la lista de los paquetes de los que depende directamente el proyecto, y `Manifest.toml` contiene los detalles de *todas* las dependencias, directas e indirectas, que hacen falta en el proyecto.
+Centrándonos por ahora en los archivos que hay en el directorio raíz, para nuestros propósitos podemos ignorar los llamados `LICENSE` y `README.md`, que son simples textos informativos. Esto nos deja los archivos `Project.toml` y `Manifest.toml`, que son los que definen el entorno del proyecto. Concretamente, el archivo `Project.toml` contiene la lista de los paquetes de los que depende directamente el proyecto, y `Manifest.toml` contiene los detalles de *todas* las dependencias, directas e indirectas, que hacen falta en el proyecto. Lo mismo ocurre con la carpeta `test`, que es un "subproyecto" particular dentro de `Fracciones`, aunque por ahora no vamos a entrar en detalles sobre eso. 
 
-## `Project.toml` y `Manifest.toml`
+## Los archivos `Project.toml` y `Manifest.toml`
 
 Estos dos archivos se generan automáticamente cuando se opera con el gestor de paquetes de Julia. Vamos a verlo con la creación de un proyecto nuevo. Supongamos que estamos en una sesión de Julia, y ejecutamos los siguientes comandos (el primero en el modo de REPL "normal", y los siguientes en el modo "pkg"):  
 
@@ -93,13 +93,13 @@ uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
-git-tree-sha1 = "6a8a2a625ab0dea913aba95c11370589e0239ff0"
+git-tree-sha1 = "6a8a2a625ab0dea913aba95c21370589e0239ff0"
 uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
 version = "0.5.6"
 
 [[Markdown]]
 deps = ["Base64"]
-uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
+uuid = "d6f4376e-aef5-505a-96c2-9c027394607a"
 
 [[Random]]
 deps = ["Serialization"]
@@ -138,14 +138,14 @@ julia> include("proyectos_julia/Fracciones/src/fraccion.jl");
 
 Ese código, que empieza con la línea `using MacroTools` y utiliza algunas de sus utilidades, no podría haberse ejecutado si no estuviéramos en el entorno presente, que tiene ese paquete entre sus dependencias. Al ejecutarlo, hemos definido el tipo `Fraccion` y diversas operaciones algebraicas para los mismos, además de algunas funciones específicas. Así pues, por ejemplo podemos sumar las fracciones de 2 partido por 3 y 1 partido por 5, y luego obtener su recíproco:
 
-```@repl c1
+```@repl c2
 x = Fraccion(2,3) + Fraccion(1,5)
 reciproco(x)
 ```
 
 ## Proyectos en forma de "paquete"
 
-El código de un proyecto puede contener instrucciones para realizar un análisis de datos, ejecutar una aplicación, o muchas otras cosas. En el ejemplo que estamos viendo el código no "hace" gran cosa; solo define un tipo de variables y unas funciones que pueden ser de utilidad en otros proyectos. Es por eso que el repositorio está estructurado en forma de "paquete", con un árbol de directorios que tiene una estructura particular, y un archivo `Project.toml` que incluye cierta información extra, como hemos visto antes. Veremos los detalles de esa estructura en el capítulo X que está dedicado especialmente a este tema.
+El código de un proyecto puede contener instrucciones para realizar un análisis de datos, ejecutar una aplicación, o muchas otras cosas. En el ejemplo que estamos viendo el código no "hace" gran cosa; solo define un tipo de variables y unas funciones que pueden ser de utilidad en otros proyectos. Es por eso que el repositorio está estructurado en forma de "paquete", con un árbol de directorios que tiene una estructura particular, y un archivo `Project.toml` que incluye cierta información extra, como hemos visto antes. Veremos los detalles de esa estructura en los capítulos 4 y 6, que están dedicados especialmente a este tema.
 
 Por ahora basta con comentar que, gracias a que el proyecto está organizado de esa forma, puede incluirse como dependencia en otro proyecto donde nos interese usar las herramientas definidas ahí. Supongamos que ese nuevo proyecto va a estar ubicado en la carpeta `proyectos_julia/proyecto1`:
 

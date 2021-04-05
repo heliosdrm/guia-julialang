@@ -1,73 +1,14 @@
-# Capítulo 2. Introducción a los tipos
+# Capítulo 2. Definición de tipos compuestos
 
-```@setup c2
+```@setup c3
 using Fracciones
 using Random
 Random.seed!(123)
 ```
 
-## Tipos, métodos y *multiple dispatch*
+Como se comentaba en el primer capítulo, el manejo que hace Julia de los tipos de las variables en las funciones es una de las claves de la eficiencia, flexibilidad y expresividad del lenguaje. Los ejemplos de aquel capítulo se basaban en los llamados "tipos primitivos" como las distintas formas de números enteros, decimales y caracteres. Pero además de esos están los "tipos compuestos", que extienden el lenguaje a mucho más que una herramienta para hacer cálculos con números.
 
-Los tipos (*types* en inglés) son un concepto central en Julia. Se trata de una propiedad que tiene todo "objeto" representado en memoria que se pueda asignar a una variable, y se puede consultar con la función `typeof`. No es posible dar un listado completo de los tipos de variables u otros objetos que tiene Julia. No solo se trata de que haya muchos; es que además la definición de nuevos tipos es un recurso empleado por numerosos paquetes para ampliar las capacidades del lenguaje, por lo que en la práctica se puede decir que el número de tipos existentes es indefinido.
-
-Incluso limitándonos al módulo básico y las librerías estándar hay muchísimos tipos de variables. Solo entre los tipos númericos definidos en `Base` tenemos todos los representados en el siguiente esquema:
-
-```
-Number ─┬───────────────────────────────┤ Complex
-        │
-        └ Real ─┬───────────────────────┤ Rational
-                │
-                ├─ AbstractIrrational ──┤ Irrational
-                │
-                ├─ AbstractFloat ───────┤ BigFloat
-                │                       │ Float64
-                │                       │ Float32
-                │                       │ Float16
-                │
-                └─ Integer ─┬───────────┤ Bool
-                            │
-                            ├─ Signed ──┤ BigInt
-                            │           │ Int128
-                            │           │ Int64
-                            │           │ Int32
-                            │           │ Int16
-                            │           │ Int8
-                            │
-                            └─ Unsigned ┤ UInt128
-                                        │ UInt64
-                                        │ UInt32
-                                        │ UInt16
-                                        │ UInt8
-```
-
-Solo los tipos más bajos de esta jerarquía, los que hay más a la derecha del esquema, son tipos "concretos", es decir tipos que definen una estructura de datos concreta. Siempre que utilicemos la función `typeof` con un dato numérico en Julia, el resultado será uno de esos tipos. Todos los demás son tipos "abstractos", que se usan como *alias* para identificar los conjuntos de tipos concretos que tiene conectados a su derecha del esquema. El operador `<:` sirve para comprobar si un tipo dado (sea concreto o abstracto) es un subtipo de otro. Así, por ejemplo:
-
-```@repl
-typeof(1) # El resultado es uno de los tipos concretos
-typeof(1) == Integer # Integer no es un tipo concreto
-typeof(1) <: Integer # Pero es un supertipo de `Int64`
-``` 
-
-Los tipos abstractos son útiles para poder identificar de forma sencilla tipos distintos que en ciertos contextos no se diferencian. También existe un supertipo `Any` que engloba todos los demás, de tal manera que `typeof(x) <: Any` siempre es cierto para cualquier `x`.
-
-Uno de los usos más importantes que se da a los tipos en Julia es la selección del método que se aplica a una función según los argumentos introducidos --lo que se conoce como *multiple dispatch*--. Un ejemplo sencillo es el operador de la multiplicación (`*`), que hace distintas operaciones, con distintos resultados, según el tipo de los argumentos introducidos. Así, en la multiplicación `z = x * y`:
-
-* Si `x` e `y` son dos números, `z` será su producto, representado en un tipo que depende del de `x` e `y`:
- - Si el tipo de `x` es igual que el de `y`, `z` será también del mismo tipo. 
- - Si `x` e `y` son de distinto tipo, `z` será del tipo más sencillo que pueda generalizar los representados por ambos. Por ejemplo, si fueran `Int64` y `Float64`, `z` sería del tipo `Float64`.
-* Si `x` e `y` representan matrices numéricas, `z` será su producto matricial, aplicando las mismas reglas respecto a los tipos de sus elementos que en el caso del producto de números.
-* Si `x` e `y` son cadenas de texto (`String`s) o caracteres (`Char`s), `z` será otro `String` que concatena `x` seguido de `y`.
-* Etc.
-
-(Para más detalles sobre la definición de métodos según los tipos de los argumentos, se puede consultar el [capítulo 8 sobre funciones en la guía básica de Julia](https://hedero.webs.upv.es/julia-basico/8-funciones-avanzado/), y también el [capítulo 4 de la presente guía](4-tipos-ext.md).)
-
-Los tipos y los métodos dotan al lenguaje de una gran flexibilidad, y además son una de las claves de la eficiencia de Julia, ya que permiten optimizar el código que se compila al ejecutar las funciones. Por ejemplo, en código máquina algunas operaciones son mucho más sencillas y rápidas si se ejecutan sobre números enteros que sobre decimales, por lo que vale la pena distinguir ambos tipos y que las funciones tengan métodos específicos según el tipo de los argumentos, aunque en general los decimales puedan representar también los enteros --y a pesar de que la multiplicidad de tipos también puede dar lugar a ciertas confusiones y errores--.
-
-## Definición de tipos compuestos
-
-Además de los "tipos primitivos" como las distintas formas de números enteros, decimales y caracteres, están los llamados "tipos compuestos", que son los que extienden el lenguaje a mucho más que una herramienta para hacer cálculos con números. En el paquete Fracciones que hemos introducido en el capítulo anterior tenemos el ejemplo del tipo `Fraccion`, que sirve para representar números racionales. En el código del archivo `src/fraccion.jl` está la definición de ese tipo, así como de múltiples métodos para realizar operaciones con ellos.
-
-El código con el que se define el tipo `Fraccion` es algo complejo a primera vista, pero podríamos definir una versión simplificada del mismo como sigue:
+En el paquete Fracciones que hemos introducido en el capítulo anterior tenemos el ejemplo del tipo `Fraccion`, que sirve para representar números racionales. En el código del archivo `src/fraccion.jl` está la definición de ese tipo, que es algo compleja a primera vista, pero podríamos simplificar como sigue:
 
 ```julia
 struct Fraccion
@@ -78,7 +19,7 @@ end
 
 Este código define un tipo compuesto por dos valores: `num` (que representa el numerador) y `den` (el denominador). Tras ejecutar ese pequeño fragmento de código ya podríamos crear un objeto de ese tipo, utilizando el nombre del tipo (en este caso `Fraccion`) como "constructor". Por ejemplo, para la fracción de tres cuartos (3 partido por 4) escribiríamos `Fraccion(3,4)`. Los contenidos de ese objeto se pueden extraer usando los nombres de sus campos, mediante la función `getfield` o su expresión abreviada:
 
-```@repl c2
+```@repl c3
 f = Fraccion(3,4)
 f.num
 f.den
@@ -99,7 +40,7 @@ Los tipos suelen designarse con nombres en el llamado *camel case*, es decir, co
 
 En un tipo como `Fraccion` se puede acceder al valor de los campos como se ha indicado, pero no se pueden modificar, porque los tipos se definen por defecto como "inmutables". Así, por ejemplo, no podemos cambiar el numerador de la fracción anterior:
 
-```@repl c2
+```@repl c3
 f.num = 1
 ```
 
@@ -116,7 +57,7 @@ De esa manera, el ejemplo anterior no habría dado un error, sino el resultado q
 
 Una situación que puede dar lugar a confusiones es la de tipos inmutables que contienen campos con valores mutables. Por ejemplo, supongamos un tipo de datos llamado `Señal` que identifica una serie de datos y una etiqueta, del siguiente modo:
 
-```@repl c2
+```@repl c3
 struct Señal
     serie
     etiqueta
@@ -170,7 +111,7 @@ typeof(unos[3])
 
 ## Tipos de los campos y tipos paramétricos
 
-Veamos ahora un aspecto muy importante: la especificación de los tipos de los campos (`num` y `den` en nuestro ejemplo). Con las definiciones que se han dado hasta aquí, estos campos podían ser cualquier tipo de número, pero también textos, funciones o algún otro tipo más exótico de variable. Pero si tenemos la intención de que `Fraccion` represente fracciones de números enteros, podríamos restringir estos campos a valores de tipo `Int`:
+Veamos ahora un aspecto muy importante: la anotación de los tipos de los campos (`num` y `den` en nuestro ejemplo). Con las definiciones que se han dado hasta aquí, estos campos podían ser cualquier tipo de número, pero también textos, funciones o algún otro tipo más exótico de variable. Pero si tenemos la intención de que `Fraccion` represente fracciones de números enteros, podríamos restringir estos campos a valores de tipo `Int`:
 
 ```julia
 struct Fraccion <: Real
@@ -273,9 +214,9 @@ Ni siquiera es obligado que los parámetros representen tipos de los campos, aun
 
 ## Constructores
 
-Hemos visto que el nombre de los tipos también sirve de función "constructora", cuyos argumentos son los valores asignados a los campos en ell mismo orden en el que están declarados en la definición del tipo (en nuestro ejemplo, el valor del numerador seguido del denominador). En los tipos paramétricos el valor de los parámetros se pasa entre llaves antes de los argumentos --p.ej. `Fraccion{BigInt}(1,2)`--, pero se puede omitir si están unívocamente determinados por los valores de los campos.
+Hemos visto que el nombre de los tipos también sirve de "función constructora", cuyos argumentos son los valores asignados a los campos en el mismo orden en el que están declarados en la definición del tipo (en nuestro ejemplo, el valor del numerador seguido del denominador). En los tipos paramétricos el valor de los parámetros se pasa entre llaves antes de los argumentos --p.ej. `Fraccion{BigInt}(1,2)`--, pero se puede omitir si están unívocamente determinados por los valores de los campos.
 
-Para esas funciones constructoras también se pueden definir métodos específicos que empleen otro número y otros tipos de argumentos, como con cualquier otra función. Así, en `src/fraccion.jl` tenemos los siguientes constructores que crean una `Fraccion` a partir de otra fracción o un entero:
+Para esos constructores también se pueden definir métodos específicos que empleen otro número y otros tipos de argumentos, como con cualquier otra función. Así, en `src/fraccion.jl` tenemos los siguientes constructores que crean una `Fraccion` a partir de otra fracción o un entero:
 
 ```julia
 Fraccion(x::Fraccion) = x
@@ -291,6 +232,24 @@ Fraccion{T}(x::Tx) where {T, Tx<:Integer} = Fraccion{T}(x, one(Tx))
 ```
 
 La distinción de los dos primeros métodos para `x::Fraccion` no es absolutamente necesaria; podría haberse definido solo el segundo, pero cuando el parámetro de la fracción de entrada y el de la salida es el mismo, no vale la pena construir una nueva fracción, y por eso se ha definido el primer método que es más específico y más sencillo. El método paramétrico para construir la fracción a partir de un entero es virtualmente igual al no paramétrico.
+
+También se ha definido un constructor con parámetro de `Fraccion` a partir de cualquier número real, aunque en este caso solo se admiten valores equivalentes a enteros, y en caso contrario se emite un error:
+
+```julia
+function Fraccion{T}(x::R) where {T, R<:Real}
+    if iszero(rem(x, one(R)))
+        return Fraccion{T}(T(x), one(T))
+    else
+        throw(InexactError(nameof(T), T, x))
+    end
+end
+```
+
+La equivalencia de `x` a un entero se comprueba calculando el resto de la división por la unidad del mismo tipo que `x` (`rem(x, one(R)`), y verificando que sea cero con la función `iszero`. Si no se señala el parámetro `T` de la `Fraccion`, el siguiente método intenta crear un objeto de tipo `Fraccion{Int}`:
+
+```julia
+Fraccion(x::Real) = Fraccion{Int}(x)
+```
 
 ## Constructores internos
 
@@ -332,8 +291,38 @@ function Fraccion(num::N, den::D) where {N<:Integer, D<:Integer}
 end
 ```
 
-Aquí la función `promote_type`, de la que se dan más detalles posteriormente, determina un tipo que permite representar adecuadamente tanto los valores del tipo `N` (los del numerador) como los del tipo `D` (del denominador). Ese tipo es el que se asigna a la fracción resultante, que se crea con el constructor interno que se ha definido antes.
+Aquí la función `promote_type`, de la que se dan detalles en otro capítulo, determina un tipo que permite representar adecuadamente tanto los valores del tipo `N` (los del numerador) como los del tipo `D` (del denominador). Ese tipo es el que se asigna a la fracción resultante, que se crea con el constructor interno que se ha definido antes.
 
-Hay muchas cosas más que contar sobre los tipos, incluyendo cómo personalizar distintos aspectos y comportamientos de los mismos, y detalles sobre cómo funciona el *multiple dispatch*, que son relevantes al crear métodos específicos para nuevos tipos. Pero estos detalles se dejan para el [capítulo 4](4-tipos-ext.md); pues ahora que ya se han visto las cuestiones básicas sobre cómo definir tipos personalizados, es oportuno comentar otros aspectos del código en proyectos y paquetes de Julia, que harán que podamos sacar mayor provecho a los tipos, entre otras cosas.
+## Constructores abstractos
+
+Hay ocasiones en las que un mismo método sirve para varios constructores relacionados. Por ejemplo, para crear un número de tipo `Float64` a partir de una `Fraccion` se puede definir el siguiente método:
+
+```julia
+Float64(x::Fraccion) = Float64(x.num / x.den)
+```
+
+También podríamos escribir lo mismo sustituyendo `Float64` por `Float32`, y lo mismo con todos los subtipos de `AbstractFloat`. Ahora bien, en lugar de definir esos constructores uno a uno, en `src/fraccion.jl` tenemos el siguiente código que los define todos a la vez de forma abstracta:
+
+```julia
+function (::Type{T})(x::Fraccion) where {T<:AbstractFloat}
+    T(x.num / x.den)
+end
+```
+
+En ese código, el nombre del constructor se reemplaza por una anotación como la que se introdujo en el [capítulo 1](1-multiple-dispatch.md#Anotar-tipos-sin-valores) para representar de forma genérica un conjunto de tipos. Del mismo modo, los constructores de números enteros a partir de fracciones se definen del siguiente modo:
+
+```julia
+function (::Type{T})(x::Fraccion) where {T<:Integer}
+    if x.den == 1
+        return T(x.num)
+    else
+        throw(InexactError(nameof(T), T, x))
+    end
+end
+```
+
+Este código devuelve el numerador convertido al tipo de entero `T` si el denominador es unitario, y en caso contrario emite un `InexactError`, que indica que `x` no se puede convertir al tipo deseado. En esa línea, `nameof(T)` es el nombre del tipo en forma de símbolo.
+
+Hay muchas cosas más que contar sobre los tipos, incluyendo cómo personalizar distintos aspectos y comportamientos de los mismos, y detalles sobre cómo funciona el *multiple dispatch*, que son relevantes al crear métodos específicos para nuevos tipos. Pero estos detalles se dejan para el [capítulo 5](5-tipos-ext.md); pues ahora que ya se han visto las cuestiones básicas sobre cómo definir tipos personalizados, es oportuno comentar otros aspectos del código en proyectos y paquetes de Julia, que harán que podamos sacar mayor provecho a los tipos, entre otras cosas.
 
 
