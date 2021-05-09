@@ -17,6 +17,10 @@ En la página web se puede navegar por el conjunto de archivos, pero para mayor 
 El árbol de archivos es muy pequeño --menos de 50 Kb en su conjunto--, y su estructura es la siguiente:
 
 ```
+├── docs/
+|   ├── src/
+|   |   └── index.md
+|   └── make.jl
 ├── src/
 |   ├── Fracciones.jl
 |   └── fraccion.jl
@@ -111,7 +115,7 @@ uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
 
 En este archivo vemos los detalles de todas las dependencias, directas e indirectas, que necesita Julia para el proyecto. Por supuesto está `MacroTools`, del que se señala que se usa la versión 0.5.6, y que depende de `Markdown` y `Random`. A su vez, `Markdown` depende de `Base64` y `Random` de `Serialization`, y los cuatro módulos en cuestión aparecen identificados también con sus propias entradas (en este caso sin número de versión, porque los cuatro son módulos estándar). Es habitual que el árbol de dependencias sea mucho más amplio, y contenga decenas de módulos y otros paquetes externos, de los que también se especifica la versión usada en el entorno.
 
-Si exploras los archivos de Fracciones.jl, podrás comprobar que el archivo `Manifest.toml` es igual o muy parecido (puede cambiar por las versiones del paquete). `Project.toml` tiene unas pocas líneas más al principio, por razones que se comentan más adelante.
+Si exploras los archivos de Fracciones.jl, podrás comprobar que el archivo `Manifest.toml` es igual o muy parecido (puede cambiar por las versiones del paquete). `Project.toml` tiene algunas líneas más, por razones que se comentarán más adelante.
 
 En general, los paquetes que se pueden usar directamente en el proyecto son los señalados en `Project.toml`, que son los reportados por `]status`. Así pues, en este caso podemos ejecutar `using MacroTools` --y naturalmente, también se pueden usar todos los módulos estándar de Julia, estén o no en el `Manifest.toml`--. Pero no se podra aplicar `using` ni `import` con ningún otro paquete externo que no se haya añadido explícitamente, aunque esté en `Manifest.toml` como dependencia indirecta.
 

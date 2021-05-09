@@ -1,4 +1,4 @@
-# Capítulo 2. Definición de tipos compuestos
+# Capítulo 3. Definición de tipos compuestos
 
 ```@setup c3
 using Fracciones
@@ -35,6 +35,20 @@ Los tipos suelen designarse con nombres en el llamado *camel case*, es decir, co
 !!! note "Tipos vs. clases"
     
     Este concepto de los "tipos" es muy semejante a lo que en otros lenguajes de programación se llaman "clases", y si anteriormente has trabajado con algún lenguaje que utilice clases, encontrarás varias cosas que se hacen igual o de forma muy parecida con los tipos de Julia. Sin embargo, el término "clase" se encuentra muy asociado al paradigma de la programación orientada a objetos, que no es el que se sigue en Julia. La diferencia de nomenclatura ayuda a remarcar esta distinción.
+
+Lo realmente interesante de poder definir tipos compuestos no es que permitan organizar datos de forma personalizada; para eso ya Julia ya pone a nuestra disposición multitud de estructuras de datos muy versátiles (diccionarios, tuplas con nombre...). La gran ventaja de los tipos es que se pueden definir funciones con métodos específicos para ellos, igual que vimos en el capítulo 1 con los distintos tipos de números. Así, en el código de `src/fraccion.jl` tenemos definida, por ejemplo, la siguiente función para calcular el recíproco de una fracción
+
+```julia
+"""
+    reciproco(x)
+    
+Calcula la fracción recíproca de `x`.
+"""
+reciproco(x::Fraccion) = Fraccion(x.den, x.num)   
+reciproco(x) = reciproco(Fraccion(x))
+```
+
+Esta función tiene dos métodos definidos: el primero es específico para el tipo `Fraccion`; y el segundo es un método genérico, que sirve para cualquier número que podamos convertir en una fracción (más adelante veremos cómo se hace eso). 
 
 ## Tipos mutables e inmutables
 
@@ -233,19 +247,21 @@ Fraccion{T}(x::Tx) where {T, Tx<:Integer} = Fraccion{T}(x, one(Tx))
 
 La distinción de los dos primeros métodos para `x::Fraccion` no es absolutamente necesaria; podría haberse definido solo el segundo, pero cuando el parámetro de la fracción de entrada y el de la salida es el mismo, no vale la pena construir una nueva fracción, y por eso se ha definido el primer método que es más específico y más sencillo. El método paramétrico para construir la fracción a partir de un entero es virtualmente igual al no paramétrico.
 
-También se ha definido un constructor con parámetro de `Fraccion` a partir de cualquier número real, aunque en este caso solo se admiten valores equivalentes a enteros, y en caso contrario se emite un error:
+También se ha definido un constructor con parámetro de `Fraccion` a partir de cualquier número real, aunque en este caso solo se admiten valores equivalentes a enteros o infinitos, y en caso contrario se emite un error:
 
 ```julia
 function Fraccion{T}(x::R) where {T, R<:Real}
     if iszero(rem(x, one(R)))
         return Fraccion{T}(T(x), one(T))
+    elseif isinf(x)
+        return Fraccion{T}(T(sign(x))*one(T), zero(T))
     else
         throw(InexactError(nameof(T), T, x))
     end
 end
 ```
 
-La equivalencia de `x` a un entero se comprueba calculando el resto de la división por la unidad del mismo tipo que `x` (`rem(x, one(R)`), y verificando que sea cero con la función `iszero`. Si no se señala el parámetro `T` de la `Fraccion`, el siguiente método intenta crear un objeto de tipo `Fraccion{Int}`:
+La equivalencia de `x` a un entero se comprueba calculando el resto de la división por la unidad del mismo tipo que `x` (`rem(x, one(R)`), y verificando que sea cero con la función `iszero`. Asimismo, la equivalencia de `x` a un número infinito se obtiene con la función `isinf`. Si no se señala el parámetro `T` de la `Fraccion`, el siguiente método intenta crear un objeto de tipo `Fraccion{Int}`:
 
 ```julia
 Fraccion(x::Real) = Fraccion{Int}(x)
@@ -279,6 +295,10 @@ end
 ```
 
 Este código utiliza la función `gdc` para obtener el máximo común divisor (en inglés *greatest common divisor*) de los argumentos introducidos, con el que la fracción se reduce a su forma canónica (p.ej. `Fraccion(2,4)` se reduce a `Fraccion(1,2)`), y manipula los signos para asegurar que el denominador es positivo. Además, hace unas verificaciones para lanzar un error si los dos argumentos son cero (en cuyo caso la fracción no tiene un valor numérico definido), o si si cualquiera de ellos es el valor negativo extremo del tipo especificado (`typemin(T)`). Por ejemplo, si `T` es `Int16` --que tiene valores definidos entre `-32768` y `32767`--, se da un error en el caso de que el numerador o el denominador sea `-32768`. Esto simplifica la gestión de excepciones en cálculos en los que se tenga que cambiar algún signo, pues el valor positivo `32768` no se puede representar con ese tipo.
+
+!!! "Desbordamiento aritmético"
+    
+    Siempre que se trabaja con números de tipo entero (subtipos de `Signed` o `Unsigned`) hay que tener cuidado los posibles problemas de [desbordamiento aritmético](https://es.wikipedia.org/wiki/Desbordamiento_aritm%C3%A9tico). Esto ocurre cuando se llega a los límites del rango definido para cada tipo (calculados con `typemin` y `typemax`).
 
 Para definir el objeto que devuelve el constructor interno se utiliza la palabra clave `new`, en lugar del nombre del tipo. El motivo es que los constructores internos *sustituyen* los constructores por defecto. Es decir, que no existe ningún método `Fraccion` que utilizar salvo el que se está definiendo en ese código. En este caso hemos querido tener ese único constructor interno, para asegurar que las fracciones siempre adoptan la forma canónica con valores aceptables. Pero normalmente se suelen mantener los constructores por defecto, y solo se crean métodos externos, lo que hace las cosas más sencillas.
 
@@ -323,6 +343,6 @@ end
 
 Este código devuelve el numerador convertido al tipo de entero `T` si el denominador es unitario, y en caso contrario emite un `InexactError`, que indica que `x` no se puede convertir al tipo deseado. En esa línea, `nameof(T)` es el nombre del tipo en forma de símbolo.
 
-Hay muchas cosas más que contar sobre los tipos, incluyendo cómo personalizar distintos aspectos y comportamientos de los mismos, y detalles sobre cómo funciona el *multiple dispatch*, que son relevantes al crear métodos específicos para nuevos tipos. Pero estos detalles se dejan para el [capítulo 5](5-tipos-ext.md); pues ahora que ya se han visto las cuestiones básicas sobre cómo definir tipos personalizados, es oportuno comentar otros aspectos del código en proyectos y paquetes de Julia, que harán que podamos sacar mayor provecho a los tipos, entre otras cosas.
+Hay muchas cosas más que contar sobre los tipos, incluyendo cómo personalizar distintos aspectos y comportamientos de los mismos. Pero estos detalles se dejan para el [capítulo 5](5-tipos-ext.md); pues ahora que ya se han visto las cuestiones básicas sobre cómo definir tipos personalizados, es oportuno comentar otros aspectos del código en proyectos y paquetes de Julia, que harán que podamos sacar mayor provecho a los tipos, entre otras cosas.
 
 

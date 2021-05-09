@@ -1,4 +1,4 @@
-# Capítulo 3. Módulos y paquetes
+# Capítulo 4. Módulos y paquetes
 
 ```@setup c4
 using Fracciones
@@ -39,7 +39,7 @@ julia> Fracciones.Fraccion(3,4) # Así sí
 Fraccion(3, 4)
 ```
 
-La primera impresión puede ser que tener que añadir el nombre del módulo como prefijo aporta más molestias que otra cosa; pero es una forma de poner orden en el espacio de trabajo, lo que resulta especialmente beneficioso en cuanto la cantidad de objetos contenidos en el módulo empieza a crecer. Un claro beneficio es que no hace falta preocuparse por la repetición de nombres. Los módulos forman contextos con espacios de nombres aislados, por lo que se pueden definir variables y funciones con los mismos nombres que los de otros paquetes, o incluso del módulo `Base`, sin que se dé ningún conflicto.
+La primera impresión puede ser que tener que añadir el nombre del módulo como prefijo aporta más molestias que otra cosa; pero es una forma de poner orden en el espacio de trabajo, lo que resulta especialmente beneficioso en cuanto la cantidad de objetos contenidos en el módulo empieza a crecer. Un claro beneficio es que no hace falta preocuparse por la repetición de nombres. Los módulos forman contextos con espacios de nombres aislados, por lo que se pueden definir variables y funciones con los mismos nombres que los de otros paquetes, o incluso del módulo `Base`, sin que se dé ningún conflicto. (Encontrarás más detalles sobre este tema en el [capítulo 7 sobre contextos de variables](7-contextos.md).)
 
 Por otro lado, el inconveniente de tener que prefijar el nombre del módulo puede reducirse en el caso de nombres largos usando un alias (p.ej. `F = Fracciones`, tras lo cual se puede escribir `F.Fracciones`, etc.). E incluso hay recursos para no tener que escribir el nombre del módulo en absoluto, que comentaremos después.
 
@@ -132,7 +132,7 @@ Si se ejecuta el comando `]generate Mod` en el gestor de paquetes, se generará 
 
 !!!tip "Plantilla de paquetes con PackageSkeleton"
 
-    El paquete [PackageSkeleton](https://github.com/tpapp/PkgSkeleton.jl) amplía la funcionalidad de `]generate`, y permite crear plantillas más complejas que incluyen utilidades y estructuras de archivos para controlar las versiones del paquete, crear tests, documentación, etc.
+    Hay paquetes como [PkgTemplates](https://invenia.github.io/PkgTemplates.jl/stable/) o [PackageSkeleton](https://github.com/tpapp/PkgSkeleton.jl), que amplían la funcionalidad de `]generate`, y permiten crear plantillas más complejas que incluyen utilidades y estructuras de archivos para controlar las versiones del paquete, crear tests, documentación, etc.
 
 Una vez el código está en forma de paquete (como en el repositorio de Fracciones), ya se puede utilizar el comando `]add` para añadirlo como dependencia en cualquier proyecto distinto, y usarlo como un paquete más, tal como se mostró en el [capítulo 1](1-paquetes.md). Sin embargo, salvo que el código esté realmente consolidado y no se piense hacer cambios sobre el mismo, es más práctico usar el comando `]develop` --o de forma abreviada `]dev`--. La diferencia entre `]add Paquete` y `]dev Paquete` es que el primer comando instala una copia de `Paquete` en el sistema centralizado de paquetes, y cada vez que se cargue (con `using Paquete`, `import Paquete`, etc.) se empleará esa copia. Por contra, `]dev` crea una referencia al directorio donde se encuentra `Paquete`, y la versión que se carga con `using` o `import` es la que corresponde al contenido del directorio en ese momento. Si se utiliza `]dev` con una URL, en lugar de un directorio local, el contenido del repositorio se copiará a una carpeta del depósito de Julia (normalmente `.julia/dev`, en el directorio personal del usuario), y será el código de esa carpeta el que se use cada vez que se carga el paquete.
 
