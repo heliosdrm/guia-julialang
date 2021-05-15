@@ -30,7 +30,7 @@ Los tipos suelen designarse con nombres en el llamado *camel case*, es decir, co
 
 !!! note "Problemas con la redefinición de tipos"
     
-    Si vas a hacer pruebas con el tipo `Fraccion`, *no* ejecutes la definición simplificada que se ha dado arriba. Hay un problema con la definición de tipos, y es que una vez se ha hecho, ya no se puede modificar en toda la sesión de trabajo. Eso significa que si ya se ha cargado alguna otra definición de `Fraccion`, el código anterior no funcionará; y si se ejecuta esa primero, no se va a poder redefinirlo sin cerrar la sesión de Julia e iniciar otra. Hay algunos trucos para redefinir tipos sin reiniciar Julia, que veremos en el capítulo XX, pero por ahora, lo que se puede hacer para experimentar es utilizar nombres "descartables", como por ejemplo `Fraccion1`, `Fraccion2`, que no entren en colisión entre sí.
+    Si vas a hacer pruebas con el tipo `Fraccion`, *no* ejecutes la definición simplificada que se ha dado arriba. Hay un problema con la definición de tipos, y es que una vez se ha hecho, ya no se puede modificar en toda la sesión de trabajo. Eso significa que si ya se ha cargado alguna otra definición de `Fraccion`, el código anterior no funcionará; y si se ejecuta esa primero, no se va a poder redefinirlo sin cerrar la sesión de Julia e iniciar otra. Hay algunos trucos para redefinir tipos sin reiniciar Julia, que veremos en el capítulo siguiente, pero por ahora lo que se puede hacer para experimentar es utilizar nombres "descartables", como por ejemplo `Fraccion1`, `Fraccion2`, que no entren en colisión entre sí.
 
 !!! note "Tipos vs. clases"
     
@@ -311,7 +311,7 @@ function Fraccion(num::N, den::D) where {N<:Integer, D<:Integer}
 end
 ```
 
-Aquí la función `promote_type`, de la que se dan detalles en otro capítulo, determina un tipo que permite representar adecuadamente tanto los valores del tipo `N` (los del numerador) como los del tipo `D` (del denominador). Ese tipo es el que se asigna a la fracción resultante, que se crea con el constructor interno que se ha definido antes.
+Aquí la función `promote_type`, de la que se dan detalles en el [capítulo 5](5-tipos-ext.md#Conversión-y-promoción-de-tipos), determina un tipo que permite representar adecuadamente tanto los valores del tipo `N` (los del numerador) como los del tipo `D` (del denominador). Ese tipo es el que se asigna a la fracción resultante, que se crea con el constructor interno que se ha definido antes.
 
 ## Constructores abstractos
 
