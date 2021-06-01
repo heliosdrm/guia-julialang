@@ -405,6 +405,7 @@ end
 !!! note
 
     El punto y coma es necesario para separar la lista de argumentos posicionales y los argumentos con nombre a la hora de definir la función. Si una función solo tuviera argumentos con nombre, la lista de argumentos debería empezar con un punto y coma --e.g. `foo(; a...)`.
+    DOS PÁRRAFOS MÁS ARRIBA DICE QUE ES HABITUAL PERO NO OBLIGATORIO USARSE EL PUNTO Y COMA.
 
 Una forma (algo exótica, pero válida) de llamar a esta función `foo` podría ser:
 
@@ -420,6 +421,7 @@ Los valores asignados a las variables de la función con esta llamada serían lo
 * `a = 1` (valor por defecto)
 * `b = 10`
 * `c`: una coleccion de datos nombrados, con `c[:bang] = 0`.
+    ESTE EJEMPLO NO LO ENTIENDO. DE DÓNDE SALE LA a Y LA c? NO SE VE LA RELACIÓN DIRECTA DE LA FUNCIÓN ANTERIOR Y ESTA LISTA DE ARGUMENTOS
 
 La flexibilidad que proporcionan los argumentos con nombre los hace una opción atractiva para facilitar el uso de las funciones, pero es recomendable usarlos con mesura. El abuso de este tipo de argumentos es una causa frecuente de código poco eficiente, que impide a Julia utilizar todas sus herramientas para optimizar los programas.
 
