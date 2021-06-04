@@ -23,7 +23,7 @@ Esto significa que el paquete requiere el uso de una versión de Julia compatibl
 * Puede omitirse el número de parche (como en `MacroTools = "0.5"`), y también el número de versión menor (dejando solo el número de versión mayor, como en `julia = "1"`). Los números que se omiten se asumen que son `0`. Así, el ejemplo es equivalente a indicar `julia = "1.0.0"` y `MacroTools = "0.5.0"`.
 * Se consideran compatibles todas las versiones igual o mayores que el número especificado, siempre que se mantenga fijo el número de mayor nivel distinto de cero.
 
-Así, en el caso de nuestro paquete de ejemplo, las versiones compatibles de `MacroTools` son 0.5.0`, `0.5,1`... y todas las que comiencen por `0.5`; y las versiones de Julia admitidas son todas las que comienzan por `1`.
+Así, en el caso de nuestro paquete de ejemplo, las versiones compatibles de `MacroTools` son `0.5.0`, `0.5,1`... y todas las que comiencen por `0.5`; y las versiones de Julia admitidas son todas las que comienzan por `1`.
 
 Esto implica que al ejecutar `]add Fracciones` en un proyecto, se comprobará que la versión de Julia es `1.x.y`, el gestor de paquetes buscará versiones de `MacroTools` que comiencen por `0.5`, e instalará la mayor de ellas que también sea compatible con otros paquetes que hubiera ya instalados en ese proyecto. El paquete escogido se utilizará para actualizar el `Manifest.toml` del proyecto en el que estamos.
 
@@ -82,7 +82,7 @@ El contenido principal de `runtests.jl` son líneas de código encabezadas por l
 
 Gracias a que se han organizado de esta manera, estas pruebas pueden lanzarse directamente desde el entorno de cualquier proyecto que tenga el paquete Fracciones entre sus dependencias. Únicamente hay que ejecutar el comando `]test Fracciones` en el entorno de gestión de paquetes:
 
-```julia
+```
 (proyecto1) pkg> test Fracciones
     Testing Fracciones
 Status `/tmp/jl_YtCQpK/Project.toml`

@@ -71,7 +71,7 @@ De esa manera, el ejemplo anterior no habría dado un error, sino el resultado q
 
 Una situación que puede dar lugar a confusiones es la de tipos inmutables que contienen campos con valores mutables. Por ejemplo, supongamos un tipo de datos llamado `Señal` que identifica una serie de datos y una etiqueta, del siguiente modo:
 
-```@repl c3
+```julia
 struct Señal
     serie
     etiqueta
@@ -138,7 +138,7 @@ Esto hará que los valores introducidos al crear una `Fraccion` intenten convert
 
 [^1]: `Int` es un *alias* que puede representar tipos distintos según la arquitectura del ordenador en que se está trabajando: es equivalente a `Int64` en los procesadores de 64 bits, y a `Int32` en procesadores de 32 bits.
 
-```julia
+```julia-repl
 julia> Frac(3.0, 4.0) # Se pueden convertir a enteros
 Frac(3, 4)
 
@@ -177,7 +177,7 @@ end
 
 Esto significa que `num` y `den` han de ser de un tipo `T`, no especificado a priori, que ha de cumplir la condición `T <: Integer`. A la hora de definir una `Fraccion` esto no resulta muy distinto que si hubiéramos especificado `num::Integer` y `den::Integer`, pero en el fondo es algo muy distinto, como vemos a continuación:
 
-```julia
+```julia-repl
 julia> f1 = Fraccion(3,4)
 Fraccion{Int64}(3, 4)
 
@@ -200,7 +200,7 @@ julia> typeof(f1) <: Fraccion >: typeof(f2)
 true
 ```
 
-Aquí vemos que `f1` es del tipo `Fraccion{Int64} mientras `f2` es una `Fraccion{UInt8}`.[^2] Son dos tipos *distintos*, cuya representación en memoria está bien especificada por el tipo de parámetro indicado entre llaves. Por otro lado, ambos se reconocen como miembros del tipo `Fraccion`.
+Aquí vemos que `f1` es del tipo `Fraccion{Int64}` mientras `f2` es una `Fraccion{UInt8}`.[^2] Son dos tipos *distintos*, cuya representación en memoria está bien especificada por el tipo de parámetro indicado entre llaves. Por otro lado, ambos se reconocen como miembros del tipo `Fraccion`.
 
 [^2]: La representación canónica de los números enteros "sin signo" (`Unsigned`) es mediante un código hexadecimal con una posición por cada 4 bits, precedido de `0x`; p.ej. `0x0f` para el número 15 en un entero sin signo de 8 bits (`UInt8`), `0x000f` para el mismo número en 16 bits `UInt16`, etc. Entre los números decimales, los de 32 bits (`Float32`) también tienen una representación canónica especial: se representan en notación exponencial, con la letra `f` antes del exponente; p.ej. el número 15 es `15.0f0` --pero también podría escribirse como `1.5f1`, etc.
 
@@ -296,7 +296,7 @@ end
 
 Este código utiliza la función `gdc` para obtener el máximo común divisor (en inglés *greatest common divisor*) de los argumentos introducidos, con el que la fracción se reduce a su forma canónica (p.ej. `Fraccion(2,4)` se reduce a `Fraccion(1,2)`), y manipula los signos para asegurar que el denominador es positivo. Además, hace unas verificaciones para lanzar un error si los dos argumentos son cero (en cuyo caso la fracción no tiene un valor numérico definido), o si si cualquiera de ellos es el valor negativo extremo del tipo especificado (`typemin(T)`). Por ejemplo, si `T` es `Int16` --que tiene valores definidos entre `-32768` y `32767`--, se da un error en el caso de que el numerador o el denominador sea `-32768`. Esto simplifica la gestión de excepciones en cálculos en los que se tenga que cambiar algún signo, pues el valor positivo `32768` no se puede representar con ese tipo.
 
-!!! "Desbordamiento aritmético"
+!!! warning "Desbordamiento aritmético"
     
     Siempre que se trabaja con números de tipo entero (subtipos de `Signed` o `Unsigned`) hay que tener cuidado los posibles problemas de [desbordamiento aritmético](https://es.wikipedia.org/wiki/Desbordamiento_aritm%C3%A9tico). Esto ocurre cuando se llega a los límites del rango definido para cada tipo (calculados con `typemin` y `typemax`).
 

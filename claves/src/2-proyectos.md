@@ -40,7 +40,7 @@ Centrándonos por ahora en los archivos que hay en el directorio raíz, para nue
 
 Estos dos archivos se generan automáticamente cuando se opera con el gestor de paquetes de Julia. Vamos a verlo con la creación de un proyecto nuevo. Supongamos que estamos en una sesión de Julia, y ejecutamos los siguientes comandos (el primero en el modo de REPL "normal", y los siguientes en el modo "pkg"):  
 
-```julia
+```julia-repl
 julia> mkdir("proyecto_prueba")
 "proyecto_prueba"
 
@@ -55,13 +55,13 @@ En la primera línea hemos utilizado la función `mkdir` para crear un nuevo dir
 
 Al escribir `]activate proyecto_prueba`, el entorno de Julia cambia al definido en ese directorio (lo que sigue a `]activate` puede ser una ruta absoluta o relativa cualquiera, o simplemente `.` para activar el entorno definido en el directorio actual). El mensaje que nos devuelve Julia señala que se ha activado un entorno *nuevo*, porque en ese directorio aún no existe realmente ningún archivo `Project.toml`. Esto lo vemos al ejecutar `]status` en la siguiente línea: normalmente el resultado de ese comando es un listado de los paquetes que se han añadido anteriormente, pero ahora vemos que nos encontramos en un "proyecto vacío" (*empty project*), como si fuera la primera vez que usamos Julia después de su instalación.
 
-!!!note "Comandos de Pkg"
+!!! note "Comandos de Pkg"
 
     Al describir los comandos de Julia, cuando van precedidos de `]` como `]activate` o `]status` en este ejemplo, se da a entender que son comandos ejecutados en el "modo pkg", que en el REPL se muestran con la etiqueta `pkg>` al principio de la línea, en lugar de la etiqueta `julia>` que se observa habitualmente. Todos los comandos el el "modo pkg" se corresponden con una función del módulo estándar `Pkg`, por lo que si conviene, en lugar de `]activate X` se puede utilizar la función `Pkg.activate("X")` en el modo normal del REPL. (Antes hay que ejecutar `using Pkg`, y nótese que los argumentos van entrecomillados.)
     
 A este proyecto vacío le podemos añadir paquetes mediante con los comandos de gestión de paquetes habituales. Añadamos, por ejemplo, el paquete `MacroTools` que también se utiliza en el proyecto de Fracciones.jl:
 
-```julia
+```
 (proyecto_prueba) pkg> add MacroTools
    Updating registry at `~/.julia/registries/General`
    Updating git-repo `https://github.com/JuliaRegistries/General.git`
@@ -127,7 +127,7 @@ Emplear un entorno específico para cada proyecto, con solo el conjunto mínimo 
 
 Así, supongamos que tenemos el repositorio de ejemplo descargado en una ruta como `proyectos_julia/Fracciones`. Para poder trabajar con él bastaría con ejecutar los siguientes comandos:
 
-```julia
+```julia-repl
 (@v1.6) pkg> activate proyectos_julia/Fracciones
  Activating environment at `~/proyectos_julia/Fracciones/Project.toml`
 
@@ -136,7 +136,7 @@ Así, supongamos que tenemos el repositorio de ejemplo descargado en una ruta co
 
 El comando `]instantiate` sirve para instalar en el sistema los paquetes recogidos en `Manifest.toml` (si es que no estaban ya instalados, o no se tenían las versiones adecuadas). Una vez hecho esto, ya podemos utilizar sin problemas el código del repositorio. Por ejemplo, podemos ejecutar el contenido de `src/fraccion.jl`:
 
-```julia
+```julia-repl
 julia> include("proyectos_julia/Fracciones/src/fraccion.jl");
 ```
 
@@ -153,7 +153,7 @@ El código de un proyecto puede contener instrucciones para realizar un análisi
 
 Por ahora basta con comentar que, gracias a que el proyecto está organizado de esa forma, puede incluirse como dependencia en otro proyecto donde nos interese usar las herramientas definidas ahí. Supongamos que ese nuevo proyecto va a estar ubicado en la carpeta `proyectos_julia/proyecto1`:
 
-```julia
+```
 (@v1.6) pkg> activate proyectos_julia/proyecto1
  Activating new environment at `~/proyecto_prueba/proyecto1/Project.toml`
 
@@ -176,7 +176,7 @@ Updating `~/proyecto_prueba/proyecto1/Manifest.toml`
 
 Los mensajes que aparecen después de `]add proyectos_julia/Fracciones` indican que nuestro nuevo proyecto ahora incorpora el de `Fracciones` como dependencia directa (en `Project.toml`), e incluye como dependencias indirectas todas las que también encontrábamos en el `Manifest.toml` de `Fracciones`. Ahora podemos trabajar con las fracciones igual que en el ejemplo del apartado anterior, pero sin tener que ejecutar explicitamente el código del otro proyecto:
 
-```julia
+```julia-repl
 julia> using Fracciones
 [ Info: Precompiling Fracciones [81451a68-6ad1-41c9-8c04-09494141aeca]
 
@@ -188,7 +188,7 @@ De hecho, cuando ejecutamos `using Fracciones` como se ha hecho en este ejemplo,
 
 [^1]: Esto se puede hacer con cualquier servidor que aloje repositorios de git, además de GitHub.
 
-```julia
+```
 (proyecto1) pkg> add https://github.com/heliosdrm/Fracciones.jl
     Cloning git-repo `https://github.com/heliosdrm/Fracciones.jl`
    Updating git-repo `https://github.com/heliosdrm/Fracciones.jl`

@@ -25,7 +25,7 @@ Con esas funciones, el signo y el valor absoluto de una `Fraccion` se definen ha
 
 Nótese que para hacer esto se ha escrito el prefijo `Base` antes del nombre de las funciones. De no haberlo incluido, se habrían creado funciones con los mismos nombres (`sign`, `abs`, `one` y `zero`) propias del módulo `Fracciones` donde se definen esos métodos, independientes de las de `Base`. Alternativamente, se podrían haber importado esas funciones de forma explícita, escribiendo con anterioridad:
 
-`julia
+```julia
 import Base: sign, abs, one zero
 ```
 
@@ -235,7 +235,7 @@ end
 La última línea de ese ejemplo se puede leer como la definición método para la función `m::Multiplicador`, es decir, una función representada por cualquier objeto `m` del tipo `Multiplicador` que se ha definido antes. En esa función, `m` es también una variable que se puede usar para hacer operaciones; en particular lo que hace es devolver el producto de su campo `n` por el argumento `x`. Así: 
 
 ```@repl c5
-k = Multiplicador(3)
+k = Multiplicador(3);
 k(2.5)
 ```
 

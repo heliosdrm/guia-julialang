@@ -1,6 +1,7 @@
 # Capítulo 1. *Multiple dispatch*
 
 ```@setup c1
+using InteractiveUtils
 f(x::Int, y::AbstractString) = 1
 f(x::Real, y::String) = 2
 ```
@@ -71,7 +72,7 @@ Para explorar la jerarquía de los tipos existen las funciones `subtypes`, que d
 ```@repl
 subtypes(AbstractFloat)
 subtypes(Float64) # Es un tipo concreto, sin subtipos
-supertype(`Bool`)
+supertype(Bool)
 ```
 
 ## Funciones y métodos
@@ -139,6 +140,7 @@ En el caso de los argumentos de entrada, la anotación puede hacerse de forma ab
 function intercambiartipos(x::T1, y::T2) where {T1, T2}
     return (T2(x), T1(y))
 end
+nothing #hide
 ```
 
 Esta función admite dos argumentos de tipos cualesquiera, pero gracias a que los tenemos identificados como `T1` y `T2` podemos usarlos en el cuerpo de la función para operar con ellos (en este caso, intercambiar los tipos de las entradas):
@@ -176,6 +178,7 @@ Esta circunstancia se suele dar cuando tratamos con lo que se conoce como tipos 
 ```@example c1
 quiensoy(::Nothing) = println("El valor introducido es `nothing`")
 quiensoy(::Missing) = println("El valor introducido es `missing`")
+nothing #hide
 ```
 
 ```@repl c1
@@ -198,6 +201,7 @@ En Julia podríamos representar cada operación con una función (la suma, el pr
 elementoneutro(::typeof(+), ::Type{T}) where {T<:Real} = zero(T)
 elementoneutro(::typeof(*), ::Type{T}) where {T<:Real} = one(T)
 elementoneutro(::typeof(*), ::Type{<:AbstractString}) = ""
+nothing #hide
 ```
 
 Aquí estamos aprovechando que cada función tiene su propio tipo, como se ha indicado anteriormente, aunque todas se puedan agrupar en el supertipo `Function`, y que los tipos de variables son también objetos con su propio tipo, todos ellos de la familia `Type`. Así:

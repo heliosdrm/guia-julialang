@@ -45,16 +45,29 @@ Aquí tenemos el nombre de variable `x` definido con dos valores distintos en se
 
 La situación se complica cuando se carga un módulo importando objetos del mismo. Por ejemplo, al ejecutar `using Fracciones` desde `Main`, todos los nombres exportados (el del tipo `Fraccion`, las funciones `numerador`, `denominador`, etc.) aumentan su alcance, y son reconocibles en `Main` --a no ser que ya existan variables u otros objetos en `Main` con esos nombres, en cuyo caso la importación no tiene lugar--. Esta operación rompe parcialmente la separación de contextos que existe de forma natural entre módulos distintos, aunque con ciertas limitaciones: solo afecta a los nombres importados, y en el contexto del módulo que hace la importación estos se convierten en variables de "solo lectura", es decir, que no se les puede asignar nuevos valores. Lo vemos con un ejemplo:
 
-```@repl
-module Foo
-    export x
-    x = [1,2]
-end
-using .Foo # importa `x` en `Main`
-x
-x[1] = 0; # Si es un objeto mutable se puede modificar
-x
-x = [3,4] # Pero no lo podemos reasignar
+```julia-repl
+julia> module Foo
+           export x
+           x = [1,2]
+       end
+Main.Foo
+
+julia> using .Foo # importa `x` en `Main`
+
+julia> x
+2-element Vector{Int64}:
+ 1
+ 2
+
+julia> x[1] = 0; # Si es un objeto mutable se puede modificar
+
+julia> x
+2-element Vector{Int64}:
+ 0
+ 2
+
+julia> x = [3,4] # Pero no lo podemos reasignar
+ERROR: cannot assign a value to variable Foo.x from Main
 ```
 
 Como se vio en el [capítulo 4](4-modulos-paquetes.md#Importar-módulos-y-sus-objetos), hay distintas formas de importar objetos de otros módulos: `using Foo` importa todos los que están señalados con `export`, pero también podemos hacer una importación selectiva con `import Foo: x`, etc. Estas dos formas de importar objetos tienen un par de diferencias sutiles:
@@ -188,8 +201,9 @@ function anidados(x)
     end
     println("Nivel superior: ", x)
 end
+nothing #hide
 ```
-```@repl
+```@repl c7
 anidados(10)
 ```
 
@@ -216,8 +230,9 @@ function secuenciador()
     end
     return f
 end
+nothing #hide
 ```
-```@repl
+```@repl c7
 siguiente = secuenciador()
 siguiente()
 siguiente()
