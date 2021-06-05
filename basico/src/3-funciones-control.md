@@ -392,7 +392,7 @@ A la hora de definir los argumentos de una función, el conjunto de argumentos v
 
 Algunas funciones también admiten argumentos identificados por su nombre, en lugar de por su posición (lo que en inglés se llaman *keyword arguments*). En el capítulo anterior hemos visto algunos ejemplos, como los argumentos `skipstart` y `header` de la función `readdlm`, o `delim`, `ignorerepeated`, `missingstring`, etc. de `CSV.File`.
 
-Los argumentos "con nombre" se introducen siempre después de los argumentos posicionales, y es habitual (aunque no obligatorio en general) separar ambos conjuntos de argumentos por un punto y coma, en lugar de una coma. Una propiedad interesante de estos argumentos es que se pueden pasar en cualquier orden, ya que el nombre es suficiente para distinguirlos.
+Los argumentos "con nombre" se introducen siempre después de los argumentos posicionales, y a la hora de llamar a la función es habitual (aunque no obligatorio en general) separar ambos conjuntos de argumentos por un punto y coma, en lugar de una coma. Una propiedad interesante de estos argumentos es que se pueden pasar en cualquier orden, ya que el nombre es suficiente para distinguirlos.
 
 Estos argumentos también pueden declararse con valores por defecto (en cuyo caso son opcionales) o sin ellos (lo que los hace obligatorios), aunque lo más habitual es que sean opcionales. También es posible declarar un conjunto indefinido de argumentos con nombre utilizando los puntos suspensivos, igual que en el caso de los argumentos posicionales, e incluso combinar todas estas opciones. Así pues, una función podría declararse con un conjunto de argumentos de entrada como el siguiente:
 
@@ -404,7 +404,7 @@ end
 
 !!! note
 
-    El punto y coma es necesario para separar la lista de argumentos posicionales y los argumentos con nombre a la hora de definir la función. Si una función solo tuviera argumentos con nombre, la lista de argumentos debería empezar con un punto y coma --e.g. `foo(; a...)`.
+    En el código que define la función es obligatorio utilizar el punto y coma para separar la lista de argumentos posicionales y los argumentos con nombre --al contrario que cuando se llama la función, donde el punto y coma es opcional--. Si una función solo tuviera argumentos con nombre, la lista de argumentos debería empezar con un punto y coma --e.g. `foo(; a...)`.
 
 Una forma (algo exótica, pero válida) de llamar a esta función `foo` podría ser:
 
@@ -414,12 +414,12 @@ foo(1.0, ["pim", "pam", "pum"]..., bang=0, b=10)
 
 Los valores asignados a las variables de la función con esta llamada serían los siguientes:
 
-* `x = 1.0`
-* `y = "pim"`
+* `x = 1.0` (primer argumento)
+* `y = "pim"` (segundo argumento, desagrupado de `["pim", "pam", "pum"`]) 
 * `z`: una colección de dos datos, con `z[1] = "pam"`, y `z[2] = "pum"`
-* `a = 1` (valor por defecto)
+* `a = 1` (valor por defecto, pues no se ha introducido ninguno con ese nombre)
 * `b = 10`
-* `c`: una coleccion de datos nombrados, con `c[:bang] = 0`.
+* `c`: una coleccion de datos nombrados, con `c[:bang] = 0`
 
 La flexibilidad que proporcionan los argumentos con nombre los hace una opción atractiva para facilitar el uso de las funciones, pero es recomendable usarlos con mesura. El abuso de este tipo de argumentos es una causa frecuente de código poco eficiente, que impide a Julia utilizar todas sus herramientas para optimizar los programas.
 
