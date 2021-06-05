@@ -353,7 +353,7 @@ ERROR: InexactError: Int64(0.5)
 julia> numeros[1] = 5.0;
 
 julia> numeros
-3-element Array{Int64,1}:
+3-element Vector{Int64}:
  5
  2
  3

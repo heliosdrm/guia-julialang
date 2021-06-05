@@ -124,7 +124,7 @@ ERROR: InexactError: Int64(0.5)
 [...]
 
 julia> numeros[7] = 10  # Esto también, porque el vector solo tenía 6 elementos
-ERROR: BoundsError: attempt to access 6-element Array{Int64,1} at index [7]
+ERROR: BoundsError: attempt to access 6-element Vector{Int64} at index [7]
 ```
 
 !!! note "Tipos de números"

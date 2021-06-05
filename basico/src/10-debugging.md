@@ -401,7 +401,9 @@ Por otro lado, cuando se entra en modo *debug* en VS Code se cambia de entorno v
 
 ### *Debug* en modo compilado
 
-Como se ha señalado arriba, un inconvienente notable de ejecutar un programa en "modo *debug*" es que en general es mucho más lento, tanto más lento cuanto más complejo es el programa. Para reducir este problema se puede hacer activar el "modo compilado" (véase el menú "*compiled mode*" abajo a la izquierda en la figura 1).[^7] Eso hará que las funciones añadidas directamente o a través de sus módulos en la lista de ese menú se ejecuten a la velocidad de costumbre, a no ser que se "entre" expresamente en ellas con la acción de "*step into*". Ahora bien, los *breakpoints* marcados en el código de las funciones que se ejecutan en modo compilado no son operativos.
+Como se ha señalado arriba, un inconvienente notable de ejecutar un programa en "modo *debug*" es que en general es mucho más lento, tanto más lento cuanto más complejo es el programa. Para reducir este problema se puede hacer activar el "modo compilado" (véase el menú "*compiled code*" abajo a la izquierda en la figura 1).[^7] Eso hará que las funciones añadidas directamente o a través de sus módulos en la lista de ese menú se ejecuten a la velocidad de costumbre, a no ser que se "entre" expresamente en ellas con la acción de "*step into*". Ahora bien, los *breakpoints* marcados en el código de las funciones que se ejecutan en modo compilado no son operativos.
+
+[^7]: El menú "*compiled code*" mostrado aquí se corresponde con la versión 1.2 de la extensión de Julia para VS Code.
 
 Consideremos, por ejemplo, que se ha entrado en modo *debug* en un programa con las siguientes líneas:
 
