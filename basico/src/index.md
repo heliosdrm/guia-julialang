@@ -15,7 +15,7 @@ Julia es un lenguaje ideal para trabajar con múltiples niveles de complejidad, 
 
 ## Objetivo y estructura de esta guía
 
-Por lo dicho arriba resulta razonable usar Julia como lenguaje para introducirse en el mundo de la programación, ya que permite un inicio "amable", con resultados útiles sin excesivo esfuerzo, y a la vez facilita el aprendizaje conceptos más avanzados de programación, en una progresión suave y continua. Partiendo de ese principio, esta guía se presenta como una introducción a la programación con Julia, que no asume conocimientos previos sobre este u otros lenguajes de programación en particular.
+Por lo dicho arriba resulta razonable usar Julia como lenguaje para introducirse en el mundo de la programación, ya que permite un inicio "amable", con resultados útiles sin excesivo esfuerzo, y a la vez facilita el aprendizaje de conceptos más avanzados de programación, en una progresión suave y continua. Partiendo de ese principio, esta guía se presenta como una introducción a la programación con Julia, que no asume conocimientos previos sobre este u otros lenguajes de programación en particular.
 
 Hay múltiples formas de plantear una guía o tutorial para aprender a utilizar un lenguaje de programación desde cero. A menudo se comienza con ejercicios triviales como el de escribir `"Hola mundo"` en pantalla, para introducir poco a poco los conceptos y así suavizar la barrera de entrada al mundo de la programación, a expensas de resultar un inicio lento y poco estimulante. En esta guía se opta por un primer encuentro con el lenguaje basado en ejemplos algo más prácticos, que no es necesario entender al detalle desde el principio, pero que contienen buena parte de los conceptos que se quieren explicar.
 
