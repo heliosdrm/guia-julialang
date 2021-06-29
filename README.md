@@ -1,6 +1,7 @@
 # Guías para programación en Julia
 
-![build status](https://github.com/jorgepz/guia-julialang/workflows/docs/badge.svg)
+![build status](https://github.com/jorgepz/guia-julialang/actions/workflows/docs.yml/badge.svg)
+
 
 [Work in progress]
 
