@@ -3,7 +3,7 @@ name: Documentation
 on:
   push:
     branches:
-      - master
+      - guia-2
     tags: '*'
   pull_request:
 
