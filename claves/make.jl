@@ -10,7 +10,8 @@ makedocs(sitename="Claves para programar en Julia",
         "5-tipos-ext.md",
         "6-paquetes-desarrollo.md",
         "7-contextos.md",
-        "8-metaprogramacion.md"
+        "8-metaprogramacion.md",
+        "9-optimizacion.md"
     ],
     expandfirst = ["index.md"]
 )

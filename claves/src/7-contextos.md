@@ -155,7 +155,7 @@ Por otro lado, si las variables globales son de tipo mutable (por ejemplo vector
 
 ## Contextos locales anidados
 
-Cuando se anidan estructuras que forman contextos globales, se crean también nuevos contextos locales. Una situación habitual en la que ocurre esto es en los bucles definidos dentro de una función, o en bucles anidados; por ejemplo, en la siguiente función que trata de reproducir el comportamiento de `sum`:
+Cuando se anidan estructuras que forman contextos locales, cada una de ellas define un nuevo contexto dentro del anterior. Una situación habitual en la que ocurre esto es en los bucles definidos dentro de una función, o en bucles anidados; por ejemplo, en la siguiente función que trata de reproducir el comportamiento de `sum`:
 
 ```julia
 function suma(x)
@@ -206,6 +206,10 @@ nothing #hide
 ```@repl c7
 anidados(10)
 ```
+
+!!! note
+    
+    
 
 ## Funciones anidadas (*closures*)
 
