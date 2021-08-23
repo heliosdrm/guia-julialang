@@ -9,7 +9,7 @@ Una de las virtudes que más se suele publicitar de Julia es su velocidad de cá
 
 Por supuesto, la optimización del código no es algo que se pueda reducir a una serie de recetas y consejos generales: cada programa presenta sus propios cuellos de botella y desafíos, que pueden requerir conocimientos profundos y especializados sobre la gestión de memoria y otros recursos informáticos. Julia también ofrece herramientas para trabajar a bajo nivel, incluso en código máquina; pero aquí nos conformaremos con presentar las buenas prácticas más sencillas, que pueden aplicarse a la mayoría de programas, a un nivel semejante al que se ha visto en los capítulos anteriores.
 
-Antes de entrar en otras materias más específicas, la primera de las buenas prácticas a destacar es una muy sencilla, y que no requiere grandes explicaciones: lo que más te ayudará con el mínimo esfuerzo a que tu programa sea robusto y eficiente es encapsular el código en pequeñas funciones, desde el primer momento en que comiences a escribir código. Este consejo ya se dio en la [guía básica de Julia](https://hedero.webs.upv.es/julia-basico/10-debugging/#Encapsular-c%C3%B3digo-en-funciones-peque%C3%B1as) que antecede a esta, con la finalidad de hacer los programas más fáciles de depurar y mantener. Pero también es un buen consejo para procurar que el código sea eficiente. No es que el mero hecho de tener el código estructurado en forma de funciones mejore mágicamente su velocidad de ejecución; pero varias de las recomendaciones que se explicarán en las siguientes secciones son más fáciles de cumplir si se sigue este sencillo consejo.
+Antes de entrar en otras materias más específicas, la primera de las buenas prácticas a destacar es una muy sencilla, y que no requiere grandes explicaciones: lo que más te ayudará con el mínimo esfuerzo a que tu programa sea robusto y eficiente es encapsular el código en pequeñas funciones, desde el primer momento en que comiences a escribir código. Este consejo es una repetición del que se da en la [guía básica de Julia](https://hedero.webs.upv.es/julia-basico/10-debugging/#Encapsular-c%C3%B3digo-en-funciones-peque%C3%B1as) que antecede a esta, con la finalidad de hacer los programas más fáciles de depurar y mantener. Pero también es una buena práctica para procurar que el código sea eficiente. No es que el mero hecho de tener el código estructurado en forma de funciones mejore mágicamente su velocidad de ejecución; pero varias de las recomendaciones que se explicarán en las siguientes secciones son más fáciles de cumplir si se sigue ese sencillo consejo.
 
 ## Evitar variables globales
 
@@ -49,7 +49,7 @@ K[] = 2 # modificar
 K[] # consultar nuevo valor
 ```
 
-Lo que hay que tener en cuenta a la hora de modificar un `Ref` --igual que en el caso de los vectores-- es que solo se admiten valores del mismo tipo. Esto no funcionaría, ya que `K` se creó como un contenedor de enteros:
+Lo que hay que tener en cuenta a la hora de modificar un `Ref` --igual que en el caso de los vectores-- es que solo se admiten valores del mismo tipo. Así pues, lo siguiente no funciona, porque `K` se creó como un contenedor de enteros:
 
 ```@repl c9
 K[] = 0.5
@@ -57,7 +57,7 @@ K[] = 0.5
 
 ## Optimizar operaciones con bucles y *arrays*
 
-Los cálculos con *arrays* de grandes dimensiones, y en general las rutinas iterativas que repiten operaciones sobre grandes cantidades de datos son partes de los programas que típicamente consumen una gran parte del tiempo de computación, así que también suelen ser partes en las que pequeñas mejoras pueden tener un gran impacto sobre la velocidad del programa.
+Los cálculos con *arrays* de grandes dimensiones, y en general las rutinas iterativas que repiten operaciones sobre grandes cantidades de datos, son partes de los programas que típicamente consumen una gran parte del tiempo de computación, así que también suelen ser partes en las que pequeñas mejoras pueden tener un gran impacto sobre la velocidad del programa.
 
 ### Bucles vs. código vectorizado
 
@@ -73,7 +73,7 @@ Esta operación se podría escribir en una función como:
 
 ```julia
 function operacion1(x, y)
-    z = 0
+    z = 0.0
     for xi in x, yj in y
         z += xi * yj + abs(xi - yj)
     end
@@ -93,7 +93,7 @@ function operacion2(x, y)
 end
 ```
 
-Las dos formas de escribir estas operaciones son posibles, y el mecanismo de *broadcasting* (las operaciones "con punto") facilita mucho hacer la versión vectorizada. Pero en Julia la vectorización del código no es necesaria; ni siquiera es conveniente en general. El código de las operaciones vectorizadas a veces es más complicado de entender que si se desarrolla en forma de un bucle `for`, y normalmente requiere más memoria, porque hay que guardar todos los datos en *arrays* para hacer todas las operaciones con una sola instrucción. En otros lenguajes la mayor rapidez de las operaciones vectorizadas compensa esos inconvenientes, pero ese no es el caso en Julia. De hecho, en el ejemplo anterior la versión vectorizada es notablemente más lenta y consume muchísima más memoria que la basada en el bucle `for`.
+Las dos formas de escribir estas operaciones son posibles, y el mecanismo de *broadcasting* (las operaciones "con punto") facilita mucho hacer la versión vectorizada. Pero en Julia la vectorización del código no es necesaria; ni siquiera es conveniente en general. El código de las operaciones vectorizadas a veces es más complicado de entender que si se desarrolla en forma de un bucle `for`, y normalmente requiere más memoria, porque hay que guardar los datos en *arrays* para hacer todas las operaciones con una sola instrucción. En otros lenguajes la mayor rapidez de las operaciones vectorizadas compensa esos inconvenientes, pero ese no es el caso en Julia. De hecho, en el ejemplo anterior la versión vectorizada es notablemente más lenta y consume muchísima más memoria que la basada en el bucle `for`.
 
 ### Iterar con *arrays* y preasignación
 
@@ -110,7 +110,7 @@ Este código tiene la desventaja de que en cada iteración se tiene que redefini
 
 ```julia
 n = countlines(archivo)
-caracteres = Vector(Int, n)
+caracteres = Vector{Int}(undef, n)
 for (i, linea) in enumerate(eachline(archivo))
     caracteres[i] = length(linea)
 end
@@ -144,7 +144,7 @@ Cuando se itera sobre *arrays*, también hay algunas prácticas que ayudan a que
 matriz = reshape(1:12, 3, 4)
 ```
 
-La forma eficiente de iterar a lo largo de todos los elementos de esta matriz sería poniendo las columnas en en bucle más externo, lo que nos permitiría recorrer sus elementos en el orden natural.
+La forma eficiente de iterar a lo largo de todos los elementos de esta matriz sería poniendo las columnas en el bucle más externo, lo que nos permitiría recorrer sus elementos en el orden natural.
 
 ```@repl c9
 for columna=1:4, fila=1:3
@@ -257,7 +257,7 @@ Del mismo modo, para operar a lo largo de filas, columnas u otras dimensiones de
 
 La inferencia de tipos es una cuestión clave para conseguir un código eficiente, y en otros sitios se menciona antes que algunos de los temas tratados arriba. Aquí lo hemos postergado, pero no por tener menos importancia, sino por que es un aspecto más complicado de manejar que los anteriores.
 
-Para que un programa sea eficiente es fundamental que las funciones se compilen de forma óptima. La compilación consiste, a grandes rasgos, en traducir el código escrito por el programador en código máquina. A ese bajo nivel es crucial conocer el tipo de cada variable, porque el tipo define cómo cada valor se codifica en memoria. Algunos lenguajes de programación como C o Java obligan a declarar de forma explícita el tipo al que pertenece cada variable. Julia, en cambio, infiere el tipo de las variables y otros objetos según el código usado para definirlas, sin declaraciones explícitas.
+Para que un programa sea eficiente es fundamental que las funciones se compilen de forma óptima. La compilación consiste, a grandes rasgos, en traducir el código escrito por el programador en código máquina. A ese bajo nivel es crucial conocer el tipo de cada variable, porque el tipo define cómo se codifica cada valor en memoria. Algunos lenguajes de programación como C o Java obligan a declarar de forma explícita el tipo al que pertenece cada variable. Julia, en cambio, infiere el tipo de las variables y otros objetos según el código usado para definirlas, sin declaraciones explícitas.
 
 Por ejemplo, en el caso de los números, `1` es por definición un `Int`[^1], mientras que `1.0` es un `Float64`, `0x01` es un `UInt8`, etc., aunque todos esos números representen una unidad. Por otro lado, la mayoría de tipos se determinan a través del constructor usado al crear el objeto; por ejemplo para definir la unidad de un `Int128` (entero de 128 bits) hay que escribir `Int128(1)`.
 
@@ -507,17 +507,48 @@ end
 
 La herramienta más básica de Julia para medir la velocidad de una operación es un conjunto de macros que se pueden aplicar a cualquier expresión, para capturar el tiempo y la cantidad de memoria que se ha necesitado asignar para ejecutarla. La más básica es `@time`, que ejecuta la expresión e imprime una información básica en pantalla, por ejemplo:
 
-```@repl c9
-using Random
-Random.seed!(123);
-@time contar_factoresprimos(Int, 10)
+```julia-repl
+julia> using Random
+
+julia> 
+
+julia> Random.seed!(123)
+MersenneTwister(123)
+
+julia> @time contar_factoresprimos(Int, 10)
+  8.735535 seconds (305.51 k allocations: 18.510 MiB, 0.16% gc time, 2.71% compilation time)
+10-element Vector{Vector{Pair{Int64, Int64}}}:
+ [29 => 1, 439 => 1, 694114698002893 => 1]
+ [2 => 2, 3 => 1, 109 => 1, 2520427474784099 => 1]
+ [87697 => 1, 28287061703539 => 1]
+ [3 => 2, 59 => 1, 508961 => 1, 16531869313 => 1]
+ [2 => 1, 19 => 1, 128327651 => 1, 1194541753 => 1]
+ [3 => 1, 11 => 1, 141299385356918597 => 1]
+ [2 => 1, 7 => 1, 73 => 1, 3089 => 1, 112279 => 1, 11057533 => 1]
+ [2 => 2, 1091 => 1, 45631 => 1, 41906162989 => 1]
+ [3 => 3, 17027 => 1, 71971 => 1, 78341477 => 1]
+ [2 => 11, 2454479042546467 => 1]
 ```
 
 Las dos primeras líneas del código anterior tienen el propósito de que se ejecuten siempre las mismas operaciones, ya que los números grandes cuestan más de analizar que los pequeños, y el conjunto de números analizados en `contar_factoresprimos` es aleatorio. Aun así nos podemos encontrar con tiempos de ejecución distintos cada vez que ejecutemos la instrucción con `@time`. En particular, la primera vez que se ejecuta una función siempre se observa un mayor consumo de tiempo y memoria, porque parte de lo que se está midiendo es la compilación. En las siguientes repeticiones el coste es sensiblmente menor:
 
-```@repl c9
-Random.seed!(123)
-@time contar_factoresprimos(Int, 10)
+```julia-repl
+julia> Random.seed!(123)
+MersenneTwister(123)
+
+julia> @time contar_factoresprimos(Int, 10)
+  8.484565 seconds (119 allocations: 9.844 KiB)
+10-element Vector{Vector{Pair{Int64, Int64}}}:
+ [29 => 1, 439 => 1, 694114698002893 => 1]
+ [2 => 2, 3 => 1, 109 => 1, 2520427474784099 => 1]
+ [87697 => 1, 28287061703539 => 1]
+ [3 => 2, 59 => 1, 508961 => 1, 16531869313 => 1]
+ [2 => 1, 19 => 1, 128327651 => 1, 1194541753 => 1]
+ [3 => 1, 11 => 1, 141299385356918597 => 1]
+ [2 => 1, 7 => 1, 73 => 1, 3089 => 1, 112279 => 1, 11057533 => 1]
+ [2 => 2, 1091 => 1, 45631 => 1, 41906162989 => 1]
+ [3 => 3, 17027 => 1, 71971 => 1, 78341477 => 1]
+ [2 => 11, 2454479042546467 => 1]
 ```
 
 La macro `@timev` hace lo mismo que `@time`, pero muestra más detalles sobre el tiempo y memoria consumidas. Por otro lado la macro `@timed`, en lugar de simplemente imprimir en pantalla las medidas de tiempo y memoria, las vuelca junto con el resultado de la operación en una tupla. Así, con `x = @timed contar_factoresprimos(Int, 10)` se obtienen los siguientes valores:
@@ -537,22 +568,6 @@ Una alternativa muy popular a la macro `@time` es `@btime` del paquete [Benchmar
 
 El paquete BenchmarkTools también proporciona la macro `@benchmark`, que da estadísticas más detalladas de todas las repeticiones realizadas, como en el siguiente ejemplo (basado en la función `factoresprimos`, menos costosa que `contar_factoresprimos`, para poder ver resultados basados en un número mayor de repeticiones)[^3]:
 
-```julia-repl
-julia> using BenchmarkTools
-
-julia> @benchmark factoresprimos(987656789)
-BenchmarkTools.Trial: 10000 samples with 9 evaluations.
- Range (min … max):  2.348 μs …  3.862 μs  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     2.353 μs              ┊ GC (median):    0.00%
- Time  (mean ± σ):   2.368 μs ± 75.103 ns  ┊ GC (mean ± σ):  0.00% ± 0.00%
-
-  █▆▅▄▄▃▂▂▁▁                                                 ▁
-  ████████████▇▆▇▆▆▆▅▆▅▅▄▃▃▃▅▆▇▇▆▅▄▅▄▄▄▄▅▅▄▁▅▃▄▄▄▄▃▄▄▄▁▃▁▅▄▅ █
-  2.35 μs      Histogram: log(frequency) by time      2.7 μs <
-
- Memory estimate: 208 bytes, allocs estimate: 3.
-```
-
 ![](assets/benchmark.png)
 
 [^3]: El resultado mostrado se corresponde con la versión 1.1 de BenchmarkTools.
@@ -561,7 +576,7 @@ BenchmarkTools.Trial: 10000 samples with 9 evaluations.
 
 Las macros anteriores son útiles para comparar distintas versiones de una función, o para hacer pruebas unitarias de las funciones que componen un programa. Pero los cuellos de botella a menudo aparecen en funciones que no presentan un gran coste en pruebas de ese tipo, y dependen de cómo, cuánto y dónde se emplean. Por otro lado, aunque con esas macros se puedan detectar funciones excesivamente costosas, queda el reto de averiguar en qué parte de sus operaciones radica el problema.
 
-Para diagnósticar esas situaciones Julia dispone de la macro `@profile` y otras funciones en el módulo estándar `Profile`. `@profile` se usa igual que `@time`, pero no muestra nada en pantalla, sino que guarda numerosos detalles sobre todas las operaciones relevantes que se ejecutan como parte de la expresión que sigue, incluyendo los tiempos que consumen y la memoria que asignan. El concepto de *relevante* aquí está determinado por unos umbrales que se fijan con la función `Profile.init`; uno de estos umbrales es el intervalo de tiempo entre cada "captura" de información, que por defecto está fijado en 1 ms. Esto implica que `@profile` detectará todas las funciones que cuestan más de 1 ms.
+Para diagnósticar esas situaciones Julia dispone de la macro `@profile` y otras funciones en el módulo estándar `Profile`. La macro `@profile` se usa igual que `@time`, pero no muestra nada en pantalla, sino que guarda numerosos detalles sobre todas las operaciones relevantes que se ejecutan como parte de la expresión que sigue, incluyendo los tiempos que consumen y la memoria que asignan. El concepto de *relevante* aquí está determinado por unos umbrales que se fijan con la función `Profile.init`; uno de estos umbrales es el intervalo de tiempo entre cada "captura" de información, que por defecto está fijado en 1 ms. Esto implica que `@profile` detectará todas las funciones que cuestan más de 1 ms.
 
 Cada vez que se usa la macro `@profile`, la información recogida hasta el momento se amplía con la de la expresión ejecutada, a no ser que se ejecute `Profile.clear()` para "limpiar el *buffer*". Hay distintas formas de ver la información acumulada. La más básica es la función `Profile.print`, que la muestra en forma de texto. Pero esa información es tan copiosa que no resulta una forma práctica de examinarla.
 
