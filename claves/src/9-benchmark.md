@@ -1,23 +1,23 @@
 # Capítulo 9. Diagnosticar y medir el rendimiento
-```@setup c10
-using BenchmarkTools
-```
+
 Una de las virtudes que más se suele publicitar de Julia es su velocidad de cálculo, incluso con enormes cantidades de datos. Pero la eficiencia de un programa depende de cómo esté construido. De hecho, un programa "mal escrito" (en el sentido de que no siga unas buenas prácticas de programación, aunque las operaciones sean correctas) puede resultar decepcionantemente lento. 
 
 Este capítulo y los siguientes están dedicados a herramientas que Julia pone a disposición de los usuarios para mejorar la eficiencia de sus programas. A la hora de optimizar un programa, es muy importante buscar primero dónde están los "cuellos de botella" (las partes del código que más lento lo hacen) y medir tanto su influencia como el efecto de las supuestas mejoras que se introducen. Por esta razón, comenzaremos por ver herramientas que sirven para hacer estos diagnósticos.
 
 ## Ejemplo: pasos de las secuencias de Collatz
 
-Para facilitar las explicaciones de este capítulo, vamos a suar como ejemplo el cálculo de [secuencias de Collatz](https://es.wikipedia.org/wiki/Conjetura_de_Collatz), series de números que comienzan con cualquier número natural, y que continúan según la siguiente regla, hasta llegar a 1:[^1]
+Para facilitar las explicaciones de este capítulo, vamos a usar como ejemplo el cálculo de [secuencias de Collatz](https://es.wikipedia.org/wiki/Conjetura_de_Collatz), series de números que comienzan con cualquier número natural, y que continúan según la siguiente regla, hasta llegar a 1:[^1]
 
 ```math
 a_{i+1} = \begin{cases}
-\frac{a_i}{2}, & \mbox{si }a_i\mbox{ es par} \\
-3a_i+1, & \mbox{si }a_i\mbox{ es impar}
+\begin{array}{ll}
+a_i/2, & \textrm{si }a_i\textrm{ es par} \\
+3a_i+1, & \textrm{si }a_i\textrm{ es impar}
+\end{array}
 \end{cases}
 ```
 
-[^1] No está matemáticamente probado que todas las secuencias de Collatz posibles acaben llegado a 1, pero es una conjetura verificada para los primeros trillones de números naturales. El siguiente [vídeo de Veritasium](https://www.youtube.com/watch?v=094y1Z2wpJg) proporciona una interesante introducción a este problema. 
+[^1]: No está matemáticamente probado que todas las secuencias de Collatz posibles acaben llegado a 1, pero es una conjetura verificada para los primeros trillones de números naturales. El siguiente [vídeo de Veritasium](https://www.youtube.com/watch?v=094y1Z2wpJg) proporciona una interesante introducción a este problema. 
 
 
 Esta regla se puede expresar con una función como la que sigue:
@@ -131,11 +131,11 @@ Una alternativa muy popular a la macro `@time` es `@btime` del paquete [Benchmar
 * `@btime` permite interpolar los nombres de variables en la expresión para hacer más fiable el análisis. Por ejemplo, si el argumento de `serie_pasoscollatz(x)` estuviese guardado en la variables `n`, se podría escribir `@btime serie_pasoscollatz($n)`.
 * La expresión pasada a `@btime` ha de ser sencilla, idealmente una simple llamada a una función. Para asignar el resultado a una variable ha de escribirse `y = @btime f(x)`, no `@btime y = f(x)`.
 
-El paquete BenchmarkTools también proporciona la macro `@benchmark`, que da estadísticas más detalladas de todas las repeticiones realizadas, como en el siguiente ejemplo:[^4]
+El paquete BenchmarkTools también proporciona la macro `@benchmark`, que da estadísticas más detalladas de todas las repeticiones realizadas, como en el siguiente ejemplo:[^2]
 
 ![](assets/benchmark.png)
 
-[^4]: El resultado mostrado se corresponde con la versión 1.1 de BenchmarkTools.
+[^2]: El resultado mostrado se corresponde con la versión 1.1 de BenchmarkTools.
 
 ## *Profiling*
 
@@ -161,11 +161,12 @@ Esa instrucción crea una tabla con la información de tiempos recogida, cuya vi
 
 En este gráfico el eje vertical está invertido respecto al sentido que usan otros visualizadores: las operaciones anidadas se muestran *debajo* de las que las contienen, en lugar de arriba. Las primeras barras (las que se muestran en la parte superior) tienen poco interés para nuestro propósito, pues tienen que ver con el entorno en el que se ejecuta y se monitoriza la expresión a evaluar. La parte interesante es la mitad inferior, comenzando por nuestra función principal: `serie_pasoscollatz`.
 
-Naturalmente, esa función y `pasoscollatz` en el siguiente nivel ocupan casi todo el rango horizontal de tiempos. También se puede ver que la mayor parte del tiempo dentro de `pasoscollatz` lo ocupa la función `siguiente_collatz`, aunque también hay un consumo de tiempo significativo que se invierte en operaciones de comparación, y en el constructor `BigInt`.  Y dentro de `siguiente_collatz`, encontramos de forma más o menos equitativa la división entera (la función `div`) y otras operaciones aritméticas. A niveles inferiores hay muchos pequeños bloques de operaciones con el tipo `BigInt`. (En el pantallazo mostrado los nombres de funciones están cortados, pero en VS Code se puede hacer zoom y desplazarse para ver los detalles del gráfico)
+Naturalmente, esa función y `pasoscollatz` en el siguiente nivel ocupan casi todo el rango horizontal de tiempos. También se puede ver que la mayor parte del tiempo dentro de `pasoscollatz` lo ocupa la función `siguiente_collatz`, aunque también hay un consumo de tiempo significativo que se invierte en operaciones de comparación, y en el constructor `BigInt`.  Y dentro de `siguiente_collatz`, encontramos de forma más o menos equitativa la división entera (la función `div`) y otras operaciones aritméticas. A niveles inferiores hay muchos pequeños bloques de operaciones con el tipo `BigInt`. (En el pantallazo mostrado los nombres de funciones están cortados, pero en VS Code se puede hacer zoom y desplazarse para ver los detalles del gráfico.)
 
 No siempre es fácil interpretar los detalles de estos gráficos. Una primera observación es que `div` (usada cuando el número de la secuencia es par) parece ocupar tanto o más tiempo que las operaciones de multiplicación y suma empleadas con los impares. Quien conozca la aritmética binaria con números enteros, puede caer rápidamente en la cuenta de que dividir por 2 es equivalente a desplazar los bits del número una posición, lo cual es más eficiente en el caso de `BigInt`:
 
 ```@repl c9
+using BenchmarkTools
 mitad(x) = x ÷ 2    # operación con `div`
 mitadb(x) = x >>> 1 # operación binaria
 x = big"6782"
