@@ -1,13 +1,11 @@
-# Capítulo 9. Optimizando el código
+# Capítulo 10. Optimizando el código
 
-```@setup c9
+```@setup c10
 using Random
 Random.seed!(123)
 ```
 
-Una de las virtudes que más se suele publicitar de Julia es su velocidad de cálculo, incluso con enormes cantidades de datos. Pero para que un programa sea eficiente también tienen que aprovecharse bien los recursos del lenguaje. De hecho, un programa "mal escrito" (en el sentido de que no siga unas buenas prácticas de programación, aunque las operaciones sean correctas) puede resultar decepcionantemente lento. En este capítulo vamos a ver algunas de esas buenas prácticas para hacer programas eficientes. En la sección de [Performance tips](https://docs.julialang.org/en/v1/manual/performance-tips/) del manual oficial de Julia encontrarás estas y más recomendaciones para aumentar la eficiencia de tus programas.
-
-Por supuesto, la optimización del código no es algo que se pueda reducir a una serie de recetas y consejos generales: cada programa presenta sus propios cuellos de botella y desafíos, que pueden requerir conocimientos profundos y especializados sobre la gestión de memoria y otros recursos informáticos. Julia también ofrece herramientas para trabajar a bajo nivel, incluso en código máquina; pero aquí nos conformaremos con presentar las buenas prácticas más sencillas, que pueden aplicarse a la mayoría de programas, a un nivel semejante al que se ha visto en los capítulos anteriores.
+En el capítulo anterior hemov sito un par de recursos para diagnosticar problemas de rendimiento en Julia. En este vamos a ver algunas de las buenas prácticas para hacer programas eficientes, aprovechando adecuadamente los recursos del lenguaje. En la sección de [Performance tips](https://docs.julialang.org/en/v1/manual/performance-tips/) del manual oficial de Julia encontrarás estas y más recomendaciones para aumentar la eficiencia de tus programas.
 
 Antes de entrar en otras materias más específicas, la primera de las buenas prácticas a destacar es una muy sencilla, y que no requiere grandes explicaciones: lo que más te ayudará con el mínimo esfuerzo a que tu programa sea robusto y eficiente es encapsular el código en pequeñas funciones, desde el primer momento en que comiences a escribir código. Este consejo es una repetición del que se da en la [guía básica de Julia](https://hedero.webs.upv.es/julia-basico/10-debugging/#Encapsular-c%C3%B3digo-en-funciones-peque%C3%B1as) que antecede a esta, con la finalidad de hacer los programas más fáciles de depurar y mantener. Pero también es una buena práctica para procurar que el código sea eficiente. No es que el mero hecho de tener el código estructurado en forma de funciones mejore mágicamente su velocidad de ejecución; pero varias de las recomendaciones que se explicarán en las siguientes secciones son más fáciles de cumplir si se sigue ese sencillo consejo.
 
@@ -37,13 +35,13 @@ NUMEROS = [5,6,7,8] # pero esto no
 
 Así pues, los tipos mutables son un recurso para crear constantes que se pueden utilizar hasta cierto punto como variables. Para representar un solo valor, en lugar de vectores se pueden utilizar objetos de tipo `Ref`, que son como vectores que solo admiten un elemento; por ejemplo:
 
-```@repl c9
+```@repl c10
 const K = Ref(1)
 ```
 
 El contenido de un `Ref` se puede consultar o reemplazar como se hace con los vectores, aunque como solo pueden tener un elemento, no se tiene que usar ningún índice entre los corchetes:
 
-```@repl c9
+```@repl c10
 K[] # consultar
 K[] = 2 # modificar
 K[] # consultar nuevo valor
@@ -51,7 +49,7 @@ K[] # consultar nuevo valor
 
 Lo que hay que tener en cuenta a la hora de modificar un `Ref` --igual que en el caso de los vectores-- es que solo se admiten valores del mismo tipo. Así pues, lo siguiente no funciona, porque `K` se creó como un contenedor de enteros:
 
-```@repl c9
+```@repl c10
 K[] = 0.5
 ```
 
@@ -93,7 +91,23 @@ function operacion2(x, y)
 end
 ```
 
-Las dos formas de escribir estas operaciones son posibles, y el mecanismo de *broadcasting* (las operaciones "con punto") facilita mucho hacer la versión vectorizada. Pero en Julia la vectorización del código no es necesaria; ni siquiera es conveniente en general. El código de las operaciones vectorizadas a veces es más complicado de entender que si se desarrolla en forma de un bucle `for`, y normalmente requiere más memoria, porque hay que guardar los datos en *arrays* para hacer todas las operaciones con una sola instrucción. En otros lenguajes la mayor rapidez de las operaciones vectorizadas compensa esos inconvenientes, pero ese no es el caso en Julia. De hecho, en el ejemplo anterior la versión vectorizada es notablemente más lenta y consume muchísima más memoria que la basada en el bucle `for`.
+Las dos formas de escribir estas operaciones son posibles, y el mecanismo de *broadcasting* (las operaciones "con punto") facilita mucho hacer la versión vectorizada. Pero en Julia la vectorización del código no es necesaria; ni siquiera es conveniente en general. El código de las operaciones vectorizadas a veces es más complicado de entender que si se desarrolla en forma de un bucle `for`, y normalmente requiere más memoria, porque hay que guardar los datos en *arrays* para hacer todas las operaciones con una sola instrucción. En otros lenguajes la mayor rapidez de las operaciones vectorizadas compensa esos inconvenientes, pero ese no es el caso en Julia. De hecho, en el ejemplo anterior la versión vectorizada es notablemente más lenta y consume muchísima más memoria que la basada en el bucle `for`, como podemos comprobar:[^1]
+
+```julia-repl
+julia> using BenchmarkTools
+
+julia> x = randn(1000); y = randn(1000);
+
+julia> @btime operacion1(x, y)
+  1.203 ms (1 allocation: 16 bytes)
+1.1359311105516087e6
+
+julia> @btime operacion2(x, y)
+  6.402 ms (7 allocations: 22.89 MiB)
+1.1359311105516304e6
+```
+
+[^1]: Las diferencias de decimales en los resultados de este ejemplo se deben a la precisión limitada de los números de coma flotante (`Float64`).
 
 ### Iterar con *arrays* y preasignación
 
@@ -140,13 +154,13 @@ La preasignación de *arrays* puede ser un recurso especialmente útil para gana
 
 Cuando se itera sobre *arrays*, también hay algunas prácticas que ayudan a que el acceso a sus contenidos sea más rápido. Cuesta menos leer o escribir elementos contiguos de un *array*, que también suelen ocupar direcciones contiguas en la memoria del ordenador, que "saltar" entre elementos distantes. Esto significa que en el caso de matrices es más eficiente iterar por columnas (recorrer primero la primera columna, luego la segunda, etc.) que por filas, ya que esa es la forma en la que están ordenados internamente sus elementos. Por ejemplo, en la siguiente matriz:
 
-```@repl c9
+```@repl c10
 matriz = reshape(1:12, 3, 4)
 ```
 
 La forma eficiente de iterar a lo largo de todos los elementos de esta matriz sería poniendo las columnas en el bucle más externo, lo que nos permitiría recorrer sus elementos en el orden natural.
 
-```@repl c9
+```@repl c10
 for columna=1:4, fila=1:3
     println(matriz[fila, columna])
 end
@@ -156,13 +170,13 @@ Generalizando esta regla para *arrays* multidimensionales, en general lo más ef
 
 Cuando se tiene una serie de índices para filas y columnas (o más dimensiones), pero esta serie no está ordenada como conviene, se pueden reordenar fácilmente haciendo uso de "índices cartesianos" (objetos de tipo `CartesianIndex`). Supongamos por ejemplo que tenemos esta serie, en la que cada elemento es una tupla de índices para una matriz (primero la fila y luego la columna):
 
-```@repl c9
+```@repl c10
 celdas = [(1,1),(1,2),(1,3),(2,1),(2,3),(3,3)]
 ```
 
 Se puede observar que los elementos de la matriz representada están ordenados por filas, y parcialmente salteados:
 
-```@repl c9
+```@repl c10
 for (i,j) in celdas
     println("Elemento ($i, $j): ", matriz[i,j])
 end
@@ -170,7 +184,7 @@ end
 
 Los objetos de tipo `CartesianIndex` sirven para indexar los elementos de un *array* (da igual el número de dimensiones) a partir de los índices de sus ejes (filas, columnas, etc.). Así, una operación equivalente a la anterior es:
 
-```@repl c9
+```@repl c10
 for ij in celdas
     ind = CartesianIndex(ij)
     println("Elemento $ind: ", matriz[ind])
@@ -179,7 +193,7 @@ end
 
 Pero una ventaja interesante de indexar a través de `CartesianIndex` en lugar de simples tuplas de números, es que este tipo especial de índices guarda un orden consistente con el de los elementos de los *arrays*, y se pueden reordenar con `sort` (o `sort!` para reordenar "en el sitio", sin crear una copia):
 
-```@repl c9
+```@repl c10
 ci = CartesianIndex.(celdas)
 sort!(ci)
 for ind in ci
@@ -193,7 +207,7 @@ Esto puede ayudar a crear recorridos más eficientes a lo largo de los índices 
 
 Cuando se tiene que operar con bloques de *arrays* en lugar de elementos individuales de los mismos o con el *array* completo, a menudo se hace un consumo de memoria que resulta superfluo, porque se crean *arrays* nuevos con datos que ya están en el original. Por ejemplo, supongamos que tenemos que hacer operaciones con submatrices de tamaño 3×3 incluidas en la que se ha usado para los ejemplos anteriores:
 
-```@repl c9
+```@repl c10
 for i = 1:2
     println("")
     submatriz = matriz[:, i:i+2]
@@ -203,7 +217,7 @@ end
 
 En este código, `submatriz` es una copia de una parte de `matriz` (lo que en inglés llaman *slice*, es decir una "tajada"). Esa copia ocupa su propio espacio en memoria, y con volúmenes de datos suficientemente grandes (por ejemplo con miles de elementos) eso puede significar una carga que ralentice significativamente el programa. Una alternativa es utilizar "vistas" de la matriz, que se comportan como esas copias parciales pero utilizan directamente los datos de la matriz original. Esto se consigue con la función `view`, o más cómodamente con la macro `@view`:
 
-```@repl c9
+```@repl c10
 for i = 1:2
     println("")
     submatriz = @view matriz[:, i:i+2]
@@ -259,9 +273,9 @@ La inferencia de tipos es una cuestión clave para conseguir un código eficient
 
 Para que un programa sea eficiente es fundamental que las funciones se compilen de forma óptima. La compilación consiste, a grandes rasgos, en traducir el código escrito por el programador en código máquina. A ese bajo nivel es crucial conocer el tipo de cada variable, porque el tipo define cómo se codifica cada valor en memoria. Algunos lenguajes de programación como C o Java obligan a declarar de forma explícita el tipo al que pertenece cada variable. Julia, en cambio, infiere el tipo de las variables y otros objetos según el código usado para definirlas, sin declaraciones explícitas.
 
-Por ejemplo, en el caso de los números, `1` es por definición un `Int`[^1], mientras que `1.0` es un `Float64`, `0x01` es un `UInt8`, etc., aunque todos esos números representen una unidad. Por otro lado, la mayoría de tipos se determinan a través del constructor usado al crear el objeto; por ejemplo para definir la unidad de un `Int128` (entero de 128 bits) hay que escribir `Int128(1)`.
+Por ejemplo, en el caso de los números, `1` es por definición un `Int`[^2], mientras que `1.0` es un `Float64`, `0x01` es un `UInt8`, etc., aunque todos esos números representen una unidad. Por otro lado, la mayoría de tipos se determinan a través del constructor usado al crear el objeto; por ejemplo para definir la unidad de un `Int128` (entero de 128 bits) hay que escribir `Int128(1)`.
 
-[^1]: `Int` es equivalente a `Int64` en ordenadores con arquitectura de 64 bits, o `Int32` en los de 32 bits.
+[^2]: `Int` es equivalente a `Int64` en ordenadores con arquitectura de 64 bits, o `Int32` en los de 32 bits.
 
 Hemos visto en el [capítulo 3](3-tipos-intro.md) que los constructores también pueden tener métodos para crear tipos distintos según los argumentos de entrada. De hecho en general, cuando se asigna a una variable el resultado de una operación, el tipo resultante puede depender tanto de la función empleada como de los argumentos. Por ejemplo, en el caso de la multiplicación `z = x*y`:
 
@@ -273,7 +287,7 @@ Hemos visto en el [capítulo 3](3-tipos-intro.md) que los constructores también
 
 Sin embargo, no siempre es todo tan sencillo. Es fácil introducir operaciones que generen una situación ambigua. Un caso habitual son las estructuras de código como bloques condicionales o bucles. Por ejemplo, en la siguiente función que realiza una "operación sorpresa" sobre dos argumentos:
 
-```@example c9
+```julia
 function sorpresa(x, y)
     if rand() > 0.5
         z = x/y
@@ -311,9 +325,9 @@ Variables
   z::Union{Float64, Int64}
 ```
 
-La información mostrada por `@code_warntype` en realidad contiene más detalles, pero para lo que queremos ver ahora basta con esas primeras líneas, que indican el tipo de las variales que intervienen en la función. En el REPL habitual, la línea que indica el tipo de la tercera variable (`z::Union{Float64, Int64}`) se muestra marcada en rojo,[^2] destacando que no es de un tipo bien determinado (puede ser tanto `Float64` como `Int64`). Se puede destacar que la inestabilidad de tipos no depende solo de la función, sino también del tipo de los argumentos usados; por ejemplo, si uno de los dos argumentos de `sorpresa` fuese un número decimal, no nos encontraríamos con el mismo problema.
+La información mostrada por `@code_warntype` en realidad contiene más detalles, pero para lo que queremos ver ahora basta con esas primeras líneas, que indican el tipo de las variales que intervienen en la función. En el REPL habitual, la línea que indica el tipo de la tercera variable (`z::Union{Float64, Int64}`) se muestra marcada en rojo,[^3] destacando que no es de un tipo bien determinado (puede ser tanto `Float64` como `Int64`). Se puede destacar que la inestabilidad de tipos no depende solo de la función, sino también del tipo de los argumentos usados; por ejemplo, si uno de los dos argumentos de `sorpresa` fuese un número decimal, no nos encontraríamos con el mismo problema.
 
-[^2]: El ejemplo de `@code_warntype` mostrado aquí es de la versión 1.6 de Julia. Versiones anteriores muestran el resultado de forma distinta.
+[^3]: El ejemplo de `@code_warntype` mostrado aquí es de la versión 1.6 de Julia. Versiones anteriores muestran el resultado de forma distinta.
 
 Hay buenas prácticas que ayudan a prevenir esas ambigüedades o a reducir su impacto. Una de ellas es la comentada anteriormente de evitar variables globales, ya que sus contenidos podrían cambiarse por otros en cualquier momento (eso no ocurre con las constantes).
 
@@ -327,6 +341,20 @@ function suma_estable(valores)
     end
     return y
 end
+```
+
+Podemos ver que con ese sencillo cambio, reducimos un 40% del tiempo necesario para ejecutar la operación: 
+
+```julia-repl
+julia> x = rand(1000);
+
+julia> @btime suma(x)
+  2.023 μs (1 allocation: 16 bytes)
+523.9471505961127
+
+julia> @btime suma_estable(x)
+  1.217 μs (1 allocation: 16 bytes)
+523.9471505961127
 ```
 
 También es bueno un estilo de programación basado en hacer muchas funciones pequeñas, más que unas pocas funciones con mucho código. Las funciones que se reducen a una serie lineal de operaciones, sin bifurcaciones que puedan introducir ambigüedades como las vistas anteriormente, serán de tipo estable siempre que las operaciones que utiliza lo sean a su vez. Todas las operaciones y funciones básicas de Julia son de tipo estable; y ese nivel de confianza se puede extender a los paquetes de terceros más populares, especialmente en los que la eficiencia es un objetivo principal, ya que en ellos este suele ser también un aspecto muy cuidado. Así pues, es más fácil preservar la estabilidad de tipos en funciones cortas y sencillas que en las largas y complicadas. Incluso si incorporan bloques condicionales, bucles u otras estructuras que pueden introducir ambigüedades, la simplicidad ayuda a reducir el riesgo, o al menos a detectarlo con más facilidad.
@@ -440,166 +468,10 @@ struct Fraccion <: Real
 end
 ```
 
-## Diagnosticar y medir cuellos de botella
+## Para profundizar más
 
-Cosas que hemos visto en este capítulo como evitar las variables globales y la inestabilidad de tipos, usar de forma eficiente los bucles y los *arrays*... son unos principios básicos generales para optimizar el código, junto con el procesamiento en paralelo que se tratará en el siguiente capítulo. Pero unos consejos generales pueden no ser suficientes para resolver problemas particulares.
+Cosas que hemos visto en este capítulo como evitar las variables globales y la inestabilidad de tipos, usar de forma eficiente los bucles y los *arrays*... son unos principios básicos generales para optimizar el código, junto con el procesamiento en paralelo que se tratará en el siguiente capítulo.
 
-A la hora de optimizar un programa, es muy importante buscar primero dónde están los "cuellos de botella" (las partes del código que más lento lo hacen) y medir tanto su influencia como el efecto de las supuestas mejoras que se introducen. Todo lo comentado en las secciones anteriores tiene muy poca utilidad si se aplica a las partes del programa que consumen menos tiempo y recursos, o puede que realmente no cambie gran cosa.
+Pero por supuesto, la optimización del código no es algo que se pueda reducir a una serie de recetas y consejos generales: cada programa presenta sus propios cuellos de botella y desafíos, que pueden requerir conocimientos profundos y especializados sobre la gestión de memoria y otros recursos informáticos. Aquí nos hemos conformado con presentar las buenas prácticas más sencillas, que pueden aplicarse a la mayoría de programas, a un nivel semejante al que se ha visto en los capítulos anteriores.
 
-Como conclusión de este capítulo veremos un par de herramientas que Julia pone a disposición de los usuarios con esa finalidad. Para facilitar las explicaciones, usaremos como ejemplo la siguiente función, expresamente *naíf* y poco eficiente, que calcula los factores primos de un número entero dado:
-
-```@example c9
-function factoresprimos(num::T) where {T<:Integer}
-    # Lista de números enteros  inicialmente vacía
-    factores = T[]
-    # Se comienza probando el factor f = 2
-    f = T(2)
-    while num ≥ f^2
-        # Si se encuentra un divisor...
-        if mod(num, f) == 0
-            push!(factores, f) # se añade a la lista de factores
-            num = div(num, f)  # y se divide n por el factor
-        else
-            # Si f no es un divisor, probar con el siguiente
-            f = f + T(1)
-        end
-    end
-    # Añadir el número que queda sin factorizar y devolver la lista
-    push!(factores, num)
-    return factores
-end
-```
-
-Esta función proporciona un *array* de factores primos, en la que cada número se repite tantas veces como se puede dividir en el argumento de entrada, de tal manera que `prod(factoresprimos(x)) == x`. O con un ejemplo:
-
-```@repl c9
-factoresprimos(63800) # 2^3 * 5^2 * 11 * 29
-```
-
-La función `contar_frecuencias` que se da a continuación sirve para transformar ese *array* en una colección de parejas de valores, en la que cada factor se acompaña de su número de repeticiones:
-
-```@example c9
-function contarfrecuencias(x)
-    unicos = unique(x)
-    return [u => count(isequal(u), x) for u in unicos]
-end
-```
-```@repl c9
-contarfrecuencias( factoresprimos(63800) )
-```
-
-Finalmente, para que el impacto de estas ineficientes funciones se pueda apreciar en los siguientes ejemplos, usaremos la función `contar_factoresprimos` para aplicar la operación anterior a `n` números aleatorios de tipo `T`, entre `0` y el máximo número representable por ese tipo:
-
-```@example c9
-function contar_factoresprimos(T, n)
-    # Vector del tipo y tamaño adecuados para el resultado
-    lista_factores = Vector{Vector{Pair{T,Int}}}(undef, n)
-    for i in eachindex(lista_factores)
-        num = rand(zero(T):typemax(T))
-        factores = factoresprimos(num)
-        lista_factores[i] = contarfrecuencias(factores)
-    end
-    return lista_factores
-end
-```
-
-### Macros para medir consumos de tiempo y memoria
-
-La herramienta más básica de Julia para medir la velocidad de una operación es un conjunto de macros que se pueden aplicar a cualquier expresión, para capturar el tiempo y la cantidad de memoria que se ha necesitado asignar para ejecutarla. La más básica es `@time`, que ejecuta la expresión e imprime una información básica en pantalla, por ejemplo:
-
-```julia-repl
-julia> using Random
-
-julia> 
-
-julia> Random.seed!(123)
-MersenneTwister(123)
-
-julia> @time contar_factoresprimos(Int, 10)
-  8.735535 seconds (305.51 k allocations: 18.510 MiB, 0.16% gc time, 2.71% compilation time)
-10-element Vector{Vector{Pair{Int64, Int64}}}:
- [29 => 1, 439 => 1, 694114698002893 => 1]
- [2 => 2, 3 => 1, 109 => 1, 2520427474784099 => 1]
- [87697 => 1, 28287061703539 => 1]
- [3 => 2, 59 => 1, 508961 => 1, 16531869313 => 1]
- [2 => 1, 19 => 1, 128327651 => 1, 1194541753 => 1]
- [3 => 1, 11 => 1, 141299385356918597 => 1]
- [2 => 1, 7 => 1, 73 => 1, 3089 => 1, 112279 => 1, 11057533 => 1]
- [2 => 2, 1091 => 1, 45631 => 1, 41906162989 => 1]
- [3 => 3, 17027 => 1, 71971 => 1, 78341477 => 1]
- [2 => 11, 2454479042546467 => 1]
-```
-
-Las dos primeras líneas del código anterior tienen el propósito de que se ejecuten siempre las mismas operaciones, ya que los números grandes cuestan más de analizar que los pequeños, y el conjunto de números analizados en `contar_factoresprimos` es aleatorio. Aun así nos podemos encontrar con tiempos de ejecución distintos cada vez que ejecutemos la instrucción con `@time`. En particular, la primera vez que se ejecuta una función siempre se observa un mayor consumo de tiempo y memoria, porque parte de lo que se está midiendo es la compilación. En las siguientes repeticiones el coste es sensiblmente menor:
-
-```julia-repl
-julia> Random.seed!(123)
-MersenneTwister(123)
-
-julia> @time contar_factoresprimos(Int, 10)
-  8.484565 seconds (119 allocations: 9.844 KiB)
-10-element Vector{Vector{Pair{Int64, Int64}}}:
- [29 => 1, 439 => 1, 694114698002893 => 1]
- [2 => 2, 3 => 1, 109 => 1, 2520427474784099 => 1]
- [87697 => 1, 28287061703539 => 1]
- [3 => 2, 59 => 1, 508961 => 1, 16531869313 => 1]
- [2 => 1, 19 => 1, 128327651 => 1, 1194541753 => 1]
- [3 => 1, 11 => 1, 141299385356918597 => 1]
- [2 => 1, 7 => 1, 73 => 1, 3089 => 1, 112279 => 1, 11057533 => 1]
- [2 => 2, 1091 => 1, 45631 => 1, 41906162989 => 1]
- [3 => 3, 17027 => 1, 71971 => 1, 78341477 => 1]
- [2 => 11, 2454479042546467 => 1]
-```
-
-La macro `@timev` hace lo mismo que `@time`, pero muestra más detalles sobre el tiempo y memoria consumidas. Por otro lado la macro `@timed`, en lugar de simplemente imprimir en pantalla las medidas de tiempo y memoria, las vuelca junto con el resultado de la operación en una tupla. Así, con `x = @timed contar_factoresprimos(Int, 10)` se obtienen los siguientes valores:
-
-* `x.value` con el resultado de la expresión ejecutada.
-* `x.time` con el tiempo en segundos.
-* `x.bytes` con el número de bytes de memoria asignados en la operación.
-* `x.gctime` con el tiempo consumido en *garbage collection* (gestión de la memoria).
-* `x.gcstats` con un objeto de tipo `GC_Diff` con más detalles sobre la gestión de memoria.
-
-
-Una alternativa muy popular a la macro `@time` es `@btime` del paquete [BenchmarkTools](https://github.com/JuliaCI/BenchmarkTools.jl). A nivel de uso son muy semejantes, con unas importantes salvedades:
-
-* `@btime` repite la operación múltiples veces, hasta llegar a un objetivo de repeticiones o tiempo. Las medidas de tiempo y memoria mostradas son un promedio, que excluye los tiempos de compilación.
-* `@btime` permite interpolar los nombres de variables en la expresión para hacer más fiable el análisis. Por ejemplo, si los argumentos de `contar_factoresprimos` estuviesen guardados en las variables `tipo` y `numero`, se podría escribir `@btime contar_factoresprimos($tipo, $numero)`.
-* La expresión pasada a `@btime` ha de ser sencilla, idealmente una simple llamada a una función. Para asignar el resultado a una variable ha de escribirse `y = @btime f(x)`, no `@btime y = f(x)`.
-
-El paquete BenchmarkTools también proporciona la macro `@benchmark`, que da estadísticas más detalladas de todas las repeticiones realizadas, como en el siguiente ejemplo (basado en la función `factoresprimos`, menos costosa que `contar_factoresprimos`, para poder ver resultados basados en un número mayor de repeticiones)[^3]:
-
-![](assets/benchmark.png)
-
-[^3]: El resultado mostrado se corresponde con la versión 1.1 de BenchmarkTools.
-
-### *Profiling*
-
-Las macros anteriores son útiles para comparar distintas versiones de una función, o para hacer pruebas unitarias de las funciones que componen un programa. Pero los cuellos de botella a menudo aparecen en funciones que no presentan un gran coste en pruebas de ese tipo, y dependen de cómo, cuánto y dónde se emplean. Por otro lado, aunque con esas macros se puedan detectar funciones excesivamente costosas, queda el reto de averiguar en qué parte de sus operaciones radica el problema.
-
-Para diagnósticar esas situaciones Julia dispone de la macro `@profile` y otras funciones en el módulo estándar `Profile`. La macro `@profile` se usa igual que `@time`, pero no muestra nada en pantalla, sino que guarda numerosos detalles sobre todas las operaciones relevantes que se ejecutan como parte de la expresión que sigue, incluyendo los tiempos que consumen y la memoria que asignan. El concepto de *relevante* aquí está determinado por unos umbrales que se fijan con la función `Profile.init`; uno de estos umbrales es el intervalo de tiempo entre cada "captura" de información, que por defecto está fijado en 1 ms. Esto implica que `@profile` detectará todas las funciones que cuestan más de 1 ms.
-
-Cada vez que se usa la macro `@profile`, la información recogida hasta el momento se amplía con la de la expresión ejecutada, a no ser que se ejecute `Profile.clear()` para "limpiar el *buffer*". Hay distintas formas de ver la información acumulada. La más básica es la función `Profile.print`, que la muestra en forma de texto. Pero esa información es tan copiosa que no resulta una forma práctica de examinarla.
-
-Lo más habitual es usar los llamados [*flame graphs*](https://www.brendangregg.com/flamegraphs.html), que muestran de forma visual el tiempo consumido por cada operación y las "suboperaciones" que las componen, de forma recursiva, hasta llegar el límite de resolución temporal que se haya usado en el registro de información. Cada operación se representa con una barra horizontal, cuya longitud es proporcional al tiempo que consume; una secuencia de operaciones se representa como una sucesión horizontal de barras, y las operaciones anidadas en otras se representan apilando las barras verticalmente. Esa disposición aporta a los gráficos una forma característica, que se puede comparar con un relieve montañoso, o con el perfil de una llama cuando se colorea con tonos rojos y amarillos —de ahí el nombre que reciben—. 
-
-Hay diversos paquetes y otras herramientas para crear y visualizar *flame graphs* a partir de esos registros. La siguiente figura muestra el gráfico interactivo que resulta de monitorizar la función `factoresprimos`, tal como se ve en VS Code con su [extensión para visualizar *flame graphs*](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-js-profile-flame).
-
-![Figura 1. *Flame graph* con VS Code](assets/vscode_flamegraph.png)
-
-Con esa extensión, VS Code no requiere cargar explícitamente el módulo `Profile` ni ningún otro paquete de Julia. Basta con escribir en el REPL:
-
-```julia
-@profview contar_factoresprimos(Int, 10)
-```
-
-Esa instrucción crea una tabla con la información de tiempos recogida, cuya visualización se puede alternar con la de un *flame graph* como el mostrado si se dispone de la extensión adecuada. (Si no está disponible, al intentar cambiar de vista aparece una sugerencia para instalarla.)
-
-En este gráfico el eje vertical está invertido respecto al sentido que usan otros visualizadores: las operaciones anidadas se muestran *debajo* de las que las contienen, en lugar de arriba. Las primeras barras (las que se muestran en la parte superior) tienen poco interés para nuestro propósito, pues tienen que ver con el entorno en el que se ejecuta y se monitoriza la expresión a evaluar. La parte interesante es la mitad inferior, comenzando por nuestra función principal: `contar_factoresprimos`.
-
-Naturalmente, esa función ocupa todo el rango horizontal de tiempos (en la figura solo se muestra un fragmento). Pero se puede ver que la mayor parte del tiempo también está ocupado por `factoresprimos`. La otra función que se ejecuta a su mismo nivel, `contarfrecuencias`, ni siquiera se llega a visualizar. Y al examinar a un nivel de detalle mayor, resulta muy evidente que el mayor peso de `factoresprimos` lo lleva la función `mod`.
-
-Esa operación (el cálculo del resto en una división entera) es por sí misma muy poco costosa, pero en el diseño tan básico que se ha hecho de la función para factorizar números, se usa en bucle un número de veces proporcional al tamaño del número analizado, y en términos globales eso es lo que más tiempo consume. Así pues, de ese análisis se manifiesta claramente que para optimizar la cuenta de factores primos lo que hay que hacer es buscar un algoritmo de factorización más eficiente.[^4]
-
-[^4]: Para una visión general de cómo mejorar la factorización de un número, puede consultarse https://es.wikipedia.org/wiki/Factorizaci%C3%B3n_de_enteros
-
-
+Julia también ofrece herramientas para trabajar a bajo nivel, incluso en código máquina, de las que los programadores más experimentados pueden sacar provecho. Algunas secciones del manual en la [documentación oficial de Julia](https://docs.julialang.org/en/v1/) dan información de interés. Para un tratamiento más exhaustivo de este tema, también se puede consultar el libro [Julia High Performance](https://juliahighperformance.com/) (ISBN 978-1788298117, en inglés).
