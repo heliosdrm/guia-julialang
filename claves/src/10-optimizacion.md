@@ -474,4 +474,8 @@ Cosas que hemos visto en este capítulo como evitar las variables globales y la 
 
 Pero por supuesto, la optimización del código no es algo que se pueda reducir a una serie de recetas y consejos generales: cada programa presenta sus propios cuellos de botella y desafíos, que pueden requerir conocimientos profundos y especializados sobre la gestión de memoria y otros recursos informáticos. Aquí nos hemos conformado con presentar las buenas prácticas más sencillas, que pueden aplicarse a la mayoría de programas, a un nivel semejante al que se ha visto en los capítulos anteriores.
 
-Julia también ofrece herramientas para trabajar a bajo nivel, incluso en código máquina, de las que los programadores más experimentados pueden sacar provecho. Algunas secciones del manual en la [documentación oficial de Julia](https://docs.julialang.org/en/v1/) dan información de interés. Para un tratamiento más exhaustivo de este tema, también se puede consultar el libro [Julia High Performance](https://juliahighperformance.com/) (ISBN 978-1788298117, en inglés).
+Julia también ofrece herramientas para trabajar a bajo nivel, incluso en código máquina, de las que los programadores más experimentados pueden sacar provecho para aumentar el rendimiento de sus programas. Algunas secciones del manual en la [documentación oficial de Julia](https://docs.julialang.org/en/v1/) dan información de interés.
+
+Por otro lado, los programas que tienen una gran carga de procesado de imágenes o cálculos análogos también se pueden beneficiar del uso de [GPUs](https://es.wikipedia.org/wiki/Unidad_de_procesamiento_gráfico) (tarjetas gráficas), para lo cual existen varios paquetes específicos recogidos bajo [JuliaGPU](https://juliagpu.org/).
+
+Finalmente, para un tratamiento más exhaustivo de estos temas, también se puede consultar el libro [Julia High Performance](https://juliahighperformance.com/) (ISBN 978-1788298117, en inglés).

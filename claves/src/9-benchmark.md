@@ -80,12 +80,12 @@ Y la función `serie_pasoscollatz` emplea ese método para calcular el número t
 
 ```@example c9
 function serie_pasoscollatz(n)
-    serie = zeros(Int, n)
+    pasos_total = zeros(Int, n)
     for i=2:n
         (pasos, inferior) = pasoscollatz(i, i)
-        serie[i] = pasos + serie[inferior]
+        pasos_total[i] = pasos + pasos_total[inferior]
     end
-    return serie
+    return pasos_total
 end
 nothing #hide
 ```
@@ -131,7 +131,7 @@ Una alternativa muy popular a la macro `@time` es `@btime` del paquete [Benchmar
 * `@btime` permite interpolar los nombres de variables en la expresión para hacer más fiable el análisis. Por ejemplo, si el argumento de `serie_pasoscollatz(x)` estuviese guardado en la variables `n`, se podría escribir `@btime serie_pasoscollatz($n)`.
 * La expresión pasada a `@btime` ha de ser sencilla, idealmente una simple llamada a una función. Para asignar el resultado a una variable ha de escribirse `y = @btime f(x)`, no `@btime y = f(x)`.
 
-El paquete BenchmarkTools también proporciona la macro `@benchmark`, que da estadísticas más detalladas de todas las repeticiones realizadas, como en el siguiente ejemplo:[^2]
+El paquete BenchmarkTools también proporciona la macro `@belapsed` equivalente a `@elapsed`, así como `@benchmark`, que da estadísticas más detalladas de todas las repeticiones realizadas, como en el siguiente ejemplo:[^2]
 
 ![](assets/benchmark.png)
 
@@ -163,7 +163,9 @@ En este gráfico el eje vertical está invertido respecto al sentido que usan ot
 
 Naturalmente, esa función y `pasoscollatz` en el siguiente nivel ocupan casi todo el rango horizontal de tiempos. También se puede ver que la mayor parte del tiempo dentro de `pasoscollatz` lo ocupa la función `siguiente_collatz`, aunque también hay un consumo de tiempo significativo que se invierte en operaciones de comparación, y en el constructor `BigInt`.  Y dentro de `siguiente_collatz`, encontramos de forma más o menos equitativa la división entera (la función `div`) y otras operaciones aritméticas. A niveles inferiores hay muchos pequeños bloques de operaciones con el tipo `BigInt`. (En el pantallazo mostrado los nombres de funciones están cortados, pero en VS Code se puede hacer zoom y desplazarse para ver los detalles del gráfico.)
 
-No siempre es fácil interpretar los detalles de estos gráficos. Una primera observación es que `div` (usada cuando el número de la secuencia es par) parece ocupar tanto o más tiempo que las operaciones de multiplicación y suma empleadas con los impares. Quien conozca la aritmética binaria con números enteros, puede caer rápidamente en la cuenta de que dividir por 2 es equivalente a desplazar los bits del número una posición, lo cual es más eficiente en el caso de `BigInt`:
+## Ejemplo: aplicación de mejoras
+
+No siempre es fácil interpretar los detalles de resultados como los mostrados anteriormente. Una primera observación del *flame graph* es que `div` (usada cuando el número de la secuencia es par) parece ocupar tanto o más tiempo que las operaciones de multiplicación y suma empleadas con los impares. Quien conozca la aritmética binaria con números enteros, puede caer rápidamente en la cuenta de que dividir por 2 es equivalente a desplazar los bits del número una posición, lo cual es más eficiente en el caso de `BigInt`:
 
 ```@repl c9
 using BenchmarkTools
@@ -176,5 +178,47 @@ x = big"6782"
 
 Así pues, una posible mejora sería cambiar la operación de división en la función `siguiente_collatz`. Por otro lado, también se puede considerar que el hecho de hacer operaciones con `BigInt` añade una carga significativa, y que podría aumentarse la eficiencia utilizando otros tipos de números enteros. El precio a pagar sería el riesgo de cometer errores, si en alguna secuencia se supera el límite de desbordamiento para ese tipo.
 
-En la práctica, con la mayoría de ordenadores personales se pueden calcular las secuencias de Collatz usando tipos de enteros menos costosos sin superar su límite de desbordamiento, antes de que el tamaño del vector generado con `serie_pasoscollatz` sea inmanejable. Se deja como ejercicio modificar las funciones anteriores sin utilizar el tipo `BigInt`, para comprobar cómo mejora el rendimiento.
+En la práctica, con la mayoría de ordenadores personales se pueden calcular las secuencias de Collatz usando tipos de enteros menos costosos sin superar su límite de desbordamiento, antes de que el tamaño del vector generado con `serie_pasoscollatz` sea inmanejable. Por lo tanto sería razonable modificar las funciones anteriores para evitar el retardo sistemático provocado por usar `BigInt`.
 
+Juntando esas dos ideas, el método genérico de `siguiente_collatz` podría modificarse como sigue, para que devuelva un número del mismo tipo de entero introducido:
+
+```@example c9
+function siguiente_collatz(x::T) where T<:Integer
+    if iseven(x)
+        return x >>> 1
+    else
+        if x > typemax(T) ÷ 3
+            throw(DomainError("la secuencia excede del límite superior para $T"))
+        end
+        return T(3)*x + one(T)
+    end
+end
+nothing #hide
+```
+
+Asimismo, las otras dos funciones (`pasoscollatz` y `serie_pasoscollatz`), se podrían modificar del siguiente modo para que las secuencias contengan el tipo de entero que se introduce como argumento:
+
+```@example c9
+function pasoscollatz(x::Integer, x0)
+    (x < 1) && throw(DomainError("solo se admiten números naturales"))
+    n = 0
+    while x ≥ x0
+        x == 1 && break
+        x = siguiente_collatz(x)
+        n += 1
+    end
+    return (n, x)
+end
+
+function serie_pasoscollatz(n::T) where T<:Integer
+    pasos_total = zeros(Int, n)
+    for i=range(T(2), stop=n)
+        (pasos, inferior) = pasoscollatz(i, i)
+        pasos_total[i] = pasos + pasos_total[inferior]
+    end
+    return pasos_total
+end
+nothing #hide
+```
+
+Cualquiera de las medidas de *benchmarking* expuestas anteriormente muestra que esta nueva versión de `serie_pasoscollatz` es cien veces más rápida que la basada en `BigInt`.
