@@ -6,15 +6,15 @@ f(x::Int, y::AbstractString) = 1
 f(x::Real, y::String) = 2
 ```
 
-Una de las características más notables de Julia es su uso de lo que se conoce como *multiple dispatch*, que en esencia significa que una misma función puede definirse de distintas maneras, según el número y el tipo de los argumentos que recibe. Esto es algo que puede pasar desapercibido en un principio, ya que la sintaxis de Julia no obliga a tenerlo en cuenta. Las funciones se pueden definir como secuencias de fórmulas matemáticas, sin preocuparse de cómo se representan en la memoria del ordenador los elementos de esas fórmulas, y sin plantearse significados alternativos de la función. Pero la posibilidad de alterar el comportamiento de las funciones según cómo sean los argumentos es una característica que hace a Julia un lenguaje muy expresivo (capaz de representar distintos algoritmos de forma sencilla y directa) y extensible (capaz de ampliar sus funcionalidades).
+Una de las características más notables de Julia es su uso de lo que se conoce como *multiple dispatch*, que en esencia significa que una misma función puede definirse de distintas maneras, según el número y el tipo de los argumentos que recibe. Esto es algo que puede pasar desapercibido en un principio, ya que la sintaxis de Julia no obliga a tenerlo en cuenta. Las funciones se pueden definir como secuencias de fórmulas matemáticas, sin preocuparse de cómo se representan en la memoria del ordenador los elementos de esas fórmulas, y sin plantearse significados alternativos de la función. Pero la posibilidad de alterar el comportamiento de las funciones según cómo sean sus argumentos es una característica que hace a Julia un lenguaje muy expresivo (capaz de representar distintos algoritmos de forma sencilla y directa) y extensible (capaz de ampliar sus funcionalidades).
 
-Un caso de uso muy habitual de *multiple dispatch*, que a menudo se emplea incluso sin conocer el concepto, es el de las funciones con argumentos opcionales. Por ejemplo, una función como la siguente:
+Un caso de uso muy habitual de *multiple dispatch*, que a menudo se emplea incluso sin conocer el concepto, es el de las funciones con argumentos opcionales. Por ejemplo en una función como la siguente:
 
 ```julia
 incrementar(x, inc=1) = x + inc
 ```
 
-A esta función se le puede llamar con solo un argumento (p.ej. `incrementar(5)`), asumiéndose que la variable `inc` tomará el valor `1` por defecto. Esto es lo mismo que escribir explícitamente los dos métodos siguientes:
+A esta función se le puede llamar con solo un argumento (p.ej. `incrementar(5)`), asumiendo que la variable `inc` tomará el valor `1` por defecto. Esto es lo mismo que escribir explícitamente los dos métodos siguientes:
 
 ```julia
 incrementar(x, inc) = x + inc
@@ -57,7 +57,7 @@ Number ─┬──────────────────────�
                                         │ UInt8
 ```
 
-Solo los tipos más bajos de esta jerarquía, los que hay más a la derecha del esquema, son tipos "concretos", es decir tipos que definen una estructura de datos concreta. Siempre que utilicemos la función `typeof` con un dato numérico en Julia, el resultado será uno de esos tipos. Todos los demás son tipos "abstractos", que se usan como *alias* para identificar los conjuntos de tipos concretos que tiene conectados a su derecha del esquema. El operador `<:` sirve para comprobar si un tipo dado (sea concreto o abstracto) es un subtipo de otro. Así, por ejemplo:
+Solo los tipos más bajos de esta jerarquía, los que hay más a la derecha del esquema, son tipos "concretos", es decir tipos que definen una estructura de datos concreta. Siempre que utilicemos la función `typeof` con un dato numérico en Julia, el resultado será uno de esos tipos. Todos los demás son tipos "abstractos", que se usan como *alias* para identificar los conjuntos de tipos concretos que tienen conectados a su derecha del esquema. El operador `<:` sirve para comprobar si un tipo dado (sea concreto o abstracto) es un subtipo de otro. Así, por ejemplo:
 
 ```@repl
 typeof(1) # El resultado es uno de los tipos concretos
@@ -67,9 +67,9 @@ typeof(1) <: Integer # Pero es un supertipo de `Int64`
 
 Los tipos abstractos son útiles para poder identificar de forma sencilla tipos distintos que en ciertos contextos no se diferencian. También existe un supertipo `Any` que engloba todos los demás, de tal manera que `typeof(x) <: Any` siempre es cierto para cualquier `x`.
 
-Para explorar la jerarquía de los tipos existen las funciones `subtypes`, que devuelve un vector con los subtipos inmediatamente debajo de un tipo abstracto cualquiera, y `supertype` que devuelve el tipo que hay por encima de otro:
+Para explorar la jerarquía de los tipos existe la función `subtypes`, que devuelve un vector con los subtipos inmediatamente debajo de un tipo abstracto cualquiera, y `supertype` que devuelve el tipo que hay por encima de otro:
 
-```@repl
+```@repl c1
 subtypes(AbstractFloat)
 subtypes(Float64) # Es un tipo concreto, sin subtipos
 supertype(Bool)
@@ -96,7 +96,7 @@ function f(x::Int, y::String)
 end
 ```
 
-... lo que se ha definido ahí es un *método* de la función `f` asociado a dos argumentos, el primero de los cuales (`x`) se ha anotado como de tipo `Int`, y el segundo (`y`) como `String`. Podríamos definir muchos otros métodos con instrucciones diferentes junto al anterior: con otros tipos concretos distintos, o con tipos abstractions como `Real`, `AbstractString`... o incluso `Any`. Por simplicidad, cuando se define un método con argumentos genéricos (de tipo `Any`) no hace falta anotarlos explícitamente; así `f(x, y)` sería equivalente a `f(x::Any, y::Any)`.
+... lo que se ha definido ahí es un *método* de la función `f` asociado a dos argumentos, el primero de los cuales (`x`) se ha anotado como de tipo `Int`, y el segundo (`y`) como `String`. Podríamos definir muchos otros métodos con instrucciones diferentes junto al anterior: con otros tipos concretos distintos, o con tipos abstractos como `Real`, `AbstractString`... o incluso `Any`. Por simplicidad, cuando se define un método con argumentos genéricos (de tipo `Any`) no hace falta anotarlos explícitamente; así `f(x, y)` sería equivalente a `f(x::Any, y::Any)`.
 
 Las combinaciones de argumentos con tipos concretos, abstractos o no especificados son completamente libres, y también se pueden crear métodos con más o menos argumentos. Sin embargo, los argumentos con nombre no cuentan: si se definen varias versiones de una misma función con los mismos argumentos posicionales, cambiando solo los argumentos "con nombre" (p.ej. `f(a, b; c=1)` y `f(a, b; c=1, d=2)`, lo que se hará es sobreescribir el mismo método.
 
@@ -113,7 +113,7 @@ Los tipos de la primera operación son compatibles con los dos métodos, mientra
 
 En casos como este, se aplica la regla del "método más específico": si entre todos los métodos compatibles hay uno cuyos tipos estén por debajo de los demás en la jerarquía de tipos abstractos, se escogerá ese método. En este caso, `Int <: Real` y `String <: AstractString`, por lo que el primer método es más específico y será el escogido para la primera operación.
 
-Si no se puede encontrar un método más específico que todos los demás, se considerará que el conjunto de métodos disponibles es ambiguo y se emitirá un error aconsejando qué método adicional se debería definir. Por ejemplo, si los métodos definidos fueran `f(x::Int, y::AbstractString)` y `f(x::Real, String)`, la operación `f(1, "abc")` también sería compatible con ambos. Pero el método más específico es distinto para cada uno de los dos argumentos, por lo que no se puede dar prioridad a ninguno de los dos, y el resultado será el siguiente: 
+Si no se puede encontrar un método más específico que todos los demás, se considerará que el conjunto de métodos disponibles es ambiguo y se emitirá un error aconsejando qué método adicional se debería definir. Por ejemplo, si los métodos definidos fueran `f(x::Int, y::AbstractString)` y `f(x::Real, String)`, la operación `f(1, "abc")` también sería compatible con ambos. Pero el método más específico sería distinto para cada uno de los dos argumentos, por lo que no se podría dar prioridad a ninguno de los dos, y el resultado sería algo como lo que sigue: 
 
 ```@repl c1
 f(1, "abc")
@@ -121,7 +121,7 @@ f(1, "abc")
 
 ## Anotación de tipos
 
-En los ejemplos anteriores hemos visto que los tipos de los argumentos se anotan como `x::T`, donde `x` es el nombre del argumento y `T` el del tipo admitido. Las variables en el cuerpo de una función también se pueden anotar de ese modo para forzar que sean de un tipo particular, e incluso la propia función se puede anotar para especificar el tipo del valor devuelto. Podemos ver un ejemplo con las dos siguientes variaciones de la función `incrementar`, que devuelven el resultado como un número de tipo `Float64`:
+En los ejemplos anteriores hemos visto que los tipos de los argumentos se anotan como `x::T`, donde `x` es el nombre del argumento y `T` el del tipo admitido. Las variables en el cuerpo de una función también se pueden anotar de ese modo para forzar que sean de un tipo particular, e incluso la propia función se puede anotar para forzar el tipo del valor devuelto. Podemos ver un ejemplo con las dos siguientes variaciones de la función `incrementar`, que devuelven el resultado como un número de tipo `Float64`:
 
 ```julia
 function incrementar(x)
@@ -171,9 +171,9 @@ a, _ = f(x)
 
 Al hacer eso, el primer valor se asignaría a la variable `a`, y el segundo se descartaría, evitando así ocupar memoria con una variable que no vamos a usar.
 
-En principio parecería absurdo que esto pueda pasar también con los argumentos de las funciones: si una función no va a usar una variable, ¿qué motivo habría para que forme parte de los argumentos de entrada? Sin embargo, a veces ocurre que con saber *el tipo* del argumento es suficiente, y su valor es realmente irrelevante. En esos casos, no hace falta siquiera escribir el guión bajo para identificar la variable; para especificar el argumento basta con la anotación del tipo.
+En principio parecería absurdo que esto pueda pasar también con los argumentos de las funciones: si una función no va a usar una variable, ¿qué motivo habría para que forme parte de los argumentos de entrada? Sin embargo, a veces ocurre que con saber *el tipo* del argumento es suficiente, y su valor concreto es irrelevante. En esos casos, no hace falta siquiera escribir el guión bajo para identificar la variable; para especificar el argumento basta con la anotación del tipo.
 
-Esta circunstancia se suele dar cuando tratamos con lo que se conoce como tipos "solitarios" (en inglés *singleton types*), que no admiten distintos valores, con lo que conociendo el tipo de la variable conocemos también su valor. Dos casos típicos son los de los tipos `Nothing` y `Missing`, que se usan para representar un objeto nulo, que "no es nada" (`nothing`) y un valor perdido (`missing`), respectivamente:
+Esta circunstancia se suele dar cuando tratamos con lo que se conoce como tipos "solitarios" (en inglés *singleton types*), que solo tienen un valor posible, con lo que conociendo el tipo de la variable conocemos también su valor. Dos casos típicos son los de los tipos `Nothing` y `Missing`, que se usan para representar un objeto nulo, que "no es nada" (`nothing`) y un valor perdido (`missing`), respectivamente:
 
 ```@example c1
 quiensoy(::Nothing) = println("El valor introducido es `nothing`")
@@ -186,7 +186,7 @@ quiensoy(nothing)
 quiensoy(missing)
 ```
 
-En este grupo también se encuentran el objeto representado por los dos puntos (`:`), que se usa para indexar arrays y otros objetos semejantes; por ejemplo en `v[:,1]`, que si `v` es una matriz significaría "todos los elementos de la primera columna de `v`. Este objeto es el único valor del tipo llamado `Colon`.
+En este grupo también se encuentran el objeto representado por los dos puntos (`:`), que se usa para indexar arrays y otros objetos semejantes; por ejemplo en `v[:,1]`, que si `v` es una matriz significaría "todos los elementos de la primera columna de `v`. Este objeto es el único valor definido del tipo llamado `Colon`.
 
 Además, hay "familias de tipos" cuyas variantes específicas tampoco admiten variedad en sus valores. Podemos ver dos de ellas, las funciones y los tipos de variables, con un ejemplo práctico. Supongamos que queremos definir una función que devuelve el [elemento neutro](https://es.wikipedia.org/wiki/Elemento_neutro) de una operación sobre un conjunto de datos. Algunos ejemplos son los siguientes:
 
@@ -214,8 +214,8 @@ elementoneutro(*, String)
 
 ## Métodos genéricos
 
-Como hemos visto, en Julia la anotación del tipo de las variables es opcional; o visto de otro modo, en Julia las variables se pueden anotar con tipos abstractos, y la ausencia de anotación se toma implícitamente como si se declarase el supertipo `Any` que incluye cualquier tipo posible.
+Como hemos visto, en Julia la anotación del tipo de las variables es opcional; o visto de otro modo, en Julia las variables se pueden anotar con tipos abstractos, y la ausencia de anotación se toma implícitamente como si se declarase el supertipo `Any`, que incluye cualquier tipo posible.
 
-De hecho, en los argumentos y el cuerpo de las funciones no solo se puede, sino que *se recomienda* usar tipos con el mayor nivel de abstracción posible que sirva para los propósitos del programa. Esto puede sorprender a usuarios con experiencia en otros lenguajes conocidos por su eficiencia, como C, Java o Fortran, que requieren la anotación explícita de los tipos de todas las variables que se utilizan en los programa. Pero lo explica el hecho de que, aunque el usuario defina métodos con variables genéricas, a bajo nivel se compilen métodos específicos para los conjuntos de tipos concretos que realmente se utilizan al llamar a las funciones.
+De hecho, en los argumentos y el cuerpo de las funciones no solo se puede, sino que *se recomienda* usar tipos con el mayor nivel de abstracción posible que sirva para los propósitos del programa. Esto puede sorprender a usuarios con experiencia en otros lenguajes conocidos por su eficiencia, como C, Java o Fortran, que requieren la anotación explícita de los tipos de todas las variables que se utilizan en los programas. Pero lo explica el hecho de que, aunque el usuario defina métodos con variables genéricas, a bajo nivel se compilen métodos específicos para los conjuntos de tipos concretos que realmente se utilizan al llamar a las funciones.
 
 Así pues, definir métodos genéricos, con argumentos de tipos abstractos, no impide en absoluto la optimización del código. Sin embargo, sí que ayuda a que las funciones sean útiles en aplicaciones más amplias que las que se hubieran podido pensar en un principio. Esto contribuye a hacer código más fácil de reutilizar y extender a posteriori.
