@@ -5,11 +5,11 @@ Los contextos de variables son un recurso de los lenguajes de programación para
 [^1]: Se usa el nombre de contextos de *variables* por simplificar, pero hablamos de contextos para nombres que pueden identificar variables, constantes, tipos, funciones o cualquier otro tipo de objeto.
 
 
-!!! note "*Scope*: ¿alcance o contexto?"
+!!! note "Scope: ¿alcance o contexto?"
     
     Para tratar este tema en inglés se suele utilizar el término *scope*, que estrictamente se refiere al alcance de una variable; es decir la región de código en la que se reconoce su asociación particular con un valor dado. Lo normal es que distintas variables que se definen en el mismo fragmento de código tengan el mismo alcance, delimitado por ciertas estructuras (funciones, bloques de código...). Estas estructuras que delimitan el alcance de un conjunto de variables es lo que llamamos un "contexto de variables". Dada la proximidad entre estos conceptos de "alcance" y "contexto", en la jerga informática se suele usar el término *scope* de forma indistinta para referirse a ambas cosas.
 
-Normalmente el funcionamiento de los contextos de variables es bastante lógico, por lo que la mayoría de programas se pueden escribir dando nombre a las variables y refiriéndose a ellas de forma natural, según dicta la intuición. Sin embargo, para usar ciertos recursos avanzadados, y en particular los que se verán en los siguientes capítulos, conviene aclarar algunos detalles, que es el propósito de este capítulo.
+Normalmente el funcionamiento de los contextos de variables es bastante lógico, por lo que la mayoría de programas se pueden escribir dando nombre a las variables y refiriéndose a ellas de forma natural, según dicta la intuición. Sin embargo, para usar ciertos recursos avanzadados, y en particular los que se verán en los siguientes capítulos, conviene aclarar algunos detalles.
 
 Buena parte de los conceptos tratados en este capítulo ya se han presentado en capítulos anteriores de esta guía y en la "guía básica" (en particular en [uno de los capítulos sobre funciones](https://hedero.webs.upv.es/julia-basico/8-funciones-avanzado)), pero aquí los recogemos de forma más completa y detallada. Aun así, para definiciones y explicaciones precisas de todos los conceptos se puede consultar la sección correspondiente del [manual oficial de Julia](https://docs.julialang.org/en/v1/manual/variables-and-scoping/).
 
@@ -83,19 +83,27 @@ Las funciones, los bucles, bloques `try-catch`, `let` y otras estructuras (con e
 
 !!! note "Contextos léxicos"
     
-    Es importante recalcar que las variables globales que se reconocen en un contexto local son las del módulo en el que *está escrito* el código (lo que se conoce como un "contexto léxico" o "estático"). Este matiz se puede apreciar claramente en el caso de las funciones: dentro de una función se puede hacer referencia a una variable `x` definida globalmente en el módulo en que se ha definido esa función, pero no tiene absolutamente ningún impacto que haya o deje de haber también una variable `x` en fragmentos código distintos en los que se llame a la función.
+    Es importante recalcar que las variables globales que se reconocen en un contexto local son las del módulo en el que *está escrito* el código (lo que se conoce como un "contexto léxico" o "estático"). Este matiz se puede apreciar claramente en el caso de las funciones: cuando se hace referencia a una variable global `x` dentro de una función, el contexto en el que se busca esa `x` es el código donde está definida la función; si esa función se usa en otro contexto (por ejemplo en un módulo distinto), no importa en que en él también pueda haber alguna variable llamada `x`.
 
 Las variables locales y las globales tienen características y un tratamiento distinto. De hecho se permite que una variable local tenga el mismo nombre que otra global. En ese caso, la variable local "enmascara" a la global, que deja de ser visible en contexto local --aunque siempre puede hacerse referencia a ella cualificándola con el nombre del módulo--:
 
-```@repl
-x = 1 # global en `Main`
-function foo()
-    x = 2 # la variable local enmascara la global
-    println("La x local es: ", x)
-    println("La x global es: ", Main.x)
-end
-foo()
-x # La x local no ha afectado a la global
+```julia-repl
+julia> x = 1 # global en `Main`
+1
+
+julia> function foo()
+           x = 2 # la variable local enmascara la global
+           println("La x local es: ", x)
+           println("La x global es: ", Main.x)
+       end
+foo (generic function with 1 method)
+
+julia> foo()
+La x local es: 2
+La x global es: 1
+
+julia> x # La x local no ha afectado a la global
+1
 ```
 
 ### Cómo diferenciar variables globales y locales
@@ -151,7 +159,7 @@ Por otro lado, si las variables globales son de tipo mutable (por ejemplo vector
 
 !!! note "Cambios en las variables globales"
     
-    No se deberían hacer modificaciones sin una buena razón a las variables globales (es decir, en general es recomendable que los objetos globales sean *constantes*, no *variables*). Un motivo es que los cambios a las globales suponen una modificación al estado del programa, que si no se hace con cuidado puede desembocar en funcionamientos difíciles de predecir. Pero también hay razones de eficiencia, que se comentan en el capítulo XXXX.
+    No se deberían hacer modificaciones sin una buena razón a las variables globales (es decir, en general es recomendable que los objetos globales sean *constantes*, no *variables*). Un motivo es que los cambios a las globales suponen una modificación al estado del programa, que si no se hace con cuidado puede desembocar en funcionamientos difíciles de predecir. Pero también hay razones de eficiencia, que se comentan en el [capítulo 10](10-optimizacion.md#Evitar-variables-globales).
 
 ## Contextos locales anidados
 
@@ -175,7 +183,9 @@ En esa función se manejan tres variables, todas ellas locales:
 
 Así pues, la variable `v` solo se puede usar dentro del bucle `for`, aunque dentro del mismo también podemos usar las variables locales `x` e `y`. Lo mismo ocurriría si dentro del bucle hiciéramos una asignación a una nueva variable (por ejemplo `z`), *que no esté definida fuera del bucle*: esa variable se crearía como una local específica de ese contexto anidado, y tampoco se reconocería fuera de él. Por contra, como la variable `y` ya estaba definida como local fuera del bucle, en la línea `y += v` se considera que es la misma variable, no una nueva específica del bucle.
 
-La asignación de valores es la única forma de definir variables locales que no tiene efecto en contextos anidados, si ya existía una local con el mismo nombre en contextos de nivel superior. En los otros casos (argumentos de funciones, iteradores, asignaciones de cabecera en bloques `let`...) siempre se crea una nueva local específica, exista o no otra del mismo nombre en el nivel superior. Por ejemplo, el siguiente código sería exactamente equivalente al que hemos visto antes (aunque ligeramente más confuso):
+Dentro de un contexto anidado se aplican, en general, las mismas reglas para definir qué variables son específicamente locales al mismo: los argumentos de entrada en el caso de que el contexto anidado sea una función, los iteradores en el caso de bucles `for`, las asignaciones de cabecera en bloques `let`... pero la "regla de la asignación" es una excepción. Cuando aparece una expresión del tipo `y = ...` en un contexto anidado, primero se busca si `y` ya existe como variable local en algún contexto de nivel superior. Si ya existe, se considera que `y` es esa misma variable, y solo si no existe se crea una nueva variable local cuyo alcance se limita a ese contexto anidado.
+
+Por ejemplo, el siguiente código sería exactamente equivalente al que hemos visto antes (aunque ligeramente más confuso):
 
 ```julia
 function suma(x)
@@ -206,10 +216,6 @@ nothing #hide
 ```@repl c7
 anidados(10)
 ```
-
-!!! note
-    
-    
 
 ## Funciones anidadas (*closures*)
 
@@ -264,7 +270,7 @@ ERROR: UndefVarError: x not defined
 
 Esto ocurre porque en la primera iteración se ejecutaría la línea `x = 1`, y en la segunda intentaría ejecutarse `x = x + i`; pero al tratarse de una iteración nueva, el valor de `x` no estaría definido de antemano y esa línea no se podría ejecutar.
 
-Este comportamiento puede parecer inconveniente en situaciones como esta, pero tiene ventajas sustanciales. En primer lugar, esto ayuda a que el código de los bucles sea más fácil de analizar, porque los objetos asignados a las variables dentro del bucle solo pueden depender de las variables globales y las instrucciones del bucle que se ejecuten en la iteración presente; no hace falta pensar en lo que se pueda haber ejecutado o dejado de ejecutar anteriormente. Esto es algo deseable en programas con cierta complejidad, y en particular para la ejecución en paralelo que comentaremos en el capítulo XXXX.
+Este comportamiento puede parecer inconveniente en situaciones como esta, pero tiene ventajas sustanciales. En primer lugar, esto ayuda a que el código de los bucles sea más fácil de analizar, porque los objetos asignados a las variables dentro del bucle solo pueden depender de las variables globales y las instrucciones del bucle que se ejecuten en la iteración presente; no hace falta pensar en lo que se pueda haber ejecutado o dejado de ejecutar anteriormente. Esto es algo deseable en programas con cierta complejidad, y en particular para la ejecución en paralelo que comentaremos en el [capítulo 11](11-paralelizacion.md).
 
 En una situación como la presentada en el ejemplo, en la que querríamos que `x` fuese una variable persistente de una iteración a la siguiente, sería necesario definirla *fuera* del bucle, antes de ejecutarlo. Sin embargo esto nos obliga a considerar si ese bucle se encuentra dentro de un contexto local (por ejemplo en una función), o en uno global (en un módulo, en el nivel superior de un *script*, etc.)
 

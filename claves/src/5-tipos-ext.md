@@ -130,7 +130,7 @@ Base.convert(::Type{Fraccion{T}}, x::Real) where T = Fraccion{T}(x)
 
 Este método ha de definirse con dos argumentos: el primero ha de designar el tipo al que se quiere hacer la conversión automática, lo cual anotamos como un tipo paricular de la familia `Type`. El segundo argumento es el valor que se quiere convertir a ese tipo. La función `convert` no suele utilizarse explícitamente; si existe el método adecuado, la conversión definida se aplica automáticamente en ciertas circunstancias. Por ejemplo, el número `2` se transformaría en `Fraccion{Int}(2,1)` en los siguientes casos:
 
-* Si se introduce en un `Array` o un objeto semejante destinado al tipo objetivo; p.ej. en `v[1] = 2` si `eltype(v) == Fraccion{Int}`.
+* Si se introduce en un `Array` o un contenedor semejante, cuyos elementos sean del tipo objetivo; p.ej. en `v[1] = 2` si `eltype(v) == Fraccion{Int}`.
 * Al asignarlo a una variable anotada con el tipo objetivo (p.ej. `x::Fraccion = 2`), o si es el valor a devolver por una función anotada con ese tipo (véase la sección sobre [Anotación de tipos](@ref) en el capítulo 1).
 * Igualmente, si se asigna a un campo anotado con el tipo objetivo, en la construcción de nuevos objetos.
 
@@ -212,11 +212,11 @@ Las funciones `getindex` y `setindex!` son especialmente interesantes, porque co
 
 Del mismo modo, las funciones `getproperty`, `setproperty!` y `propertynames` controlan el comportamiento de las expresiones con punto que se usan para acceder a los campos o propiedades de un objeto:
 
-* La expresión de lectura `x.campo` ejecuta la función `getproperty(x, :campo)` -- con el segundo argumento como un símbolo que representa lo escrito después del punto.
+* La expresión de lectura `x.campo` ejecuta la función `getproperty(x, :campo)` --con el segundo argumento como un símbolo que representa lo escrito después del punto--.
 * La expresión de lectura `x.campo = valor` ejecuta la función `setproperty!(x, :campo) = valor`.
 * Si en el REPL se presiona el tabulador después de escribir `x.`, se muestra una lista con los nombres devueltos por la función `propertynames(x)`.
 
-En el caso de los tipos compuestos, si no se ha definido ningún metodo para estas funciones se intenta acceder a los campos de ese tipo. Por lo tanto, si se crea un método específico para cualquiera de ellas es conveniente hacerlo con las tres, para mantener la consistencia. (En el caso de los tipos inmutables no hace falta extender la función `setproperty!`, ya los campos no se pueden modificar.)[^1]
+En el caso de los tipos compuestos, si no se ha definido ningún metodo para estas funciones se intenta acceder a los campos de ese tipo. Por lo tanto, si se crea un método específico para cualquiera de ellas es conveniente hacerlo con las tres, para mantener la consistencia. (En el caso de los tipos inmutables no hace falta extender la función `setproperty!`, ya que los campos no se pueden modificar.)[^1]
 
 [^1]: Si se crean métodos para `getproperty`, `setproperty!` o `propertynames`, la lectura y escritura de los campos del tipo se puede seguir haciendo de forma directa mediante las funciones `gefield`, `setfield!` y `fieldnames`, que no deberían modificarse con métodos nuevos.
 
@@ -249,7 +249,7 @@ Ese código definía un método para cualquier tipo `T<:AbstractFloat` en el que
 
 ## Pirateo de tipos
 
-A lo largo de este capítulo hemos visto varios ejemplos en los que hemos extendido funciones del módulo `Base` de Julia con aplicaciones específicas para el tipo `Fraccion`; y lo mismo podría haberse hecho con funciones de otros módulos, así como de paquetes de terceros. Y del mismo modo que hemos definido métodos para el tipo `Fraccion` que hemos definido, podríamos haberlo hecho para cualquier otro tipo, esté definido por nosotros, presente en `Base` o importado de cualquier otro módulo o paquete.
+A lo largo de este capítulo hemos visto varios ejemplos en los que hemos extendido funciones del módulo `Base` de Julia con aplicaciones específicas para el tipo `Fraccion`; y lo mismo podría haberse hecho con funciones de otros módulos, así como de paquetes de terceros. Y del mismo modo que hemos definido métodos para nuestro tipo `Fraccion`, podríamos haberlo hecho para cualquier otro tipo, esté definido por nosotros, presente en `Base` o importado de cualquier otro módulo o paquete.
 
 Todo esto es muy útil, especialmente porque se puede hacer sin tener que manipular los módulos o paquetes en los que están definidos las funciones o los tipos que se están usando. Esto es una de las razones por las que Julia se considera un lenguaje fácilmente "extensible": se puede tomar el trabajo de otros (funciones y tipos definidos en otros paquetes) y ampliar su funcionalidad con un nuevo paquete, sin tener que definir versiones derivadas de aquellos objetos, y sin necesidad de coordinarse con los autores de los paquetes anteriores.
 

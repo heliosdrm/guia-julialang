@@ -4,7 +4,7 @@
 using Fracciones
 ```
 
-Al final del capítulo 4 se hizo una breve introducción sobre cómo transformar un módulo de Julia en un paquete para facilitar su reutilización en otros proyectos. En el presente capítulo encontrarás más consejos e instrucciones útiles para mejorar la calidad, robustez y usabilidad de los paquetes.
+Al final del capítulo 4 se hizo una breve introducción sobre cómo transformar un módulo de Julia en un paquete, para facilitar su reutilización en otros proyectos, tomando el paquete [Fracciones](https://github.com/heliosdrm/Fracciones.jl) como ejemplo. En el presente capítulo vamos a desarrollar este tema en mayor profundidad, con más consejos e instrucciones para mejorar la calidad, robustez y usabilidad de los paquetes en Julia.
 
 ## Compatibilidad de las dependencias
 
@@ -18,10 +18,10 @@ julia = "1"
 MacroTools = "0.5"
 ```
 
-Esto significa que el paquete requiere el uso de una versión de Julia compatible con la número 1, y de una versión de `MacroTools` compatible con la número 0.5. Esta definición de compatibilidad está basada en la numeración de [SemVer](https://semver.org/), que identifica las versiones como una secuencia de tres números ("versión mayor", "versión menor" y "parche"). Concretamente, el criterio que se sigue es el siguiente:
+Esto significa que el paquete requiere el uso de una versión de Julia compatible con la número 1, y de una versión de `MacroTools` compatible con la número 0.5. Esta definición de compatibilidad está basada en la numeración de [SemVer](https://semver.org/lang/es/), que identifica las versiones como una secuencia de tres números ("versión mayor", "versión menor" y "parche"). Concretamente, el criterio que se sigue es el siguiente:
 
 * Puede omitirse el número de parche (como en `MacroTools = "0.5"`), y también el número de versión menor (dejando solo el número de versión mayor, como en `julia = "1"`). Los números que se omiten se asumen que son `0`. Así, el ejemplo es equivalente a indicar `julia = "1.0.0"` y `MacroTools = "0.5.0"`.
-* Se consideran compatibles todas las versiones igual o mayores que el número especificado, siempre que se mantenga fijo el número de mayor nivel distinto de cero.
+* Se consideran compatibles todas las versiones iguales o mayores que el número especificado, siempre que se mantenga fijo el número de mayor nivel distinto de cero.
 
 Así, en el caso de nuestro paquete de ejemplo, las versiones compatibles de `MacroTools` son `0.5.0`, `0.5,1`... y todas las que comiencen por `0.5`; y las versiones de Julia admitidas son todas las que comienzan por `1`.
 
@@ -33,7 +33,7 @@ La especificación de compatibilidad puede ser más compleja si hace falta. Por 
 
 Al igual que podemos usar los números de versión de nuestras dependencias para gestionar adecuadamente las compatibilidades, también es conveniente que en nuestro paquete actualicemos el número de versión señalado en `Project.toml` cuando se haga algún cambio en el código --y si vamos a compartir el paquete o a utilizarlo en proyectos distintos, es una práctica imprescindible para asegurar la reproducibilidad--.
 
-Para facilitar que el gestor de paquetes escoja las versiones adecuadas, es muy recomendable seguir el criterio [SemVer] de numeración de versiones. Según este criterio la versión de un software viene indicada por tres números que separamos por un punto:
+Para facilitar que el gestor de paquetes escoja las versiones adecuadas, es muy recomendable seguir el criterio SemVer de numeración de versiones. Según este criterio la versión de un software viene indicada por tres números que separamos por un punto:
 
 * La primera versión "estable" del software recibe el número de versión 1.0.0.
 * Si se hace algún arreglo para solucionar *bugs*, sin alterar en ningún otro aspecto la funcionalidad del software, se incrementa el tercer número, dejando los demás iguales. P.ej. de la versión 1.0.0 se pasaría a la 1.0.1.
@@ -52,11 +52,11 @@ Sin adentrarnos en el territorio de gestión de versiones con Git, que es un asu
 
 ### Registro de paquetes
 
-Para que el gestor de paquetes sepa dónde buscar para instalar una u otra versión de un paquete dado, este ha de estar incluido en un registro de paquetes. Los registros son índices alojados en el depósito de Julia (generalmente en el directorio `.julia/registries`), que contienen detalles técnicos de un conjunto de paquetes, incluyendo la fuente desde la que se pueden descargar y el código de los *commits* asociados a cada una de las versiones registradas. (Los *commits* son puntos específicos de la historia de un repositorio de Git.) Cuando utilizamos instrucciones como `]add`, `]update`, etc. dando solo el nombre de un paquete (sin una dirección desde la cual descargarlo), el gestor de paquetes busca ese paquete en los registros instalados, y utiliza la versión disponible en el mismo sobre los paquetes y sus versiones.
+Para que el gestor de paquetes sepa dónde buscar para instalar una u otra versión de un paquete dado, este ha de estar incluido en un registro de paquetes. Los registros son índices alojados en el depósito de Julia (generalmente en el directorio `.julia/registries`), que contienen detalles técnicos de un conjunto de paquetes, incluyendo la fuente desde la que se pueden descargar y el código de los *commits* asociados a cada versión. (Los *commits* son puntos específicos de la historia de un repositorio de Git.) Cuando utilizamos instrucciones como `]add`, `]update`, etc. dando solo el nombre de un paquete (sin una dirección desde la cual descargarlo), el gestor de paquetes busca ese paquete en los registros disponibles, y utiliza la información contenida en ellos.
 
 El registro más conocido es el [Registro General](https://github.com/JuliaRegistries/General), que incluye miles de paquetes y es el que se suele instalar por defecto con Julia. Pero eso no impide añadir en paralelo otros registros, e incluso crearse un registro propio. (Para crear un registro propio una buena opción es el paquete [LocalRegistry](https://github.com/GunnarFarneback/LocalRegistry.jl), muy útil y fácil de usar --considerando que se sepa cómo usar Git--.) La mayoría de operaciones con el gestor de paquetes implican también una actualización de la copia local de los registros, de tal manera que si los creadores de otros paquetes han registrado nuevos paquetes o versiones de los mismos en el Registro General --o en otro que tengamos sincronizado en nuestra instalación--, tendremos acceso inmediato a todas las novedades sin necesidad de hacer nada especial.
 
-Si queremos tener nuestro paquete disponible en el Registro General, en primer lugar es necesario publicarlo en un repositorio Git, con una [licencia de código abierto aprobada por la OSI](https://opensource.org/licenses). Si se ha escogido GitHub como plataforma para publicarlo, posiblemente el procedimiento más cómodo para solicitar que se añada nuestro paquete al Registro General sea usar la aplicación [Registrator](https://github.com/JuliaRegistries/Registrator.jl) (véanse las instrucciones en su propia página web). Alternativamente, [JuliaHub](https://juliahub.com) también ofrece un servicio gratuito para registrar paquetes. Otros registros pueden tener distintos mecanismos para añadir paquetes y versiones al mismo.
+Si queremos tener nuestro paquete disponible en el Registro General, en primer lugar es necesario publicarlo en un repositorio Git, con una [licencia de código abierto aprobada por la OSI](https://opensource.org/licenses). Si se ha escogido GitHub como plataforma para publicarlo, posiblemente el procedimiento más cómodo para solicitar que se añada nuestro paquete al Registro General sea usar la aplicación [Registrator](https://github.com/JuliaRegistries/Registrator.jl) (véanse las instrucciones en su propia página web). Alternativamente, [JuliaHub](https://juliahub.com) también ofrece un servicio gratuito para registrar paquetes. Otros registros pueden tener distintos mecanismos para indexar paquetes y versiones de los mismos.
 
 ## Tests
 
@@ -86,10 +86,10 @@ Gracias a que se han organizado de esta manera, estas pruebas pueden lanzarse di
 (proyecto1) pkg> test Fracciones
     Testing Fracciones
 Status `/tmp/jl_YtCQpK/Project.toml`
-  [81451a68] Fracciones v0.1.0 `/home/meliana/.julia/dev/Fracciones#master`
+  [81451a68] Fracciones v0.1.0 `/home/heliosdrm/.julia/dev/Fracciones#master`
   [8dfed614] Test
 Status `/tmp/jl_YtCQpK/Manifest.toml`
-  [81451a68] Fracciones v0.1.0 `/home/meliana/.julia/dev/Fracciones#master`
+  [81451a68] Fracciones v0.1.0 `/home/heliosdrm/.julia/dev/Fracciones#master`
   [1914dd2f] MacroTools v0.5.6
   [2a0f44e3] Base64
   [8ba89e20] Distributed
@@ -164,7 +164,7 @@ const FOOBAR_DOC = """
 
 La macro `@doc` no solo sirve para asignar un *docstring* a un objeto, sino también para extraerlo: el comando `@doc foo` busca el *docstring* que haya asociado a `foo`, y lo devuelve si existe.  
 
-Ese *docstring* es el texto de ayuda que se muestra en el modo de ayuda del REPL (al que se entra pulsando `?` al comienzo de la línea) cuando se consulta por el objeto en cuestión (véase un ejemplo en la figura 1). Otras herramientas capaces de interpretar los *docstrings* también emplean esos textos en las páginas o paneles de ayuda, dando formato a los títulos, listas, tablas, etc. según los códigos de Markdown empleados.
+Ese *docstring* es el texto que se muestra en el modo de ayuda del REPL (al que se entra pulsando `?` al comienzo de la línea), cuando se consulta por el objeto en cuestión (véase un ejemplo en la figura 1). Otras herramientas capaces de interpretar los *docstrings* también emplean esos textos en las páginas o paneles de ayuda, dando formato a los títulos, listas, tablas, etc. según los códigos de Markdown empleados.
 
 ![Figura 1](assets/helpmode.png)
 
@@ -193,17 +193,17 @@ reciproco
 
 El generador de documentación de Documenter sustituye ese bloque por tres cuadros de texto, con los *docstrings* de las tres funciones que se han indicado. Cuando el *docstring* contiene ejemplos en bloques etiquetados con `jldoctest`, como el de la función `fraccion` que se ha mostrado al comienzo de esta sección, se ejecuta ese código y se verifica que los resultados son iguales a los escritos.
 
-Naturalmente, el propio paquete Documenter cuenta con una documentación amplia, detallada y muy bien cuidada (en inglés). En ella se puede encontrar toda la información de cómo usarlo para sacar el máximo provecho del mismo para construir la documentación de otros paquetes.
+Naturalmente, el propio paquete Documenter cuenta con una documentación amplia, detallada y muy bien cuidada (en inglés). En ella se puede encontrar toda la información de cómo usarlo, para sacarle el máximo provecho al construir la documentación de otros paquetes.
 
 ## Artefactos
 
-La mayoría de paquetes requieren de herramientas que no forman parte directamente del mismo. Cuando esas herramientas tienen forma de otros paquetes de Julia, estos pueden introducirse como dependencias del mismo, tal como se ha visto anteriormente. Pero también puede darse el caso de que se quieran emplear librerías y programas compuestos en otros lenguajes, bases de datos sin código de Julia asociado, u otro tipo de recursos que no tengan forma de paquete de Julia. Para esas situaciones se usan los llamados "artefactos".
+La mayoría de paquetes requieren herramientas que no forman parte directamente del mismo. Cuando esas herramientas tienen forma de otros paquetes de Julia, estos pueden introducirse como dependencias del mismo, tal como se ha visto anteriormente. Pero también puede darse el caso de que se quieran emplear librerías y programas compuestos en otros lenguajes, bases de datos sin código de Julia asociado, u otro tipo de recursos que no tengan forma de paquete de Julia. Para esas situaciones se usan los llamados "artefactos".
 
 Los artefactos son, básicamente, conjuntos de archivos que se guardan en el depósito de Julia (generalmente dentro de `.julia/artifacts`), y para los que se proporciona un mecanismo de acceso seguro y fiable desde los paquetes. Un aspecto interesante es que su gestión es independiente de la de los paquetes que los emplean. Esto significa que, al igual que ocurre con las dependencias ordinarias, las actualizaciones de un paquete no altera necesariamente los artefactos que emplea, y que varios paquetes pueden hacer uso del mismo artefacto.
 
 Normalmente los artefactos solo aparecen en paquetes con cierto nivel de complejidad, por encima de la que se cubre en esta guía, así que no nos detendremos en muchos detalles sobre este recurso. Veremos únicamente algunas ideas clave sobre cómo se crean y cómo se accede a ellos desde los paquetes.
 
-La situación más básica es en la que tenemos un conjunto de archivos ya generados previamente, posiblemente disponibles en algún sitio de Internet, y lo único que necesitamos es que esos archivos estén recogidos y accesibles para nuestro paquete. Si tenemos la suerte de que el conjunto de archivos se pueda descargar comprimido en un archivo de tipo `tar.gz` --o si podemos generarlo nosotros de esa manera y subirlo a un sitio accesible--, lo más sencillo es recurrir a la función `add_artifact!` del paquete [ArtifactUtils](https://github.com/simeonschaub/ArtifactUtils.jl). Esta función toma un nombre arbitrario para el artefacto y su ruta de descarga, y genera o modifica un archivo llamado `Artifacts.toml`, que ha de estar en el directorio raíz de nuestro paquete.[^1]
+La situación más básica es aquella en la que tenemos un conjunto de archivos ya generados previamente, posiblemente disponibles en algún sitio de Internet, y lo único que necesitamos es que esos archivos estén recogidos y accesibles para nuestro paquete. Si tenemos la suerte de que el conjunto de archivos se pueda descargar comprimido en un archivo de tipo `tar.gz` --o si podemos generarlo nosotros de esa manera y subirlo a un sitio accesible--, lo más sencillo es recurrir a la función `add_artifact!` del paquete [ArtifactUtils](https://github.com/simeonschaub/ArtifactUtils.jl). Esa función toma un nombre arbitrario para el artefacto y su ruta de descarga, y genera o modifica un archivo llamado `Artifacts.toml`, que ha de estar en el directorio raíz de nuestro paquete.[^1]
 
 [^1]: Esto es válido al menos para la versión 0.1 de ArtifactUtils.jl.
 
@@ -219,7 +219,7 @@ Esta acción buscaría si el artefacto identificado como `abcdata` está disponi
 
 ### Artefactos con BinaryBuilder
 
-Un uso habitual de los artefactos es poner a disposición de un paquete librerías externas, probablemente compiladas en otro lenguaje. Esto es un caso más complejo, para el que se recomienda usar las herramientas de [BinaryBuilder](https://docs.binarybuilder.org/stable/). Entre ellas se cuenta con un asistente interactivo (la función `run_wizard`) para construir el código que genera los binarios y los recoge como artefactos. BinaryBuilder también crea paquetes de Julia conocidos como "JLL" (*Julia-Link Libraries*), cuya utilidad principal es acceder a los artefactos generados --a través de un archivo `Artifacts.toml`, como hemos visto antes--. Estos JLL son paquetes de Julia al uso, que se pueden añadir como dependencias en nuestro paquete objetivo.
+Un uso habitual de los artefactos es poner a disposición de un paquete una o varias librerías externas, probablemente compiladas en otro lenguaje. Esto es un caso más complejo, para el que se recomienda usar las herramientas de [BinaryBuilder](https://docs.binarybuilder.org/stable/). Entre ellas se cuenta un asistente interactivo (la función `run_wizard`) para construir el código que genera los binarios y los recoge como artefactos. BinaryBuilder también crea paquetes de Julia conocidos como "JLL" (*Julia-Link Libraries*), cuya utilidad principal es acceder a los artefactos generados --a través de un archivo `Artifacts.toml`, como hemos visto antes--. Estos JLL son paquetes de Julia al uso, que se pueden añadir como dependencias en nuestro paquete objetivo.
 
 La creación, gestión y uso de artefactos, paquetes JLL, etc. es un tema que da para mucho más, pero no desarrollaremos aquí. Para más información un buen recurso (en inglés) es el [*post* sobre este tema](https://julialang.org/blog/2019/11/artifacts/) publicado por los desarrolladores en el blog de Julia.
 

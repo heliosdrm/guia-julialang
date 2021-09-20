@@ -6,9 +6,9 @@ using Random
 Random.seed!(123)
 ```
 
-Como se comentaba en el primer capítulo, el manejo que hace Julia de los tipos de las variables en las funciones es una de las claves de la eficiencia, flexibilidad y expresividad del lenguaje. Los ejemplos de aquel capítulo se basaban en los llamados "tipos primitivos" como las distintas formas de números enteros, decimales y caracteres. Pero además de esos están los "tipos compuestos", que extienden el lenguaje a mucho más que una herramienta para hacer cálculos con números.
+Como se comentaba en el primer capítulo, el manejo que hace Julia de los tipos de las variables en las funciones es una de las claves de la eficiencia, flexibilidad y expresividad del lenguaje. Los ejemplos de aquel capítulo se basaban en los llamados "tipos primitivos", como las distintas formas de números enteros y decimales. Pero además de esos están los "tipos compuestos", que extienden el lenguaje a mucho más que una herramienta para hacer cálculos con números.
 
-En el paquete Fracciones que hemos introducido en el capítulo anterior tenemos el ejemplo del tipo `Fraccion`, que sirve para representar números racionales. En el código del archivo `src/fraccion.jl` está la definición de ese tipo, que es algo compleja a primera vista, pero podríamos simplificar como sigue:
+En el paquete [Fracciones](https://github.com/heliosdrm/Fracciones.jl) que hemos introducido en el capítulo anterior tenemos el ejemplo del tipo `Fraccion`, que sirve para representar números racionales. En el código del archivo `src/fraccion.jl` está la definición de ese tipo, que es algo compleja a primera vista, pero podríamos simplificar como sigue:
 
 ```julia
 struct Fraccion
@@ -80,7 +80,7 @@ end
 s = Señal(rand(5), "prueba")
 ```
 
-Como `Señal` es un tipo inmutable, no se podría hacer ninguna de las siguientes reasignaciones a sus campos:
+Como `Señal` es un tipo inmutable, *no* se podría hacer ninguna de las siguientes reasignaciones a sus campos:
 
 ```julia
 s.serie = rand(10)
@@ -91,7 +91,7 @@ Lo que sí se podría hacer es *modificar* el contenido de `s.serie` (por ejempl
 
 ## Tipos abstractos y supertipos
 
-La definición simplificada al extremo que se ha dado antes del tipo `Fraccion` se puede complementar, acercándola a la que se da realmente en el repositorio, con una serie de modificaciones. En primer lugar se puede incluir el nuevo tipo dentro de una jerarquía de tipos abstractos asignándole un "supertipo". En particular, hemos definido `Fraccion` como un subtipo de número real. Sobre la definición simplificada esto se definiría como sigue:
+La definición simplificada al extremo que se ha dado antes del tipo `Fraccion` se puede complementar, acercándola a la que se da realmente en el repositorio, con una serie de modificaciones. En primer lugar se puede incluir el nuevo tipo dentro de una jerarquía de tipos abstractos asignándole un "supertipo". En particular, hemos definido `Fraccion` como un subtipo de número real. Sobre la definición simplificada esto se haría como sigue:
 
 ```julia
 struct Fraccion <: Real
@@ -125,7 +125,7 @@ typeof(unos[3])
 
 ## Tipos de los campos y tipos paramétricos
 
-Veamos ahora un aspecto muy importante: la anotación de los tipos de los campos (`num` y `den` en nuestro ejemplo). Con las definiciones que se han dado hasta aquí, estos campos podían ser cualquier tipo de número, pero también textos, funciones o algún otro tipo más exótico de variable. Pero si tenemos la intención de que `Fraccion` represente fracciones de números enteros, podríamos restringir estos campos a valores de tipo `Int`:
+Veamos ahora un aspecto muy importante: la anotación de los tipos de los campos (`num` y `den` en nuestro ejemplo). Con las definiciones que se han dado hasta aquí, estos campos podían ser cualquier tipo de número, pero también textos, funciones o algún otro tipo más exótico de variable. Así que si tenemos la intención de que `Fraccion` represente fracciones de números enteros, podríamos restringir estos campos a valores de tipo `Int`:
 
 ```julia
 struct Fraccion <: Real
@@ -134,15 +134,15 @@ struct Fraccion <: Real
 end
 ```
 
-Esto hará que los valores introducidos al crear una `Fraccion` intenten convertirse al tipo `Int`,[^1] y que se dé un error si la conversión no es posible:
+Esto haría que los valores introducidos al crear una `Fraccion` intenten convertirse al tipo `Int`,[^1] y que se dé un error si la conversión no es posible:
 
 [^1]: `Int` es un *alias* que puede representar tipos distintos según la arquitectura del ordenador en que se está trabajando: es equivalente a `Int64` en los procesadores de 64 bits, y a `Int32` en procesadores de 32 bits.
 
 ```julia-repl
-julia> Frac(3.0, 4.0) # Se pueden convertir a enteros
-Frac(3, 4)
+julia> Fraccion(3.0, 4.0) # Se pueden convertir a enteros
+Fraccion(3, 4)
 
-julia> Frac(1.5, 4)   # El numerador no se puede convertir a entero
+julia> Fraccion(1.5, 4)   # El numerador no se puede convertir a entero
 ERROR: InexactError: Int64(1.5)
 ```
 
@@ -155,7 +155,7 @@ struct Fraccion <: Real
 end
 ```
 
-Sin embargo, esa no es la mejor solución. Siempore que sea posible es recomendable hacer que los campos tengan un tipo concreto. El motivo es que cuando se intenta compilar programas con variables de tipo compuesto, si todos sus campos son de un tipo concreto predefinido el compilador podrá definir exactamente la cantidad de memoria requerida, lo que permitirá optimizar el código a bajo nivel y acelerar la ejecución del programa. Por contra, un campo de tipo abstracto dificultará la optimización de cualquier programa que lo utilice.
+Sin embargo, esa no es la mejor solución. Siempre que sea posible se recomienda que los campos tengan un tipo concreto. El motivo es que cuando se intenta compilar funciones con variables de tipo compuesto, si todos sus campos son de un tipo concreto predefinido, el compilador podrá calcular exactamente la cantidad de memoria requerida, lo que permitirá optimizar el código a bajo nivel y acelerar la ejecución del programa. Por contra, un campo de tipo abstracto dificultará la optimización de cualquier programa que lo utilice.
 
 La forma adecuada de proceder en casos como este es definiendo "tipos paramétricos", del siguiente modo, que ya es casi lo mismo que encontramos en el código del repositorio:
 
@@ -202,7 +202,7 @@ true
 
 Aquí vemos que `f1` es del tipo `Fraccion{Int64}` mientras `f2` es una `Fraccion{UInt8}`.[^2] Son dos tipos *distintos*, cuya representación en memoria está bien especificada por el tipo de parámetro indicado entre llaves. Por otro lado, ambos se reconocen como miembros del tipo `Fraccion`.
 
-[^2]: La representación canónica de los números enteros "sin signo" (`Unsigned`) es mediante un código hexadecimal con una posición por cada 4 bits, precedido de `0x`; p.ej. `0x0f` para el número 15 en un entero sin signo de 8 bits (`UInt8`), `0x000f` para el mismo número en 16 bits `UInt16`, etc. Entre los números decimales, los de 32 bits (`Float32`) también tienen una representación canónica especial: se representan en notación exponencial, con la letra `f` antes del exponente; p.ej. el número 15 es `15.0f0` --pero también podría escribirse como `1.5f1`, etc.
+[^2]: La representación canónica de los números enteros "sin signo" (`Unsigned`) es mediante un código hexadecimal con una posición por cada 4 bits, precedido de `0x`; p.ej. `0x0f` para el número 15 en un entero sin signo de 8 bits (`UInt8`), `0x000f` para el mismo número en 16 bits (`UInt16`), etc. Entre los números decimales, los de 32 bits (`Float32`) también tienen una representación canónica especial: se representan en notación exponencial, con la letra `f` antes del exponente; p.ej. el número 15 es `15.0f0` --pero también podría escribirse como `1.5f1`, etc.
 
 De este modo, el código anterior define no solo un tipo concreto, sino una familia de tipos, cuyos miembros se concretan por el valor del parámetro `T`. En este caso hemos asignado un mismo tipo `T` al numerador `num` y el denominador `den`, por lo que si se pasan dos enteros de distinto tipo, se intentará convertir estos a un mismo tipo de entero. Por ejemplo, si combinamos un `Int32` y un `Int64`, se escojerá el `Int64` como tipo que engloba a ambos:
 
@@ -222,15 +222,15 @@ struct Fraccion{N, D} <: Real where {N<:Integer, D<:Integer}
 end
 ```
 
-El valor de los parámeetros en un tipo paramétrico puede ser cualquiera que cumpla las condiciones especificadas en las expresiones con `where`, que se pueden componer e incluso anidar. También se puede dejar que un parámetro `T` adopte cualquier valor, escribiendo solo `where T` o `where {T}`, sin ninguna condición impuesta.
+El valor de los parámetros en un tipo paramétrico puede ser cualquiera que cumpla las condiciones especificadas en las expresiones con `where`, que se pueden componer e incluso anidar. También se puede dejar que un parámetro `T` adopte cualquier valor, escribiendo solo `where T` o `where {T}`, sin ninguna condición impuesta.
 
 Ni siquiera es obligado que los parámetros representen tipos de los campos, aunque sea lo habitual. Fijémonos, por ejemplo, en el tipo `Array`. Su definición paramétrica es `Array{T, N} where {T, N}`, siendo `T` el tipo de los elementos que contiene, mientras `N` es el *número* de dimensiones (1 para vectores, 2 para matrices, etc.).
 
 ## Constructores
 
-Hemos visto que el nombre de los tipos también sirve de "función constructora", cuyos argumentos son los valores asignados a los campos en el mismo orden en el que están declarados en la definición del tipo (en nuestro ejemplo, el valor del numerador seguido del denominador). En los tipos paramétricos el valor de los parámetros se pasa entre llaves antes de los argumentos --p.ej. `Fraccion{BigInt}(1,2)`--, pero se puede omitir si están unívocamente determinados por los valores de los campos.
+Hemos visto que el nombre de los tipos también sirve de "función constructora", cuyos argumentos son los valores asignados a los campos, en el mismo orden en el que se declaran al definir el tipo. En nuestro ejemplo, el primer argumento del constructor `Fraccion` es el valor del campo `num` (numerador), y el segundo es el valor de `den` (el denominador). En los tipos paramétricos, el valor de los parámetros se pasa entre llaves antes de los argumentos --p.ej. `Fraccion{BigInt}(1,2)`--, pero se puede omitir si están unívocamente determinados por los valores de los campos.
 
-Para esos constructores también se pueden definir métodos específicos que empleen otro número y otros tipos de argumentos, como con cualquier otra función. Así, en `src/fraccion.jl` tenemos los siguientes constructores que crean una `Fraccion` a partir de otra fracción o un entero:
+Para los constructores también se pueden definir métodos específicos, que empleen otro número y otros tipos de argumentos, como ocurre con cualquier función. Así, en `src/fraccion.jl` tenemos los siguientes constructores que crean una `Fraccion` a partir de otra fracción o un entero:
 
 ```julia
 Fraccion(x::Fraccion) = x
@@ -294,13 +294,13 @@ function Fraccion{T}(n, d) where {T<:Integer}
 end
 ```
 
-Este código utiliza la función `gdc` para obtener el máximo común divisor (en inglés *greatest common divisor*) de los argumentos introducidos, con el que la fracción se reduce a su forma canónica (p.ej. `Fraccion(2,4)` se reduce a `Fraccion(1,2)`), y manipula los signos para asegurar que el denominador es positivo. Además, hace unas verificaciones para lanzar un error si los dos argumentos son cero (en cuyo caso la fracción no tiene un valor numérico definido), o si si cualquiera de ellos es el valor negativo extremo del tipo especificado (`typemin(T)`). Por ejemplo, si `T` es `Int16` --que tiene valores definidos entre `-32768` y `32767`--, se da un error en el caso de que el numerador o el denominador sea `-32768`. Esto simplifica la gestión de excepciones en cálculos en los que se tenga que cambiar algún signo, pues el valor positivo `32768` no se puede representar con ese tipo.
+Este código utiliza la función `gdc` para obtener el máximo común divisor (en inglés *greatest common divisor*) de los argumentos introducidos, con el que la fracción se reduce a su forma canónica (p.ej. `Fraccion(2,4)` se reduce a `Fraccion(1,2)`), y manipula los signos para asegurar que el denominador es positivo. Además, hace unas verificaciones para lanzar un error si los dos argumentos son cero (en cuyo caso la fracción no tiene un valor numérico definido), o si si cualquiera de ellos es el valor negativo extremo del tipo especificado (`typemin(T)`). Por ejemplo, si `T` es `Int16` (que tiene valores definidos entre `-32768` y `32767`), se da un error en el caso de que el numerador o el denominador sea `-32768`. Esto simplifica la gestión de excepciones en cálculos en los que se tenga que cambiar algún signo, pues el valor positivo `32768` no se podría representar como un `Int16`.
 
 !!! warning "Desbordamiento aritmético"
     
-    Siempre que se trabaja con números de tipo entero (subtipos de `Signed` o `Unsigned`) hay que tener cuidado los posibles problemas de [desbordamiento aritmético](https://es.wikipedia.org/wiki/Desbordamiento_aritm%C3%A9tico). Esto ocurre cuando se llega a los límites del rango definido para cada tipo (calculados con `typemin` y `typemax`).
+    Tal como se ha mostrado en este ejemplo, siempre que se trabaja con números de tipo entero (subtipos de `Signed` o `Unsigned`) hay que tener cuidado los posibles problemas de [desbordamiento aritmético](https://es.wikipedia.org/wiki/Desbordamiento_aritm%C3%A9tico). Esto ocurre cuando se llega a los límites del rango definido para cada tipo (calculados con `typemin` y `typemax`).
 
-Para definir el objeto que devuelve el constructor interno se utiliza la palabra clave `new`, en lugar del nombre del tipo. El motivo es que los constructores internos *sustituyen* los constructores por defecto. Es decir, que no existe ningún método `Fraccion` que utilizar salvo el que se está definiendo en ese código. En este caso hemos querido tener ese único constructor interno, para asegurar que las fracciones siempre adoptan la forma canónica con valores aceptables. Pero normalmente se suelen mantener los constructores por defecto, y solo se crean métodos externos, lo que hace las cosas más sencillas.
+Para definir el objeto que devuelve el constructor interno se utiliza la palabra clave `new`, en lugar del nombre del tipo. El motivo es que los constructores internos *sustituyen* los constructores por defecto. Es decir, que no existe ningún método `Fraccion` que utilizar salvo el que se está definiendo en ese código. En este caso hemos querido tener ese constructor interno, para asegurar que las fracciones siempre adoptan la forma canónica con valores aceptables. Pero normalmente se suelen mantener los constructores por defecto, y solo se crean métodos externos, lo que hace las cosas más sencillas.
 
 Por ejemplo, al crear el constructor interno `Fraccion{T}(n, d)` ya no existe un constructor por defecto que permita omitir el parámetro, por lo que tenemos que definirlo explícitamente, con el siguiente código:
 
@@ -311,7 +311,7 @@ function Fraccion(num::N, den::D) where {N<:Integer, D<:Integer}
 end
 ```
 
-Aquí la función `promote_type`, de la que se dan detalles en el [capítulo 5](5-tipos-ext.md#Conversión-y-promoción-de-tipos), determina un tipo que permite representar adecuadamente tanto los valores del tipo `N` (los del numerador) como los del tipo `D` (del denominador). Ese tipo es el que se asigna a la fracción resultante, que se crea con el constructor interno que se ha definido antes.
+Aquí la función `promote_type`, de la que se dan detalles en el [capítulo 5](5-tipos-ext.md#Conversión-y-promoción-de-tipos), determina un tipo que permite representar adecuadamente tanto los valores del tipo `N` (los del numerador) como los del tipo `D` (del denominador). Ese tipo es el que se asigna a la fracción resultante, que se crea con el constructor interno que hemos definido antes.
 
 ## Constructores abstractos
 

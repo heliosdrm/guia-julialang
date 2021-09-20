@@ -13,6 +13,7 @@ Varios de los temas que trataremos en este y los siguientes capítulos se verán
 En la página web se puede navegar por el conjunto de archivos, pero para mayor comodidad se puede hacer una copia local del repositorio completo en cualquier directorio del ordenador. Para quienes no sean usuarios de Git, lo más sencillo es seleccionar la opción de "descargar como ZIP" (ver en la figura siguiente, aunque la interfaz de GitHub a la que accedas pueda ser distinta de la que se muestra). Una vez descargado, se puede descomprimir el archivo en el sitio que se escoja (puede ser cualquier carpeta).
 
 ![Figura 1](assets/downloadgithub.png)
+
 *Figura 1. Diálogo para clonar un repositorio de GitHub (desde el botón "Code")*
 
 El árbol de archivos es muy pequeño --menos de 50 Kb en su conjunto--, y su estructura es la siguiente:
