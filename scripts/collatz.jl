@@ -42,10 +42,9 @@ julia> pasoscollatz(3) # - 10 - 5 - 16 - 8 - 4 - 2 - 1
 ```
 """
 function pasoscollatz(x::Integer)
-    (x < 1) && throw(DomainError("solo se admiten números naturales"))
+    (x < 1) && throw(DomainError("solo se admiten números naturales a partir de uno"))
     n = 0
-    while x ≥ 1
-        x == 1 && break
+    while x > 1
         x = siguiente_collatz(x)
         n += 1
     end
@@ -66,7 +65,7 @@ julia> pasoscollatz(9,8) # - 28 - 14 - 7
 ```
 """
 function pasoscollatz(x::Integer, x0)
-    (x < 1) && throw(DomainError("solo se admiten números naturales"))
+    (x < 1) && throw(DomainError("solo se admiten números naturales a partir de uno"))
     n = 0
     while x ≥ x0
         x == 1 && break
@@ -94,13 +93,13 @@ julia> serie_pasoscollatz(5)
  5
 ```
 """ 
-function serie_pasoscollatz(n)
-    serie = zeros(Int, n)
-    for i=2:n
+function serie_pasoscollatz(n::T) where T<:Integer
+    pasos_total = zeros(Int, n)
+    for i=range(T(2), stop=n)
         (pasos, inferior) = pasoscollatz(i, i)
-        serie[i] = pasos + serie[inferior]
+        pasos_total[i] = pasos + pasos_total[inferior]
     end
-    return serie
+    return pasos_total
 end
 
 # Algoritmos para paralelización

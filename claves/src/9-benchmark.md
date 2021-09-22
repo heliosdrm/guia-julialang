@@ -2,7 +2,7 @@
 
 Una de las virtudes que más se suele publicitar de Julia es su velocidad de cálculo, incluso con enormes cantidades de datos. Pero la eficiencia de un programa depende de cómo esté construido. De hecho, un programa "mal escrito" (en el sentido de que no siga unas buenas prácticas de programación, aunque las operaciones sean correctas) puede resultar decepcionantemente lento. 
 
-Este capítulo y los siguientes están dedicados a herramientas que Julia pone a disposición de los usuarios para mejorar la eficiencia de sus programas. A la hora de optimizar un programa, es muy importante buscar primero dónde están los "cuellos de botella" (las partes del código que más lento lo hacen) y medir tanto su influencia como el efecto de las supuestas mejoras que se introducen. Por esta razón, comenzaremos por ver herramientas que sirven para hacer estos diagnósticos.
+Este capítulo y los siguientes están dedicados a herramientas que Julia pone a disposición de los usuarios para mejorar la eficiencia de sus programas. A la hora de optimizar un programa, es muy importante buscar primero dónde están los "cuellos de botella" (las partes del código que más lento lo hacen) y medir tanto su influencia como el efecto de las supuestas mejoras que se introducen. Por esta razón, comenzaremos por ver herramientas que sirven para hacer esos diagnósticos.
 
 ## Ejemplo: pasos de las secuencias de Collatz
 
@@ -17,7 +17,7 @@ a_i/2, & \textrm{si }a_i\textrm{ es par} \\
 \end{cases}
 ```
 
-[^1]: No está matemáticamente probado que todas las secuencias de Collatz posibles acaben llegado a 1, pero es una conjetura verificada para los primeros trillones de números naturales. El siguiente [vídeo de Veritasium](https://www.youtube.com/watch?v=094y1Z2wpJg) proporciona una interesante introducción a este problema. 
+[^1]: No está matemáticamente probado que todas las secuencias de Collatz posibles acaben llegado a 1, pero es una conjetura verificada para los primeros trillones de números naturales. Puede verse una estupenda introducción a este problema en [Veritasium](https://www.youtube.com/watch?v=q_dvxXc7d2Y), entre otros sitios. 
 
 
 Esta regla se puede expresar con una función como la que sigue:
@@ -38,11 +38,10 @@ A continuación se define la función `pasoscollatz`, que calcula el número de 
 
 ```@example c9
 function pasoscollatz(x::Integer)
-    (x < 1) && throw(DomainError("solo se admiten números naturales"))
+    (x < 1) && throw(DomainError("solo se admiten números naturales a partir de uno"))
     n = 0
     s = BigInt(x)
-    while s ≥ 1
-        s == 1 && break
+    while s > 1
         s = siguiente_collatz(s)
         n += 1
     end
@@ -57,13 +56,13 @@ Para calcular ese valor de todas las secuencias de Collatz con inicios desde 1 h
 pasoscollatz.(1:1000)
 ```
 
-Pero es obvio que esto resulta un proceso poco ineficiente. Por la forma en la que se definen las secuencias de Collatz, se deduce que si conocemos el valor de `pasoscollatz(y)` para todos los valores de `y < x`, entonces para calcular `pasoscollatz(x)` solo haría falta contar los pasos de la secuencia desde `x` hasta que se alcanza el primer valor menor que `x`, y sumarles el resultado correspondiente a ese número menor. 
+Pero es obvio que eso resulta un proceso poco ineficiente. Por la forma en la que se definen las secuencias de Collatz, se deduce que si conocemos el valor de `pasoscollatz(y)` para todos los valores de `y < x`, entonces para calcular `pasoscollatz(x)` solo haría falta contar los pasos de la secuencia desde `x` hasta que se alcanza el primer valor menor que `x`, y sumarles el resultado correspondiente a ese número menor. 
 
 Para implementar este otro algoritmo se define el siguiente método de `pasoscollatz`, que hace la cuenta de los pasos desde `x` hasta el primer número menor que `x0`, y también devuelve el valor de ese número:
 
 ```@example c9
 function pasoscollatz(x::Integer, x0)
-    (x < 1) && throw(DomainError("solo se admiten números naturales"))
+    (x < 1) && throw(DomainError("solo se admiten números naturales a partir de uno"))
     n = 0
     s = BigInt(x)
     while s ≥ x0
@@ -76,7 +75,7 @@ end
 nothing #hide
 ```
 
-Y la función `serie_pasoscollatz` emplea ese método para calcular el número total de pasos para secuencias de 1 a `n`:
+Y la función `serie_pasoscollatz` emplea ese método para calcular el número total de pasos de las secuencias que comienzan con valores desde 1 hasta `n`:
 
 ```@example c9
 function serie_pasoscollatz(n)
@@ -92,7 +91,7 @@ nothing #hide
 
 ## Macros para medir consumos de tiempo y memoria
 
-La herramienta más básica de Julia para medir la velocidad de una operación es un conjunto de macros que se pueden aplicar a cualquier expresión, para capturar el tiempo y la cantidad de memoria que se ha necesitado asignar para ejecutarla. La más básica es `@time`, que ejecuta la expresión e imprime una información básica en pantalla. Con esto podríamos, por ejemplo, comparar la velocidad de las dos alternativas definidas antes para calcular las longitudes de las series de Collatz de 1 a `n`:
+La herramienta más básica de Julia para medir la velocidad de una operación es un conjunto de macros que se pueden aplicar a cualquier expresión, para capturar el tiempo y la cantidad de memoria que se ha necesitado asignar al ejecutarla. La más elemental es `@time`, que ejecuta la expresión e imprime una información básica en pantalla. Con esto podríamos, por ejemplo, comparar la velocidad de las dos alternativas definidas antes para calcular las longitudes de las series de Collatz de 1 a `n`:
 
 ```julia-repl
 julia> @time pasoscollatz.(1:1000)
@@ -116,7 +115,9 @@ julia> @time serie_pasoscollatz(1000)
 
 De esta manera podemos comprobar rápidamente que la segunda versión es diez veces más eficiente que la primera. El valor exacto del tiempo y la memoria consumida en asignaciones depende del ordenador y también puede variar entre pruebas. En particular, la primera vez que se ejecuta una función se suele observar un mayor consumo de tiempo y memoria, porque parte de lo que se está midiendo es la compilación.
 
-La macro `@timev` hace lo mismo que `@time`, pero muestra más detalles sobre el tiempo y memoria consumidas. Por otro lado la macro `@timed`, en lugar de simplemente imprimir en pantalla las medidas de tiempo y memoria, las vuelca junto con el resultado de la operación en una tupla. Así, con `x = @serie_pasoscollatz(1000)` se obtendrían los siguientes valores:
+La macro `@timev` hace lo mismo que `@time`, pero muestra más detalles sobre el tiempo y memoria consumidas. Por otro lado la macro `@elapsed` no solo presenta el tiempo transcurrido en pantalla, sino que lo devuelve como resultado (en lugar del resultado de la operación evaluada).
+
+Finalmente, la macro `@timed` devuelve las medidas de tiempo y memoria junto con el resultado de la operación y otras cosas en una tupla. Así, con `x = @serie_pasoscollatz(1000)` se obtendrían los siguientes valores:
 
 * `x.value` con el resultado de la expresión ejecutada.
 * `x.time` con el tiempo en segundos.
@@ -128,7 +129,7 @@ La macro `@timev` hace lo mismo que `@time`, pero muestra más detalles sobre el
 Una alternativa muy popular a la macro `@time` es `@btime` del paquete [BenchmarkTools](https://github.com/JuliaCI/BenchmarkTools.jl). A nivel de uso son muy semejantes, con unas importantes salvedades:
 
 * `@btime` repite la operación múltiples veces, hasta llegar a un objetivo de repeticiones o tiempo. Las medidas de tiempo y memoria mostradas son un promedio, que excluye los tiempos de compilación.
-* `@btime` permite interpolar los nombres de variables en la expresión para hacer más fiable el análisis. Por ejemplo, si el argumento de `serie_pasoscollatz(x)` estuviese guardado en la variables `n`, se podría escribir `@btime serie_pasoscollatz($n)`.
+* `@btime` permite interpolar los nombres de variables en la expresión para hacer más fiable el análisis. Por ejemplo, si el argumento de `serie_pasoscollatz(x)` estuviese guardado en la variable `n`, se podría escribir `@btime serie_pasoscollatz($n)`.
 * La expresión pasada a `@btime` ha de ser sencilla, idealmente una simple llamada a una función. Para asignar el resultado a una variable ha de escribirse `y = @btime f(x)`, no `@btime y = f(x)`.
 
 El paquete BenchmarkTools también proporciona la macro `@belapsed` equivalente a `@elapsed`, así como `@benchmark`, que da estadísticas más detalladas de todas las repeticiones realizadas, como en el siguiente ejemplo:[^2]
@@ -141,13 +142,13 @@ El paquete BenchmarkTools también proporciona la macro `@belapsed` equivalente 
 
 Las macros anteriores son útiles para comparar distintas versiones de una función, o para hacer pruebas unitarias de las funciones que componen un programa. Pero los cuellos de botella a menudo aparecen en funciones que no presentan un gran coste en pruebas de ese tipo, y dependen de cómo, cuánto y dónde se emplean. Por otro lado, aunque con esas macros se puedan detectar funciones excesivamente costosas, queda el reto de averiguar en qué parte de sus operaciones radica el problema.
 
-Para diagnósticar esas situaciones Julia dispone de la macro `@profile` y otras funciones en el módulo estándar `Profile`. La macro `@profile` se usa igual que `@time`, pero no muestra nada en pantalla, sino que guarda numerosos detalles sobre todas las operaciones relevantes que se ejecutan como parte de la expresión que sigue, incluyendo los tiempos que consumen y la memoria que asignan. El concepto de *relevante* aquí está determinado por unos umbrales que se fijan con la función `Profile.init`; uno de estos umbrales es el intervalo de tiempo entre cada "captura" de información, que por defecto está fijado en 1 ms. Esto implica que `@profile` detectará todas las funciones que cuestan más de 1 ms.
+Para diagnósticar esas situaciones Julia dispone de la macro `@profile` y otras funciones en el módulo estándar `Profile`. La macro `@profile` se usa igual que `@time`, pero no muestra nada en pantalla, sino que guarda numerosos detalles sobre todas las operaciones relevantes que se ejecutan como parte de la expresión que sigue, incluyendo los tiempos que consumen y la memoria que asignan. El concepto de *relevante* aquí está determinado por unos umbrales que se fijan con la función `Profile.init`; uno de esos umbrales es el intervalo de tiempo entre cada "captura" de información, que por defecto está fijado en 1 ms. Esto implica que `@profile` detectará todas las funciones que cuestan más de 1 ms.
 
 Cada vez que se usa la macro `@profile`, la información recogida hasta el momento se amplía con la de la expresión ejecutada, a no ser que se ejecute `Profile.clear()` para "limpiar el *buffer*". Hay distintas formas de ver la información acumulada. La más básica es la función `Profile.print`, que la muestra en forma de texto. Pero esa información es tan copiosa que no resulta una forma práctica de examinarla.
 
 Lo más habitual es usar los llamados [*flame graphs*](https://www.brendangregg.com/flamegraphs.html), que muestran de forma visual el tiempo consumido por cada operación y las "suboperaciones" que las componen, de forma recursiva, hasta llegar el límite de resolución temporal que se haya usado en el registro de información. Cada operación se representa con una barra horizontal, cuya longitud es proporcional al tiempo que consume; una secuencia de operaciones se representa como una sucesión horizontal de barras, y las operaciones anidadas en otras se representan apilando las barras verticalmente. Esa disposición aporta a los gráficos una forma característica, que se puede comparar con un relieve montañoso, o con el perfil de una llama cuando se colorea con tonos rojos y amarillos —de ahí el nombre que reciben—. 
 
-Hay diversos paquetes y otras herramientas para crear y visualizar *flame graphs* a partir de esos registros. La siguiente figura muestra el gráfico interactivo que resulta de monitorizar la función `factoresprimos`, tal como se ve en VS Code con su [extensión para visualizar *flame graphs*](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-js-profile-flame).
+Hay diversos paquetes y otras herramientas para crear y visualizar *flame graphs* a partir de esos registros. La siguiente figura muestra el gráfico interactivo que resulta de monitorizar la función `serie_pasoscollatz`, tal como se ve en VS Code con su [extensión para visualizar *flame graphs*](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-js-profile-flame).
 
 ![Figura 1. *Flame graph* con VS Code](assets/vscode_flamegraph.png)
 
@@ -159,7 +160,7 @@ Con esa extensión, VS Code no requiere cargar explícitamente el módulo `Profi
 
 Esa instrucción crea una tabla con la información de tiempos recogida, cuya visualización se puede alternar con la de un *flame graph* como el mostrado si se dispone de la extensión adecuada. (Si no está disponible, al intentar cambiar de vista aparece una sugerencia para instalarla.)
 
-En este gráfico el eje vertical está invertido respecto al sentido que usan otros visualizadores: las operaciones anidadas se muestran *debajo* de las que las contienen, en lugar de arriba. Las primeras barras (las que se muestran en la parte superior) tienen poco interés para nuestro propósito, pues tienen que ver con el entorno en el que se ejecuta y se monitoriza la expresión a evaluar. La parte interesante es la mitad inferior, comenzando por nuestra función principal: `serie_pasoscollatz`.
+En este gráfico el eje vertical está invertido respecto al sentido que usan otros visualizadores: las operaciones anidadas se muestran *debajo* de las que las contienen, en lugar de arriba. Las primeras barras (las que se muestran en la parte superior) tienen poco interés para nuestro propósito, pues tienen que ver con el entorno en el que se ejecuta y se monitoriza la expresión a evaluar. La parte interesante es la mitad inferior, comenzando por nuestra función principal: `serie_pasoscollatz`. (Para apreciar los detalles puede ser necesario visualizar la imagen ampliada.)
 
 Naturalmente, esa función y `pasoscollatz` en el siguiente nivel ocupan casi todo el rango horizontal de tiempos. También se puede ver que la mayor parte del tiempo dentro de `pasoscollatz` lo ocupa la función `siguiente_collatz`, aunque también hay un consumo de tiempo significativo que se invierte en operaciones de comparación, y en el constructor `BigInt`.  Y dentro de `siguiente_collatz`, encontramos de forma más o menos equitativa la división entera (la función `div`) y otras operaciones aritméticas. A niveles inferiores hay muchos pequeños bloques de operaciones con el tipo `BigInt`. (En el pantallazo mostrado los nombres de funciones están cortados, pero en VS Code se puede hacer zoom y desplazarse para ver los detalles del gráfico.)
 
@@ -200,7 +201,7 @@ Asimismo, las otras dos funciones (`pasoscollatz` y `serie_pasoscollatz`), se po
 
 ```@example c9
 function pasoscollatz(x::Integer, x0)
-    (x < 1) && throw(DomainError("solo se admiten números naturales"))
+    (x < 1) && throw(DomainError("solo se admiten números naturales a partir de uno"))
     n = 0
     while x ≥ x0
         x == 1 && break

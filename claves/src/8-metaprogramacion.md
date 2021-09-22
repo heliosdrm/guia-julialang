@@ -9,7 +9,7 @@ Random.seed!(123)
 
 En este capítulo nos adentraremos en estrategias de programación algo más avanzadas. El objetivo de las herramientas y técnicas que vamos a ver no consiste tanto en procesar información y hacer cálculos, que es normalmente el objetivo final de los programas, sino generar el código que se usará para eso. La *metaprogramacion* es, se podría decir, escribir código que genera código, normalmente para abreviar la cantidad de líneas que hay que escribir a mano, o hacer el código fuente más fácil de seguir por un humano.
 
-Veamos un ejemplo en el código del paquete [Fracciones](https://github.com/heliosdrm/Fracciones.jl). En él hay tenemos un método `Base.:+` definido para dos argumentos de tipo `Fraccion`, que nos permite hacer la suma de dos fracciones, por ejemplo:
+Veamos un ejemplo en el código del paquete [Fracciones](https://github.com/heliosdrm/Fracciones.jl). En el [capítulo 5](5-tipos-ext.md) vimos que en ese paquete tenemos un método `Base.:+` definido para dos argumentos de tipo `Fraccion`, que nos permite hacer la suma de dos fracciones, por ejemplo:
 
 ```@repl c8
 a = Fraccion(1, 5);
@@ -17,7 +17,7 @@ b = Fraccion(2, 5);
 a + b
 ```
 
-Por otro lado, también interesaría poder hacer la suma entre una fracción y cualquier otro número real que se pudiera convertir a una fracción. Esto se puede hacer sin ningún código adicional, gracias a que el tipo `Fraccion` está definido como un subtipo de `Real`, y también se han implementado las reglas de promoción de tipos adecuadas. Así pues, al sumar una fracción y cualquier otro número real la conversión correspondiente se realiza de forma automática (véase la sección sobre [Conversión y promoción de tipos](@ref) en el capítulo 5). Por ejemplo:
+Por otro lado, también interesaría poder hacer la suma entre una fracción y cualquier otro número real interpretable como una fracción. Esto se puede hacer sin ningún código adicional, gracias a que el tipo `Fraccion` está definido como un subtipo de `Real`, y también se han implementado las reglas de promoción de tipos adecuadas. Así pues, al sumar una fracción y cualquier otro número real la conversión correspondiente se realiza de forma automática (véase la sección sobre [Conversión y promoción de tipos](@ref) en el capítulo 5). Por ejemplo:
 
 ```@repl c8
 Fraccion(1, 2) + 1
@@ -49,7 +49,7 @@ Base.:OPERADOR(x::Real, y::Fraccion) = Fraccion(x) OPERADOR y
 Pues bien, eso mismo es lo que hace el siguiente código, empleando el bucle `for` y la macro `@eval`:
 
 ```julia
-for op ∈ (:+, :-, :*, :/, :(==), :<)
+for op in (:+, :-, :*, :/, :(==), :<)
     @eval Base.$op(x::Fraccion, y::Real) = x $op Fraccion(y)
     @eval Base.$op(x::Real, y::Fraccion) = Fraccion(x) $op y
 end
@@ -113,7 +113,7 @@ El comportamiento de esta función es obvio:
 raizpositivo(-2)
 ```
 
-Pero ahora cambiemos la primera línea por la evaluación de una expresión equivalente (lo cual es una tontería, pero nos ayuda a mostrar la limitación de de la que estamos hablando):
+Pero ahora cambiemos la primera línea por la evaluación de una expresión equivalente (lo cual es una tontería, pero nos ayuda a mostrar la limitación de la que estamos hablando):
 
 ```@example c8 
 function raizpositivo_eval(x)
@@ -158,7 +158,7 @@ Y luego esa función se podría haber aplicado en bucle a los operadores que se 
     
     Conviene aclarar que lo que pertenece al contexto global al usar `eval` son las variables *referidas* en la expresión que se tiene que evaluar. Por contra, las variables *interpoladas* para crear las expresiones siguen las reglas normales, y pueden ser globales o locales. Por ejemplo, Si se evalúa la expresión `:(x + $y)`, `x` se tomará siempre del contexto global, mientras que `y` (interpolada como `$y`) se habrá sustituido antes de la evaluación por el valor que corresponda de la variable `y`, sea esta global o local.
 
-La limitación del contexto en el que se pueden ejecutar las expresiones con `eval` tiene una contrapartida, y es que se puede utilizar para *hackear* otros módulos. En general no está permitido crear nuevas variables en un módulo `A` desde otro módulo `B`, ni que se les asigne nuevos valores si ya existen esas variables. Lo vemos con un ejemplo, en el que intentamos manipular `A` desde `Main`:
+La limitación del contexto en el que se pueden ejecutar las expresiones con `eval` tiene una contrapartida, y es que se puede utilizar para *hackear* otros módulos. En general no está permitido crear nuevas variables en un módulo `A` desde otro módulo `B`, ni asignarles nuevos valores si ya existen esas variables. Lo vemos con un ejemplo, en el que intentamos manipular `A` desde `Main`:
 
 ```@repl c8
 module A
@@ -180,7 +180,7 @@ Si en lugar de la macro queremos usar la función `eval`, tenemos dos opciones:
 * Usar el método `Base.eval`, que permite pasarle el módulo objetivo como primer argumento.
 * Usar la función `eval` del módulo objetivo (cuando se define un módulo se crea por defecto una función `eval` asociada al mismo).
 
-Así, la instrucción equivalente a `@eval A y=0` sería:
+Así, las instrucciones equivalentes a `@eval A y=0` serían:
 
 ```julia
 Base.eval(A, :(y=0))
@@ -271,9 +271,9 @@ macro NOMBRE(ARGUMENTOS)
 end
 ```
 
-A nivel superficial es la misma estructura que se usa para definir funciones, aunque en lugar de la palabra `function` se emplea `macro`, y también hay otras diferencias notables. `NOMBRE` es el nombre de la macro (sin el símbolo `@` que se emplea para llamarla); por otro lado `ARGUMENTOS` es una lista de argumentos, como las de las funciones, pero en el caso de las macros, estos argumentos solo pueden ser expresiones (una o más de una), y el resultado devuelto por la macro también ha de ser otra expresión.
+A nivel superficial es la misma estructura que se usa para definir funciones, aunque en lugar de la palabra `function` se emplea `macro`, y también hay otras diferencias notables. `NOMBRE` es el nombre de la macro (sin el símbolo `@` que se emplea para llamarla); por otro lado `ARGUMENTOS` es una lista de argumentos, como los de las funciones, pero en el caso de las macros, estos argumentos solo pueden ser expresiones (una o más de una), y el resultado devuelto por la macro también ha de ser otra expresión.
 
-La forma de llamar las macros también es distinta a la de las funciones: su nombre tiene que ir precedido del símbolo `@`, y a pesar de que los argumentos sean expresiones, se escriben "a pelo", sin delimitarlas con `:()` o `quote ... end` También es habitual llamar a las macros sin poner paréntesis a los argumentos que siguen; es válido añadir los paréntesis, pero si se hace es importante que no haya ningún espacio entre el nombre de la macro y el paréntesis, lo cual no es crítico en el caso de las funciones
+La forma de llamar las macros también es distinta a la de las funciones: su nombre tiene que ir precedido del símbolo `@`, y a pesar de que los argumentos sean expresiones, se escriben "a pelo", sin delimitarlas con `:()` o `quote ... end` También es habitual llamar a las macros sin poner paréntesis a los argumentos que siguen; es válido añadir los paréntesis, pero si se hace es importante que no haya ningún espacio entre el nombre de la macro y el paréntesis, lo cual no es crítico en el caso de las funciones.
 
 Finalmente, la diferencia más profunda y compleja entre funciones y macros es cómo se ejecutan y el efecto que tienen sobre los programas: las macros actúan en la fase de análisis del código, y la expresión que generan se inserta en el mismo sitio donde se ha hecho la llamada a la macro, antes de continuar con la fase de ejecución.
 
@@ -289,6 +289,7 @@ macro ejemplo(ex)
         println("EJECUCIÓN DE CÓDIGO: variable del contexto presente = ", $(esc(ex)))
     end
 end
+nothing #hide
 ```
 
 A continuación definimos una función que emplea esa macro:
@@ -301,19 +302,19 @@ function foo(x)
 end
 ```
 
-Aquí ya podemos ver un aspecto peculiar de las macros, y es que como se ha dicho antes, actúan durante la fase de análisis de código, antes del *runtime*. Así, aunque lo único que hemos hecho ahora es *definir* una función (sin ejecutarla), las dos llamadas a la macro `@ejemplo` contenidas en esa definición sí hacen que se ejecute el código de la macro. Esto lo prueba el hecho de que se impriman los dos mensajes con el texto `"ANÁLISIS DE CÓDIGO"`. Hay, además, dos detalles a destacar:
+Aquí ya podemos ver un aspecto peculiar de las macros, y es que como se ha dicho antes, actúan durante la fase de análisis de código, antes del *runtime*. Así, aunque lo único que hemos hecho ahora es *definir* una función (sin ejecutarla), las dos llamadas a la macro `@ejemplo` contenidas en esa definición sí hacen que se ejecute el código de la macro. Esto lo prueba el hecho de que se imprima dos veces el mensaje con el texto `"ANÁLISIS DE CÓDIGO"`. Hay, además, dos detalles a destacar:
 
 * De las tres líneas con `println` que hay en el código de la macro, solo se ejecuta la primera, porque es la única en la que se hace una llamada "real" a esa función. Las otras dos líneas son solo parte de la expresión generada por la macro, que no se evalúa en este momento, sino que se se inserta en en el código de la función.
-* Los argumentos `x` y `-x` que se pasan a la macro son meras expresiones, ajenas a la variable `x` que se emplea en la función. De hecho, habría dado lo mismo que no existiera. Así, el mensaje presentado en pantalla solo muestra el valor del símbolo `:x` --o la expresión `:(-x)` en el segundo caso.
+* Los argumentos `x` y `-x` que se pasan a la macro son meras expresiones, ajenas a la variable `x` que se emplea en la función. De hecho, habría dado lo mismo que no existiera. Así, el mensaje presentado en pantalla solo muestra el valor del símbolo `:x` --o la expresión `:(-x)` en el segundo caso--.
 
-Ahora veamos qué pasa si definimos una variable `x` y ejecutamos la macro `@example` en el contexto global:
+Ahora veamos qué pasa si definimos una variable `x` y ejecutamos la macro `@ejemplo` en el contexto global:
 
 ```@repl c8
 x = 1;
 @ejemplo x
 ```
 
-Al llamar a la macro se vuelve a ejecutar su código, por lo que vemos de nuevo el mensaje `"ANÁLISIS DE CÓDIGO..."`. Pero además se inserta e inmediatamente después se evalúa la expresión resultante, lo que da lugar a las otros dos mensajes con `"EJECUCIÓN DE CÓDIGO..."`. Los dos mensajes son iguales, aunque resultan de dos instrucciones distintas. Podemos ver la forma exacta que toman esas instrucciones con `@macroexpand`:
+Al llamar a la macro se vuelve a procesar su código, por lo que vemos de nuevo el mensaje `"ANÁLISIS DE CÓDIGO..."`. Pero además se inserta e inmediatamente después se evalúa la expresión resultante, lo que da lugar a las otros dos mensajes con `"EJECUCIÓN DE CÓDIGO..."`. Los dos mensajes son iguales, aunque resultan de dos instrucciones distintas. Podemos ver la forma exacta que toman esas instrucciones con `@macroexpand`:
 
 ```julia-repl
 julia> @macroexpand @ejemplo x
@@ -345,7 +346,7 @@ quote
 end
 ```
 
-En el contexto de la función no es lo mismo la `Main.x` que `x`, pues esta última hace referencia a la variable local. Así que los mensajes que vemos al ejecutar la función muestran valores distintos para cada uno de los contextos (`1` para `Main.x`, y `2` para `x`).
+En el contexto de la función no es lo mismo `Main.x` que `x`, pues esta última hace referencia a la variable local. Así que los mensajes que vemos al ejecutar la función muestran valores distintos para cada uno de los contextos (`1` para `Main.x`, y `2` para `x`).
 
 
 ## Diferencias entre macros y `eval`
@@ -423,7 +424,7 @@ quote
 end
 ```
 
-Podemos ver aquí que el nombre `inicio` se ha reemplazado por `var"#9#inicio"`, y lo mismo se ha hecho con `resultado` y `final`. Esto asegura que las variables definidas a través de la macro no coincidan con nombres normales. También en este caso `esc` omite la ofuscación, de manera que las variables generadas se identifiquen con el mismo símbolo que aparece en el código de la macro. Así, si ejecutamos la macro obtenemos:
+Podemos ver aquí que el nombre `inicio` se ha reemplazado por `var"#9#inicio"`, y lo mismo se ha hecho con `resultado` y `final`. Esto asegura que las variables definidas a través de la macro no coincidan con nombres normales. También en este caso `esc` omite la ofuscación, para que las variables generadas se identifiquen con el mismo símbolo que aparece en el código de la macro. Así, si ejecutamos la macro obtenemos:
 
 ```@repl c8
 @cronometrar x = sum(rand(100_000))
@@ -431,7 +432,7 @@ Podemos ver aquí que el nombre `inicio` se ha reemplazado por `var"#9#inicio"`,
 
 Se puede ver que la expresión introducida, que se interpola con la función `esc`, se mantiene tal cual en el código generado, pero la función `time` se señala como la existente en `Main` (donde hemos definido la macro), y las variables `inicio`, `resultado` y `final` aparecen con el nombre ofuscado. De ese modo, podemos confiar en que no se aplicará una posible función `time` que pudiera haberse definido aparte, ni habrá problemas en el caso de que existan otras variables con esos mismos nombres en el contexto donde se llamó a la macro.
 
-Estas operaciones de higiene se aplican por defecto a todos los nombres que aparecen en la expresión generada, exceptuando las que se introducen con `esc`. Pero puede haber circunstancias en las que resultaría más conveniente lo contrario: que la mayor parte de la expresión generada aparezca tal como se escribe en la definición de la macro, con algunas excepciones puntuales. La forma de conseguirlo sería aplicar la función `esc` a todo el resultado de la macro, cualificando adecuadamente las variables o funciones que correspondan a módulos distintos de aquel desde el que se le llama, y señalando como `local` las variables que se desee mantener "ocultas".
+Estas operaciones de higiene se aplican por defecto a todos los nombres que aparecen en la expresión generada, exceptuando las que se introducen con `esc`. Pero puede haber circunstancias en las que resultaría más conveniente lo contrario: que la mayor parte de la expresión generada aparezca tal como se escribe en la definición de la macro, con algunas excepciones puntuales. La forma de conseguirlo sería aplicar la función `esc` a todo el resultado de la macro, cualificando adecuadamente las variables o funciones según el módulo al que pertenezcan, y señalando como `local` las variables que se desee mantener "ocultas".
 
 Por ejemplo, la macro `@cronometrar` podría haberse definido del siguiente modo, que daría un resultado equivalente.[^2]
 
@@ -441,7 +442,7 @@ macro cronometrar(expresion)
         local inicio = Base.time()
         local resultado = $expresion
         local final = Base.time()
-        println("Tiempo transcurrido: ", (inicio-final)/1e9, " segundos")
+        Base.println("Tiempo transcurrido: ", (inicio-final)/1e9, " segundos")
         resultado
     end |> esc
 end
@@ -474,7 +475,7 @@ Las dos herramientas empleadas son la función `postwalk` y la macro `@capture`.
 
 [^4]: Realmente `MacroTools.postwalk` se define con dos argumentos: el primero es la función de transformación, y el segundo la expresión a transformar. Los "bloques `do`" son un recurso aplicable a funciones que siguen ese patrón (su primer argumento es otra función), que permite escribir esa "función-argumento" de una forma más conveniente. (Véase la sección al respecto en el [manual de Julia](https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments)).
 
-Dentro de esa función de transformación se usa la macro `@capture`, que toma cada subexpresión y busca en ella el patrón de una división: `num_ / den_`, donde `num_` y `den_` indican cualquier símbolo o expresión. Por ejemplo, la subexpresión `:(5/2)` daría un resultado positivo, mientras que `:(1+2)` daría un resultado negativo. Ese resultado se refleja en el valor devuelto por `@capture` (la variable `hayfraccion`). Pero además, si se ha encontrado el patrón, los dos elementos definidos en él quedan "capturados" en variables con el mismo nombre pero sin el guión bajo final. En el ejemplo positivo anterior, se crearía una variable `num=5` y otra `den=2` (en el ejemplo negativo no se crearía ninguna variable).
+Dentro de esa función de transformación se usa la macro `@capture`, que toma cada subexpresión y busca en ella el patrón de una división: `num_ / den_`, donde `num_` y `den_` indican cualquier símbolo o expresión. Por ejemplo, la subexpresión `:(5/2)` daría un "acierto", mientras que `:(1+2)` daría un "fallo". Ese resultado se refleja en el valor devuelto por `@capture` (la variable `hayfraccion`, que es `true` en el caso de acierto, y `false` en el caso de fallo). Pero además, si se ha encontrado el patrón, los dos elementos definidos en él quedan "capturados" en variables locales con el mismo nombre pero sin el guión bajo final. En el ejemplo positivo anterior, se crearía una variable `num=5` y otra `den=2` (en el ejemplo negativo no se crearía ninguna variable).
 
 Esto se usa para construir la expresión de reemplazo, donde `num` y `den` aparecen interpolados como argumentos de la función `fraccion`. Si no se encuentra el patrón, se devuelve la subexpresión sin modificaciones.
 

@@ -4,9 +4,9 @@
 include("../../scripts/collatz.jl")
 ```
 
-En este último capítulo vamos a ver unos principios de cómo emplear técnidas de computación paralela con Julia, para tratar de conseguir aún mayor velocidad en los cálculos.
+En este último capítulo vamos a ver unos principios de cómo emplear técnicas de computación paralela con Julia, para tratar de conseguir aún mayor velocidad en los cálculos.
 
-Antes que nada, conviene advertir que la computación paralela es un tema bastante complicado, del que es difícil sacar provecho con solo una introducción superficial. Pero un texto que pretende hablar de las "claves de Julia" estaría incompleto sin siquiera una mención al tema, pues una de las características de este lenguaje de programación es que ha sido diseñado desde el principio para obtener el máximo rendimiento con ordenadores con múltiples procesadores y en redes distribuidas —aunque se pueden hacer muchísimas cosas sin adentrarse en ese terreno—.
+Antes que nada, conviene advertir que la computación paralela es un tema bastante complicado, del que es difícil sacar provecho con solo una introducción superficial. Pero un texto que pretende hablar de las "claves de Julia" estaría incompleto sin siquiera una mención al tema, pues una de las características de este lenguaje de programación es que ha sido diseñado desde el principio para obtener el máximo rendimiento de ordenadores con múltiples procesadores y en redes distribuidas —aunque se pueden hacer muchísimas cosas sin adentrarse en ese terreno—.
 
 !!! note "Compatibilidad con versiones de Julia"
 
@@ -26,7 +26,7 @@ El número de hilos disponibles para ejecutar un programa de Julia se determina 
 julia -t 4
 ```
 
-Una vez iniciada la sesión, puede consultarse el número de hilos con la función `Threads.nthreads()`. Por otro lado, el hilo en el que se esté ejecutando un proceso cualquiera se puede consultar con la función `Threads.threadid()`.
+Una vez iniciada la sesión, puede consultarse el número de hilos disponibles con la función `Threads.nthreads()`. Por otro lado, el hilo en el que se esté ejecutando un proceso cualquiera se puede consultar con la función `Threads.threadid()`.
 
 Si no se especifica nada, Julia se inicia por defecto con un solo hilo, pero habitualmente se puede conseguir un mayor rendimiento lanzando dos o más hilos por cada CPU que tenga el ordenador. No hay ninguna regla fija para determinar el número óptimo de hilos. Las CPUs modernas suelen funcionar de manera eficiente con más de un hilo, especialmente si se reparten adecuadamente tareas que consuman distintos recursos (acceso a ficheros, gestión de memoria, cálculos...), pero lanzar un número excesivo de hilos por procesador acaba ralentizando los procesos.
 
@@ -55,12 +55,11 @@ function serie_pasoscollatz(n::T) where T<:Integer
     end
     return pasos_total
 end
-nothing #hide
 ```
 
 Esa función contiene esencialmente un bucle que calcula el número total de pasos para cada secuencia de Collatz (`pasos_total[i]`). En la primera instrucción del bucle se usa la función `pasoscollatz` para contar los pasos de la secuencia que comienza en `i` hasta alcanzar un valor inferior al inicial; en la segunda se toma esa cuenta y se le suma el número de pasos totales de la secuencia inferior. Para que esto funcione correctamente, las secuencias inferiores tienen que haberse calculado *antes* que las superiores, por lo que ese bucle no es apto para lanzar en múltiples hilos en paralelo.
 
-Por otro lado, entre las funciones contenidas en el repositorio hay una alternativa (`serie_pasoscollatz_threads`) con un bucle en el que el orden de las iteraciones es irrelevante. En lugar de la función `pasoscollatz`, que cuenta los pasos de una secuencia hasta llegar a un valor *anterior al inicial*, en el bucle se usa `pasoscollatz!`, que hace la cuenta hasta llegar al final o a un número *para el que ya se tenga un resultado*, sea tanto inferior como superior al inicial. El código de esta función con el bucle alternativo está paralelizado tal como se ha comentado antes:
+Por otro lado, entre las funciones contenidas en el repositorio hay una alternativa (`serie_pasoscollatz_threads`) con un bucle en el que el orden de las iteraciones es irrelevante. En lugar de la función `pasoscollatz`, que cuenta los pasos de una secuencia hasta llegar a un valor *anterior al inicial*, en el bucle se usa `pasoscollatz!`, que hace la cuenta para cada valor inicial hasta llegar al final o a un número *para el que ya se tenga un resultado*, sea tanto inferior como superior al inicial. El código de esta función está paralelizado tal como se ha comentado antes:
 
 ```julia
 function serie_pasoscollatz_threads(n::T) where T<:Integer
@@ -84,7 +83,7 @@ Por otro lado, la versión paralelizada resulta sensiblemente más rápida para 
 
 [^1]: Los datos de la figura 2 se han obtenido con Julia 1.6 en un Intel i3 de 4 núcleos a 2.5GHz, con Ubuntu 16.04.
 
-Esto ocurre a pesar de que el número de iteraciones que se hacen en el fondo es mucho mayor en la versión paralelizada. Manipulando las funciones para hacer la cuenta, se puede observar que con `n=100_000`, al ejecutar `serie_pasoscollatz(n)` la función `pasoscollatz` ejecuta cerca de medio millón de iteraciones de su bucle `while`- Por otro lado, al ejecutar `serie_pasoscollatz_threads(n)`, la función `pasoscollatz!` ejecuta más de un millón y medio de iteraciones.
+Esto ocurre a pesar de que el el número de iteraciones que se hacen en el fondo es mucho mayor en la versión paralelizada. Manipulando las funciones para hacer la cuenta, se puede observar que con `n=100_000`, al ejecutar `serie_pasoscollatz(n)` la función `pasoscollatz` ejecuta cerca de medio millón de iteraciones de su bucle `while`. Por otro lado, al ejecutar `serie_pasoscollatz_threads(n)`, la función `pasoscollatz!` ejecuta más de un millón y medio de iteraciones.
 
 ## Lanzar tareas en paralelo (`@spawn`)
 
@@ -191,7 +190,7 @@ julia> paresonones(1000)
  297
 ```
 
-El problema está claramente en la paralelización de las operaciones, porque si se elimina la macro `@threads` dejan de "perderse" números. Sin embargo, por la naturelza de la función es obvio que el error no se debe al orden de las iteraciones. Lo que ocurre en realidad es que al hacer simultáneamente varias reasignaciones a los elementos del vector `resultado` en función de sus valores anteriores, muchas de esas asignaciones quedan sin anuladas.
+El problema está claramente en la paralelización de las operaciones, porque si se elimina la macro `@threads` dejan de "perderse" números. Sin embargo, por la naturelza de la función es obvio que el error no se debe al orden de las iteraciones. Lo que ocurre en realidad es que al hacer simultáneamente varias reasignaciones a los elementos del vector `resultado` en función de sus valores anteriores, muchas de esas asignaciones quedan anuladas.
 
 Hay varias formas de resolver este problema. Por un lado existen algunas [operaciones atómicas](https://docs.julialang.org/en/v1/base/multi-threading/#Atomic-operations), que a bajo nivel se reducen a una sola operación de la CPU, y por lo tanto no pueden verse interrumpidas o alteradas por las carreras de datos. Pero solo hay un conjunto limitado de esas operaciones, y únicamente se pueden aplicar a ciertos de tipos de variables muy específicas, por lo que no vamos a detenernos en ellas.
 
@@ -280,7 +279,7 @@ end
 end #hide
 ```
 
-A primera vista esto se parece mucho al uso de `Threads.@spawn`. De hecho las funciones `fetch`, `wait` y la macro `@sync` también se pueden emplear para ahcer que otras tareas esperen a la finalización de una lanzada con `@async`, igual que se hacía con las paralelizadas mediante `Threads.@spawn`. Pero hay un par de diferencias fundamentales:
+A primera vista esto se parece mucho al uso de `Threads.@spawn`. De hecho las funciones `fetch`, `wait` y la macro `@sync` también se pueden emplear para hacer que otras tareas esperen a la finalización de una lanzada con `@async`, igual que se hacía con las paralelizadas mediante `Threads.@spawn`. Pero hay un par de diferencias fundamentales:
 
 * `@async` no delega la tarea a otro hilo, sino que la pone "en cola", a la espera de que se dé alguna interrupción adecuada en el resto del programa para ponerse en marcha. (En el ejemplo de arriba, ese punto es el primer `sleep` del segundo bucle.)
 * El comportamiento de `@async` es independiente del número de hilos disponibles, porque la tarea programada se inicia en el mismo hilo.
@@ -289,7 +288,7 @@ A primera vista esto se parece mucho al uso de `Threads.@spawn`. De hecho las fu
 
 Esta última condición solo la cumplen un conjunto limitado de funciones, entre las que como se ha visto se encuentra `sleep`. Así, en el ejemplo anterior, el primer bucle se pone a la cola de tareas, y su primera iteración se inicia cuando el primer `sleep` del segundo bucle le da paso. En ese momento la instrucción que iba a continuación --`println("tac ", i)`-- se pone en espera, y así los dos bucles se van dando paso alternativamente. Pero si no estuvieran las líneas con `sleep` u otras funciones que lo permitan, el primer bucle no podría iniciarse hasta que acabase el resto del programa.
 
-Un caso típico de uso de `@async` es en compañía de funciones de lectura y escritura de archivos (p.ej. `read` o `write`), en las interacciones con bases de datos, transferencias de datos por Internet, etc. Todas esas operaciones suelen estar programadas en funciones que también dejan paso a tareas asíncronas, igual que `sleep`, ya que gran parte del tiempo consumido por ellas se invierte en el acceso a los discos, que requiere muy poca CPU, por lo que esas funciones están diseñadas para permitir que otras tareas aprovechen esa capacidad de procesado.
+La macro `@async` se usa a menudo con tareas que se llevan a cabo mientras se ejecutan funciones de lectura y escritura de archivos (p.ej. `read` o `write`), interacciones con bases de datos, o transferencias de datos por Internet. Todas esas operaciones suelen estar programadas en funciones que también dejan paso a tareas asíncronas, igual que `sleep`, ya que gran parte del tiempo consumido por ellas se invierte en el acceso a los discos, que requiere muy poca CPU, por lo que esas funciones están diseñadas para permitir que otras tareas aprovechen esa capacidad de procesado.
 
 Si se desea es posible añadir puntos de interrupción al código de forma manual, con la función `yield`. Por ejemplo, podríamos sustituir las llamadas a `sleep` del ejemplo anterior por `yield`, lo que daría el mismo resultado, pero sin tiempos de espera:
 
@@ -308,7 +307,7 @@ Puedes experimentar poniendo y quitando la instrucción `yield()` en distintos p
 
 ## Coda
 
-Las herramientas que se han presentado en este capítulo son, como se decía al principio, solo la punta del iceberg en el terreno de la computación paralela. De hecho, ni siquiera se ha abordado el tema aún más complejo de la [computación distribuida](https://es.wikipedia.org/wiki/Computación_distribuida), en la que las tareas se reparten entre distintos ordenadores de una red. (Julia tiene también herramientas para esto en el módulo `Distributed`).
+Las herramientas que se han presentado en este capítulo son, como se decía al principio, solo la punta del iceberg en el terreno de la computación paralela. De hecho, ni siquiera hemos abordado el tema aún más complejo de la [computación distribuida](https://es.wikipedia.org/wiki/Computación_distribuida), en la que las tareas se reparten entre distintos ordenadores de una red. (Julia tiene también herramientas para eso en el módulo `Distributed`).
 
 Para poder usar de forma productiva esas herramientas es necesario profundizar en detalles que están mucho más allá del alcance de esta guía, que no pretende ser más que una introducción a los aspectos más destacables de Julia como lenguaje de programación. La computación paralela es uno de sus puntos fuertes, pero no el más importante, y en lo que a la optimización de código se refiere, es un recurso que conviene reservar para cuando no se puede sacar mucho más de otras estrategias más sencillas.
 

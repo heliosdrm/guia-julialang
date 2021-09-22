@@ -15,7 +15,7 @@ En el [capítulo 7](7-contextos.md) hemos visto que las variables de un programa
 
 Tanto si son locales como globales, las variables son sencillamente nombres que designan objetos representados de alguna forma en la memoria del ordenador. Pero debido a su distinto alcance, el espacio de memoria ocupado por esos objetos se gestiona de forma distinta según si se asocian a variables locales o globales, y resulta mucho menos eficiente en el caso de las globales. Por esa razón, una de las recomendaciones habituales para mejorar la velocidad de los programas es evitar el uso de *variables* globales lo máximo posible.
 
-El énfasis en la palabra "variables" se debe a que el problema no está en todos los tipos de objetos globales, sino específicamente en las variables, que pueden cambiar su contenido. De hecho, una de las soluciones recomendadas para evitar este problema (después de la de utilizar funciones para utilizar menos globales) es sustituir las variables globales por *constantes*, siempre que sea pertinente, por ejemplo cuando se trata de parámetros cuyo valor no se espera que tenga que cambiar.
+El énfasis en la palabra "variables" se debe a que el problema no está en todos los tipos de objetos globales, sino específicamente en las variables, que pueden cambiar su contenido. De hecho, una de las soluciones recomendadas para evitar este problema (después de la de utilizar funciones para que haya menos código en el contexto global) es sustituir las variables globales por *constantes*, siempre que sea pertinente, por ejemplo cuando se trata de parámetros cuyo valor no se espera que tenga que cambiar.
 
 Las constantes se definen igual que las variables, pero añadiendo la palabra `const` antes del nombre. También es costumbre usar nombres en mayúsculas para distinguir las constantes de las variables. Por ejemplo, podríamos definir la [constante de Avogadro](https://es.wikipedia.org/wiki/Constante_de_Avogadro) de la siguiente manera:
 
@@ -55,11 +55,11 @@ K[] = 0.5
 
 ## Optimizar operaciones con bucles y *arrays*
 
-Los cálculos con *arrays* de grandes dimensiones, y en general las rutinas iterativas que repiten operaciones sobre grandes cantidades de datos, son partes de los programas que típicamente consumen una gran parte del tiempo de computación, así que también suelen ser partes en las que pequeñas mejoras pueden tener un gran impacto sobre la velocidad del programa.
+Los cálculos con *arrays* de grandes dimensiones, y en general las rutinas iterativas que repiten operaciones sobre grandes cantidades de datos, son elementos de los programas que típicamente consumen una gran parte del tiempo de computación, así que pequeñas mejoras en el código correspondiente pueden tener un gran impacto sobre la velocidad del programa.
 
 ### Bucles vs. código vectorizado
 
-En primer lugar vale la pena desterrar el prejuicio hacia los bucles que a menudo se aprende al programar en otros lenguajes como Matlab/Octave, Python (con Numpy) o R. En esos lenguajes las operaciones con *arrays* están muy optimizadas, y resulta más rápido hacer una sola operación complicada con *arrays* de 1000 elementos que interpretar y ejecutar 1000 operaciones con unos pocos números escalares. Así que en ellos se recomienda, cuando es viable, sustituir los bucles por operaciones monolíticas con *arrays* que contengan todos los elementos sobre los que se quiere iterar.
+En primer lugar vale la pena desterrar el prejuicio hacia los bucles que a menudo se aprende al programar en otros lenguajes como Matlab/Octave, Python (con Numpy) o R. En esos lenguajes las operaciones con *arrays* están muy optimizadas, y resulta más rápido hacer una sola operación complicada con *arrays* de 1000 elementos que interpretar y ejecutar 1000 operaciones con unos pocos números escalares. Así que en lenguajes como esos se recomienda, cuando es viable, sustituir los bucles por operaciones monolíticas con *arrays* que contengan todos los elementos sobre los que se quiere iterar.
 
 Por ejemplo, supongamos que tenemos dos vectores de números `x` e `y`, de longitudes `n` y `m`, respectivamente, y tenemos que calcular la variable `z` que se define según la siguiente fórmula:
 
@@ -67,7 +67,7 @@ Por ejemplo, supongamos que tenemos dos vectores de números `x` e `y`, de longi
 z = \sum_{i,j=1}^{n,m}(x_i \cdot x_j + \left|x_i - y_j\right|)
 ```
 
-Esta operación se podría escribir en una función como:
+Esta operación se podría escribir en una función con un bucle compuesto como:
 
 ```julia
 function operacion1(x, y)
@@ -79,7 +79,7 @@ function operacion1(x, y)
 end
 ```
 
-Su versión "vectorizada" podría ser algo como lo que sigue:
+Y su versión "vectorizada" podría ser algo como lo que sigue:
 
 ```julia
 function operacion2(x, y)
@@ -130,7 +130,7 @@ for (i, linea) in enumerate(eachline(archivo))
 end
 ```
 
-Esta segunda alternativa supone un ahorro de memoria, aunque obliga a procesar el archivo dos veces: una para contar el número de líneas con la función `countlines`, y otra para medir su longitud e ir escribiendo el resultado. Esto es porque el primer paso es suficientemente sencillo (consume aproximadamente un 5% del tiempo total, y prácticamente nada de memoria comparado con el resto de la operación), y compensa sobradamente el coste adicional de ir redefiniendo el vector `caracteres`. Este es un ejemplo muy básico, en el que según el tamaño del archivo no se observará gran diferencia, pero hay situaciones en las que el ahorro sí se puede notar.
+Esta segunda alternativa supone un ahorro de memoria, aunque obliga a procesar el archivo dos veces: una para contar el número de líneas con la función `countlines`, y otra para medir su longitud e ir escribiendo el resultado. El ahorro se debe a que el primer paso es suficientemente sencillo (consume aproximadamente un 5% del tiempo total, y prácticamente nada de memoria comparado con el resto de la operación), y compensa sobradamente el coste adicional de ir redefiniendo el vector `caracteres`. Este es un ejemplo muy básico, en el que según el tamaño del archivo no se observará gran diferencia, pero hay situaciones en las que el ahorro sí se puede notar.
 
 Se podría señalar también que un bucle tan sencillo es un candidato ideal para escribirlo como un *array comprehension*:
 
@@ -140,19 +140,19 @@ caracteres = [length(linea) for linea in eachline(archivo)]
 
 Sin embargo, a pesar de que es más conciso y fácil de leer, es la más lenta y pesada de las tres alternativas.
 
-La preasignación de *arrays* puede ser un recurso especialmente útil para ganar eficiencia, si las operaciones que se hacen en el bucle implican crear nuevos *arrays* (por ejemplo, si se está trabajando con vectores, matrices, etc., y se definen nuevos valores de los mismos en cada iteración). La creación de *arrays* es más costosa que la de escalares, porque el espacio que ocupan en memoria se gestiona de otro modo. Así que, aprovechando que son objetos mutables, según el caso puede ser buena idea predefinirlos fuera del bucle, y hacer que las operaciones del mismo no creen nuevos *arrays*, sino que sencillamente los modifiquen asignándoles nuevos valores a sus elementos.
+La preasignación de *arrays* puede ser un recurso especialmente útil para ganar eficiencia, si las operaciones que se hacen en el bucle implican crear nuevos *arrays* (por ejemplo, si se está trabajando con vectores, matrices, etc., y se definen nuevos valores de los mismos en cada iteración). La creación de *arrays* es más costosa que la de escalares, porque el espacio que ocupan en memoria se gestiona de otro modo. Así que, aprovechando que son objetos mutables, según el caso puede ser conveniente predefinirlos fuera del bucle, y hacer que las operaciones del mismo no creen nuevos *arrays*, sino que sencillamente los modifiquen asignándoles nuevos valores a sus elementos.
 
 !!! tip "Usar `StaticArray`s para trabajar con *arrays* pequeños"
     
-    Una alternativa que puede ser útil en situaciones como la anterior es usar el paquete [StaticArrays](https://juliaarrays.github.io/StaticArrays.jl/stable/) para crear los vectores, matrices, etc. que se tengan que usar en las iteraciones. Ese paquete define unos tipos especiales de *arrays* (`SArray`, `MArray`, etc.) que se comportan en casi todo como los tipos de *array* estándar, excepto en que no se puede cambiar sus dimensiones, y en el caso de los `SArray` son inmutables. Estas restricciones permiten gestionarlos de tal manera que son mucho maś eficientes de usar, sobre todo si no tienen muchos elementos.
+    Una alternativa que puede ser útil en situaciones como la comentada es usar el paquete [StaticArrays](https://juliaarrays.github.io/StaticArrays.jl/stable/) para crear los vectores, matrices, etc. que se tengan que usar en las iteraciones. Ese paquete define unos tipos especiales de *arrays* (`SArray`, `MArray`, etc.) que se comportan en casi todo como los tipos de *array* estándar, excepto en que no se puede cambiar sus dimensiones, y en el caso de los `SArray` son inmutables. Estas restricciones permiten gestionarlos de tal manera que son mucho maś eficientes de usar, sobre todo si no tienen muchos elementos.
 
 !!! note "Peligros de los cálculos en paralelo"
     
-    La recomendación de predefinir *arrays* fuera de los bucles y modificarlos en las iteraciones hay que tomarla con cautela cuando se hacen cálculos en paralelo. Véase el siguiente capítulo para más detalles al respecto.
+    La recomendación de predefinir *arrays* fuera de los bucles y modificarlos en las iteraciones hay que tomarla con cautela cuando se hacen cálculos en paralelo. Véase el [siguiente capítulo](11-paralelizacion.md) para más detalles al respecto.
 
 ### Acceso eficiente a los *arrays*
 
-Cuando se itera sobre *arrays*, también hay algunas prácticas que ayudan a que el acceso a sus contenidos sea más rápido. Cuesta menos leer o escribir elementos contiguos de un *array*, que también suelen ocupar direcciones contiguas en la memoria del ordenador, que "saltar" entre elementos distantes. Esto significa que en el caso de matrices es más eficiente iterar por columnas (recorrer primero la primera columna, luego la segunda, etc.) que por filas, ya que esa es la forma en la que están ordenados internamente sus elementos. Por ejemplo, en la siguiente matriz:
+Cuando se itera sobre *arrays*, también hay algunas prácticas que ayudan a que el acceso a sus contenidos sea más rápido. Cuesta menos leer o escribir elementos contiguos de un *array* que "saltar" entre elementos distantes. Esto significa que en el caso de matrices es más eficiente iterar por columnas (recorrer primero la primera columna, luego la segunda, etc.) que por filas, ya que esa es la forma en la que están ordenados internamente sus elementos. Por ejemplo, en la siguiente matriz:
 
 ```@repl c10
 matriz = reshape(1:12, 3, 4)
@@ -205,7 +205,7 @@ Esto puede ayudar a crear recorridos más eficientes a lo largo de los índices 
 
 ### "Vistas" de *arrays* (*views*)
 
-Cuando se tiene que operar con bloques de *arrays* en lugar de elementos individuales de los mismos o con el *array* completo, a menudo se hace un consumo de memoria que resulta superfluo, porque se crean *arrays* nuevos con datos que ya están en el original. Por ejemplo, supongamos que tenemos que hacer operaciones con submatrices de tamaño 3×3 incluidas en la que se ha usado para los ejemplos anteriores:
+Cuando se tiene que operar con bloques de *arrays* en lugar de elementos individuales de los mismos o con el *array* completo, a menudo se hace un consumo de memoria que resulta superfluo, porque se crean *arrays* nuevos con datos que ya están en el original. Por ejemplo, supongamos que tenemos que hacer operaciones con submatrices de tamaño 3×3 incluidas en la matriz que se ha usado para los ejemplos anteriores:
 
 ```@repl c10
 for i = 1:2
@@ -250,7 +250,7 @@ end
 
 
 ```julia
-@inbounds eachindex(x)
+@inbounds for i in eachindex(x)
     # operaciones con x[i]
 end
 ```
@@ -269,7 +269,7 @@ Del mismo modo, para operar a lo largo de filas, columnas u otras dimensiones de
 
 ## Facilitar la inferencia de tipos
 
-La inferencia de tipos es una cuestión clave para conseguir un código eficiente, y en otros sitios se menciona antes que algunos de los temas tratados arriba. Aquí lo hemos postergado, pero no por tener menos importancia, sino por que es un aspecto más complicado de manejar que los anteriores.
+La inferencia de tipos es una cuestión clave para conseguir un código eficiente, y en otros sitios se menciona antes que algunos de los temas que hemos tratado hasta ahora. Aquí lo hemos postergado, pero no por tener menos importancia, sino por que es un aspecto más complicado de manejar que los anteriores.
 
 Para que un programa sea eficiente es fundamental que las funciones se compilen de forma óptima. La compilación consiste, a grandes rasgos, en traducir el código escrito por el programador en código máquina. A ese bajo nivel es crucial conocer el tipo de cada variable, porque el tipo define cómo se codifica cada valor en memoria. Algunos lenguajes de programación como C o Java obligan a declarar de forma explícita el tipo al que pertenece cada variable. Julia, en cambio, infiere el tipo de las variables y otros objetos según el código usado para definirlas, sin declaraciones explícitas.
 
@@ -310,7 +310,7 @@ function suma(valores)
 end
 ```
 
-En este caso, la variable `y` se define inicialmente como un número del tipo de `0` (un `Int`), pero una vez se entra en el bucle, se le asignan nuevos valores que pueden ser de otro tipo, dependiendo del tipo de los elementos contenidos en `valores`. Así pues, tampoco se podrá saber a priori de qué tipo va a ser en cada momento `y`.
+En este caso, la variable `y` se define inicialmente como un número del tipo de `0` (un `Int`), pero una vez se entra en el bucle, se le asignan nuevos valores que pueden ser de otro tipo, dependiendo del tipo de los elementos contenidos en `valores`. Así pues, tampoco se podrá saber a priori qué tipo va a tener la variable `y` en cada momento.
 
 En estas situaciones, cuando a través del código no se puede inferir unívocamente el tipo de alguna variable, se dice que la variable es de "tipo inestable". Cuando esto ocurre en el código de una función, es más difícil que se compile adecuadamente, lo que puede hacer que sea más lenta. Por esta razón, una de las recomendaciones más habituales para hacer funciones eficientes es cuidar la estabilidad de tipos en las funciones.
 
@@ -478,4 +478,4 @@ Julia también ofrece herramientas para trabajar a bajo nivel, incluso en códig
 
 Por otro lado, los programas que tienen una gran carga de procesado de imágenes o cálculos análogos también se pueden beneficiar del uso de [GPUs](https://es.wikipedia.org/wiki/Unidad_de_procesamiento_gráfico) (tarjetas gráficas), para lo cual existen varios paquetes específicos recogidos bajo [JuliaGPU](https://juliagpu.org/).
 
-Finalmente, para un tratamiento más exhaustivo de estos temas, también se puede consultar el libro [Julia High Performance](https://juliahighperformance.com/) (ISBN 978-1788298117, en inglés).
+Para un tratamiento más exhaustivo de todos estos temas, el libro [Julia High Performance](https://juliahighperformance.com/) (ISBN 978-1788298117, en inglés) es un buen recurso, que proporciona muchos más detalles y ejemplos de cómo mejorar el rendimiento de los programas en Julia.
