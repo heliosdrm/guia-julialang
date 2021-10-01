@@ -8,15 +8,13 @@ Sin embargo, para un uso realmente productivo de Julia hay que ir más allá de 
 
 ## Dónde encontrar paquetes para Julia
 
-La mayoría de paquetes para Julia están creados por la comunidad de usuarios, y su desarrollo está descentralizado. Cada usuario/desarrollador puede escoger la forma y el sitio donde publicar los paquetes creados, pero para facilitar su instalación existe un "Registro General" que recoge una lista con detalles técnicos de miles de paquetes. Los más conocidos, y en general la mayoría de los que se suelen necesitar, están incluidos en ese registro.[^1]
+La mayoría de paquetes para Julia están creados por la comunidad de usuarios, y su desarrollo está descentralizado. Cada usuario/desarrollador puede escoger la forma y el sitio donde publicar los paquetes creados, pero para facilitar su instalación existe un "Registro General" que recoge una lista con detalles técnicos de miles de paquetes. Los más conocidos, y en general la mayoría de los que se suelen necesitar, están incluidos en ese registro.
 
 [El sitio web del Registro General](https://github.com/JuliaRegistries/General) no es fácil de explorar, ni proporciona directamente la información que necesitan los usuarios para "descubrir" los paquetes. Para ello se puede usar el servicio [JuliaHub](https://juliahub.com/), que permite buscar los paquetes registrados por nombre, temática o popularidad, entre otros criterios. También existe la web [Julia Packages](https://juliapackages.com/), de código abierto, que ofrece un servicio semejante. Además, la [web oficial de Julia](https://julialang.org/) tiene un apartado titulado "*Ecosystem*" que recomienda algunos paquetes para tareas o dominios de uso habituales.
 
 !!! note "¿Son fiables los paquets de terceros?"
 
     El Registro General es un repositorio de uso público, es decir que cualquier usuario puede proponer paquetes para ser incluidos en él, siempre que cumplan ciertas reglas para que se puedan instalar de forma segura. No se hace, sin embargo, ninguna revisión de la funcionalidad de los paquetes. Por lo tanto, el hecho de que un paquete esté en ese registro no garantiza que funcione correctamente. Para saber qué paquetes son más recomendables, lo mejor es guiarse por las valoraciones de los usuarios. Los servicios de búsqueda citados incluyen una métrica de popularidad en forma de "estrellas" concedidas por la comunidad de usuarios. 
-     
-[^1]: Los usuarios de [JuliaPro](https://juliacomputing.com/products/juliapro.html) tienen también acceso a un repositorio de paquetes basado en el Registro General, pero con un mayor control sobre los contenidos y documentación de los paquetes.
 
 
 ## Instalación y eliminación de paquetes y sus dependencias
@@ -58,9 +56,9 @@ Esta acción hace que el paquete ya no esté disponible (no se mostrará con `]s
 
 ## Actualizar y fijar versiones
 
-Los paquetes externos tienen un ritmo de desarrollo propio, independiente del núcleo del lenguaje, y a menudo se publican nuevas versiones con arreglos y mejoras de estos paquetes con más frecuencia que la distribución base de Julia. El comando `]status` o `]st` muestra, junto a los nombres de los paquetes instalados, las versiones de los mismos. Una vez instalado un el paquete `X`, este se puede actualizar en cualquier momento a la versión más reciente posible mediante `]update X` o `]up X`. Si no se indica ningún paquete en particular, `]update` o `]up` busca actualizaciones de todos los paquetes instalados.[^2]
+Los paquetes externos tienen un ritmo de desarrollo propio, independiente del núcleo del lenguaje, y a menudo se publican nuevas versiones con arreglos y mejoras de estos paquetes con más frecuencia que la distribución base de Julia. El comando `]status` o `]st` muestra, junto a los nombres de los paquetes instalados, las versiones de los mismos. Una vez instalado un el paquete `X`, este se puede actualizar en cualquier momento a la versión más reciente posible mediante `]update X` o `]up X`. Si no se indica ningún paquete en particular, `]update` o `]up` busca actualizaciones de todos los paquetes instalados.[^1]
 
-[^2]: Esto solo afecta a los paquetes que se hayan instalado desde un repositorio como el Registro General u otro equivalente. En particular, los paquetes añadidos directamente desde una URL no se pueden actualizar de este modo.
+[^1]: Esto solo afecta a los paquetes que se hayan instalado desde un repositorio como el Registro General u otro equivalente. En particular, los paquetes añadidos directamente desde una URL no se pueden actualizar de este modo.
 
 Es posible que la versión a la que se actulicen algunos paquetes sea menor que la última publicada, o incluso que algunos cambien a una versión *más antigua* que la que se estaba usando hasta el momento. Esto ocurre porque las dependencias de los paquetes también pueden definir las versiones compatibles, y el gestor de paquetes realiza las actualizaciones imponiendo la condición de que se cumplan todas las relaciones de compatibilidad.
 
@@ -168,7 +166,7 @@ En general solo conviene hacer esto con módulos de la biblioteca estándar. Sal
 
 Al cargar un módulo estándar o un paquete con el comando `using`, los nombres de las funciones y otros objetos "exportados" pasan a ser utilizables directamente, como ocurre con `readdlm` al cargar `DelimitedFiles`, `plot` de `Plots`, etc. Por otro lado, los paquetes generalmente contienen muchas otras funciones y objetos que no se exportan; la mayoría suelen ser elementos "internos", es decir, que no están pensados para que el usuario que carga el paquete los use habitualmente, pero no siempre es así. Por ejemplo, la función `File` del paquete `CSV` no está exportada, y por eso para leer archivos con ese paquete hay que llamarla como `CSV.File`.
 
-Esto es conveniente en el caso de funciones cuyo nombre sea muy genérico, de tal manera que puedan entrar en conflicto con funciones distintas de otros paquetes.[^3] Si por ejemplo en la misma sesión se carga el paquete `Plots` y también `PyPlot`, al usar la función `plot` ocurre esto:
+Esto es conveniente en el caso de funciones cuyo nombre sea muy genérico, de tal manera que puedan entrar en conflicto con funciones distintas de otros paquetes.[^2] Si por ejemplo en la misma sesión se carga el paquete `Plots` y también `PyPlot`, al usar la función `plot` ocurre esto:
 
 ```julia-repl
 julia> using Plots, PyPlot
@@ -178,7 +176,7 @@ WARNING: both Plots and PyPlot export "plot"; uses of it in module Main must be 
 ERROR: UndefVarError: plot not defined
 ```
 
-[^3]: Algunos paquetes pueden *extender* funciones de otros paquetes o módulos, añadiendo nuevos métodos. Ese tipo de extensiones no producen ese tipo de conflictos.
+[^2]: Algunos paquetes pueden *extender* funciones de otros paquetes o módulos, añadiendo nuevos métodos. Ese tipo de extensiones no producen ese tipo de conflictos.
 
 Para evitar este error, en lugar de `plot` habría que usar `Plots.plot` o `PyPlot.plot`, según lo que se desee.
 
