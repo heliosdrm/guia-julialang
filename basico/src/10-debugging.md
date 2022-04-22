@@ -401,7 +401,7 @@ Por otro lado, cuando se entra en modo *debug* en VS Code se cambia de entorno v
 
 ### *Debug* en modo compilado
 
-Como se ha señalado arriba, un inconvienente notable de ejecutar un programa en "modo *debug*" es que en general es mucho más lento, tanto más lento cuanto más complejo es el programa. Para reducir este problema se puede hacer activar el "modo compilado" (véase el menú "*compiled code*" abajo a la izquierda en la figura 1).[^7] Eso hará que las funciones añadidas directamente o a través de sus módulos en la lista de ese menú se ejecuten a la velocidad de costumbre, a no ser que se "entre" expresamente en ellas con la acción de "*step into*". Ahora bien, los *breakpoints* marcados en el código de las funciones que se ejecutan en modo compilado no son operativos.
+Como se ha señalado arriba, un inconvienente notable de ejecutar un programa en "modo *debug*" es que en general es mucho más lento, tanto más lento cuanto más complejo es el programa. Una forma de reducir ese problema es ejecutar las operaciones que no interese inspeccionar en "modo compilado". El paquete Debugger permite activar el modo compilado forma interactiva, y la extensión de Julia para VS Code utiliza una lista de funciones y módulos cuyas funciones se ejecutan de ese modo durante los procesos de *debugging* (véase el menú "*compiled code*" abajo a la izquierda en la figura 1).[^7] Las funciones ejecutadas en modo compilado correrán a la velocidad de costumbre. Ahora bien, los *breakpoints* marcados en el código de las mismas no son operativos.
 
 [^7]: El menú "*compiled code*" mostrado aquí se corresponde con la versión 1.2 de la extensión de Julia para VS Code.
 
@@ -411,7 +411,7 @@ Consideremos, por ejemplo, que se ha entrado en modo *debug* en un programa con 
 
 A modo de ayuda visual, el código se muestra como se vería en el editor de VS Code. La primera línea (#11) está resaltada, indicando que la ejecución se ha detenido en ese punto. El punto rojo en la tercera línea señala un *breakpoint*. Supongamos, además, que dentro del código de la función `g` (que no se muestra aquí) también se ha activado otro *breakpoint*.
 
-Si se selecciona la opción de "continuar" la ejecución, normalmente la siguiente interrupción tendría lugar durante la ejecución de la segunda línea, en el *breakpoint* que hay dentro de la función `g`. Pero si estuviera activado el modo compilado y la función `g` se encontrara en la lista de funciones compiladas, la función `g` se ejecutaría sin detenerse, y la interrupción se daría en el *breakpoint* de la tercera línea, que está al mismo "nivel" que el punto desde el que se reanuda la ejecución.
+Si se selecciona la opción de "continuar" la ejecución, normalmente la siguiente interrupción tendría lugar durante la ejecución de la segunda línea, en el *breakpoint* que hay dentro de la función `g`. Pero si la función `g` se encontrara en la lista de funciones compiladas, la función `g` se ejecutaría sin detenerse, y la interrupción se daría en el *breakpoint* de la tercera línea, que está al mismo "nivel" que el punto desde el que se reanuda la ejecución.
 
 Por defecto la lista de funciones compiladas incluye solo las de `Base` y los módulos estándar. Eso permite acelerar muchas de las operaciones que se realizan en cualquier programa sin riesgo de saltarse *breakpoints* (que normalmente suelen añadirse al código propio). Pero en cualquier momento pueden añadirse funciones propias o de otros paquetes, que sean complejas y lentas de ejecutar en modo *debug*, y que no interese inspeccionar.
 
