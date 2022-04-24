@@ -25,7 +25,7 @@ Los cinco siguientes capítulos vuelven sobre algunos de los temas anteriores pa
 
 Para finalizar, el último capítulo presenta estrategias y herramientas para [detectar y depurar errores](10-debugging.md) en los programas, uno de los desafíos más importantes tanto para principiantes como para las personas con más experiencia programando. 
 
-Las herramientas presentadas en esta guía son la base para hacer cualquier programa en Julia, aunque solo abarcan una parte de todo lo que proporciona este lenguaje de programación. Otros recursos para extraer el máximo rendimiento de Julia se reservan para una guía más avanzada, que pretende seguir a la presente.
+Las herramientas presentadas en esta guía son la base para hacer cualquier programa en Julia, aunque solo abarcan una parte de todo lo que proporciona este lenguaje de programación. Para conocer más recursos con los que extraer mayor rendimiento a los programas, puedes consular ["Claves para programar en Julia"](https://hedero.webs.upv.es/julia-claves/), una continuación a esta guía con información más avanzada y específica de este magnífico lenguaje.
 
 ## Créditos y licencia
 
