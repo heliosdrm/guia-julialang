@@ -107,14 +107,18 @@ pkg (estudio1)>
 
 Si se quiere volver al entorno por defecto, basta con ejecutar `]activate` sin ningúna ruta a continuación.
 
-Cuando se activa un entorno por primera vez, este está "limpio" de paquetes, como si se estuviese trabajando con una instalación nueva de Julia. Para trabajar con cualquier paquete externo hay que añadirlo de la forma habitual, con `]add`, etc. La instalación de paquetes en un entorno nuevo no duplica los archivos descargados o instalados en el sistema; únicamente edita dos archivos de texto en el directorio del entorno:
+Cuando se activa un entorno por primera vez, este está "limpio" de paquetes. Para trabajar con cualquier paquete externo hay que añadirlo de la forma habitual, con `]add`, etc. La instalación de paquetes en un entorno nuevo no duplica los archivos descargados o instalados en el sistema; únicamente edita dos archivos de texto en el directorio del entorno:
 
 * `Project.toml`. Este archivo contiene la lista de paquetes que se han añadido explicitamente al entorno, es decir los que se podrán cargar con el comando `using` mientras se esté trabajando en ese entorno.
-* `Manifest.tom`. Contiene una lista completa de todos los paquetes necesarios para trabajar en el entorno, incluyendo los listados en `Project.toml` y todas sus dependencias directas e indirectas. Además, para cada paquete señala su lista de dependencias directas y la versión que se cargará en el entorno.
+* `Manifest.toml`. Contiene una lista completa de todos los paquetes necesarios para trabajar en el entorno, incluyendo los listados en `Project.toml` y todas sus dependencias directas e indirectas. Además, para cada paquete señala su lista de dependencias directas y la versión que se cargará en el entorno.
 
 De este modo, cada proyecto puede tener definida su propia configuración de paquetes, y mantenerla fijada cuando se cierre el proyecto, sin renunciar a tener otros entornos con versiones más actualizadas. Al estar todas las versiones recogidas en el archivo `Manifest.toml`, siempre que se vuelva a activar esa carpeta del proyecto el gestor de paquetes utilizará las mismas versiones, aunque en otros proyectos se hayan cambiado. (Naturalmente, esto es así mientras no se hagan actualizaciones en el entorno en cuestión.) 
 
-Incluso en otro ordenador, con una instalación de Julia aparte, se puede reproducir el conjunto de paquetes y sus versiones asociadas a un proyecto, si se mantienen los archivos `Project.toml` y `Manifest.toml`. En el nuevo ordenador únicamente haría falta ejecutar --una vez activado el entorno del proyecto-- el comando `]instantiate`, para descargar e instalar en el sistema los paquetes indicados en el *manifest*. Si la versión de Julia es la misma, los proyectos funcionarán igualmente en ambos ordenadores (salvo por diferencias que pudiera haber en utilidades del sistema operativo, al margen de los componentes de Julia). Si la versión de Julia ha cambiado, podría haber incompatibilidades con los paquetes o diferencias en el funcionamiento del programa. Para controlar incluso este detalle, se puede añadir a `Project.toml` una indicación sobre la versión de Julia a emplear, con las siguientes líneas:
+Incluso en otro ordenador, con una instalación de Julia aparte, se puede reproducir el conjunto de paquetes y sus versiones asociadas a un proyecto, si se mantienen los archivos `Project.toml` y `Manifest.toml`. En el nuevo ordenador únicamente haría falta ejecutar --una vez activado el entorno del proyecto-- el comando `]instantiate`, para descargar e instalar en el sistema los paquetes indicados en el *manifest*. Si la versión de Julia es la misma, los proyectos funcionarán igualmente en ambos ordenadores, salvo por tres posibles causas:
+
+Una son las diferencias que pudiera haber en las características de la máquina o en las utilidades del sistema operativo externas a Julia. Estos casos están fuera del control de Julia, pero son relativamente infrecuentes.
+
+Si la versión de Julia ha cambiado, podría haber incompatibilidades con los paquetes o diferencias en el funcionamiento del programa. Para controlar incluso este detalle, se puede añadir a `Project.toml` una indicación sobre la versión de Julia a emplear, con las siguientes líneas:
 
 ```toml
 [compat]
@@ -123,9 +127,13 @@ julia = "1"
 
 (En este ejemplo se indica que se ha de usar la versión 1 de Julia. Puede indicarse una versión más específica --p.ej. `julia="1.5"`, o incluso distintas versiones separadas por comas.)
 
+Finalmente, puede que el proyecto use paquetes que no estén especificados en el `Project.toml` de su propio entorno, sino en el del entorno "global", el que se activa por defecto al inicio de cada sesión de Julia. Los paquetes del entorno por defecto están siempre disponibles para ser cargados con `using`, incluso si se ha activado otro entorno, lo cual es muy cómodo si hay algunos paquetes que se pretende usar de forma habitual, pero tiene esa otra desventaja.
+
+Además, el entorno por defecto tiende a ser un terreno de pruebas, en el que se van acumulando los distintos paquetes que se instalan, a veces antes de decidir su uso definitivo en los proyectos en curso. Esta práctica hace proliferar incompatibilidades, por lo que algunos paquetes en el entorno por defecto se quedan bloqueados en versiones antiguas, y otros no se pueden añadir. Así pues, es preferible mantener razonablemente limpio el entorno por defecto, y tener algún directorio reservado para las pruebas, que llegado el caso de problemas se puede "resetear" borrando los archivos `Project.toml` y `Manifest.toml`. Alternativamente, para pruebas ocasionales también se puede activar un entorno temporal con `activate --temp`, que se crea en la carpeta de archivos temporales y se "olvida" al terminar la sesión.
+
 Es muy recomendable trabajar siempre de este modo, con un entorno distinto para cada proyecto, en parte porque hace que el trabajo sea reproducible a largo plazo, tal como se ha dicho. Pero además, si cada proyecto tiene en su entorno con solo los paquetes que necesita, se evitan los entornos con un número excesivo de paquetes, que son una causa frecuente de incompatibilidades entre versiones.
 
-El entorno por defecto, que se activa al inicio de cada sesión de Julia, tiende a ser un terreno de pruebas, en el que se van acumulando los distintos paquetes que se instalan, a veces antes de decidir su uso definitivo en los proyectos en curso. Esta práctica hace proliferar incompatibilidades, por lo que algunos paquetes en el entorno por defecto se quedan bloqueados en versiones antiguas, y otros no se pueden añadir. Así pues, es preferible mantener razonablemente limpio el entorno por defecto, y tener algún directorio reservado para las pruebas, que llegado el caso de problemas se puede "resetear" borrando los archivos `Project.toml` y `Manifest.toml`.
+
 
 !!! note "Entornos en VS Code"
 
