@@ -150,7 +150,7 @@ Lo más habitual es usar los llamados [*flame graphs*](https://www.brendangregg.
 
 Hay diversos paquetes y otras herramientas para crear y visualizar *flame graphs* a partir de esos registros. La siguiente figura muestra el gráfico interactivo que resulta de monitorizar la función `serie_pasoscollatz`, tal como se ve en VS Code con su [extensión para visualizar *flame graphs*](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-js-profile-flame).
 
-![Figura 1. *Flame graph* con VS Code](assets/vscode_flamegraph.png)
+![Figura 1. *Flame graph* con VS Code](assets/vscode_flamegraph2.png)
 
 Con esa extensión, VS Code no requiere cargar explícitamente el módulo `Profile` ni ningún otro paquete de Julia. Basta con escribir en el REPL:
 
@@ -160,9 +160,9 @@ Con esa extensión, VS Code no requiere cargar explícitamente el módulo `Profi
 
 Esa instrucción crea una tabla con la información de tiempos recogida, cuya visualización se puede alternar con la de un *flame graph* como el mostrado si se dispone de la extensión adecuada. (Si no está disponible, al intentar cambiar de vista aparece una sugerencia para instalarla.)
 
-En este gráfico el eje vertical está invertido respecto al sentido que usan otros visualizadores: las operaciones anidadas se muestran *debajo* de las que las contienen, en lugar de arriba. Las primeras barras (las que se muestran en la parte superior) tienen poco interés para nuestro propósito, pues tienen que ver con el entorno en el que se ejecuta y se monitoriza la expresión a evaluar. La parte interesante es la mitad inferior, comenzando por nuestra función principal: `serie_pasoscollatz`. (Para apreciar los detalles puede ser necesario visualizar la imagen ampliada.)
+En este gráfico el eje vertical está invertido respecto al sentido que usan otros visualizadores: las operaciones anidadas se muestran *debajo* de las que las contienen, en lugar de arriba. Las primeras barras del *flame graph*  completo (las que se muestran en la parte superior) suelen incluir información de operaciones que tienen poco interés para nuestro propósito, pues tienen que ver con el entorno en el que se ejecuta y se monitoriza la expresión a evaluar. En nuestro caso, la parte interesante es la que contiene nuestra función principal: `serie_pasoscollatz`, que es la que se muestra en la imagen. (Se puede llegar a esa vista de detalle pulsando con el ratón sobre la barra que contiene esa función.)
 
-Naturalmente, esa función y `pasoscollatz` en el siguiente nivel ocupan casi todo el rango horizontal de tiempos. También se puede ver que la mayor parte del tiempo dentro de `pasoscollatz` lo ocupa la función `siguiente_collatz`, aunque también hay un consumo de tiempo significativo que se invierte en operaciones de comparación, y en el constructor `BigInt`.  Y dentro de `siguiente_collatz`, encontramos de forma más o menos equitativa la división entera (la función `div`) y otras operaciones aritméticas. A niveles inferiores hay muchos pequeños bloques de operaciones con el tipo `BigInt`. (En el pantallazo mostrado los nombres de funciones están cortados, pero en VS Code se puede hacer zoom y desplazarse para ver los detalles del gráfico.)
+Naturalmente, `serie_pasoscollatz` y `pasoscollatz` en el siguiente nivel ocupan casi todo el rango horizontal de tiempos. También se puede ver que la mayor parte del tiempo dentro de `pasoscollatz` lo ocupa la función `siguiente_collatz`, aunque también hay un consumo de tiempo significativo que se invierte en operaciones de comparación, y en el constructor `BigInt`.  Y dentro de `siguiente_collatz`, encontramos de forma más o menos equitativa la división entera (la función `div`) y otras operaciones aritméticas. A niveles inferiores hay muchos pequeños bloques de operaciones con el tipo `BigInt`. (En el pantallazo mostrado los nombres de funciones están cortados, pero en VS Code se puede hacer zoom y desplazarse para ver los detalles del gráfico.)
 
 ## Ejemplo: aplicación de mejoras
 
