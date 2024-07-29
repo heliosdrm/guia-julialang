@@ -26,7 +26,7 @@ El número de hilos disponibles para ejecutar un programa de Julia se determina 
 julia -t 4
 ```
 
-Una vez iniciada la sesión, puede consultarse el número de hilos disponibles con la función `Threads.nthreads()`. Por otro lado, el hilo en el que se esté ejecutando un proceso cualquiera se puede consultar con la función `Threads.threadid()`.
+Una vez iniciada la sesión, puede consultarse el número de hilos disponibles con la función `Threads.nthreads()`. Por otro lado, el hilo en el que se esté ejecutando una tarea cualquiera se puede consultar con la función `Threads.threadid()`. Desde la versión 1.7 de Julia en adelante, el hilo en el que se ejecuta una tarea —y por lo tanto el valor de `Threads.threadid()`— puede ir cambiando de forma dinámica para optimizar el funcionamiento.
 
 Si no se especifica nada, Julia se inicia por defecto con un solo hilo, pero habitualmente se puede conseguir un mayor rendimiento lanzando dos o más hilos por cada CPU que tenga el ordenador. No hay ninguna regla fija para determinar el número óptimo de hilos. Las CPUs modernas suelen funcionar de manera eficiente con más de un hilo, especialmente si se reparten adecuadamente tareas que consuman distintos recursos (acceso a ficheros, gestión de memoria, cálculos...), pero lanzar un número excesivo de hilos por procesador acaba ralentizando los procesos.
 
@@ -89,7 +89,7 @@ Esto ocurre a pesar de que el el número de iteraciones que se hacen en el fondo
 
 Para un uso más flexible de los hilos disponibles se puede usar la macro `@spawn` del módulo `Threads`, normalmente acompañada de otras macros para controlar la conclusión de las tareas lanzadas. Esta macro delega la ejecución de una tarea (una operación o un conjunto de operaciones recogidas en un bloque) a cualquier hilo que haya disponible, y continúa con el resto de las operaciones programadas hasta que se requiera el resultado de la tarea delegada.
 
-La siguiente figura muestra este procedimiento de forma gráfica. En la parte izquierda se representa una secuencia de operaciones numeradas del 1 al 6, pero la operación número 3 (señalada en rojo) es una tarea larga, cuyo resultado en realidad no se requiere hasta la última operación. Marcando esa tarea con `Threads.@spawn`, el procesador buscaría un hilo disponible para ejecutarla al mismo tiempo que se ejecutan las operaciones 4 y 5 en el hilo principal, esperando al resultado de la número 3 antes de proceder con la sexta.
+La siguiente figura muestra este procedimiento de forma gráfica. (Por simplificar se representa como si cada tarea se ejecutase de principio a fin en el mismo hilo, aunque esto puede no ocurrir así.) En la parte izquierda se representa una secuencia de operaciones numeradas del 1 al 6, pero la operación número 3 (señalada en rojo) es una tarea larga, cuyo resultado en realidad no se requiere hasta la última operación. Marcando esa tarea con `Threads.@spawn`, el procesador buscaría un hilo disponible para ejecutarla al mismo tiempo que se ejecutan las operaciones 4 y 5 en el hilo principal, esperando al resultado de la número 3 antes de proceder con la sexta.
 
 ![Figura 3. Delegación de una tarea a otro hilo](assets/spawn.png)
 
@@ -262,6 +262,10 @@ Los cerrojos son recursos que permiten detener un hilo cuando están siendo usad
 
 ## Tareas asíncronas (`@async`)
 
+!!! warning "Característica obsoleta"
+
+    Esta explicación sobre la macro `@async` es anterior a Julia 1.7, cuando se introdujeron mejoras que hicieron que las tareas lanzadas con `@spawn` aprovechen mucho mejor los recursos, independientemente del número de hilos disponibles. Actualmente no se recomienda el uso de `@async`, que tiene inconvenientes importantes sobre todo para tareas complejas, y se recomienda usar `@spawn` siempre en su lugar.
+
 La ejecución asíncrona es una forma de "procesado multihilo virtual", en la que se aprovechan puntos de interrupción entre ciertas operaciones para dar paso a otras tareas si procede. De ese modo, en la práctica se pueden estar procesando varias tareas al mismo tiempo, aunque todo ocurra de forma intermitente en el mismo hilo.
 
 Para crear y ejecutar una tarea de forma asíncrona se puede utilizar la macro `@async`, como en el siguiente ejemplo en el que hacemos correr dos bucles a la vez:
@@ -279,12 +283,13 @@ end
 end #hide
 ```
 
-A primera vista esto se parece mucho al uso de `Threads.@spawn`. De hecho las funciones `fetch`, `wait` y la macro `@sync` también se pueden emplear para hacer que otras tareas esperen a la finalización de una lanzada con `@async`, igual que se hacía con las paralelizadas mediante `Threads.@spawn`. Pero hay un par de diferencias fundamentales:
+A primera vista esto se parece mucho al uso de `Threads.@spawn`. De hecho las funciones `fetch`, `wait` y la macro `@sync` también se pueden emplear para hacer que otras tareas esperen a la finalización de una lanzada con `@async`, igual que se hacía con las paralelizadas mediante `Threads.@spawn`. Pero hay algunas de diferencias fundamentales:
 
 * `@async` no delega la tarea a otro hilo, sino que la pone "en cola", a la espera de que se dé alguna interrupción adecuada en el resto del programa para ponerse en marcha. (En el ejemplo de arriba, ese punto es el primer `sleep` del segundo bucle.)
-* El comportamiento de `@async` es independiente del número de hilos disponibles, porque la tarea programada se inicia en el mismo hilo.
+* El comportamiento de `@async` es independiente del número de hilos disponibles, porque la tarea programada se ejecuta enteramente en el mismo hilo.
 * Por esa misma razón, las tareas lanzadas con `@async` son menos susceptibles de provocar problemas por carreras de datos.
-* Por otro lado, lanzar una tarea con `@async` solo resulta práctico si las tareas que le siguen presentan puntos de interrupción que le dejen paso.
+* Por otro lado, las tareas que dependen de una lanzada con `@async` se ven obligadas a ejecutarse también en el mismo hilo, lo que puede empeorar la eficiencia en lugar de mejorarla.
+* Además, lanzar una tarea con `@async` solo resulta práctico si las tareas que le siguen presentan puntos de interrupción que le dejen paso.
 
 Esta última condición solo la cumplen un conjunto limitado de funciones, entre las que como se ha visto se encuentra `sleep`. Así, en el ejemplo anterior, el primer bucle se pone a la cola de tareas, y su primera iteración se inicia cuando el primer `sleep` del segundo bucle le da paso. En ese momento la instrucción que iba a continuación --`println("tac ", i)`-- se pone en espera, y así los dos bucles se van dando paso alternativamente. Pero si no estuvieran las líneas con `sleep` u otras funciones que lo permitan, el primer bucle no podría iniciarse hasta que acabase el resto del programa.
 
