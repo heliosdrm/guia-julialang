@@ -154,7 +154,7 @@ Además, se pueden escribir bloques de pruebas con la macro `@testset`, de tal m
 ```@repl c10
 @testset "Seno de Bhaskara I" begin
     for x = range(0, π, length=5)
-        @test sin_aprox(x) ≈ sin(x) atol = 0.001
+        @test sin_aprox(x) ≈ sin(x) atol = 0.01
     end
 end
 ```
@@ -198,14 +198,11 @@ julia> gauss_diasemana(11, 8, 2018)
 "sábado"
 ```
 
-Pero si queremos se puede configurar la sesión para que esa línea se "active", de tal manera que en el REPL veremos algo como lo que sigue:
+Pero si queremos se puede modificar la [variable de entorno](https://docs.julialang.org/en/v1/manual/environment-variables/) `JULIA_DEBUG` para que las líneas con `@debug` se "activen" en la sesión de trabajo presente:
 
 ```julia-repl
-julia> using Logging
-
-julia> debug_logger = ConsoleLogger(stderr, Logging.Debug);
-
-julia> global_logger(debug_logger);
+julia> ENV["JULIA_DEBUG"] = Main
+Main
 
 julia> gauss_diasemana(11, 8, 2018)
 ┌ Debug: Valores de la fórmula de Gauss
@@ -219,15 +216,40 @@ julia> gauss_diasemana(11, 8, 2018)
 "sábado"
 ```
 
-Lo que hemos hecho antes de llamar a la función `gauss_diasemana` es crear un registro del tipo `ConsoleLogger`, que dirige la información al dispositivo donde se hayan de mostrar los mensajes de diagnóstico (`stderr`, normalmente en pantalla), y que tiene en cuenta todos los registros de tipo `Debug` o de mayor prioridad.[^2] A continuación, se ha configurado el sistema de registro global para usar el que hemos creado. De este modo, al llegar a la línea con la macro `@debug`, se presenta en pantalla la cadena de texto y la variables especificadas --incluyendo el cálculo `div(g, 4)`, al que se le da el nombre `g_4`.
+La variable de entorno `JULIA_DEBUG` identifica los módulos en los que se tendrán en cuenta las líneas con `@debug`. En este ejemplo se ha asignado el módulo `Main`, asumiendo que la función `gauss_diasemana` se había definido en la sesión de trabajo (directamente en el REPL o en un script cargado con `include`, por ejemplo). Si fuese parte de un paquete en desarrollo, en lugar de `Main` la función estaría definida en su propio módulo. Es posible activar el "nivel debug" de varios módulos:
 
-[^2]: El sistema de registro de Julia tiene cuatro niveles de prioridad, que en orden ascendente son: `Debug` (el de menor prioridad, pensado para desarrolladores), `Info` (información dirigida al usuario), `Warning` (avisos de que puede pasar algo anormal) y `Error` (mensajes de fallos críticos, que normalmente harán que se interrumpa la ejecución del código). Por defecto se muestran los mensajes de nivel `Info` o superiores. Este sistema se describe con detalle en la sección [Logging](https://docs.julialang.org/en/v1/stdlib/Logging/) del manual oficial. 
+```julia-repl
+julia> ENV["JULIA_DEBUG"] = Main, MiModulo
+```
 
-El registro que se usa por defecto también es del tipo `ConsoleLogger`, por lo que para volver a la configuración original, que ignora los mensajes de `Debug`, se podría escribir:
+O también desactivarlos todos:
+
+```julia-repl
+julia> ENV["JULIA_DEBUG"] = ()
+```
+
+Otra forma de activar las líneas con `@debug` es cambiar la configuración global del sistema de *logging* de Julia, con la función `global_logger`. Esto es especialmente útil si en lugar de presentar los mensajes emitidos (que pueden ser muchos) en la pantalla queremos dirigirlos a un archivo de texto. Por ejemplo podríamos redirigir todos los mensajes al archivo `"log.txt"` con las siguientes instrucciones:
 
 ```julia
+io = open("log.txt", "w")
+debug_logger = SimpleLogger(io, Logging.Debug)
+global_logger(debug_logger);
+```
+
+A partir de ese momento, durante la sesión de trabajo todos los mensajes de "debug" (de todos los módulos, y también los "warnings" y errores) se escribirán en `"log.txt"`.
+
+Para volver a la configuración original, que presenta los imágenes en pantalla e ignora los de tipo "debug", se puede cambiar el `SimpleLogger` por un `ConsoleLogger` con las opciones por defecto:[^2]
+
+```julia
+close(io)
 global_logger(ConsoleLogger())
 ```
+!!! warning
+
+    Hay que recordar cerrar el archivo con la instrucción `close(io)` para que los mensajes se queden grabados en él. Además, si se desea utilizar el mismo archivo para registrar distintos conjuntos de mensajes, hay que abrirlos con la opción `"a"` en lugar de `"w"` para que los nuevos mensajes se escriban a continuación de los anteriores, en lugar de sobreescribir el archivo.
+
+[^2]: La differencia entre un `ConsoleLogger` y un `SimpleLogger` es que el primero da formato al texto para presentarlo en pantalla de forma más legible. Para ambos tipos el primer argumento es el archivo en el que se van a registrar los mensajes (`stderr` por defecto), y el segundo es el nivel de prioridad. Hay cuatro niveles de prioridad, que en orden ascendente son: `Logging.Debug` (el de menor prioridad, pensado para desarrolladores y que es el que se ha puesto en el ejemplo), `Logging.Info` (información dirigida al usuario), `Logging.Warning` (avisos de que puede pasar algo anormal) y `Logging.Error` (mensajes de fallos críticos, que normalmente harán que se interrumpa la ejecución del código). Por defecto se muestran los mensajes de nivel `Info` o superiores. Este sistema se describe con detalle en la sección [Logging](https://docs.julialang.org/en/v1/stdlib/Logging/) del manual oficial. 
+
 
 Por otro lado, la propia función `global_logger` devuelve un registro con la configuración previa, que puede usarse como argumento para volver al estado anterior:
 
@@ -255,24 +277,12 @@ julia> with_logger(debug_logger) do
 
 Esto hace que el registro que hemos definido como `debug_logger` solo se aplique a las instrucciones incluidas en el boque `do ... end`, sin alterar el sistema de registro global.
 
-Para procesar mejor los mensajes emitidos, sobre todo si son muchos, puede ser conveniente dirigirlos a un archivo de texto en lugar de al `stderr`. En ese caso, es más apropiado usar un registro del tipo `SimpleLogger`[^3], que se podría configurar para asociarlo al archivo `"log.txt"` del siguiente modo:
-
-```julia
-io = open("log.txt", "w")
-debug_logger = SimpleLogger(io, Logging.Debug)
-```
-
-[^3]: La differencia entre un `ConsoleLogger` y un `SimpleLogger` es que el primero da formato al texto para presentarlo en pantalla de forma más legible.
-
-!!! warning
-
-    Hay que recordar cerrar el archivo con la instrucción `close(io)` para que los mensajes se queden grabados en él. Además, si se desea utilizar el mismo archivo para registrar distintos conjuntos de mensajes, hay que abrirlos con la opción `"a"` en lugar de `"w"` para que los nuevos mensajes se escriban a continuación de los anteriores, en lugar de sobreescribir el archivo.
 
 ## Infiltrator
 
 Los registros de mensajes que acabamos de ver son como radiografías que podemos hacer a los programas y funciones para echar un vistazo a su interior. Son una herramienta sencilla y muy eficiente, pero para que resulten útiles hemos de saber dónde buscar y qué información queremos observar. Desafortunadamente muchas veces esto no es así, por lo que a menudo necesitaremos técnicas de *debugging* más flexibles.
 
-Cuando tenemos localizados los puntos críticos de un programa, un método conveniente para explorarlos con más libertad es utilizar la macro `@infiltrate` del paquete [Infiltrator](https://github.com/JuliaDebug/Infiltrator.jl), en lugar de `@debug`[^4]. Esto hace que la ejecución del programa se detenga en ese punto. Por ejemplo, en la función `gauss_diasemana` podríamos cambiar las últimas líneas por las siguientes:
+Cuando tenemos localizados los puntos críticos de un programa, un método conveniente para explorarlos con más libertad es utilizar la macro `@infiltrate` del paquete [Infiltrator](https://github.com/JuliaDebug/Infiltrator.jl), en lugar de `@debug`[^3]. Esto hace que la ejecución del programa se detenga en ese punto. Por ejemplo, en la función `gauss_diasemana` podríamos cambiar las últimas líneas por las siguientes:
 
 ```julia
     w = rem(d + e + f + g + div(g, 4), 7)
@@ -281,7 +291,7 @@ Cuando tenemos localizados los puntos críticos de un programa, un método conve
 end
 ```
 
-[^4]: La versión de Infiltrator usada para estos ejemplos es la v0.3.
+[^3]: La versión de Infiltrator usada para estos ejemplos es la v0.3.
 
 A continuación cargamos el paquete Infiltrator y empleamos la nueva versión de nuestra función:
 
@@ -354,12 +364,12 @@ Hay dos maneras de desactivar y reactivar el efecto de `@infiltrate` sin redefin
 
 * Si se ejecuta la macro `@stop` dentro del modo *debug*, el punto de interrupción (*breakpoint*) actual dejará de tener efecto la siguiente vez que se ejecute el programa o la función. La instrucción `Infiltrator.clear_stop()` reactiva todos los *breakpoints*.
 
-* Se puede añadir una condición después de `@infiltrate`, de tal modo que el *breakpoint* se active solo cuando esa condición es cierta. Por ejemplo, se podría crear la variable `Main.activar_infiltrate`[^5] que podamos definir arbitrariamente como `true` o `false`, y en la línea en la que queremos detener el código escribir:
+* Se puede añadir una condición después de `@infiltrate`, de tal modo que el *breakpoint* se active solo cuando esa condición es cierta. Por ejemplo, se podría crear la variable `Main.activar_infiltrate`[^4] que podamos definir arbitrariamente como `true` o `false`, y en la línea en la que queremos detener el código escribir:
 
 ```julia
 @infiltrate Main.activar_infiltrate
 ```
-[^5]: El motivo por el que se sugiere definir explícitamente esta variable en el entorno global de `Main` es para asegurar que es esa la variable que controla el comportamiento de `@infiltrate`, en el caso de que hubiera alguna variable local con el mismo nombre en el entorno de la función manipulada.
+[^4]: El motivo por el que se sugiere definir explícitamente esta variable en el entorno global de `Main` es para asegurar que es esa la variable que controla el comportamiento de `@infiltrate`, en el caso de que hubiera alguna variable local con el mismo nombre en el entorno de la función manipulada.
 
 !!! note "No dejes las líneas con `@infiltrate` al terminar"
 
@@ -374,12 +384,12 @@ Hay dos maneras de desactivar y reactivar el efecto de `@infiltrate` sin redefin
 
 Cuando queremos investigar el funcionamiento de un programa, pero los puntos críticos no están bien definidos desde un principio o pueden ir cambiando de un caso a otro, lo que necesitamos es un *debugger* dinámico, que ofrece mayor flexibilidad para detener la función en distintos lugares, en lugar de puntos fijos como hemos visto con las herramientas anteriores.
 
-El paquete [Debugger](https://github.com/JuliaDebug/Debugger.jl) permite depurar un programa de este modo a través del REPL.[^6] Si se ejecuta una expresión precedida de la macro `@enter`, su ejecución se detendrá en la primera lína de código, en un modo *debug* muy semejante al que se ha visto con Infiltrator, pero con dos diferencias importantes:
+El paquete [Debugger](https://github.com/JuliaDebug/Debugger.jl) permite depurar un programa de este modo a través del REPL.[^5] Si se ejecuta una expresión precedida de la macro `@enter`, su ejecución se detendrá en la primera lína de código, en un modo *debug* muy semejante al que se ha visto con Infiltrator, pero con dos diferencias importantes:
 
 * Además de hacer operaciones en ese mismo punto del código, se pueden ejecutar instrucciones para detenerse en la siguiente línea, dentro de funciones a las que se llama, etc. (véanse los detalles en la página web del paquete). 
 * Esta mayor libertad tiene un precio: para poder detener el programa de forma arbitraria en cualquier punto del código hay que renunciar a compilarlo, lo que en general hará que funcione más lento; a veces *mucho* más lento.
 
-[^6]: La versión de Debugger considerada en este texto la v0.6.
+[^5]: La versión de Debugger considerada en este texto la v0.6.
 
 También es posible hacer avanzar el programa y detenerse en un punto arbitrario, añadiendo *breakpoints*. Pero en este caso disponemos de múltiples formas de definir los *breakpoints*:
 
@@ -401,9 +411,9 @@ Por otro lado, cuando se entra en modo *debug* en VS Code se cambia de entorno v
 
 ### *Debug* en modo compilado
 
-Como se ha señalado arriba, un inconvienente notable de ejecutar un programa en "modo *debug*" es que en general es mucho más lento, tanto más lento cuanto más complejo es el programa. Una forma de reducir ese problema es ejecutar las operaciones que no interese inspeccionar en "modo compilado". El paquete Debugger permite activar el modo compilado forma interactiva, y la extensión de Julia para VS Code utiliza una lista de funciones y módulos cuyas funciones se ejecutan de ese modo durante los procesos de *debugging* (véase el menú "*compiled code*" abajo a la izquierda en la figura 1).[^7] Las funciones ejecutadas en modo compilado correrán a la velocidad de costumbre. Ahora bien, los *breakpoints* marcados en el código de las mismas no son operativos.
+Como se ha señalado arriba, un inconvienente notable de ejecutar un programa en "modo *debug*" es que en general es mucho más lento, tanto más lento cuanto más complejo es el programa. Una forma de reducir ese problema es ejecutar las operaciones que no interese inspeccionar en "modo compilado". El paquete Debugger permite activar el modo compilado forma interactiva, y la extensión de Julia para VS Code utiliza una lista de funciones y módulos cuyas funciones se ejecutan de ese modo durante los procesos de *debugging* (véase el menú "*compiled code*" abajo a la izquierda en la figura 1).[^6] Las funciones ejecutadas en modo compilado correrán a la velocidad de costumbre. Ahora bien, los *breakpoints* marcados en el código de las mismas no son operativos.
 
-[^7]: El menú "*compiled code*" mostrado aquí se corresponde con la versión 1.2 de la extensión de Julia para VS Code.
+[^6]: El menú "*compiled code*" mostrado aquí se corresponde con la versión 1.2 de la extensión de Julia para VS Code.
 
 Consideremos, por ejemplo, que se ha entrado en modo *debug* en un programa con las siguientes líneas:
 
